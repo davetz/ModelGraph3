@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelGraph.Views;
+using System;
 
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -40,6 +41,7 @@ namespace ModelGraph.Services
         public static bool CanGoBack => Frame.CanGoBack;
 
         public static bool CanGoForward => Frame.CanGoForward;
+        public static ModelPage ActiveModelPage { get; set; }
 
         public static bool GoBack()
         {
@@ -59,6 +61,10 @@ namespace ModelGraph.Services
             // Don't open the same page multiple times
             if (Frame.Content?.GetType() != pageType || (parameter != null && !parameter.Equals(_lastParamUsed)))
             {
+                var activePage = ActiveModelPage;
+                ActiveModelPage = null;
+                activePage?.NavigatedFrom();
+
                 var navigationResult = Frame.Navigate(pageType, parameter, infoOverride);
                 if (navigationResult)
                 {

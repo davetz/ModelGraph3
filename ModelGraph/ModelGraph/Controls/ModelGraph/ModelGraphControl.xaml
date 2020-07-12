@@ -1,0 +1,255 @@
+﻿<Page
+    x:Class="ModelGraph.Controls.ModelGraphControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
+    mc:Ignorable="d"
+    d:DesignHeight="200"
+    d:DesignWidth="600"
+    KeyboardAcceleratorPlacementMode="Hidden"
+    Unloaded="ModelGraphControl_Unloaded" >
+
+    <Page.Resources>
+        
+        <Style x:Key="ControlPanelStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Right" />
+        </Style>
+
+        <Style x:Key="ActionPanelStyle" TargetType="StackPanel">
+            <Setter Property="Orientation" Value="Horizontal" />
+            <Setter Property="HorizontalAlignment" Value="Left" />
+        </Style>
+
+        <Style x:Key="ActionNameStyle" TargetType="TextBlock" >
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontStyle" Value="Italic" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="Firebrick"/>
+        </Style>
+
+        <Style x:Key="ActionHelpStyle" TargetType="TextBlock" >
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="TextAlignment" Value="Left"/>
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontStyle" Value="Normal" />
+            <Setter Property="Visibility" Value="Collapsed" />
+        </Style>
+
+        <Style x:Key="PinButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="2,0,10,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontSize" Value="10" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="Content" Value="&#xe718;" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="AlphaButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="UndoButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Content" Value="&#xe7a6;" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="RedoButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="Content" Value="&#xe7a7;" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="UndoRedoCountStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontSize" Value="8" />
+        </Style>
+
+        <Style x:Key="ToolTipBorderStyle" TargetType="Border">
+            <Setter Property="CornerRadius" Value="4" />
+            <Setter Property="Visibility" Value="Collapsed" />
+            <Setter Property="Background" Value="{ThemeResource AppBarBackgroundThemeBrush}" />
+        </Style>
+
+        <Style x:Key="ToolTipStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="4" />
+            <Setter Property="Text" Value="Okey Doekey" />
+        </Style>
+        
+        <Style x:Key="DrawGridStyle" TargetType="Grid">
+            <Setter Property="Background" Value="DarkSlateGray" />
+        </Style>
+        
+    </Page.Resources>
+
+    <Grid x:Name="RootGrid" Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="30" />
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.KeyboardAccelerators>
+            <KeyboardAccelerator Key="A" Invoked="KeyboardAccelerator_A_Invoked"/>
+            <KeyboardAccelerator Key="F" Invoked="KeyboardAccelerator_F_Invoked"/>
+            <KeyboardAccelerator Key="R" Invoked="KeyboardAccelerator_R_Invoked"/>
+            <KeyboardAccelerator Key="G" Invoked="KeyboardAccelerator_G_Invoked"/>
+            <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_M_Invoked"/>
+            <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_L_Invoked"/>
+            <KeyboardAccelerator Key="U" Invoked="KeyboardAccelerator_U_Invoked"/>
+            <KeyboardAccelerator Key="C" Invoked="KeyboardAccelerator_C_Invoked"/>
+            <KeyboardAccelerator Key="X" Invoked="KeyboardAccelerator_X_Invoked"/>
+            <KeyboardAccelerator Key="P" Invoked="KeyboardAccelerator_P_Invoked"/>
+            <KeyboardAccelerator Key="D" Invoked="KeyboardAccelerator_D_Invoked"/>
+            <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_V_Invoked"/>
+            <KeyboardAccelerator Key="H" Invoked="KeyboardAccelerator_H_Invoked"/>
+            <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_Up_Invoked"/>
+            <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_Left_Invoked"/>
+            <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_Down_Invoked"/>
+            <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_Right_Invoked"/>
+            <KeyboardAccelerator Key="Enter" Invoked="KeyboardAccelerator_Enter_Invoked"/>
+            <KeyboardAccelerator Key="Home" Invoked="KeyboardAccelerator_Home_Invoked"/>
+            <KeyboardAccelerator Key="Delete" Invoked="KeyboardAccelerator_Delete_Invoked"/>
+            <KeyboardAccelerator Key="Escape" Invoked="KeyboardAccelerator_Escape_Invoked"/>
+            <KeyboardAccelerator Key="X" Modifiers="Control" Invoked="KeyboardAccelerator_Cut_Invoked"/>
+            <KeyboardAccelerator Key="C" Modifiers="Control" Invoked="KeyboardAccelerator_Copy_Invoked"/>
+            <KeyboardAccelerator Key="V" Modifiers="Control" Invoked="KeyboardAccelerator_Paste_Invoked"/>
+        </Grid.KeyboardAccelerators>
+
+
+        <Grid Grid.Row="0" x:Name="ControlGrid" >
+
+            <StackPanel x:Name="ControlPanel" Style="{StaticResource ControlPanelStyle}">
+
+                <TextBlock x:Name="ActionHelp" x:Uid="_407" Style="{StaticResource ActionHelpStyle}" />
+                <TextBlock x:Name="ActionName" x:Uid="_401" Style="{StaticResource ActionNameStyle}" />
+                <Button x:Name="PinButton" x:Uid="_402" Style="{StaticResource PinButtonStyle}" Click="PinButton_Click"/>
+
+                <Button x:Name="AlignButton" x:Uid="_410" Content="a" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="AlignVertItem" x:Uid="_426" Click="AlignVertItem_Click"/>
+                            <MenuFlyoutItem x:Name="AlignHorzItem" x:Uid="_427" Click="AlignHorzItem_Click"/>
+                            <!--<MenuFlyoutItem x:Name="AlignWestItem" x:Uid="_428" Click="AlignWestItem_Click"/>
+                            <MenuFlyoutItem x:Name="AlignEastItem" x:Uid="_429" Click="AlignEastItem_Click"/>
+                            <MenuFlyoutItem x:Name="AlignNorthItem" x:Uid="_430" Click="AlignNorthItem_Click"/>
+                            <MenuFlyoutItem x:Name="AlignSouthItem" x:Uid="_431" Click="AlignSouthItem_Click"/>-->
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="FlipButton"  x:Uid="_411"  Content="f" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="FlipVertItem" x:Uid="_432" Click="FlipVertItem_Click"/>
+                            <MenuFlyoutItem x:Name="FlipHorzItem" x:Uid="_433" Click="FlipHorzItem_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="RotateButton" x:Uid="_412" Content="r" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="RotateLeft45Item" x:Uid="_434"   Click="RotateLeft45Item_Click"/>
+                            <MenuFlyoutItem x:Name="RotateLeft90Item" x:Uid="_436"   Click="RotateLeft90Item_Click"/>
+                            <MenuFlyoutItem x:Name="RotateRight45Item" x:Uid="_435"  Click="RotateRight45Item_Click"/>
+                            <MenuFlyoutItem x:Name="RotateRight90Item" x:Uid="_437"  Click="RotateRight90Item_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="GravityButton" x:Uid="_413" Content="g" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                            <MenuFlyoutItem x:Name="GravityInsideItem" x:Uid="_450"   Click="GravityInsideItem_Click"/>
+                            <MenuFlyoutItem x:Name="GravityDisperseItem" x:Uid="_451"   Click="GravityDisperseItem_Click"/>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="MoveButton" x:Uid="_414" Content="m" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="LinkButton" x:Uid="_415" Content="l" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="UnlinkButton" x:Uid="_416" Content="u" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="CopyButton" x:Uid="_417" Content="c" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="CutButton" x:Uid="_418" Content="x" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <Button x:Name="PasteButton" x:Uid="_419" Content="p" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+                
+                <Button x:Name="DeleteButton" x:Uid="_420" Content="d" Style="{StaticResource AlphaButtonStyle}">
+                    <Button.Flyout>
+                        <MenuFlyout>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+                
+                <Button x:Name="UndoButton" x:Uid="_403" Style="{StaticResource UndoButtonStyle}" Click="UndoButton_Click"/>
+                <TextBlock x:Name="UndoCount" x:Uid="_404" Style="{StaticResource UndoRedoCountStyle}" />
+                <Button x:Name="RedoButton" x:Uid="_405" Style="{StaticResource RedoButtonStyle}"  Click="RedoButton_Click"/>
+                <TextBlock x:Name="RedoCount" x:Uid="_406" Style="{StaticResource UndoRedoCountStyle}" />
+
+            </StackPanel>
+        </Grid>
+
+        <Grid x:Name="CanvasGrid"  Grid.Row="1" Background="DarkSlateGray">
+
+            <canvas:CanvasControl x:Name="EditorCanvas" Draw="EditorCanvas_Draw" IsTabStop="False" Loaded="EditorCanvas_Loaded" />
+
+            <Canvas x:Name="RootCanvas" Background="Transparent" DoubleTapped="RootCanvas_DoubleTapped"  >
+                <Border x:Name="ToolTipBorder" Style="{StaticResource ToolTipBorderStyle}" IsTapEnabled="False">
+                    <TextBlock x:Name="ItemToolTip" Style="{StaticResource ToolTipStyle}" IsTapEnabled="False"/>
+                </Border>
+            </Canvas>
+        </Grid>
+    </Grid>
+
+</Page>

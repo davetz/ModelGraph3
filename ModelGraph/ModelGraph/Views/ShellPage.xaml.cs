@@ -4,11 +4,12 @@ using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
-
+using ModelGraph.Core;
 using ModelGraph.Helpers;
 using ModelGraph.Services;
-
+using Windows.Foundation;
 using Windows.System;
+using Windows.UI.ViewManagement;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -21,6 +22,7 @@ namespace ModelGraph.Views
     // TODO WTS: Change the icons and titles for all NavigationViewItems in ShellPage.xaml.
     public sealed partial class ShellPage : Page, INotifyPropertyChanged
     {
+        private Size _desiredSize = new Size { Height = 600, Width = 600 };
         private readonly KeyboardAccelerator _altLeftKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.Left, VirtualKeyModifiers.Menu);
         private readonly KeyboardAccelerator _backKeyboardAccelerator = BuildKeyboardAccelerator(VirtualKey.GoBack);
 
@@ -46,12 +48,83 @@ namespace ModelGraph.Views
             Initialize();
         }
 
+        #region ModelPageService  =============================================
+        //
+        #region InsertModelPage  ==============================================
+        public void InsertModelPage(IRootModel model)
+        {
+            if (model is null) return;
+
+            model.DataRoot.SetLocalizer(Helpers.ResourceExtensions.CoreLocalizer());
+
+            var item = navigationView.MenuItems
+                            .OfType<WinUI.NavigationViewItem>()
+                            .FirstOrDefault(menuItem => (menuItem.Name == "Home"));
+
+            if (item is null) return;
+
+            var index = navigationView.MenuItems.IndexOf(item) + 2;
+            var navItem = new WinUI.NavigationViewItem
+            {
+                Content = model.TitleName,
+                Icon = new SymbolIcon(Symbol.AllApps),
+                Tag = model
+            };
+            ToolTipService.SetToolTip(navItem, model.TitleSummary);
+
+            navItem.Loaded += NavItem_Loaded;
+            navigationView.MenuItems.Insert(index, navItem);
+
+            //navigationView.SelectedItem = navItem;
+            //Selected = navItem;
+
+            NavigationService.Navigate(typeof(ModelPage), model);
+        }
+
+        private static void NavItem_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (sender is NavigationViewItem navItem)
+            {
+                navItem.Loaded -= NavItem_Loaded;
+                navItem.IsSelected = true;
+            }
+        }
+        #endregion
+        //
+        #region RemoveModelPage  ==============================================
+        public void RemoveModelPage(IRootModel model)
+        {
+            var item = navigationView.MenuItems
+                            .OfType<WinUI.NavigationViewItem>()
+                            .FirstOrDefault(menuItem => (menuItem.Tag == model));
+
+            if (item is null) return;
+            navigationView.MenuItems.Remove(item);
+
+            var home = navigationView.MenuItems
+                            .OfType<WinUI.NavigationViewItem>()
+                            .FirstOrDefault(menuItem => (menuItem.Name == "Home"));
+
+            if (!(home is null))
+            {
+                home.IsSelected = true;
+                NavigationService.Navigate(typeof(MainPage));
+            }
+
+        }
+        #endregion
+        #endregion
+
         private void Initialize()
         {
             NavigationService.Frame = shellFrame;
             NavigationService.NavigationFailed += Frame_NavigationFailed;
             NavigationService.Navigated += Frame_Navigated;
             navigationView.BackRequested += OnBackRequested;
+
+            ModelPageService.Current.InsertModelPage = InsertModelPage;
+            ModelPageService.Current.RemoveModelPage = RemoveModelPage;
+            ApplicationView.GetForCurrentView().TryResizeView(_desiredSize);
         }
 
         private async void OnLoaded(object sender, RoutedEventArgs e)
