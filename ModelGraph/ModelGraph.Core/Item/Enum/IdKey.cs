@@ -400,8 +400,8 @@ namespace ModelGraph.Core
         TableListModel_647 = 0x647,
         GraphListModel_648 = 0x648,
         //=====================================================================
-        PairX_MetaModel = 0x652,
-        EnumX_MetaModel = 0x653,
+        PairXModel_652 = 0x652,
+        EnumXModel_653 = 0x653,
         TableModel_654 = 0x654,
         GraphModel_655 = 0x655,
         SymbolX_MetaModel = 0x656,
