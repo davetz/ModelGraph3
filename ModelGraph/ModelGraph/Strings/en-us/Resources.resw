@@ -173,4 +173,101 @@
     <value>Web link shared with the application</value>
     <comment>Page title for ShareTarget when web link is shared</comment>
   </data>
+  <data name="ComparePage.Content" xml:space="preserve">
+    <value>Compare</value>
+    <comment>Navigation view item name for Compare</comment>
+  </data>
+  <data name="ExceptionCorruptLineModelCache" xml:space="preserve">
+    <value>Corrupt line model cache</value>
+  </data>
+  <data name="ExceptionEnumToBooleanConverterParameterMustBeAnEnumName" xml:space="preserve">
+    <value>parameter must be an Enum name!</value>
+    <comment>Parameter must be an Enum name in enum to boolean converter</comment>
+  </data>
+  <data name="ExceptionEnumToBooleanConverterValueMustBeAnEnum" xml:space="preserve">
+    <value>value must be an Enum!</value>
+    <comment>Value must be an Enum in enum to boolean converter</comment>
+  </data>
+  <data name="MainPage.Content" xml:space="preserve">
+    <value>Home</value>
+    <comment>Navigation view item name for Main</comment>
+  </data>
+  <data name="MainPage_NewButton.Content" xml:space="preserve">
+    <value>Create New Model</value>
+  </data>
+  <data name="MainPage_NewButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Create a new model</value>
+  </data>
+  <data name="MainPage_OpenButton.Content" xml:space="preserve">
+    <value>Open Model Data File</value>
+  </data>
+  <data name="MainPage_OpenButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Open a model data file</value>
+  </data>
+  <data name="ModelTree_FilterCountTip" xml:space="preserve">
+    <value>Filtered Count</value>
+  </data>
+  <data name="ModelTree_FilterExpandTip" xml:space="preserve">
+    <value>Show/Hide Item Filter String</value>
+  </data>
+  <data name="ModelTree_FilterTextTip" xml:space="preserve">
+    <value>Enter a filter string</value>
+  </data>
+  <data name="ModelTree_ItemHasErrorTip" xml:space="preserve">
+    <value>Has an Error,  Click to expand.</value>
+  </data>
+  <data name="ModelTree_LeftExpandTip" xml:space="preserve">
+    <value>Expand/Collapse Tree Level</value>
+  </data>
+  <data name="ModelTree_RightExpandTip" xml:space="preserve">
+    <value>Show/Hide Item Properties</value>
+  </data>
+  <data name="ModelTree_SortModeTip" xml:space="preserve">
+    <value>SortMode: (none, assending, descending) </value>
+  </data>
+  <data name="ModelTree_TotalCountTip" xml:space="preserve">
+    <value>Total Count</value>
+  </data>
+  <data name="ModelTree_UsageModeTip" xml:space="preserve">
+    <value>A: Show All,  U: Show Used,  N: Show Not Used</value>
+  </data>
+  <data name="Settings_About.Text" xml:space="preserve">
+    <value>About this application</value>
+    <comment>About this application title for Settings</comment>
+  </data>
+  <data name="Settings_AboutDescription.Text" xml:space="preserve">
+    <value>Settings page placeholder text.  Your app description goes here.</value>
+    <comment>About this application description for Settings</comment>
+  </data>
+  <data name="Settings_Personalization.Text" xml:space="preserve">
+    <value>Personalization</value>
+    <comment>Personalization text for Settings</comment>
+  </data>
+  <data name="Settings_PrivacyTermsLink.Content" xml:space="preserve">
+    <value>Privacy Statement</value>
+    <comment>Privacy Statement link content for Settings</comment>
+  </data>
+  <data name="Settings_PrivacyTermsLink.NavigateUri" xml:space="preserve">
+    <value>https://YourPrivacyUrlGoesHere/</value>
+    <comment>Here is your Privacy Statement url for Settings</comment>
+  </data>
+  <data name="Settings_Theme.Text" xml:space="preserve">
+    <value>Choose Theme</value>
+    <comment>Choose theme text for Settings</comment>
+  </data>
+  <data name="Settings_Theme_Dark.Content" xml:space="preserve">
+    <value>Dark</value>
+    <comment>Dark theme text for Settings</comment>
+  </data>
+  <data name="Settings_Theme_Default.Content" xml:space="preserve">
+    <value>Windows default</value>
+    <comment>Windows default theme text for Settings</comment>
+  </data>
+  <data name="Settings_Theme_Light.Content" xml:space="preserve">
+    <value>Light</value>
+    <comment>Light theme text for Settings</comment>
+  </data>
+  <data name="StorageFileRepo_New" xml:space="preserve">
+    <value>New Model</value>
+  </data>
 </root>
