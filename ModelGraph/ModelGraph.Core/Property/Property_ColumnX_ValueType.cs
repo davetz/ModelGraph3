@@ -1,4 +1,6 @@
-﻿namespace ModelGraph.Core
+﻿using System;
+
+namespace ModelGraph.Core
 {
     public class Property_ColumnX_ValueType : EnumPropertyOf<ColumnX>
     {

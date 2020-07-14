@@ -1,9 +1,12 @@
 ﻿
+using System;
+
 namespace ModelGraph.Core
 {
     public class Property_QueryX_IsBreakPoint : PropertyOf<QueryX, bool>
     {
         internal override IdKey IdKey => IdKey.QueryXIsBreakPointProperty;
+        protected override Type PropetyModelType => typeof(PropertyCheckModel_618);
 
         internal Property_QueryX_IsBreakPoint(PropertyRoot owner)
         {

@@ -1,9 +1,12 @@
 ﻿
+using System;
+
 namespace ModelGraph.Core
 {
     public class Property_Relation_IsRequired : PropertyOf<Relation, bool>
     {
         internal override IdKey IdKey => IdKey.RelationIsRequiredProperty;
+        protected override Type PropetyModelType => typeof(PropertyCheckModel_618);
 
         internal Property_Relation_IsRequired(PropertyRoot owner)
         {

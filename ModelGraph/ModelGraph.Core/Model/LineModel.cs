@@ -204,6 +204,7 @@ namespace ModelGraph.Core
         #region Virtual Functions  ============================================
         internal virtual bool ExpandLeft(Root root) => false;
         internal virtual bool ExpandRight(Root root) => false;
+        internal virtual Property[] GetProperties() => null;
 
         internal virtual bool IsItemUsed => true;
 

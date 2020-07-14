@@ -2,10 +2,10 @@
 
 namespace ModelGraph.Core
 {
-    public class PairXModel_652 : LineModel
+    public class PairModel_652 : LineModel
     {//============================================== In the MetaDataRoot hierarchy  ==============
-        internal PairXModel_652(LineModel owner, Item item) : base(owner, item) { }
-        internal override IdKey IdKey => IdKey.PairXModel_652;
+        internal PairModel_652(PairListModel_664 owner, Item item) : base(owner, item) { }
+        internal override IdKey IdKey => IdKey.PairModel_652;
         public override bool CanExpandRight => true;
         public override bool CanDrag => true;
 

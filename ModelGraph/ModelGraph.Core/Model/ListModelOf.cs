@@ -1,19 +1,23 @@
 ﻿
 using System.Collections.Generic;
+using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public class TableListModel_643 : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
-        internal TableListModel_643(MetadataRootModel_623 owner, TableXRoot item) : base(owner, item) { }
-        private TableXRoot TXR => Item as TableXRoot;
-        internal override IdKey IdKey => IdKey.TableListModel_643;
+    public abstract class ListModelOf<T> : LineModel where T : Item
+    {
+        internal ListModelOf(LineModel owner, Item item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;
         public override bool CanSort => TotalCount > 1;
-        public override int TotalCount => TXR.Count;
+        public override int TotalCount => GetTotalCount();
 
+        #region RequiredMethodes  =============================================
+        protected abstract int GetTotalCount();
+        protected abstract IList<T> GetChildItems();
+        protected abstract void CreateChildModel(T childItem);
+        #endregion
 
         internal override bool ExpandLeft(Root root)
         {
@@ -21,24 +25,17 @@ namespace ModelGraph.Core
 
             IsExpandedLeft = true;
 
-            foreach (var tx in TXR.Items)
+            foreach (var itm in GetChildItems())
             {
-                new TableModel_654(this, tx);
+                CreateChildModel(itm);
             }
 
             return true;
         }
-
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
-        {
-            list.Clear();
-            list.Add(new InsertCommand(this, () => ItemCreated.Record(root, new TableX(Item as TableXRoot, true))));
-        }
-
         internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
         {
             var viewListChanged = false;
-            if (IsExpanded || AutoExpandLeft)
+            if (IsExpandedLeft || AutoExpandLeft)
             {
                 AutoExpandLeft = false;
                 IsExpandedLeft = true;
@@ -54,16 +51,16 @@ namespace ModelGraph.Core
                     }
                     CovertClear();
 
-                    foreach (var tx in TXR.Items)
+                    foreach (var itm in GetChildItems())
                     {
-                        if (prev.TryGetValue(tx, out LineModel m))
+                        if (prev.TryGetValue(itm, out LineModel m))
                         {
                             CovertAdd(m);
                             prev.Remove(m.Item);
                         }
                         else
                         {
-                            new TableModel_654(this, tx);
+                            CreateChildModel(itm);
                             viewListChanged = true;
                         }
                     }
@@ -77,5 +74,6 @@ namespace ModelGraph.Core
             }
             return viewListChanged || base.Validate(root, prev);
         }
+
     }
 }

@@ -1,8 +1,11 @@
-﻿namespace ModelGraph.Core
+﻿using System;
+
+namespace ModelGraph.Core
 {
     public abstract class EnumPropertyOf<T> : PropertyOf<T, string>, IEnumProperty where T : Item
     {
         internal EnumZ EnumZ { get; }
+        protected override Type PropetyModelType => typeof(PropertyComboModel_619);
 
         internal EnumPropertyOf(PropertyRoot owner, EnumZ enumZ)
         {

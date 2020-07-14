@@ -1,9 +1,12 @@
 ﻿
+using System;
+
 namespace ModelGraph.Core
 {
     public class Property_ColumnX_IsChoice : PropertyOf<ColumnX, bool>
     {
         internal override IdKey IdKey => IdKey.ColumnIsChoiceProperty;
+        protected override Type PropetyModelType => typeof(PropertyCheckModel_618);
 
         internal Property_ColumnX_IsChoice(PropertyRoot owner)
         {
