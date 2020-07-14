@@ -13,7 +13,7 @@ namespace ModelGraph.Core
             owner.Add(this);
         }
 
-        internal override string GetValue(Item item) => Cast(item).Name;
-        internal override void SetValue(Item item, string val) => Cast(item).Name = val;
+        internal override string GetValue(Item item) => Cast(item).DisplayValue;
+        internal override void SetValue(Item item, string val) => Cast(item).DisplayValue = val;
     }
 }
