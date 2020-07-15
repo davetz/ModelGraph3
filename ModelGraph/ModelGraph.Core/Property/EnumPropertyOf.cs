@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     public abstract class EnumPropertyOf<T> : PropertyOf<T, string>, IEnumProperty where T : Item
     {
         internal EnumZ EnumZ { get; }
-        protected override Type PropetyModelType => typeof(PropertyComboModel_619);
+        protected override Type PropetyModelType => typeof(Model_619_ComboProperty);
 
         internal EnumPropertyOf(PropertyRoot owner, EnumZ enumZ)
         {

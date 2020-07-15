@@ -19,7 +19,7 @@ namespace ModelGraph.Core
             Depth = 254;
             ControlType = ControlType.PrimaryTree;
 
-            new RootModel_612(this, root);
+            new Model_612_Root(this, root);
             root.Add(this);
         }
         internal TreeModel(Root root, Action<Root,TreeModel> newLineModel)

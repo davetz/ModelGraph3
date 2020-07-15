@@ -1344,25 +1344,16 @@ NEC – NWC – SEC - SWC</value>
     <value>Relation</value>
   </data>
   <data name="6B1N" xml:space="preserve">
-    <value>Properties</value>
+    <value>Column Property</value>
   </data>
   <data name="6B2N" xml:space="preserve">
-    <value>Child Relation</value>
+    <value>Computed Property</value>
   </data>
   <data name="6B3N" xml:space="preserve">
-    <value>Parent Relation</value>
+    <value>Child Relation</value>
   </data>
   <data name="6B4N" xml:space="preserve">
-    <value>Default Properties</value>
-  </data>
-  <data name="6B5N" xml:space="preserve">
-    <value>Unused Child Relations</value>
-  </data>
-  <data name="6B6N" xml:space="preserve">
-    <value>Unused Parent Relations</value>
-  </data>
-  <data name="6B7N" xml:space="preserve">
-    <value>Computed</value>
+    <value>Parent Relation</value>
   </data>
   <data name="6C1K" xml:space="preserve">
     <value>(Link) </value>

@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     public abstract class Property : Item
     {
         internal Value Value = Root.ValuesUnknown;
-        protected virtual Type PropetyModelType => typeof(PropertyTextModel_617);
+        protected virtual Type PropetyModelType => typeof(Model_617_TextProperty);
 
         internal virtual bool HasParentName => false;
         internal virtual string GetParentName(Root root, Item itm) => default;
@@ -20,12 +20,12 @@ namespace ModelGraph.Core
 
         internal void CreatePropertyModel(LineModel owner, Item item)
         {
-            if (PropetyModelType == typeof(PropertyComboModel_619))
-                new PropertyComboModel_619(owner, item, this);
-            else if (PropetyModelType == typeof(PropertyCheckModel_618))
-                new PropertyCheckModel_618(owner, item, this);
+            if (PropetyModelType == typeof(Model_619_ComboProperty))
+                new Model_619_ComboProperty(owner, item, this);
+            else if (PropetyModelType == typeof(Model_618_CheckProperty))
+                new Model_618_CheckProperty(owner, item, this);
             else
-                new PropertyTextModel_617(owner, item, this);
+                new Model_617_TextProperty(owner, item, this);
         }
     }
 }
