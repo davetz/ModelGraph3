@@ -1,9 +1,10 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_6A4_Table : ListModelOf<RowX>
-    {//============================================== In the ModelingRoot hierarchy  ==============
+    {
         internal Model_6A4_Table(Model_647_TableList owner, TableX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6A4_Table;
 

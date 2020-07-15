@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_676_SummaryProperty : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_676_SummaryProperty(Model_674_SummaryPropertyRelation owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_676_SummaryProperty;
         public override (string, string) GetKindNameId(Root root) => Item.GetKindNameId(root);

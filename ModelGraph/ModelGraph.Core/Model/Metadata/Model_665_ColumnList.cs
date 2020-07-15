@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_665_ColumnList : ListModelOf<ColumnX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_665_ColumnList(Model_653_Enum owner, EnumX item) : base(owner, item) { }
         private EnumX EX => Item as EnumX;
         internal override IdKey IdKey => IdKey.Model_665_ColumnList;

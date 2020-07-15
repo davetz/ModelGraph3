@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_6B2_ComputeList : ListModelOf<ComputeX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         private readonly Relation_Store_ComputeX Store_ComputeX;
 
         internal Model_6B2_ComputeList(Model_6A1_Row owner, RowX item) : base(owner, item) 

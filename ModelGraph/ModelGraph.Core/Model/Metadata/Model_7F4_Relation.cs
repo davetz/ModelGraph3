@@ -2,7 +2,7 @@
 namespace ModelGraph.Core
 {
     public class Model_7F4_Relation : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item) { }
         private Relation RX => Item as Relation;
         internal override IdKey IdKey => IdKey.Model_7F4_Relation;

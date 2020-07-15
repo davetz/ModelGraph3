@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_7F1_PrimeStore : ListModelOf<Item>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_7F1_PrimeStore(Model_7F0_Root owner, Store item) : base(owner, item) { }
         private Store ST => Item as Store;
         internal override IdKey IdKey => IdKey.Model_7F1_PrimeStore;

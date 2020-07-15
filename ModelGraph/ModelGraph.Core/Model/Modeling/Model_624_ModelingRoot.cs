@@ -12,7 +12,7 @@ namespace ModelGraph.Core
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
 
-            new ViewListModel_63A(this, root.Get<ViewXRoot>());
+            new Model_63A_ViewList(this, root.Get<ViewXRoot>());
             new Model_647_TableList(this, root.Get<TableXRoot>());
             new Model_648_GraphList(this, root.Get<GraphXRoot>());
 

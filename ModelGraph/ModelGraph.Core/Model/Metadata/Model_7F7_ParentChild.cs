@@ -2,7 +2,7 @@
 namespace ModelGraph.Core
 {
     public class Model_7F7_ParentChild : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal readonly (Item, Item) ItemPair;
         internal Model_7F7_ParentChild(Model_7F5_ChildList owner, Relation item, (Item, Item) itemPair) : base(owner, item) { ItemPair = itemPair; }
         internal override IdKey IdKey => IdKey.Model_7F7_ParentChild;

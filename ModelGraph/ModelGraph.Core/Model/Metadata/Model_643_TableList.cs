@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_643_TableList : ListModelOf<TableX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_643_TableList(Model_623_MetadataRoot owner, TableXRoot item) : base(owner, item) { }
         private TableXRoot TXR => Item as TableXRoot;
         internal override IdKey IdKey => IdKey.Model_643_TableList;

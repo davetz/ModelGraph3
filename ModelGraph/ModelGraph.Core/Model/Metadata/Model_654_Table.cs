@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_654_Table : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_654_Table(Model_643_TableList owner, TableX item) : base(owner, item) { }
         private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_654_Table;
@@ -42,8 +41,8 @@ namespace ModelGraph.Core
         {
             if (IsExpandedRight) return false;
 
-            new Model_617_TextProperty(this, Item, root.Get<Property_Item_Summary>());
-            new Model_617_TextProperty(this, Item, root.Get<Property_Item_Name>());
+            root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
+            root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
 
             IsExpandedRight = true;
             return true;

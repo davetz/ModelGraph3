@@ -12,7 +12,7 @@ namespace ModelGraph.Core
             Owner = owner;
             Depth = (byte)(owner.Depth + 1);
 
-            owner.CovertInsert(this);
+            owner.Add(this);
 
             Property = prop;
         }

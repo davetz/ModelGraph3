@@ -1,4 +1,5 @@
-﻿namespace ModelGraph.Core
+﻿
+namespace ModelGraph.Core
 {
     public class Model_623_MetadataRoot : LineModel
     {

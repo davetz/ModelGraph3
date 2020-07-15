@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_624_EnumList : ListModelOf<EnumX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_624_EnumList(Model_623_MetadataRoot owner, EnumXRoot item) : base(owner, item) { }
         private EnumXRoot EXR => Item as EnumXRoot;
         internal override IdKey IdKey => IdKey.Model_624_EnumList;

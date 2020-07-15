@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_6B3_ChildRelationList : ListModelOf<Relation>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         private Relation_StoreX_ChildRelation StoreX_ChildRelation;
 
         internal Model_6B3_ChildRelationList(Model_6A1_Row owner, RowX item) : base(owner, item) 

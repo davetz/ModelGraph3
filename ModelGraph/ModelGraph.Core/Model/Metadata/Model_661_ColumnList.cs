@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_661_ColumnList : ListModelOf<ColumnX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         private readonly Relation_Store_ColumnX Store_ColumnX;
 
         internal Model_661_ColumnList(Model_654_Table owner, TableX item) : base(owner, item) 

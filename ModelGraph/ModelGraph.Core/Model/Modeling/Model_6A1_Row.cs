@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_6A1_Row : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_6A1_Row(Model_6A4_Table owner, RowX item) : base(owner, item) { }
         private RowX RX => Item as RowX;
         internal override IdKey IdKey => IdKey.Model_6A1_Row;

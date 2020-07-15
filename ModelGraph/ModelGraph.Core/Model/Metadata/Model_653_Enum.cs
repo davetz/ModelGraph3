@@ -2,7 +2,7 @@
 namespace ModelGraph.Core
 {
     public class Model_653_Enum : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_653_Enum(Model_624_EnumList owner, EnumX item) : base(owner, item) { }
         private EnumX EX => Item as EnumX;
         internal override IdKey IdKey => IdKey.Model_653_Enum;
@@ -29,8 +29,8 @@ namespace ModelGraph.Core
             if (IsExpandedRight) return false;
             IsExpandedRight = true;
 
-            root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
             root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
+            root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
 
             return true;
         }

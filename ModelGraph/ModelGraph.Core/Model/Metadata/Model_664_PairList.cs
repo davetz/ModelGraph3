@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_664_PairList : ListModelOf<PairX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_664_PairList(Model_653_Enum owner, EnumX item) : base(owner, item) { }
         private EnumX EX => Item as EnumX;
         internal override IdKey IdKey => IdKey.Model_664_PairList;

@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_674_SummaryPropertyRelation : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_674_SummaryPropertyRelation(Model_654_Table owner, TableX item) : base(owner, item) { }
         private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_674_SummaryPropertyRelation;

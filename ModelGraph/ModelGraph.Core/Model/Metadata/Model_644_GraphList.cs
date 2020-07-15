@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_644_GraphList : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_644_GraphList(Model_623_MetadataRoot owner, Item item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_644_GraphList;
 

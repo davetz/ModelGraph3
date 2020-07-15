@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_7F5_ChildList : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_7F5_ChildList(Model_7F4_Relation owner, Relation item) : base(owner, item) { }
         private Relation RX => Item as Relation;
         internal override IdKey IdKey => IdKey.Model_7F5_ChildList;

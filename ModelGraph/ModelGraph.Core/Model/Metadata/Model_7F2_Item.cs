@@ -2,7 +2,7 @@
 namespace ModelGraph.Core
 {
     public class Model_7F2_Item : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_7F2_Item(LineModel owner, Item item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F2_Item;
 

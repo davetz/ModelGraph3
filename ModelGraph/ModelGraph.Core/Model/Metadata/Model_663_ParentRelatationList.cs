@@ -1,10 +1,9 @@
-﻿
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
     public class Model_663_ParentRelatationList : ListModelOf<Relation>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         private Relation_StoreX_ParentRelation StoreX_ParentRelation;
         private TableX TX => Item as TableX;
         internal Model_663_ParentRelatationList(Model_654_Table owner, TableX item) : base(owner, item) 

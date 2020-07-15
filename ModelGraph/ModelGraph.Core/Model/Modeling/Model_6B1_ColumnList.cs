@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
     public class Model_6B1_ColumnList : ListModelOf<ColumnX>
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         private readonly Relation_Store_ColumnX Store_ColumnX;
 
         internal Model_6B1_ColumnList(Model_6A1_Row owner, RowX item) : base(owner, item) 
@@ -17,9 +17,8 @@ namespace ModelGraph.Core
         protected override IList<ColumnX> GetChildItems() => Store_ColumnX.TryGetChildren(Item.Owner, out IList<ColumnX> list) ? list : new ColumnX[0];
         protected override void CreateChildModel(ColumnX childItem)
         {
-            //new ColumnModel_657(this, childItem);
+            childItem.CreatePropertyModel(this, Item);
         }
         #endregion
-
     }
 }

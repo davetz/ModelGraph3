@@ -2,7 +2,7 @@
 namespace ModelGraph.Core
 {
     public class Model_658_Compute : LineModel
-    {//============================================== In the MetaDataRoot hierarchy  ==============
+    {
         internal Model_658_Compute(Model_666_ComputeList owner, ComputeX item) : base(owner, item) { }
         private ComputeX CX => Item as ComputeX;
         internal override IdKey IdKey => IdKey.Model_658_Compute;
@@ -17,12 +17,12 @@ namespace ModelGraph.Core
             if (IsExpandedRight) return false;
             IsExpandedRight = true;
 
-            new Model_617_TextProperty(this, Item, root.Get<Property_ComputeX_ValueType>());
-            new Model_617_TextProperty(this, Item, root.Get<Property_ComputeX_Select>());
-            new Model_617_TextProperty(this, Item, root.Get<Property_ComputeX_Separator>());
-            new Model_619_ComboProperty(this, Item, root.Get<Property_ComputeX_CompuType>());
-            new Model_617_TextProperty(this, Item, root.Get<Property_Item_Summary>());
-            new Model_617_TextProperty(this, Item, root.Get<Property_Item_Name>());
+            root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
+            root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
+            root.Get<Property_ComputeX_CompuType>().CreatePropertyModel(this, Item);
+            root.Get<Property_ComputeX_Separator>().CreatePropertyModel(this, Item);
+            root.Get<Property_ComputeX_Select>().CreatePropertyModel(this, Item);
+            root.Get<Property_ComputeX_ValueType>().CreatePropertyModel(this, Item);
 
             return true;
         }

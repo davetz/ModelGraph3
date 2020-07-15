@@ -387,7 +387,7 @@ namespace ModelGraph.Core
         MetaViewQuery_Model = 0x633,
         MetaViewCommand_Model = 0x634,
         MetaViewProperty_Model = 0x635,
-        ViewListModel_63A = 0x63A,
+        Model_63A_ViewList = 0x63A,
         ViewView_Model = 0x63B,
         ViewItem_Model = 0x63C,
         ViewQuery_Model = 0x63D,
