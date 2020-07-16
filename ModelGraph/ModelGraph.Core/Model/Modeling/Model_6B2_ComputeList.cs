@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         private readonly Relation_Store_ComputeX Store_ComputeX;
 
-        internal Model_6B2_ComputeList(Model_6A1_Row owner, RowX item) : base(owner, item) 
+        internal Model_6B2_ComputeList(LineModel owner, RowX item) : base(owner, item) 
         {
             Store_ComputeX = item.DataRoot.Get<Relation_Store_ComputeX>();
         }
@@ -17,7 +17,7 @@ namespace ModelGraph.Core
         protected override IList<ComputeX> GetChildItems() => Store_ComputeX.TryGetChildren(Item.Owner, out IList<ComputeX> list) ? list : new ComputeX[0];
         protected override void CreateChildModel(ComputeX childItem)
         {
-            //new ComputeModel_658(this, childItem);
+            childItem.CreatePropertyModel(this, Item);
         }
         #endregion
     }

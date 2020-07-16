@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_6A1_Row : LineModel
+    public class Model_6AA_RelatedParent : LineModel
     {
         private RowX RX => Item as RowX;
-        internal Model_6A1_Row(Model_6A4_Table owner, RowX item) : base(owner, item) { }
-        internal override IdKey IdKey => IdKey.Model_6A1_Row;
-
+        internal Model_6AA_RelatedParent(Model_6A8_ParentRelation owner, RowX item) : base(owner, item) { }
+        internal override IdKey IdKey => IdKey.Model_6AA_RelatedParent;
         public override bool CanExpandLeft => true;
         public override bool CanDrag => true;
 

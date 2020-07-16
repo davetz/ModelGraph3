@@ -451,10 +451,10 @@ namespace ModelGraph.Core
         GraphX_Model = 0x6A5,
         GraphXRef_Model = 0x6A6,
 
-        RowXChildRelation_Model = 0x6A7,
-        RowXParentRelation_Model = 0x6A8,
-        RowXRelatedChild_Model = 0x6A9,
-        RowXRelatedParent_Model = 0x6AA,
+        Model_6A7_ChildRelation = 0x6A7,
+        Model_6A8_ParentRelation = 0x6A8,
+        Model_6A9_RelatedChild = 0x6A9,
+        Model_6AA_RelatedParent = 0x6AA,
         //=====================================================================
         Model_6B1_ColumnList = 0x6B1,
         Model_6B2_ComputeList = 0x6B2,

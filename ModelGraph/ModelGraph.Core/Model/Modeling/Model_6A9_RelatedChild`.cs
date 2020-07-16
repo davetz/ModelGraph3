@@ -1,13 +1,13 @@
-﻿using System.Collections.Generic;
+﻿
+using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_6A1_Row : LineModel
+    public class Model_6A9_RelatedChild : LineModel
     {
         private RowX RX => Item as RowX;
-        internal Model_6A1_Row(Model_6A4_Table owner, RowX item) : base(owner, item) { }
-        internal override IdKey IdKey => IdKey.Model_6A1_Row;
-
+        internal Model_6A9_RelatedChild(Model_6A7_ChildRelation owner, RowX item) : base(owner, item) { }
+        internal override IdKey IdKey => IdKey.Model_6A9_RelatedChild;
         public override bool CanExpandLeft => true;
         public override bool CanDrag => true;
 
@@ -34,5 +34,6 @@ namespace ModelGraph.Core
             new Model_6B4_ParentRelationList(this, rx);
             return true;
         }
+
     }
 }
