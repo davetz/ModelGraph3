@@ -1,6 +1,6 @@
-﻿namespace ModelGraph.Core
-{/*
- */
+﻿
+namespace ModelGraph.Core
+{
     public class ForkedPath : Path
     {
         readonly Path Path1;
@@ -18,6 +18,8 @@
 
             owner.Add(this);
         }
+        internal Graph Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Properties/Methods  ===========================================

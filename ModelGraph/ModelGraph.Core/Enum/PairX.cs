@@ -14,7 +14,8 @@
 
             owner.Add(this);
         }
-        internal EnumX EnumX => Owner as EnumX;
+        internal EnumX Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal List<string> List => _list;
 
         #region Constructor  ==================================================
-        internal ErrorMany(StoreOf<Error> owner, Item item, IdKey idKe, string text = null)
+        internal ErrorMany(ErrorRoot owner, Item item, IdKey idKe, string text = null)
         {
             Owner = owner;
             Item = item;
@@ -18,6 +18,8 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
+        internal ErrorRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Overrides  ====================================================

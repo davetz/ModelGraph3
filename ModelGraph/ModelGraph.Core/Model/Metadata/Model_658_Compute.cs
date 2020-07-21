@@ -1,10 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_658_Compute : LineModel
+    public class Model_658_Compute : LineModelOf<ComputeX>
     {
         internal Model_658_Compute(Model_666_ComputeList owner, ComputeX item) : base(owner, item) { }
-        private ComputeX CX => Item as ComputeX;
         internal override IdKey IdKey => IdKey.Model_658_Compute;
 
         public override bool CanExpandRight => true;

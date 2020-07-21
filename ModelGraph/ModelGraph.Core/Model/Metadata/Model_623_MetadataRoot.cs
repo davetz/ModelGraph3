@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_623_MetadataRoot : LineModel
+    public class Model_623_MetadataRoot : LineModelOf<Root>
     {
-        internal Model_623_MetadataRoot(Model_612_Root owner, Item item) : base(owner, item) { }
+        internal Model_623_MetadataRoot(Model_612_Root owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_623_MetadataRoot;
         public override bool CanExpandLeft => true;
 

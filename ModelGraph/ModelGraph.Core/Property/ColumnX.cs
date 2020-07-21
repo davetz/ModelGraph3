@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         internal override State State { get; set; }
 
         #region Constructors  =================================================
-        internal ColumnX(StoreOf<ColumnX> owner, bool autoExpand = false)
+        internal ColumnX(ColumnXRoot owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;
@@ -22,6 +22,8 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
+        internal ColumnXRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

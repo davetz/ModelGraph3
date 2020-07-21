@@ -2,25 +2,22 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_624_EnumList : ListModelOf<EnumX>
+    public class Model_624_EnumList : ListModelOf<EnumXRoot,EnumX>
     {
         internal Model_624_EnumList(Model_623_MetadataRoot owner, EnumXRoot item) : base(owner, item) { }
-        private EnumXRoot EXR => Item as EnumXRoot;
         internal override IdKey IdKey => IdKey.Model_624_EnumList;
 
-        #region RequiredMethods  ==============================================
-        protected override int GetTotalCount() => EXR.Count;
-        protected override IList<EnumX> GetChildItems() => EXR.Items;
+        protected override int GetTotalCount() => Item.Count;
+        protected override IList<EnumX> GetChildItems() => Item.Items;
         protected override void CreateChildModel(EnumX childItem)
         {
             new Model_653_Enum(this, childItem);
         }
-        #endregion
 
         public override void GetButtonCommands(Root root, List<LineCommand> list)
         {
             list.Clear();
-            list.Add(new InsertCommand(this, () => ItemCreated.Record(root, new EnumX(EXR, true))));
+            list.Add(new InsertCommand(this, () => ItemCreated.Record(root, new EnumX(Item, true))));
         }
 
     }

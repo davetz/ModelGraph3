@@ -6,13 +6,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ResizingEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Resizing(StoreOf<EnumZ> owner)
+        internal Enum_Resizing(EnumRoot owner) : base(owner)
         {
-            Owner = owner;
-
             CreateChildren();
-
-            owner.Add(this);
         }
         #endregion
 

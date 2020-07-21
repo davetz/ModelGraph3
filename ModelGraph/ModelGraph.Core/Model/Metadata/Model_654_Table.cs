@@ -2,10 +2,9 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_654_Table : LineModel
+    public class Model_654_Table : LineModelOf<TableX>
     {
         internal Model_654_Table(Model_643_TableList owner, TableX item) : base(owner, item) { }
-        private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_654_Table;
 
         public override bool CanExpandLeft => true;
@@ -26,14 +25,13 @@ namespace ModelGraph.Core
         {
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
-            var tx = TX;
 
-            new Model_661_ColumnList(this, tx);
-            new Model_666_ComputeList(this, tx);
-            new Model_662_ChildRelationList(this, tx);
-            new Model_663_ParentRelatationList(this, tx);
-            new Model_673_NamePropertyRelation(this, tx);
-            new Model_674_SummaryPropertyRelation(this, tx);
+            new Model_661_ColumnList(this, Item);
+            new Model_666_ComputeList(this, Item);
+            new Model_662_ChildRelationList(this, Item);
+            new Model_663_ParentRelatationList(this, Item);
+            new Model_673_NamePropertyRelation(this, Item);
+            new Model_674_SummaryPropertyRelation(this, Item);
             return true;
         }
 

@@ -6,13 +6,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.AspectEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Aspect(StoreOf<EnumZ> owner)
+        internal Enum_Aspect(EnumRoot owner) : base(owner)
         {
-            Owner = owner;
-
             CreateChildren();
-
-            owner.Add(this);
         }
         #endregion
 

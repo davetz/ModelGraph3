@@ -47,6 +47,7 @@ namespace ModelGraph.Core
         }
         public void RegisterRelationalReferences(Root root)
         {
+            InitializeLocalReferences(root);
         }
         #endregion
 
@@ -65,6 +66,33 @@ namespace ModelGraph.Core
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.RelationRoot;
         public override string GetParentId(Root root) => GetKindId(root);
+        #endregion
+
+        #region RelationMethods  ==============================================
+        //========================================== frequently used references
+        private Relation_Store_ChildRelation Store_ChildRelation;
+        private Relation_Store_ParentRelation Store_ParentRelation;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            Store_ChildRelation = root.Get<Relation_Store_ChildRelation>();
+            Store_ParentRelation = root.Get<Relation_Store_ParentRelation>();
+        }
+        #endregion
+
+        #region GetHeadTail  ==================================================
+        internal (Store, Store) GetHeadTail()
+        {
+            Store head, tail;
+                Store_ChildRelation.TryGetParent(this, out head);
+                Store_ParentRelation.TryGetParent(this, out tail);
+
+            return (head, tail);
+        }
+
+        #endregion
+
         #endregion
     }
 }

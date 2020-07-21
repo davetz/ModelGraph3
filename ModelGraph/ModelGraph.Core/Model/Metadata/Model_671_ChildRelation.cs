@@ -1,11 +1,10 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_671_ChildRelation : LineModel
+    public class Model_671_ChildRelation : LineModelOf<Relation>
     {
         internal Model_671_ChildRelation(Model_662_ChildRelationList owner, Relation item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_671_ChildRelation;
-        private Relation RX => Item as Relation;
 
 
         public override (string, string) GetKindNameId(Root root) => Item.GetKindNameId(root);
@@ -29,11 +28,11 @@ namespace ModelGraph.Core
 
         internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
         {
-            if (dropModel.Item is TableX tx)
+            if (dropModel.GetItem() is TableX tx)
             {
                 if (doDrop)
                 {
-                    ItemLinked.Record(root, root.Get<Relation_StoreX_ParentRelation>(), tx, RX);
+                    ItemLinked.Record(root, root.Get<Relation_StoreX_ParentRelation>(), tx, Item);
                 }
                 return DropAction.Link;
             }

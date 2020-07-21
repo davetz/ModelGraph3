@@ -43,9 +43,10 @@
         #region Constructor  ==================================================
         internal Node()
         {
-            Owner = null;
             DX = DY = (byte)GraphDefault.MinNodeSize;
         }
+        internal Graph Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Booleans  =====================================================

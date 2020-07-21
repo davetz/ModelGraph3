@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_617_TextProperty : PropertyModel
+    public class Model_617_TextProperty : PropertyModelOf<Item>
     {
         internal Model_617_TextProperty(LineModel owner, Item item, Property prop) : base(owner, item, prop) { }
         internal override IdKey IdKey => IdKey.Model_617_TextProperty;

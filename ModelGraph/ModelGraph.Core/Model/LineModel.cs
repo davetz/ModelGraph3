@@ -4,31 +4,14 @@ using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public class LineModel : StoreOf<LineModel>
+    public abstract class LineModel : StoreOf<LineModel>
     {
-        public Item Item { get; protected set; }
+        internal LineModel Owner;
         private ModelFlags _modelFlags;
         public byte Depth;      // depth of tree hierarchy
 
-        public LineModel ParentModel => Owner as LineModel;
-
-        #region Constructor  ==================================================
-        internal LineModel() { }
-        internal LineModel(LineModel owner, Item item)
-        {
-            Item = item;
-            Owner = owner;
-            Depth = (byte)(owner.Depth + 1);
-
-            if( item.AutoExpandRight)
-            {
-                item.AutoExpandRight = false;
-                ExpandRight(DataRoot);
-            }
-
-            owner.CovertAdd(this);
-        }
-        #endregion
+        public LineModel ParentModel => Owner;
+        internal override Item GetOwner() => Owner;
 
         #region ModelState  ===================================================
         [Flags]
@@ -202,6 +185,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region Virtual Functions  ============================================
+        internal abstract Item GetItem();
+
         internal virtual bool UseItemIdentity => true;
 
         internal virtual bool ExpandLeft(Root root) => false;

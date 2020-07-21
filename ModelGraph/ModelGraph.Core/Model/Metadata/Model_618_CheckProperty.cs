@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_618_CheckProperty : PropertyModel
+    public class Model_618_CheckProperty : PropertyModelOf<Item>
     {
         internal Model_618_CheckProperty(LineModel owner, Item item, Property prop) : base(owner, item, prop) { }
         internal override IdKey IdKey => IdKey.Model_618_CheckProperty;

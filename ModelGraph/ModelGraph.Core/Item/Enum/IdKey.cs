@@ -448,13 +448,11 @@ namespace ModelGraph.Core
         Model_6A1_Row = 0x6A1,
         Model_6A4_Table = 0x6A4,
 
-        GraphX_Model = 0x6A5,
-        GraphXRef_Model = 0x6A6,
+        Model_6A5_Graph = 0x6A5,
+        Model_6A6_GraphList = 0x6A6,
 
         Model_6A7_ChildRelation = 0x6A7,
         Model_6A8_ParentRelation = 0x6A8,
-        Model_6A9_RelatedChild = 0x6A9,
-        Model_6AA_RelatedParent = 0x6AA,
         //=====================================================================
         Model_6B1_ColumnList = 0x6B1,
         Model_6B2_ComputeList = 0x6B2,

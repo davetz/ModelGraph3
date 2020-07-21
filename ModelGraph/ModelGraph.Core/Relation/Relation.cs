@@ -62,7 +62,7 @@ namespace ModelGraph.Core
         internal abstract List<(Item, Item)> GetChildLinkPairList();
         internal abstract List<(Item, Item)> GetParentLinkPairList();
 
-        internal abstract (Store, Store) GetHeadTail(Root root);
+        internal abstract (Store, Store) GetHeadTail();
 
         #endregion
     }

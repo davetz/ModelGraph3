@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_657_Column : LineModel
+    public class Model_657_Column : LineModelOf<ColumnX>
     {
-        internal Model_657_Column(Model_661_ColumnList owner, Item item) : base(owner, item) { }
+        internal Model_657_Column(Model_661_ColumnList owner, ColumnX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_657_Column;
         public override bool CanExpandRight => true;
         public override bool CanDrag => true;

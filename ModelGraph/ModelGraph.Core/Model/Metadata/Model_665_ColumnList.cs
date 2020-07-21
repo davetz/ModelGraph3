@@ -2,10 +2,9 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_665_ColumnList : ListModelOf<ColumnX>
+    public class Model_665_ColumnList : ListModelOf<EnumX, ColumnX>
     {
         internal Model_665_ColumnList(Model_653_Enum owner, EnumX item) : base(owner, item) { }
-        private EnumX EX => Item as EnumX;
         internal override IdKey IdKey => IdKey.Model_665_ColumnList;
 
         #region RequiredMethods  ==============================================

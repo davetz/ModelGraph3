@@ -17,6 +17,8 @@
             if (autoExpandRight) AutoExpandRight = true;
             owner.Add(this);
         }
+        internal ViewXRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

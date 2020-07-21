@@ -1,4 +1,5 @@
 ﻿
+
 namespace ModelGraph.Core
 {
     public class Enum_Contact : EnumZ
@@ -6,13 +7,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ContactEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Contact(StoreOf<EnumZ> owner)
+        internal Enum_Contact(EnumRoot owner) : base(owner)
         {
-            Owner = owner;
-
             CreateChildren();
-
-            owner.Add(this);
         }
         #endregion
 

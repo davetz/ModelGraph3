@@ -7,13 +7,10 @@ namespace ModelGraph.Core
         internal EnumZ EnumZ { get; }
         protected override Type PropetyModelType => typeof(Model_619_ComboProperty);
 
-        internal EnumPropertyOf(PropertyRoot owner, EnumZ enumZ)
+        internal EnumPropertyOf(PropertyRoot owner, EnumZ enumZ) : base(owner)
         {
-            Owner = owner;
             EnumZ = enumZ;
             Value = new StringValue(this);
-
-            owner.Add(this);
         }
 
         internal abstract int GetItemPropertyValue(Item item); //get the item's proproperty enum key value

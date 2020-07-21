@@ -6,13 +6,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.PairingEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Pairing(StoreOf<EnumZ> owner)
+        internal Enum_Pairing(EnumRoot owner) : base(owner)
         {
-            Owner = owner;
-
             CreateChildren();
-
-            owner.Add(this);
         }
         #endregion
 

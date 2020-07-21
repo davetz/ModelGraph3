@@ -2,13 +2,13 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_661_ColumnList : ListModelOf<ColumnX>
+    public class Model_661_ColumnList : ListModelOf<TableX, ColumnX>
     {
         private readonly Relation_Store_ColumnX Store_ColumnX;
 
         internal Model_661_ColumnList(Model_654_Table owner, TableX item) : base(owner, item) 
         {
-            Store_ColumnX = item.DataRoot.Get<Relation_Store_ColumnX>();
+            Store_ColumnX = item.GetRoot().Get<Relation_Store_ColumnX>();
         }
         internal override IdKey IdKey => IdKey.Model_661_ColumnList;
         internal override string GetFilterSortId(Root root) => GetNameId(root);

@@ -2,15 +2,14 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_662_ChildRelationList : ListModelOf<Relation>
+    public class Model_662_ChildRelationList : ListModelOf<TableX, Relation>
     {
         private Relation_StoreX_ChildRelation StoreX_ChildRelation;
 
         internal Model_662_ChildRelationList(Model_654_Table owner, TableX item) : base(owner, item) 
         {
-            StoreX_ChildRelation = item.DataRoot.Get<Relation_StoreX_ChildRelation>();
+            StoreX_ChildRelation = item.GetRoot().Get<Relation_StoreX_ChildRelation>();
         }
-        private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_662_ChildRelationList;
 
         #region RequiredMethods  ==============================================
@@ -33,7 +32,7 @@ namespace ModelGraph.Core
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(root, rx);
-            ItemLinked.Record(root, StoreX_ChildRelation, TX, rx);
+            ItemLinked.Record(root, StoreX_ChildRelation, Item, rx);
             ChildDelta -= 2;
         }
     }

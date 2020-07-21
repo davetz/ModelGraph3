@@ -10,13 +10,15 @@
         private string _description;
 
         #region Constructors  =================================================
-        internal TableX(StoreOf<TableX> owner, bool autoExpand = false)
+        internal TableX(TableXRoot owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;
 
             owner.Add(this);
         }
+        internal TableXRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

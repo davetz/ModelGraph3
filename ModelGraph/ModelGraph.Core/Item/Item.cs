@@ -4,8 +4,6 @@ namespace ModelGraph.Core
 {
     public abstract class Item
     {
-        internal Item Owner;        //each item has an owner, this-> owner-> ... -> dataChef
-
         private byte _flags;        //IsNew, IsDeleted, IsDiscarded, AutoExpandLeft, AutoExpandRight,..
         internal byte ModelDelta;   //incremented when a property or relation is changed
         internal byte ChildDelta;   //incremented when list of child items is changed 
@@ -38,14 +36,15 @@ namespace ModelGraph.Core
 
         public Root DataRoot => GetRoot();
         /// <summary>Walk up item tree hierachy to find the parent DataRoot</summary>
-        private Root GetRoot()
+        internal abstract Item GetOwner();
+        internal Root GetRoot()
         {
             var itm = this;
             for (int i = 0; i < 100; i++)
             {
                 if (itm is null) break;
                 if (itm is Root root) return root;
-                itm = itm.Owner;
+                itm = itm.GetOwner();
             }
             throw new Exception("GetRoot: Corrupted item hierarchy");
         }

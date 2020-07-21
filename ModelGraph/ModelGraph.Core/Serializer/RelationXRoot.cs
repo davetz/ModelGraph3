@@ -41,6 +41,8 @@ namespace ModelGraph.Core
         {
             root.RegisterChildRelation(this, root.Get<Relation_Relation_QueryX>());
             root.RegisterChildRelation(this, root.Get<Relation_Relation_ViewX>());
+
+            InitializeLocalReferences(root);
         }
 
         private Property[] GetProps(Root root) => new Property[]
@@ -128,6 +130,33 @@ namespace ModelGraph.Core
             else
                 throw new Exception($"RelationXStore ReadData, unknown format version: {fv}");
         }
+        #endregion
+
+        #region RelationMethods  ==============================================
+        //========================================== frequently used references
+        private Relation_StoreX_ChildRelation Store_ChildRelation;
+        private Relation_StoreX_ParentRelation Store_ParentRelation;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            Store_ChildRelation = root.Get<Relation_StoreX_ChildRelation>();
+            Store_ParentRelation = root.Get<Relation_StoreX_ParentRelation>();
+        }
+        #endregion
+
+        #region GetHeadTail  ==================================================
+        internal (Store, Store) GetHeadTail()
+        {
+            Store head, tail;
+            Store_ChildRelation.TryGetParent(this, out head);
+            Store_ParentRelation.TryGetParent(this, out tail);
+
+            return (head, tail);
+        }
+
+        #endregion
+
         #endregion
     }
 }

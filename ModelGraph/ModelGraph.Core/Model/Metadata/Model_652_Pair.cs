@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_652_Pair : LineModel
+    public class Model_652_Pair : LineModelOf<PairX>
     {
-        internal Model_652_Pair(Model_664_PairList owner, Item item) : base(owner, item) { }
+        internal Model_652_Pair(Model_664_PairList owner, PairX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_652_Pair;
         public override bool CanExpandRight => true;
         public override bool CanDrag => true;

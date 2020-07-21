@@ -3,13 +3,15 @@
     internal class ErrorNone : Error
     {
         #region Constructor  ==================================================
-        internal ErrorNone(StoreOf<Error> owner, Item item, IdKey idKe)
+        internal ErrorNone(ErrorRoot owner, Item item, IdKey idKe)
         {
             Owner = owner;
             Item = item;
             ErrorId = idKe;
             owner.Add(this);
         }
+        internal ErrorRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Overrides  ====================================================

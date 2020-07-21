@@ -1,10 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_653_Enum : LineModel
+    public class Model_653_Enum : LineModelOf<EnumX>
     {
         internal Model_653_Enum(Model_624_EnumList owner, EnumX item) : base(owner, item) { }
-        private EnumX EX => Item as EnumX;
         internal override IdKey IdKey => IdKey.Model_653_Enum;
 
         public override bool CanExpandLeft => true;
@@ -17,10 +16,9 @@ namespace ModelGraph.Core
         {
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
-            var ex = EX;
 
-            new Model_664_PairList(this, ex);
-            new Model_665_ColumnList(this, ex);
+            new Model_664_PairList(this, Item);
+            new Model_665_ColumnList(this, Item);
             return true;
         }
 

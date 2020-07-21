@@ -2,47 +2,18 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_644_GraphList : LineModel
+    public class Model_644_GraphList : ListModelOf<GraphXRoot, GraphX>
     {
-        internal Model_644_GraphList(Model_623_MetadataRoot owner, Item item) : base(owner, item) { }
+        internal Model_644_GraphList(Model_623_MetadataRoot owner, GraphXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_644_GraphList;
 
-        internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
+        protected override void CreateChildModel(GraphX gx)
         {
-            var viewListChange = false;
-            if (!IsExpanded) return false;
-            if (ChildDelta == Item.ChildDelta) return false;
-            ChildDelta = Item.ChildDelta;
-
-            prev.Clear();
-            foreach (var child in Items)
-            {
-                prev[child.Item] = child;
-            }
-            CovertClear();
-
-            var st = Item as GraphXRoot;
-            foreach (var gx in st.Items)
-            {
-                if (prev.TryGetValue(gx, out LineModel m))
-                {
-                    CovertAdd(m);
-                    prev.Remove(m);
-                }
-                else
-                {
-                    viewListChange = true;
-                    new Model_655_Graph(this, gx);
-                }
-            }
-
-            if (prev.Count > 0)
-            {
-                viewListChange = true;
-                foreach (var model in prev.Values) { model.Discard(); }
-            }
-
-            return viewListChange | base.Validate(root, prev);
+            new Model_655_Graph(this, gx);
         }
+
+        protected override IList<GraphX> GetChildItems() => Item.Items;
+
+        protected override int GetTotalCount() => Item.Count;
     }
 }

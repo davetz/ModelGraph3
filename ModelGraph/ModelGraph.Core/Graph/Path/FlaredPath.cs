@@ -1,4 +1,5 @@
-﻿namespace ModelGraph.Core
+﻿
+namespace ModelGraph.Core
 {
     public class FlaredPath : Path
     {
@@ -15,6 +16,8 @@
 
             owner.Add(this);
         }
+        internal Graph Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Properties/Methods  ===========================================

@@ -37,9 +37,10 @@
         #region Constructors  =================================================
         internal Edge(QueryX queryX)
         {
-            Owner = null;
             _queryX = queryX;
         }
+        internal Graph Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Properties/Methods  ===========================================

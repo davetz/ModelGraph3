@@ -6,13 +6,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.BarWidthEnum;
 
         #region Constructor  ==================================================
-        internal Enum_BarWidth(StoreOf<EnumZ> owner)
+        internal Enum_BarWidth(EnumRoot owner) : base(owner)
         {
-            Owner = owner;
-
             CreateChildren();
-
-            owner.Add(this);
         }
         #endregion
 

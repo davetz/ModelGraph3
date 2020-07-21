@@ -32,6 +32,7 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
+        QueryXRoot QR => Owner as QueryXRoot;
         #endregion
 
         #region Identity  =====================================================
@@ -40,23 +41,13 @@ namespace ModelGraph.Core
         public override string GetNameId(Root root)
         {
             string name;
+            var (head, tail) = GetHeadTail();
+            if (head is null) return InvalidItem;
+
             if (IsRoot)
-            {
-                if (root.Get<Relation_Store_QueryX>().TryGetParent(this, out Store st))
-                    name = st.GetDoubleNameId(root);
-                else
-                    name = InvalidItem;
-            }
+                name = head.GetDoubleNameId(root);
             else
-            {
-                if (root.Get<Relation_Relation_QueryX>().TryGetParent(this, out Relation re))
-                {
-                    var (head, tail) = re.GetHeadTail(root);
-                    name = $"{head.GetNameId(root)} --> {tail.GetNameId(root)}";
-                }
-                else
-                    name = InvalidItem;
-            }
+                name = $"{head.GetNameId(root)} --> {tail.GetNameId(root)}";
 
             if (HasSelect || HasWhere || IsRoot || IsHead || IsTail)
             {
@@ -75,6 +66,7 @@ namespace ModelGraph.Core
             }
             return name;
         }
+        (Store, Store) GetHeadTail() => QR.GetHeadTail(this);
 
         #region GetIdKey  =====================================================
         private IdKey GetIdKey()

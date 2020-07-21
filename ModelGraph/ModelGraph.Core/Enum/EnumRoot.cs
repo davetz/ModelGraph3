@@ -22,6 +22,8 @@
             root.RegisterPrivateItem(new Enum_SideType(this));
             root.RegisterPrivateItem(new Enum_ValueType(this));
         }
+        internal Root Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

@@ -2,15 +2,14 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_666_ComputeList : ListModelOf<ComputeX>
+    public class Model_666_ComputeList : ListModelOf<TableX, ComputeX>
     {
         private readonly Relation_Store_ComputeX Store_ComputeX;
 
         internal Model_666_ComputeList(Model_654_Table owner, TableX item) : base(owner, item) 
         {
-            Store_ComputeX = item.DataRoot.Get<Relation_Store_ComputeX>();
+            Store_ComputeX = item.GetRoot().Get<Relation_Store_ComputeX>();
         }
-        private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_666_ComputeList;
 
         public override bool CanDrag => true;
@@ -37,7 +36,7 @@ namespace ModelGraph.Core
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(root, cx);
-            ItemLinked.Record(root, Store_ComputeX, TX, cx);
+            ItemLinked.Record(root, Store_ComputeX, Item, cx);
         }
     }
 }

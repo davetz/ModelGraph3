@@ -18,7 +18,7 @@ namespace ModelGraph.Core
         internal override string Name { get => GetType().Name; set => _ = value; }
         public override string GetNameId(Root root)
         {
-            var (head, tail) = GetHeadTail(root);
+            var (head, tail) = GetHeadTail();
             var myName = Name;
             if (string.IsNullOrWhiteSpace(myName) || myName.StartsWith("?")) myName = string.Empty;
             var headName = head is null ? BlankName : head.GetNameId(root);
@@ -26,23 +26,7 @@ namespace ModelGraph.Core
 
             return $"({myName})    {headName} --> {tailName}";
         }
-
-        internal  override (Store, Store) GetHeadTail(Root root)
-        {
-            Store head, tail;
-            if (IsExternal)
-            {
-                root.Get<Relation_StoreX_ChildRelation>().TryGetParent(this, out head);
-                root.Get<Relation_StoreX_ParentRelation>().TryGetParent(this, out tail);
-            }
-            else
-            {
-                root.Get<Relation_Store_ChildRelation>().TryGetParent(this, out head);
-                root.Get<Relation_Store_ParentRelation>().TryGetParent(this, out tail);
-            }
-
-            return (head, tail);
-        }
+        internal override (Store, Store) GetHeadTail() => (Owner as IRelationRoot).GetHeadTail();
         #endregion
 
         #region Initialize  ===================================================

@@ -15,7 +15,7 @@ namespace ModelGraph.Core
         #region Constructor  ==================================================
         internal TreeModel(Root root) //========== invoked in the RootModel constructor
         {
-            Owner = Item = root;
+            Item = root;
             Depth = 254;
             ControlType = ControlType.PrimaryTree;
 
@@ -24,7 +24,7 @@ namespace ModelGraph.Core
         }
         internal TreeModel(Root root, Action<Root,TreeModel> newLineModel)
         {
-            Owner = Item = root;
+            Item = root;
             Depth = 254;
             ControlType = ControlType.PartialTree;
 

@@ -6,17 +6,6 @@ namespace ModelGraph.Core
     {
         internal Property Property;
 
-        internal PropertyModel(LineModel owner, Item item, Property prop)
-        {
-            Item = item;
-            Owner = owner;
-            Depth = (byte)(owner.Depth + 1);
-
-            owner.Add(this);
-
-            Property = prop;
-        }
-
         public bool IsReadOnly => Property.IsReadonly;
         public bool IsMultiline => Property.IsMultiline;
 

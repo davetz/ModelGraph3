@@ -36,7 +36,8 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        public GraphX GraphX => Owner as GraphX;
+        internal GraphX Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Properties/Methods  ===========================================

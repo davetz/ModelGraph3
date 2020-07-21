@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         protected override IList<RowX> GetChildItems() => RowX_RowX.TryGetChildren(Item, out IList<RowX> list) ? list : new RowX[0];
         protected override void CreateChildModel(RowX childItem)
         {
-            new Model_6A9_RelatedChild(this, childItem);
+            new Model_6A1_Row(this, childItem);
         }
         #endregion
     }

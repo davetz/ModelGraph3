@@ -20,6 +20,8 @@ namespace ModelGraph.Core
             if (autoExpandRight) AutoExpandRight = true;
             owner.Add(this);
         }
+        internal EnumXRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

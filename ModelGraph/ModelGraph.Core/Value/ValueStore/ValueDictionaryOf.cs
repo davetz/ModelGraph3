@@ -55,7 +55,7 @@ namespace ModelGraph.Core
                 return false;
             }
 
-            if (_owner.DataRoot.TryGetComputedValue(_owner, key))
+            if (_owner.GetRoot().TryGetComputedValue(_owner, key))
                 return _values.TryGetValue(key, out val);
             else
             {

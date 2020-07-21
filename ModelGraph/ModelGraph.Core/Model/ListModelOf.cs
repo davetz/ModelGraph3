@@ -4,9 +4,9 @@ using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public abstract class ListModelOf<T> : LineModel where T : Item
+    public abstract class ListModelOf<T1, T2> : LineModelOf<T1> where T1 : Item where T2 : Item
     {
-        internal ListModelOf(LineModel owner, Item item) : base(owner, item) { }
+        internal ListModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;
@@ -15,8 +15,8 @@ namespace ModelGraph.Core
 
         #region RequiredMethodes  =============================================
         protected abstract int GetTotalCount();
-        protected abstract IList<T> GetChildItems();
-        protected abstract void CreateChildModel(T childItem);
+        protected abstract IList<T2> GetChildItems();
+        protected abstract void CreateChildModel(T2 childItem);
         #endregion
 
         internal override bool ExpandLeft(Root root)
@@ -47,7 +47,7 @@ namespace ModelGraph.Core
                     prev.Clear();
                     foreach (var child in Items)
                     {
-                        prev[child.Item] = child;
+                        prev[child.GetItem()] = child;
                     }
                     CovertClear();
 
@@ -56,7 +56,7 @@ namespace ModelGraph.Core
                         if (prev.TryGetValue(itm, out LineModel m))
                         {
                             CovertAdd(m);
-                            prev.Remove(m.Item);
+                            prev.Remove(m.GetItem());
                         }
                         else
                         {

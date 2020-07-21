@@ -13,6 +13,8 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
+        internal EnumZ Owner;
+        internal override Item GetOwner() => Owner;
 
         internal int EnumKey => (int)(_idKey & IdKey.EnumMask);
     }

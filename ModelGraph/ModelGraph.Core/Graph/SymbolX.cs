@@ -20,13 +20,15 @@ namespace ModelGraph.Core
         
 
         #region Constructors  =================================================
-        public SymbolX(Store owner, bool autoExpand = false)
+        public SymbolX(SymbolXRoot owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;
 
             owner.Add(this);
         }
+        internal SymbolXRoot Owner;
+        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

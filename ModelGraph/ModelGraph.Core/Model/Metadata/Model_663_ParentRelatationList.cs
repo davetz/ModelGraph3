@@ -2,13 +2,12 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_663_ParentRelatationList : ListModelOf<Relation>
+    public class Model_663_ParentRelatationList : ListModelOf<TableX, Relation>
     {
         private Relation_StoreX_ParentRelation StoreX_ParentRelation;
-        private TableX TX => Item as TableX;
         internal Model_663_ParentRelatationList(Model_654_Table owner, TableX item) : base(owner, item) 
         {
-            StoreX_ParentRelation = item.DataRoot.Get<Relation_StoreX_ParentRelation>();
+            StoreX_ParentRelation = item.GetRoot().Get<Relation_StoreX_ParentRelation>();
         }
         internal override IdKey IdKey => IdKey.Model_663_ParentRelatationList;
         internal override string GetFilterSortId(Root root) => GetNameId(root);
@@ -33,7 +32,7 @@ namespace ModelGraph.Core
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(root, rx);
-            ItemLinked.Record(root, StoreX_ParentRelation, TX, rx);
+            ItemLinked.Record(root, StoreX_ParentRelation, Item, rx);
             ChildDelta -= 2;
         }
     }

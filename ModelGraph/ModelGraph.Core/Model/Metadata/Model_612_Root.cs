@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_612_Root : LineModel
+    public class Model_612_Root : LineModelOf<Root>
     {
         internal override IdKey IdKey => IdKey.Model_612_Root;
         public override bool CanExpandLeft => true;
