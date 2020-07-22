@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public abstract class TreeModel : LineModel, IRootModel
+    public abstract class TreeModel : LineModelOf<Root>, IRootModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
 
@@ -113,11 +113,11 @@ namespace ModelGraph.Core
                         _buffer.Refresh(Items[0], viewSize, viewSize);
                         break;
                     case ChangeType.ToggleLeft:
-                        selected.ToggleLeft(Owner as Root);
+                        selected.ToggleLeft(Item);
                         _buffer.Refresh(Items[0], viewSize, leading);
                         break;
                     case ChangeType.ToggleRight:
-                        selected.ToggleRight(Owner as Root);
+                        selected.ToggleRight(Item);
                         _buffer.Refresh(Items[0], viewSize, leading);
                         break;
                     case ChangeType.ToggleFilter:
@@ -144,7 +144,7 @@ namespace ModelGraph.Core
             var viewListChanged = false;
             foreach (var model in Items)
             {
-                viewListChanged |= model.Validate(Owner as Root, prev);
+                viewListChanged |= model.Validate(Item, prev);
             }
             if (viewListChanged) 
                 RefreshViewList(ChangeType.ViewListChanged);

@@ -1,15 +1,13 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public abstract class EnumZ : StoreOf<PairZ>
+    public abstract class EnumZ : StoreOf<EnumRoot, PairZ>
     {
         internal EnumZ (EnumRoot owner)
         {
             Owner = owner;
             owner.Add(this);
         }
-        internal EnumRoot Owner;
-        internal override Item GetOwner() => Owner;
 
         #region GetEnumKey  ==================================================
         internal int GetKey(Root root, string name)

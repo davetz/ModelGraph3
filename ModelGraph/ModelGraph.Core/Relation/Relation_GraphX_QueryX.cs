@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_GraphX_QueryX : RelationOf<GraphX,QueryX>
+    public class Relation_GraphX_QueryX : RelationOf<RelationRoot, GraphX, QueryX>
     {
         internal override IdKey IdKey => IdKey.GraphX_QueryX;
 

@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_GraphX_ColorColumnX : RelationOf<GraphX,ColumnX>
+    public class Relation_GraphX_ColorColumnX : RelationOf<RelationRoot, GraphX,ColumnX>
     {
         internal override IdKey IdKey => IdKey.GraphX_ColorColumnX;
 

@@ -4,9 +4,11 @@ using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public abstract class LineModel : StoreOf<LineModel>
+    public abstract class LineModel : ItemOf<LineModel>
     {
-        internal LineModel Owner;
+        static readonly List<LineModel> _noItems = new List<LineModel>(0);
+        virtual internal List<LineModel> Items => _noItems;
+        
         private ModelFlags _modelFlags;
         public byte Depth;      // depth of tree hierarchy
 
@@ -103,9 +105,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region CommonMethods   ===============================================
-        internal Store ItemStore => Item as Store;
+        internal Store ItemStore => GetItem() as Store;
         internal bool IsValidModel(LineModel m) => !IsInvalidModel(m);
-        internal bool IsInvalidModel(LineModel m) => IsInvalid(m) || IsInvalid(m.Item);
+        internal bool IsInvalidModel(LineModel m) => IsInvalid(m) || IsInvalid(m.GetItem());
         internal bool ToggleLeft(Root root) => IsExpandedLeft ? CollapseLeft() : ExpandLeft(root);
         internal bool ToggleRight(Root root) => IsExpandedRight ? CollapseRight() : ExpandRight(root);
 
@@ -115,7 +117,7 @@ namespace ModelGraph.Core
             IsExpandedRight = false;
             if (Count == 0) return false;
             DiscardChildren();
-            CovertClear();
+            Clear();
             return true;
         }
         protected bool CollapseRight()
@@ -130,7 +132,7 @@ namespace ModelGraph.Core
                     if (item is PropertyModel)
                     {
                         anyChange = true;
-                        CovertRemove(item);
+                        Remove(item);
                         item.Discard();
                     }
                     else
@@ -196,9 +198,9 @@ namespace ModelGraph.Core
         internal virtual bool IsItemUsed => true;
 
         public virtual int TotalCount => 0;
-        internal virtual string GetFilterSortId(Root root) => $"{Item.GetKindId(root)}{Item.GetNameId(root)}";
+        internal virtual string GetFilterSortId(Root root) => $"{GetItem().GetKindId(root)}{GetItem().GetNameId(root)}";
 
-        public byte ItemDelta => (byte)(Item.ChildDelta + Item.ModelDelta);
+        public byte ItemDelta => (byte)(GetItem().ChildDelta + GetItem().ModelDelta);
         public virtual bool CanDrag => false;
         public virtual bool CanSort => false;
         public virtual bool CanFilter => false;
@@ -228,6 +230,13 @@ namespace ModelGraph.Core
             }
             return viewListChange;
         }
+
+        internal virtual int Count => 0;
+        internal virtual void Add(LineModel child) { }
+        internal virtual void Remove(LineModel child) { }
+        internal virtual void Clear() { }
+
+        
         #endregion
     }
 }

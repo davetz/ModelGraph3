@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_Relation_ViewX : RelationOf<Relation,ViewX>
+    public class Relation_Relation_ViewX : RelationOf<RelationRoot, Relation, ViewX>
     {
         internal override IdKey IdKey => IdKey.Relation_ViewX;
 

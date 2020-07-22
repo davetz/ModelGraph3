@@ -1,10 +1,11 @@
 ﻿
+using ModelGraph.Core.Model;
+
 namespace ModelGraph.Core
 {
-    public class Model_7F4_Relation : LineModel
+    public class Model_7F4_Relation : SelectModelOf<Relation>
     {
-        internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item) { }
-        private Relation RX => Item as Relation;
+        internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item, 2) { }
         internal override IdKey IdKey => IdKey.Model_7F4_Relation;
 
         public override bool CanExpandLeft => true;
@@ -13,7 +14,7 @@ namespace ModelGraph.Core
         {
             var prop = root.Get<Property_Relation_Pairing>();
             var kind = Item.GetKindId(root);
-            var name = $"{Item.GetNameId(root)}        [{prop.GetValue(RX)}]";
+            var name = $"{Item.GetNameId(root)}        [{prop.GetValue(Item)}]";
             return (kind, name);
         }
         public override string GetSummaryId(Root root) => Item.GetSummaryId(root);
@@ -23,10 +24,9 @@ namespace ModelGraph.Core
         {
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
-            var rx = RX;
 
-            new Model_7F5_ChildList(this, rx);
-            new Model_7F6_ParentList(this, rx);
+            new Model_7F5_ChildList(this, Item);
+            new Model_7F6_ParentList(this, Item);
             return true;
         }
     }

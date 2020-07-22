@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_675_NameProperty : LineModel
+    public class Model_675_NameProperty : LineModelOf<Property>
     {
         internal Model_675_NameProperty(Model_673_NamePropertyRelation owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_675_NameProperty;
@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         private void RemoveNameProperty(Root root)
         {
             var pm = Owner as LineModel;
-            var tx = pm.Item;
+            var tx = pm.GetItem();
             pm.ChildDelta++;
             ItemUnLinked.Record(root, root.Get<Relation_Store_NameProperty>(), tx, Item);
         }

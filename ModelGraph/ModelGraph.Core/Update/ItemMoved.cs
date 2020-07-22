@@ -37,7 +37,7 @@
         internal override void Undo()
         {
             var item = Item;
-            var store = item.Owner as Store;
+            var store = item.GetOwner() as Store;
             store.Move(item, Index1);
             IsUndone = true;
         }
@@ -45,7 +45,7 @@
         internal override void Redo()
         {
             var item = Item;
-            var store = item.Owner as Store;
+            var store = item.GetOwner() as Store;
             store.Move(item, Index2);
             IsUndone = false;
         }

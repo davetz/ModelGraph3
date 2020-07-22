@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public abstract class RelationOf<T1, T2> : Relation where T1 : Item where T2 : Item
+    public abstract class RelationOf<T0, T1, T2> : Relation where T0 : Item where T1 : Item where T2 : Item
     {
         static ArgumentException _invalidPairingException = new ArgumentException("Invalid Pairing");
 
@@ -11,6 +11,8 @@ namespace ModelGraph.Core
         private MapToOne<T2> _children1;
         private MapToMany<T1> _parents2;
         private MapToMany<T2> _children2;
+        internal T0 Owner;
+        internal override Item GetOwner() => Owner;
 
         override internal bool IsValidParentChild(Item parentItem, Item childItem) { return (parentItem is T1 && childItem is T2); }
 

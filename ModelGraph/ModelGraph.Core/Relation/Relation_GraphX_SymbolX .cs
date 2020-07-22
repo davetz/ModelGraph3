@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_GraphX_SymbolX : RelationOf<GraphX,SymbolX>
+    public class Relation_GraphX_SymbolX : RelationOf<RelationRoot, GraphX, SymbolX>
     {
         internal override IdKey IdKey => IdKey.GraphX_SymbolX;
 

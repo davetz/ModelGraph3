@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_6B1_ColumnList : ListModelOf<ColumnX>
+    public class Model_6B1_ColumnList : ListModelOf<RowX, ColumnX>
     {
         private readonly Relation_Store_ColumnX Store_ColumnX;
 

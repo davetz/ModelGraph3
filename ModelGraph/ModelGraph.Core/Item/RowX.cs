@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class RowX : Item
+    public class RowX : ItemOf<TableX>
     {
         #region Constructors  =================================================
         internal RowX(TableX owner, bool autoExpand = false)
@@ -10,8 +10,6 @@
 
             owner.Add(this);
         }
-        internal TableX Owner;
-        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

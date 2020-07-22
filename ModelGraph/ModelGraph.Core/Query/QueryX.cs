@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class QueryX : Item
+    public class QueryX : ItemOf<QueryXRoot>
     {
         internal WhereSelect Where;
         internal WhereSelect Select;

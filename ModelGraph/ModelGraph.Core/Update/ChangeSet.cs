@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ChangeSet : StoreOf<ItemChange>
+    public class ChangeSet : StoreOf<ChangeRoot, ItemChange>
     {
         private static int SequenceCount;
         internal DateTime DateTime;

@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_676_SummaryProperty : LineModel
+    public class Model_676_SummaryProperty : LineModelOf<Property>
     {
         internal Model_676_SummaryProperty(Model_674_SummaryPropertyRelation owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_676_SummaryProperty;
@@ -15,10 +15,8 @@ namespace ModelGraph.Core
         }
         private void RemoveSummaryProperty(Root root)
         {
-            var pm = Owner as LineModel;
-            var tx = pm.Item;
-            pm.ChildDelta++;
-            ItemUnLinked.Record(root, root.Get<Relation_Store_SummaryProperty>(), tx, Item);
+            Owner.ChildDelta++;
+            ItemUnLinked.Record(root, root.Get<Relation_Store_SummaryProperty>(), Owner.GetItem(), Item);
         }
     }
 }

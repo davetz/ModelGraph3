@@ -161,7 +161,7 @@ namespace ModelGraph.Core
             if (!relation_Store_ChildRelation.TryGetChildren(tx1, out IList<Relation> relations)) return false;
             foreach (var re in relations)
             {
-                var rx = re as RelationOf<RowX, RowX>;
+                var rx = re as RelationOf<TableX, RowX, RowX>;
                 if (!relation_Store_ParentRelation.TryGetParent(rx, out Store tx)) return false;
                 if (tx == tx2)
                 {

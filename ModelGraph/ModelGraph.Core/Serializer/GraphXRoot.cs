@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class GraphXRoot : ExternalRoot<GraphX>, ISerializer, IPrimeRoot
+    public class GraphXRoot : ExternalRoot<Root, GraphX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("48C7FA8C-88F1-4203-8E54-3255C1F8C528");
         static byte _formatVersion = 1;
@@ -132,20 +133,30 @@ namespace ModelGraph.Core
 
         #region GraphXMethods  ================================================
         //========================================== frequently used references
-        private Relation_QueryX_QueryX QueryX_QueryX;
-        private Relation_GraphX_QueryX GraphX_QueryX;
-        private Relation_Store_ColumnX Store_ColumnX;
-        private Relation_Relation_QueryX Relation_QueryX;
-        private Relation_GraphX_ColorColumnX GraphX_ColorColumnX;
+        private QueryXRoot _queryXRoot;
+        private DummyItem _dummyItem;
+        private DummyQueryX _dummyQueryX;
+
+        private Relation_QueryX_QueryX _relation_QueryX_QueryX;
+        private Relation_GraphX_QueryX _relation_GraphX_QueryX;
+        private Relation_GraphX_SymbolX _relation_GraphX_SymbolX;
+        private Relation_Store_ColumnX _relation_Store_ColumnX;
+        private Relation_Relation_QueryX _relation_Relation_QueryX;
+        private Relation_GraphX_ColorColumnX _relation_GraphX_ColorColumnX;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();
-            GraphX_QueryX = root.Get<Relation_GraphX_QueryX>();
-            Store_ColumnX = root.Get<Relation_Store_ColumnX>();
-            Relation_QueryX = root.Get<Relation_Relation_QueryX>();
-            GraphX_ColorColumnX = root.Get<Relation_GraphX_ColorColumnX>();
+            _queryXRoot = root.Get<QueryXRoot>();
+            _dummyItem = root.Get<DummyItem>();
+            _dummyQueryX = root.Get<DummyQueryX>();
+
+            _relation_QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();
+            _relation_GraphX_QueryX = root.Get<Relation_GraphX_QueryX>();
+            _relation_GraphX_SymbolX = root.Get<Relation_GraphX_SymbolX>();
+            _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
+            _relation_Relation_QueryX = root.Get<Relation_Relation_QueryX>();
+            _relation_GraphX_ColorColumnX = root.Get<Relation_GraphX_ColorColumnX>();
         }
         #endregion
 
@@ -153,12 +164,10 @@ namespace ModelGraph.Core
         // Ensure all edges and nodes have parameters.
         bool ValidateGraphParms(Graph g)
         {
-            var dummyItemRef = Get<DummyItem>();
-            var dummyQueryXRef = Get<DummyQueryX>();
-            var GraphX_SymbolX = Get<Relation_GraphX_SymbolX>();
+            var GraphX_SymbolX = _relation_GraphX_SymbolX;
 
-            var gx = g.GraphX;
-            var rt = (g.SeedItem == null) ? dummyItemRef : g.SeedItem;
+            var gx = g.Owner;
+            var rt = (g.SeedItem == null) ? _dummyItem : g.SeedItem;
             var anyChange = false;
 
             #region Build validPathPairs dictionary  ==========================
@@ -201,7 +210,7 @@ namespace ModelGraph.Core
                 foreach (var e1 in qxParams)
                 {
                     List<NodeEdge> invalidParams = null;
-                    if (e1.Key == dummyQueryXRef)
+                    if (e1.Key == _dummyQueryX)
                     {
 
                         foreach (var pm in e1.Value)
@@ -279,13 +288,13 @@ namespace ModelGraph.Core
 
                 #region Add new QxParams  =====================================
 
-                if (!qxParams.TryGetValue(dummyQueryXRef, out List<NodeEdge> parmList))
+                if (!qxParams.TryGetValue(_dummyQueryX, out List<NodeEdge> parmList))
                 {
                     // there weren't any existing node parms,
                     // so create all new ones
                     anyChange = true;
                     parmList = new List<NodeEdge>(g.NodeItems.Count);
-                    qxParams.Add(dummyQueryXRef, parmList);
+                    qxParams.Add(_dummyQueryX, parmList);
                     foreach (var item in g.NodeItems)
                     {
                         Node node1 = new Node
@@ -330,7 +339,7 @@ namespace ModelGraph.Core
                 foreach (var e1 in validPathPairs)
                 {
                     // skip over the nodes, they are already done
-                    if (e1.Key == dummyQueryXRef) continue;
+                    if (e1.Key == _dummyQueryX) continue;
 
                     if (!qxParams.TryGetValue(e1.Key, out List<NodeEdge> paramList))
                     {
@@ -519,9 +528,9 @@ namespace ModelGraph.Core
         internal bool RefreshGraphX(QueryX qx)
         {
             var qr = qx;
-            while (QueryX_QueryX.TryGetParent(qr, out qx)) { qr = qx; }
+            while (_relation_QueryX_QueryX.TryGetParent(qr, out qx)) { qr = qx; }
 
-            if (GraphX_QueryX.TryGetParent(qr, out GraphX gx))
+            if (_relation_GraphX_QueryX.TryGetParent(qr, out GraphX gx))
                 RefreshGraphX(gx);
 
             return true;
@@ -533,7 +542,7 @@ namespace ModelGraph.Core
             gx.Color.Reset();
             gx.NodeOwners.Clear();
 
-            if (GraphX_ColorColumnX.TryGetChild(gx, out ColumnX cx) && Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
+            if (_relation_GraphX_ColorColumnX.TryGetChild(gx, out ColumnX cx) && _relation_Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
             {
                 var items = tx.GetItems();
                 foreach (var item in items)
@@ -542,7 +551,7 @@ namespace ModelGraph.Core
                 }
             }
 
-            if (GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> qxList))
+            if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> qxList))
             {
                 var workQueue = new Queue<QueryX>(qxList);
                 while (workQueue.Count > 0)
@@ -552,7 +561,7 @@ namespace ModelGraph.Core
                     {
                         gx.Color.BuildARGBList(qx.PathParm.LineColor);
                     }
-                    if (QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> qcList))
+                    if (_relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> qcList))
                     {
                         foreach (var qc in qcList)
                         {
@@ -561,13 +570,13 @@ namespace ModelGraph.Core
                     }
                     if (qx.QueryKind == QueryType.Path && qx.IsHead)
                     {
-                        GetHeadTail(qx, out Store head, out Store t);
+                        var (head, _) = qx.Owner.GetHeadTail(qx);
                         gx.NodeOwners.Add(head);
 
                         var qt = qx;
-                        while (QueryX_QueryX.TryGetChild(qt, out QueryX qn)) { qt = qn; }
+                        while (_relation_QueryX_QueryX.TryGetChild(qt, out QueryX qn)) { qt = qn; }
 
-                        GetHeadTail(qt, out Store h, out Store tail);
+                        var (_, tail) = qt.Owner.GetHeadTail(qt);
                         gx.NodeOwners.Add(tail);
                     }
                 }
@@ -587,11 +596,11 @@ namespace ModelGraph.Core
 
         private void RefreshGraph(Graph g)
         {
-            var gx = g.GraphX;
+            var gx = g.Owner;
             var rt = g.SeedItem;
 
             g.Reset();
-            TryGetForest(g, rt, gx.NodeOwners);
+            _queryXRoot.TryGetForest(g, rt, gx.NodeOwners);
             var anyChange = ValidateGraphParms(g);
 
             TryCreateQueryPaths(g);
@@ -608,18 +617,15 @@ namespace ModelGraph.Core
         #region AssignNodeColor  ==============================================
         private void AssignNodeColor(Graph g)
         {
-            var GraphX_ColorColumnX = Get<Relation_GraphX_ColorColumnX>();
-            var Store_ColumnX = Get<Relation_Store_ColumnX>();
-
             var group_Color = new Dictionary<Item, byte>();
             var item_group = new Dictionary<Item, Item>();
 
-            if (GraphX_ColorColumnX.TryGetChild(g.GraphX, out ColumnX cx) && Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
+            if (_relation_GraphX_ColorColumnX.TryGetChild(g.Owner, out ColumnX cx) && _relation_Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
             {
                 var items = tx.GetItems();
                 foreach (var gp in items)
                 {
-                    group_Color[gp] = g.GraphX.Color.ColorIndex(cx.Value.GetString(gp));
+                    group_Color[gp] = g.Owner.Color.ColorIndex(cx.Value.GetString(gp));
                 }
 
                 foreach (var (q1, q2) in g.GroupQuerys)
@@ -644,7 +650,7 @@ namespace ModelGraph.Core
         {
             foreach (var eg in g.Edges)
             {
-                eg.LineColor = (eg.QueryX.PathParm != null) ? g.GraphX.Color.ColorIndex(eg.QueryX.PathParm.LineColor) : (byte)0;
+                eg.LineColor = (eg.QueryX.PathParm != null) ? g.Owner.Color.ColorIndex(eg.QueryX.PathParm.LineColor) : (byte)0;
             }
         }
         #endregion

@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class EnumRoot : StoreOf<EnumZ>
+    public class EnumRoot : StoreOf<Root, EnumZ>
     {
         #region Constructors  =================================================
         internal EnumRoot(Root root)
@@ -22,8 +22,6 @@
             root.RegisterPrivateItem(new Enum_SideType(this));
             root.RegisterPrivateItem(new Enum_ValueType(this));
         }
-        internal Root Owner;
-        internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================

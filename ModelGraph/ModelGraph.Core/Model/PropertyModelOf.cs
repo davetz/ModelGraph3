@@ -14,7 +14,7 @@ namespace ModelGraph.Core
 
             Depth = (byte)(owner.Depth + 1);
 
-            owner.CovertAdd(this);
+            owner.Add(this);
         }
     }
 }

@@ -66,7 +66,7 @@ namespace ModelGraph.Core
         static internal Value Create(ValType type, int capacity = 0, string defaultValue = null)
         {
             int index = (int)type;
-            return (index < _valCreate.Length) ? _valCreate[index](capacity, defaultValue) : Root.ValuesInvalid; 
+            return (index < _valCreate.Length) ? _valCreate[index](capacity, defaultValue) : ComputeXRoot.ValuesInvalid; 
         }
         static Func<int, string, Value>[] _valCreate = new Func<int, string, Value>[]
         {

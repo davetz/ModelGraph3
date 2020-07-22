@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_Store_SummaryProperty : RelationOf<Store,Property>
+    public class Relation_Store_SummaryProperty : RelationOf<RelationRoot, Store, Property>
     {
         internal override IdKey IdKey => IdKey.Store_SummaryProperty;
 

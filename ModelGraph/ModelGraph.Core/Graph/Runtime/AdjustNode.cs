@@ -41,7 +41,7 @@ namespace ModelGraph.Core
             }
             #endregion
 
-            var gx = node.Graph.GraphX;
+            var gx = node.Graph.Owner;
             var tpSkew = gx.TerminalSkew;
             var tmLen = gx.TerminalLength;
             var tmSpc = gx.TerminalSpacing / 2f;

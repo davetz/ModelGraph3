@@ -440,7 +440,7 @@ namespace ModelGraph.Core
            {
                 TakeSnapshot();
 
-                var tmLen = Graph.GraphX.TerminalLength + 4;
+                var tmLen = Graph.Owner.TerminalLength + 4;
                 var nodes = new List<Node>(Nodes);
                 if (IsVertical())
                 {

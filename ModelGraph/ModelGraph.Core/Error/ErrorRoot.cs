@@ -1,6 +1,8 @@
-﻿namespace ModelGraph.Core
+﻿using System.Collections.Generic;
+
+namespace ModelGraph.Core
 {
-    public class ErrorRoot : StoreOf<Error>
+    public class ErrorRoot : StoreOf<Root, Error>
     {
         #region Constructors  =================================================
         internal ErrorRoot(Root root)
@@ -133,29 +135,27 @@
         internal void ClearError(Item item, Error error)
         {
             if (error.IsErrorAux) throw new System.Exception("Corrupt Error Hierarcy");
-            Get<ErrorRoot>().Remove(error);
+            Remove(error);
             _itemError.Remove(item);
             item.ErrorDelta++;
         }
         internal void ClearError(Item item, Item aux1, Error error)
         {
             if (!error.IsErrorAux1) throw new System.Exception("Corrupt Error Hierarcy");
-            Get<ErrorRoot>().Remove(error);
+            Remove(error);
             _itemErrorAux1.Remove((item, aux1));
             item.ErrorDelta++;
         }
         internal void ClearError(Item item, Item aux1, Item aux2, Error error)
         {
             if (!error.IsErrorAux1) throw new System.Exception("Corrupt Error Hierarcy");
-            Get<ErrorRoot>().Remove(error);
+            Remove(error);
             _itemErrorAux2.Remove((item, aux1, aux2));
             item.ErrorDelta++;
         }
 
         internal void ClearErrors(HashSet<IdKey> traits)
         {
-            var storeOf_Error = Get<ErrorRoot>();
-
             var removeError = new Dictionary<Item, Error>();
             var removeErrorAux1 = new Dictionary<(Item, Item), Error>();
             var removeErrorAux2 = new Dictionary<(Item, Item, Item), Error>();
@@ -175,19 +175,19 @@
             foreach (var e in removeError)
             {
                 _itemError.Remove(e.Key);
-                storeOf_Error.Remove(e.Value);
+                Remove(e.Value);
                 e.Value.Item.ErrorDelta++;
             }
             foreach (var e in removeErrorAux1)
             {
                 _itemErrorAux1.Remove(e.Key);
-                storeOf_Error.Remove(e.Value);
+                Remove(e.Value);
                 e.Value.Item.ErrorDelta++;
             }
             foreach (var e in removeErrorAux2)
             {
                 _itemErrorAux2.Remove(e.Key);
-                storeOf_Error.Remove(e.Value);
+                Remove(e.Value);
                 e.Value.Item.ErrorDelta++;
             }
         }
@@ -207,7 +207,7 @@
 
                 ClearError(item, prevError);
             }
-            return AddError(item, new ErrorNone(Get<ErrorRoot>(), item, idKe));
+            return AddError(item, new ErrorNone(this, item, idKe));
         }
         internal ErrorNoneAux TryAddErrorNone(Item item, Item aux1, IdKey idKe)
         {
@@ -222,7 +222,7 @@
 
                 ClearError(item, aux1, prevError);
             }
-            return AddError(item, aux1, new ErrorNoneAux(Get<ErrorRoot>(), item, aux1, idKe));
+            return AddError(item, aux1, new ErrorNoneAux(this, item, aux1, idKe));
         }
         internal ErrorNoneAux2 TryAddErrorNone(Item item, Item aux1, Item aux2, IdKey idKe)
         {
@@ -237,7 +237,7 @@
 
                 ClearError(item, aux1, aux2, prevError);
             }
-            return AddError(item, aux1, aux2, new ErrorNoneAux2(Get<ErrorRoot>(), item, aux1, aux2, idKe));
+            return AddError(item, aux1, aux2, new ErrorNoneAux2(this, item, aux1, aux2, idKe));
         }
 
         internal ErrorOne TryAddErrorOne(Item item, IdKey idKe, string text = null)
@@ -253,7 +253,7 @@
 
                 ClearError(item, prevError);
             }
-            return AddError(item, new ErrorOne(Get<ErrorRoot>(), item, idKe, text));
+            return AddError(item, new ErrorOne(this, item, idKe, text));
         }
         internal ErrorOneAux TryAddErrorOne(Item item, Item aux1, IdKey idKe, string text = null)
         {
@@ -268,7 +268,7 @@
 
                 ClearError(item, aux1, prevError);
             }
-            return AddError(item, aux1, new ErrorOneAux(Get<ErrorRoot>(), item, aux1, idKe, text));
+            return AddError(item, aux1, new ErrorOneAux(this, item, aux1, idKe, text));
         }
         internal ErrorOneAux2 TryAddErrorOne(Item item, Item aux1, Item aux2, IdKey idKe, string text = null)
         {
@@ -283,7 +283,7 @@
 
                 ClearError(item, aux1, aux2, prevError);
             }
-            return AddError(item, aux1, aux2, new ErrorOneAux2(Get<ErrorRoot>(), item, aux1, aux2, idKe, text));
+            return AddError(item, aux1, aux2, new ErrorOneAux2(this, item, aux1, aux2, idKe, text));
         }
 
         internal ErrorMany TryAddErrorMany(Item item, IdKey idKe, string text = null)
@@ -299,7 +299,7 @@
 
                 ClearError(item, prevError);
             }
-            return AddError(item, new ErrorMany(Get<ErrorRoot>(), item, idKe, text));
+            return AddError(item, new ErrorMany(this, item, idKe, text));
         }
         internal ErrorManyAux TryAddErrorMany(Item item, Item aux1, IdKey idKe, string text = null)
         {
@@ -314,7 +314,7 @@
 
                 ClearError(item, aux1, prevError);
             }
-            return AddError(item, aux1, new ErrorManyAux(Get<ErrorRoot>(), item, aux1, idKe, text));
+            return AddError(item, aux1, new ErrorManyAux(this, item, aux1, idKe, text));
         }
         internal ErrorManyAux2 TryAddErrorMany(Item item, Item aux1, Item aux2, IdKey idKe, string text = null)
         {
@@ -329,7 +329,7 @@
 
                 ClearError(item, aux1, aux2, prevError);
             }
-            return AddError(item, aux1, aux2, new ErrorManyAux2(Get<ErrorRoot>(), item, aux1, aux2, idKe, text));
+            return AddError(item, aux1, aux2, new ErrorManyAux2(this, item, aux1, aux2, idKe, text));
         }
         #endregion
 

@@ -1,11 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using ModelGraph.Core.Model;
+using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_6A1_Row : LineModel
+    public class Model_6A1_Row : SelectModelOf<RowX>
     {
-        private RowX RX => Item as RowX;
-        internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item) { }
+        internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item, 4) { }
         internal override IdKey IdKey => IdKey.Model_6A1_Row;
 
         public override bool CanExpandLeft => true;
@@ -26,12 +26,11 @@ namespace ModelGraph.Core
         {
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
-            var rx = RX;
 
-            new Model_6B1_ColumnList(this, rx);
-            new Model_6B2_ComputeList(this, rx);
-            new Model_6B3_ChildRelationList(this, rx);
-            new Model_6B4_ParentRelationList(this, rx);
+            new Model_6B1_ColumnList(this, Item);
+            new Model_6B2_ComputeList(this, Item);
+            new Model_6B3_ChildRelationList(this, Item);
+            new Model_6B4_ParentRelationList(this, Item);
             return true;
         }
     }

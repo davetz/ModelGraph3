@@ -4,7 +4,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class RelationXRoot : ExternalRoot<Relation>, ISerializer, IPrimeRoot, IRelationRoot
+    public class RelationXRoot : ExternalRoot<Root, Relation>, ISerializer, IPrimeRoot, IRelationRoot
     {
         static Guid _serializerGuid = new Guid("D950F508-B774-4838-B81A-757EFDC40518");
         static byte _formatVersion = 1;
@@ -146,7 +146,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetHeadTail  ==================================================
-        internal (Store, Store) GetHeadTail()
+        public (Store, Store) GetHeadTail()
         {
             Store head, tail;
             Store_ChildRelation.TryGetParent(this, out head);

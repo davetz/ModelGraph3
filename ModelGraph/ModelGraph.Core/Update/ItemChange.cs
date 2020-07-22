@@ -1,7 +1,9 @@
 ﻿
+using System;
+
 namespace ModelGraph.Core
 {
-    public abstract class ItemChange : Item
+    public abstract class ItemChange : ItemOf<ChangeSet>
     {
         internal string _name;
         internal override string Name { get => _name; }
@@ -21,6 +23,16 @@ namespace ModelGraph.Core
         {
             Owner.ModelDelta++;
             Owner.Owner.ModelDelta++;
+        }
+
+        internal void Reparent(ChangeSet newOwner, bool insert = false)
+        {
+            Owner.Remove(this);
+            if (insert)
+                newOwner.Insert(this, 0);
+            else
+                newOwner.Add(this);
+            Owner = newOwner;
         }
     }
 }

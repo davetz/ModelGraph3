@@ -26,7 +26,7 @@
             var cs = root.Get<ChangeRoot>().ChangeSet;
 
             string name = item.GetChangeLogId(root);
-            var store = item.Owner as Store;
+            var store = item.GetOwner() as Store;
 
             new ItemCreated(cs, item, store.IndexOf(item), name);
         }
@@ -37,7 +37,7 @@
         {
             var item = Item;
 
-            var store = item.Owner as Store;
+            var store = item.GetOwner() as Store;
             store.Remove(item);
             IsUndone = true;
         }
@@ -46,7 +46,7 @@
             var item = Item;
             var index = AtIndex;
 
-            var store = item.Owner as Store;
+            var store = item.GetOwner() as Store;
             store.Insert(item, index);
             IsUndone = false;
         }

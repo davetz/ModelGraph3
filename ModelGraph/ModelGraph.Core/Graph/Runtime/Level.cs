@@ -2,9 +2,8 @@
 using System.Collections.Generic;
 
 namespace ModelGraph.Core
-{/*
- */
-    public class Level : Item
+{
+    public class Level : ItemOf<Graph>
     {
         internal List<Path> Paths = new List<Path>();
         internal override IdKey IdKey => IdKey.Level;

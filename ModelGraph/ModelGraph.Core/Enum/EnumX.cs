@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class EnumX : StoreOf<PairX>
+    public class EnumX : StoreOf<EnumXRoot, PairX>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;

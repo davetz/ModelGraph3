@@ -32,7 +32,7 @@ namespace ModelGraph.Core
         internal ComputeStep(StepType stepType)
         {
             StepType = stepType;
-            Evaluate = Root.LiteralUnresolved;
+            Evaluate = ComputeXRoot.LiteralUnresolved;
         }
         #endregion
 

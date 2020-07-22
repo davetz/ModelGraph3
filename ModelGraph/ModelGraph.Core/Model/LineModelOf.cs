@@ -9,6 +9,8 @@ namespace ModelGraph.Core
         internal T Item;
         internal override Item GetItem() => Item;
 
+        internal LineModelOf() { }
+
         internal LineModelOf(LineModel owner, T item)
         {
             Item = item;
@@ -18,10 +20,10 @@ namespace ModelGraph.Core
             if (item.AutoExpandRight)
             {
                 item.AutoExpandRight = false;
-                ExpandRight(DataRoot);
+                ExpandRight(item.GetRoot());
             }
 
-            owner.CovertAdd(this);
+            owner.Add(this);
         }
     }
 }

@@ -6,6 +6,13 @@ namespace ModelGraph.Core
 {
     public abstract class ListModelOf<T1, T2> : LineModelOf<T1> where T1 : Item where T2 : Item
     {
+        private List<LineModel> _items = new List<LineModel>();
+        internal override List<LineModel> Items => _items;
+        internal override int Count => _items.Count;
+        internal override void Add(LineModel child) => _items.Add(child);
+        internal override void Remove(LineModel child) => _items.Remove(child);
+        internal override void Clear() => _items.Clear();
+
         internal ListModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
@@ -49,13 +56,13 @@ namespace ModelGraph.Core
                     {
                         prev[child.GetItem()] = child;
                     }
-                    CovertClear();
+                    Clear();
 
                     foreach (var itm in GetChildItems())
                     {
                         if (prev.TryGetValue(itm, out LineModel m))
                         {
-                            CovertAdd(m);
+                            Add(m);
                             prev.Remove(m.GetItem());
                         }
                         else

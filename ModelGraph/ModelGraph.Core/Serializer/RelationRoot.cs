@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class RelationRoot : InternalRoot<Relation>, IPrimeRoot, IRelationRoot
+    public class RelationRoot : InternalRoot<Root, Relation>, IPrimeRoot, IRelationRoot
     {
         internal RelationRoot(Root root)
         {
@@ -82,7 +82,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetHeadTail  ==================================================
-        internal (Store, Store) GetHeadTail()
+        public (Store, Store) GetHeadTail()
         {
             Store head, tail;
                 Store_ChildRelation.TryGetParent(this, out head);

@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
 
-    public abstract class LineCommand : Item
+    public abstract class LineCommand : ItemOf<LineModel>
     {
         internal Action Action { get; }
 
@@ -14,13 +14,12 @@ namespace ModelGraph.Core
         }
         public void Execute() 
         {
-            if (IsValid(Owner))
+            if (IsValid(GetOwner()))
                 DataRoot.PostCommand(this);
             if (IsInsertCommand)
             {
-                var model = Owner as LineModel;
-                model.AutoExpandLeft = true;
-                model.ChildDelta -= 2;
+                Owner.AutoExpandLeft = true;
+                Owner.ChildDelta -= 2;
             }
         }
 

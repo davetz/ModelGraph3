@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_Item_Error : RelationOf<Item,Error>
+    public class Relation_Item_Error : RelationOf<RelationRoot, Item, Error>
     {
         internal override IdKey IdKey => IdKey.Item_Error;
 

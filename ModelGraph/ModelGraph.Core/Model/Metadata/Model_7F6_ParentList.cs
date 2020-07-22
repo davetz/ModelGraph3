@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_7F6_ParentList : LineModel
+    public class Model_7F6_ParentList : LineModelOf<Relation>
     {
         internal Model_7F6_ParentList(Model_7F4_Relation owner, Relation item) : base(owner, item) { }
         private Relation RX => Item as Relation;
@@ -49,7 +49,7 @@ namespace ModelGraph.Core
                         var pc = child as Model_7F8_ChildParent;
                         prev2[pc.ItemPair] = pc;
                     }
-                    CovertClear();
+                    Clear();
 
                     if (TotalCount > 0)
                     {
@@ -58,8 +58,8 @@ namespace ModelGraph.Core
 
                             if (prev2.TryGetValue(pair, out LineModel m))
                             {
-                                CovertAdd(m);
-                                prev.Remove(m.Item);
+                                Add(m);
+                                prev.Remove(m.GetItem());
                             }
                             else
                             {

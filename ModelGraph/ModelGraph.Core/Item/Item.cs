@@ -21,7 +21,7 @@ namespace ModelGraph.Core
 
         public virtual string GetKindId(Root root = null) => root is null ? GetRoot().GetKindId(IdKey) : root.GetKindId(IdKey);
         public virtual string GetNameId(Root root = null) { var name = root is null ? GetRoot().GetNameId(IdKey) : root.GetNameId(IdKey); return string.IsNullOrWhiteSpace(name) ? GetIndexId() : name; }
-        public virtual string GetParentId(Root root = null) => Owner.GetNameId(root);
+        public virtual string GetParentId(Root root = null) => GetOwner().GetNameId(root);
         public virtual string GetDoubleNameId(Root root = null) => $"{GetParentId(root)} : {GetNameId(root)}";
         public virtual string GetChangeLogId(Root root = null) => GetDoubleNameId(root);
         public virtual (string, string) GetKindNameId(Root root = null) => (GetKindId(root), GetNameId(root));
@@ -115,28 +115,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Property/Methods ==============================================
-        internal int Index => (Owner is Store st) ? st.IndexOf(this) : -1;
+        internal int Index => (GetOwner() is Store st) ? st.IndexOf(this) : -1;
 
-        internal void Reparent(Store newOwner, bool insert = false)
-        {
-            if (newOwner.IsValidOwnerOf(this))
-            {
-                if (Owner is Store st && st.Remove(this))
-                {
-                    if (insert)
-                        newOwner.Insert(this, 0);
-                    else
-                        newOwner.Add(this);
-                    Owner = newOwner;
-                }
-                else
-                    throw new ArgumentException($"Item.Reparent() - old Owner does not contain {this}");
-            }
-            else
-                throw new ArgumentException($"Item.Reparent() - Attempted repairented of invalid child type {this}");
-        }
-
-        internal Store Store => Owner as Store;
+        internal Store Store => GetOwner() as Store;
 
         internal bool IsValid(Item itm) => !IsInvalid(itm);
         internal bool IsInvalid(Item itm)
@@ -146,7 +127,7 @@ namespace ModelGraph.Core
                 if (itm is null) return true;
                 if (itm.IsUnsable) return true;
                 if (itm is Root) return false;
-                itm = itm.Owner;
+                itm = itm.GetOwner();
             }
             return true;
         }

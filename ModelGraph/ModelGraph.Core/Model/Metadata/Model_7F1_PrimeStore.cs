@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_7F1_PrimeStore : ListModelOf<Item>
+    public class Model_7F1_PrimeStore : ListModelOf<Store, Item>
     {
         internal Model_7F1_PrimeStore(Model_7F0_Root owner, Store item) : base(owner, item) { }
         private Store ST => Item as Store;

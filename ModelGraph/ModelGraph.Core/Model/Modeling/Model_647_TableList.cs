@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_647_TableList : ListModelOf<TableX>
+    public class Model_647_TableList : ListModelOf<TableXRoot, TableX>
     {
         internal Model_647_TableList(Model_624_ModelingRoot owner, TableXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_647_TableList;

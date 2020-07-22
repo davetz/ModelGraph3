@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_ComputeX_QueryX : RelationOf<ComputeX,QueryX>
+    public class Relation_ComputeX_QueryX : RelationOf<RelationRoot, ComputeX, QueryX>
     {
         internal override IdKey IdKey => IdKey.ComputeX_QueryX;
 

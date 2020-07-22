@@ -6,12 +6,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ValueXValueTypeProperty;
         internal override bool IsReadonly => true;
 
-        internal Property_QueryX_ValueType(PropertyRoot owner)
+        internal Property_QueryX_ValueType(PropertyRoot owner) : base(owner)
         {
-            Owner = owner;
             Value = new StringValue(this);
-
-            owner.Add(this);
         }
 
         internal override string GetValue(Item item) { var root = DataRoot; return root.Get<Enum_ValueType>().GetEnumValueName(root, (int)root.GetValueType(Cast(item))); }

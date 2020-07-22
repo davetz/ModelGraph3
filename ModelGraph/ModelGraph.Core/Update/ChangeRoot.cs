@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ChangeRoot : StoreOf<ChangeSet>
+    public class ChangeRoot : StoreOf<Root, ChangeSet>
     {
         internal ChangeSet ChangeSet { get; private set; } //aggragates all changes made durring ModelRequest(Action)
         private string _infoText;
@@ -199,7 +199,7 @@ namespace ModelGraph.Core
 
         bool TryGetChildRelations(Item item, out IList<Relation> relations, Relation_Store_ChildRelation stoCRels, Relation_StoreX_ChildRelation stoXCRels)
         {
-            if (item.Owner.IsExternal)
+            if (item.GetOwner().IsExternal)
             {
                 if (stoXCRels.TryGetChildren(item, out IList<Relation> txRelations))
                 {
@@ -209,12 +209,12 @@ namespace ModelGraph.Core
                 relations = null;
                 return false;
             }
-            return stoCRels.TryGetChildren(item.Owner, out relations);
+            return stoCRels.TryGetChildren(item.GetOwner(), out relations);
         }
 
         bool TryGetParentRelations(Item item, out IList<Relation> relations, Relation_Store_ParentRelation stoPRels, Relation_StoreX_ParentRelation stoXPRels)
         {
-            if (item.Owner.IsExternal)
+            if (item.GetOwner().IsExternal)
             {
                 if (stoXPRels.TryGetChildren(item, out IList<Relation> txRelations))
                 {
@@ -224,7 +224,7 @@ namespace ModelGraph.Core
                 relations = null;
                 return false;
             }
-            return stoPRels.TryGetChildren(item.Owner, out relations);
+            return stoPRels.TryGetChildren(item.GetOwner(), out relations);
         }
 
         #endregion

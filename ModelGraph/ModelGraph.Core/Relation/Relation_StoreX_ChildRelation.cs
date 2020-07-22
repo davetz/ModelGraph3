@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_StoreX_ChildRelation : RelationOf<Store,Relation>
+    public class Relation_StoreX_ChildRelation : RelationOf<RelationRoot, Store,Relation>
     {
         internal override IdKey IdKey => IdKey.StoreX_ChildRelation;
 

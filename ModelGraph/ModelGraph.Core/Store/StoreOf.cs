@@ -3,21 +3,23 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public abstract class StoreOf<T> : Store where T : Item
+    public abstract class StoreOf<T1, T2> : Store where T1 : Item where T2 : Item
     {
-        private List<T> _items = new List<T>(0);    // list of child items
+        private List<T2> _items = new List<T2>(0);    // list of child items
+        internal T1 Owner;
+        internal override Item GetOwner() => Owner;
 
         #region Count/Items/GetItems  =========================================
-        public IList<T> Items => (_items is null) ? new List<T>(0).AsReadOnly() : _items.AsReadOnly(); // protected from accidental corruption
+        public IList<T2> Items => (_items is null) ? new List<T2>(0).AsReadOnly() : _items.AsReadOnly(); // protected from accidental corruption
         internal override int Count => (_items is null) ? 0 : _items.Count;
         internal override List<Item> GetItems() => new List<Item>(_items);
         internal override void RemoveAll() { _items.Clear(); UpdateDelta(); }
-        internal override Type GetChildType() => typeof(T);
+        internal override Type GetChildType() => typeof(T2);
         #endregion
 
         #region Methods  ======================================================
-        internal override bool IsValidOwnerOf(Item item) => item is T;
-        private T Cast(Item item) => (item is T child) ? child : throw new InvalidCastException("StoreOf");
+        internal override bool IsValidOwnerOf(Item item) => item is T2;
+        private T2 Cast(Item item) => (item is T2 child) ? child : throw new InvalidCastException("StoreOf");
         private void UpdateDelta() { ModelDelta++; ChildDelta++; }
 
         internal void SetCapacity(int exactCount)
@@ -32,13 +34,13 @@ namespace ModelGraph.Core
         }
 
         // Covert  ============================================================
-        internal void CovertAdd(T item) => _items.Add(item);
-        internal void CovertRemove(T item) => _items.Remove(item);
-        internal void CovertInsert(T item) => _items.Insert(0,item);
+        internal void CovertAdd(T2 item) => _items.Add(item);
+        internal void CovertRemove(T2 item) => _items.Remove(item);
+        internal void CovertInsert(T2 item) => _items.Insert(0,item);
         internal void CovertClear() => _items.Clear();
 
         // Add  =============================================================
-        internal void Add(T item)
+        internal void Add(T2 item)
         {
             _items.Add(item);
             UpdateDelta();
@@ -46,7 +48,7 @@ namespace ModelGraph.Core
         internal override void Add(Item item) => Add(Cast(item));
 
         // Remove  ==========================================================
-        internal bool Remove(T item)
+        internal bool Remove(T2 item)
         {
             UpdateDelta();
             return _items.Remove(item);
@@ -64,7 +66,7 @@ namespace ModelGraph.Core
         public override bool Remove(Item item) => Remove(Cast(item));
 
         // Insert  ============================================================
-        internal void Insert(T item, int index)
+        internal void Insert(T2 item, int index)
         {
             var i = (index < 0) ? 0 : index;
 
@@ -77,11 +79,11 @@ namespace ModelGraph.Core
         internal override void Insert(Item item, int index) => Insert(Cast(item), index); 
 
         // IndexOf  ===========================================================
-        internal int IndexOf(T item) => (_items is null) ? -1 : _items.IndexOf(item);
+        internal int IndexOf(T2 item) => (_items is null) ? -1 : _items.IndexOf(item);
         internal override int IndexOf(Item item) => IndexOf(Cast(item));
 
         // Move  ==============================================================
-        internal void Move(T item, int index)
+        internal void Move(T2 item, int index)
         {
             if (_items.Remove(item))
             {

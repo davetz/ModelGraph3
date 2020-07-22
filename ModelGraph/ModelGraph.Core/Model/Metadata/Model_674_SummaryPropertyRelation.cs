@@ -2,81 +2,25 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_674_SummaryPropertyRelation : LineModel
+    public class Model_674_SummaryPropertyRelation : ListModelOf<TableX, Property>
     {
+        Relation_Store_SummaryProperty Store_SummaryProperty;
         internal Model_674_SummaryPropertyRelation(Model_654_Table owner, TableX item) : base(owner, item) { }
         private TableX TX => Item as TableX;
         internal override IdKey IdKey => IdKey.Model_674_SummaryPropertyRelation;
 
-        public override bool CanExpandLeft => TotalCount > 0;
-        public override int TotalCount => DataRoot.Get<Relation_Store_SummaryProperty>().ChildCount(Item);        
+        protected override int GetTotalCount() => Store_SummaryProperty.ChildCount(Item);
 
-        internal override bool ExpandLeft(Root root)
+        protected override IList<Property> GetChildItems() => Store_SummaryProperty.TryGetChildren(Item, out IList<Property> list) ? list : new Property[0];
+
+        protected override void CreateChildModel(Property np)
         {
-            if (IsExpandedLeft) return false;
-            {
-                IsExpandedLeft = true;
-
-                if (root.Get<Relation_Store_SummaryProperty>().TryGetChild(Item, out Property sp))
-                {
-                    new Model_676_SummaryProperty(this, sp);
-                }
-            }
-
-            return true;
-        }
-
-        internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
-        {
-            var viewListChange = false;
-            if (IsExpanded || AutoExpandLeft)
-            {
-                AutoExpandLeft = false;
-                IsExpandedLeft = true;
-
-                if (ChildDelta != Item.ChildDelta)
-                {
-                    ChildDelta = Item.ChildDelta;
-
-                    if (!root.Get<Relation_Store_SummaryProperty>().TryGetChild(Item, out Property sp))
-                    {
-                        IsExpandedLeft = false;
-                        DiscardChildren();
-                        CovertClear();
-                        return true;
-                    }
-
-                    prev.Clear();
-                    foreach (var child in Items)
-                    {
-                        prev[child.Item] = child;
-                    }
-                    CovertClear();
-
-                    if (prev.TryGetValue(sp, out LineModel m))
-                    {
-                        CovertAdd(m);
-                        prev.Remove(m.Item);
-                    }
-                    else
-                    {
-                        new Model_676_SummaryProperty(this, sp);
-                        viewListChange = true;
-                    }
-
-                    if (prev.Count > 0)
-                    {
-                        viewListChange = true;
-                        foreach (var model in prev.Values) { model.Discard(); }
-                    }
-                }
-            }
-            return viewListChange || base.Validate(root, prev);
+            new Model_676_SummaryProperty(this, np);
         }
 
         internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
         {
-            if (dropModel.Item is Property np)
+            if (dropModel.GetItem() is Property np)
             {
                 if (doDrop)
                 {

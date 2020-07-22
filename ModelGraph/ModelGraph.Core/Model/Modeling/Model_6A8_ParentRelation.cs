@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_6A8_ParentRelation : ListModelOf<RowX>
+    public class Model_6A8_ParentRelation : ListModelOf<RowX, RowX>
     {
         private readonly RelationX_RowX_RowX RowX_RowX;
 

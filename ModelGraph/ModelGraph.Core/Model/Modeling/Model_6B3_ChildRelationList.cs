@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_6B3_ChildRelationList : ListModelOf<Relation>
+    public class Model_6B3_ChildRelationList : ListModelOf<RowX, Relation>
     {
         private Relation_StoreX_ChildRelation StoreX_ChildRelation;
         private RowX RX => Item as RowX;
