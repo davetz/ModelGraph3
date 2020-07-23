@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class EnumRoot : StoreOf<Root, EnumZ>
+    public class EnumRoot : ChildOfStoreOf<Root, EnumZ>
     {
         #region Constructors  =================================================
         internal EnumRoot(Root root)

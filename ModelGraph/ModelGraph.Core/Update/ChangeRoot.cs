@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ChangeRoot : StoreOf<Root, ChangeSet>
+    public class ChangeRoot : ChildOfStoreOf<Root, ChangeSet>
     {
         internal ChangeSet ChangeSet { get; private set; } //aggragates all changes made durring ModelRequest(Action)
         private string _infoText;

@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class RowX : ItemOf<TableX>
+    public class RowX : ChildOf<TableX>
     {
         #region Constructors  =================================================
         internal RowX(TableX owner, bool autoExpand = false)

@@ -11,6 +11,6 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) => DataRoot.GetQueryXRelationName(Cast(item));
+        internal override string GetValue(Item item) => Cast(item).RelationName;
     }
 }

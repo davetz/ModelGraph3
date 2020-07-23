@@ -138,7 +138,7 @@ namespace ModelGraph.Repository
             }
             catch (Exception ex)
             {
-                chef.AddRepositorReadError(ex.Message);
+                //chef.AddRepositorReadError(ex.Message);
                 return false;
             }
             return true;
@@ -164,7 +164,7 @@ namespace ModelGraph.Repository
             }
             catch (Exception ex)
             {
-                chef.AddRepositorWriteError(ex.Message);
+                //chef.AddRepositorWriteError(ex.Message);
                 return false;
             }
             return true;

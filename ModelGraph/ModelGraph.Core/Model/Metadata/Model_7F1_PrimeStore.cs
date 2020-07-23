@@ -15,7 +15,7 @@ namespace ModelGraph.Core
         protected override void CreateChildModel(Item itm)
         {
             if (itm is Store)
-                new Model_7F3_Store(this, itm);
+                new Model_7F3_Store(this, itm as Store);
             else if (itm is Relation rx)
                 new Model_7F4_Relation(this, rx);
             else

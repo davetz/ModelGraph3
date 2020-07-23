@@ -1,9 +1,8 @@
 ﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
-{/*
- */
-    public partial class Graph : Item
+{
+    public partial class Graph : ChildOf<GraphX>
     {
         public Item SeedItem;    // seed of query forest 
         public Query[] Forest;   // roots of the query forest
@@ -22,7 +21,7 @@ namespace ModelGraph.Core
         public Dictionary<Node, List<Edge>> Node_Edges = new Dictionary<Node, List<Edge>>(); // list of edges for each node
         public Dictionary<Item, Node> Item_Node = new Dictionary<Item, Node>();              // look up item -> node
 
-        public List<(byte A, byte R, byte G, byte B)> ARGBList => GraphX.ARGBList;
+        public List<(byte A, byte R, byte G, byte B)> ARGBList => Owner.ARGBList;
 
         public Extent Extent;  // current x,y extent of this graph
 
@@ -36,8 +35,7 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal GraphX Owner;
-        internal override Item GetOwner() => Owner;
+        public GraphX GraphX => Owner;
         #endregion
 
         #region Properties/Methods  ===========================================

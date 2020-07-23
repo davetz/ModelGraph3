@@ -3,7 +3,7 @@
 namespace ModelGraph.Core
 {
 
-    public abstract class LineCommand : ItemOf<LineModel>
+    public abstract class LineCommand : ChildOf<LineModel>
     {
         internal Action Action { get; }
 

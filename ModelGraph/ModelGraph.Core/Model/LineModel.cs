@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public abstract class LineModel : ItemOf<LineModel>
+    public abstract class LineModel : ChildOf<LineModel>
     {
         static readonly List<LineModel> _noItems = new List<LineModel>(0);
         virtual internal List<LineModel> Items => _noItems;

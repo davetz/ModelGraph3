@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class GraphX : StoreOf<GraphXRoot, Graph>
+    public class GraphX : ChildOfStoreOf<GraphXRoot, Graph>
     {
         internal Color Color = new Color();
         internal HashSet<Store> NodeOwners = new HashSet<Store>();

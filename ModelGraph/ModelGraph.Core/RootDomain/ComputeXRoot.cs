@@ -212,7 +212,7 @@ namespace ModelGraph.Core
             bool TryGetRelated()
             {
                 var selectors = new List<Query>();
-                if (!TryGetForest(cx, key, selectors, out Query[] forest) || selectors.Count == 0) return false;
+                if (!_queryXRoot.TryGetForest(cx, key, selectors, out Query[] forest) || selectors.Count == 0) return false;
 
                 return cx.Value.LoadCache(cx, key, selectors);
             }
@@ -220,7 +220,7 @@ namespace ModelGraph.Core
             bool TryGetCompositeString(bool reverse = false)
             {
                 var selectors = new List<Query>();
-                if (!TryGetForest(cx, key, selectors, out _) || selectors.Count == 0) return false;
+                if (!_queryXRoot.TryGetForest(cx, key, selectors, out _) || selectors.Count == 0) return false;
 
                 var sb = new StringBuilder(128);
 

@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class TableX : StoreOf<TableXRoot, RowX>
+    public class TableX : ChildOfStoreOf<TableXRoot, RowX>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;

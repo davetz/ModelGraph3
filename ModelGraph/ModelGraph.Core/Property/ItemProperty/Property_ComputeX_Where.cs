@@ -10,7 +10,7 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) { var root = DataRoot; return root.GetWhereProperty(Cast(item)); }
-        internal override void SetValue(Item item, string val) { var root = DataRoot; root.TrySetWhereProperty(Cast(item), val); }
+        internal override string GetValue(Item item) =>  Cast(item).GetWhereString();
+        internal override void SetValue(Item item, string val) => Cast(item).SetWhereString(val);
     }
 }

@@ -70,7 +70,7 @@ namespace ModelGraph.Core
                 var bestFlip = FlipState.None;
                 var bestCost = float.MaxValue;
 
-                var scale = GraphX.SymbolScale;
+                var scale = Owner.SymbolScale;
 
                 ClearTestResults();
                 byte[][] penalty; // [edge sector index] [symbol target index]

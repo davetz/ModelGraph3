@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class QueryX : ItemOf<QueryXRoot>
+    public class QueryX : ChildOf<QueryXRoot>
     {
         internal WhereSelect Where;
         internal WhereSelect Select;
@@ -32,7 +32,6 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        QueryXRoot QR => Owner as QueryXRoot;
         #endregion
 
         #region Identity  =====================================================
@@ -66,7 +65,6 @@ namespace ModelGraph.Core
             }
             return name;
         }
-        (Store, Store) GetHeadTail() => QR.GetHeadTail(this);
 
         #region GetIdKey  =====================================================
         private IdKey GetIdKey()
@@ -123,6 +121,11 @@ namespace ModelGraph.Core
         #endregion
         #endregion
 
+        #region DependantMethods  =============================================
+        (Store, Store) GetHeadTail() => Owner.GetHeadTail(this);
+        internal string GetTailTableName() => Owner.GetTailTableName(this);
+        #endregion
+
         #region Validation  ===================================================
         [Flags]
         private enum PFlag : byte //private validation state
@@ -171,6 +174,8 @@ namespace ModelGraph.Core
 
         internal bool AnyChange => (HasWhere && Where.AnyChange) || (HasSelect && Select.AnyChange);
 
+        internal string RelationName => Owner.GetRelationNameId(this);
+
         internal string WhereString { get { return Where?.InputString; } set { SetWhereString(value); } }
         internal string SelectString { get { return Select?.InputString; } set { SetSelectString(value); } }
         private void SetWhereString(string value)
@@ -178,7 +183,10 @@ namespace ModelGraph.Core
             if (string.IsNullOrWhiteSpace(value))
                 Where = null;
             else
+            {
                 Where = new WhereSelect(value);
+                Owner.ValidateQueryDependants(this);
+            }
         }
         private void SetSelectString(string value)
         {

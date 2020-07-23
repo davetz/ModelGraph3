@@ -10,7 +10,7 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) => DataRoot.GetSelectProperty(Cast(item));
-        internal override void SetValue(Item item, string val) => DataRoot.TrySetSelectProperty(Cast(item), val);
+        internal override string GetValue(Item item) => Cast(item).GetSelectString();
+        internal override void SetValue(Item item, string val) => Cast(item).SetSelectString(val);
     }
 }

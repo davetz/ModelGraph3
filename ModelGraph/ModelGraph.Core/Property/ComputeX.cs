@@ -21,7 +21,6 @@ namespace ModelGraph.Core
         internal CompuType CompuType; // type of computation
 
         #region Constructors  =================================================
-        private ComputeXRoot CR => Owner as ComputeXRoot;
         internal ComputeX(ComputeXRoot owner, bool autoExpand = false)
         {
             Owner = owner;
@@ -42,15 +41,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region Properties  ===================================================
-        public override string GetParentId(Root root) => CR.GetParentId(root, this);
+        public override string GetParentId(Root root) => Owner.GetParentId(root, this);
 
-        internal void SetCompuType(CompuType ct) => CR.SetComputeTypeProperty(this, ct);
+        internal void SetCompuType(CompuType ct) => Owner.SetComputeTypeProperty(this, ct);
 
-        internal string GetWhereString() => CR.GetWhereString(this);
-        internal string GetSelectString() => CR.GetSelectString(this);
+        internal string GetWhereString() => Owner.GetWhereString(this);
+        internal string GetSelectString() => Owner.GetSelectString(this);
 
-        internal void SetWhereString(string val) => CR.SetWhereString(this, val);
-        internal void SetSelectString(string val) => CR.SetSelectString(this, val);
+        internal void SetWhereString(string val) => Owner.SetWhereString(this, val);
+        internal void SetSelectString(string val) => Owner.SetSelectString(this, val);
         #endregion
     }
 }

@@ -20,6 +20,8 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
+            root.RegisterReferenceItem(new DummyQueryX(this));
+
             var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_QueryX_Where(sto));
@@ -172,7 +174,6 @@ namespace ModelGraph.Core
         //========================================== frequently used references
         private ErrorRoot _errorRoot;
         private GraphXRoot _graphXRoot;
-        private QueryXRoot _queryXRoot;
         private ComputeXRoot _computeXRoot;
 
         private Property_QueryX_Where _property_QueryX_Where;
@@ -194,7 +195,6 @@ namespace ModelGraph.Core
         {
             _errorRoot = root.Get<ErrorRoot>();
             _graphXRoot = root.Get<GraphXRoot>();
-            _queryXRoot = root.Get<QueryXRoot>();
             _computeXRoot = root.Get<ComputeXRoot>();
 
             _property_QueryX_Where = root.Get<Property_QueryX_Where>();
@@ -227,7 +227,7 @@ namespace ModelGraph.Core
             }
         }
 
-        private void ValidateQueryDependants(QueryX qx)
+        internal void ValidateQueryDependants(QueryX qx)
         {
             while (_relation_QueryX_QueryX.TryGetParent(qx, out QueryX qp)) { qx = qp; }
 
@@ -498,7 +498,7 @@ namespace ModelGraph.Core
         #region CreateQueryX  =================================================
         private QueryX CreateQueryX(ViewX vx, Store st)
         {
-            var qxNew = new QueryX(_queryXRoot, QueryType.View, true);
+            var qxNew = new QueryX(this, QueryType.View, true);
             ItemCreated.Record(Owner, qxNew);
             ItemLinked.Record(Owner, _relation_ViewX_QueryX, vx, qxNew);
             ItemLinked.Record(Owner, _relation_Store_QueryX, st, qxNew);
@@ -506,7 +506,7 @@ namespace ModelGraph.Core
         }
         private QueryX CreateQueryX(GraphX gx, Store st)
         {
-            var qxNew = new QueryX(_queryXRoot, QueryType.Graph, true);
+            var qxNew = new QueryX(this, QueryType.Graph, true);
             ItemCreated.Record(Owner, qxNew);
             ItemLinked.Record(Owner, _relation_GraphX_QueryX, gx, qxNew);
             ItemLinked.Record(Owner, _relation_Store_QueryX, st, qxNew);
@@ -514,7 +514,7 @@ namespace ModelGraph.Core
         }
         private QueryX CreateQueryX(ComputeX cx, Store st)
         {
-            var qxNew = new QueryX(_queryXRoot, QueryType.Value, true);
+            var qxNew = new QueryX(this, QueryType.Value, true);
             ItemCreated.Record(Owner, qxNew);
             ItemLinked.Record(Owner, _relation_ComputeX_QueryX, cx, qxNew);
             ItemLinked.Record(Owner, _relation_Store_QueryX, st, qxNew);
@@ -523,7 +523,7 @@ namespace ModelGraph.Core
 
         private QueryX CreateQueryX(GraphX gx, SymbolX sx, Store st)
         {
-            var qxNew = new QueryX(_queryXRoot, QueryType.Symbol, true);
+            var qxNew = new QueryX(this, QueryType.Symbol, true);
             ItemCreated.Record(Owner, qxNew);
             ItemLinked.Record(Owner, _relation_GraphX_SymbolQueryX, gx, qxNew);
             ItemLinked.Record(Owner, _relation_SymbolX_QueryX, sx, qxNew);
@@ -533,7 +533,7 @@ namespace ModelGraph.Core
 
         private QueryX CreateQueryX(ViewX vx, Relation re)
         {
-            var qxNew = new QueryX(_queryXRoot, QueryType.View);
+            var qxNew = new QueryX(this, QueryType.View);
             ItemCreated.Record(Owner, qxNew);
             ItemLinked.Record(Owner, _relation_ViewX_QueryX, vx, qxNew);
             ItemLinked.Record(Owner, _relation_Relation_QueryX, re, qxNew);
@@ -543,7 +543,7 @@ namespace ModelGraph.Core
         private QueryX CreateQueryX(QueryX qx, Relation re, QueryType kind)
         {
             qx.IsTail = false;
-            var qxNew = new QueryX(_queryXRoot, kind);
+            var qxNew = new QueryX(this, kind);
             ItemCreated.Record(Owner, qx);
             ItemLinked.Record(Owner, _relation_QueryX_QueryX, qx, qxNew);
             ItemLinked.Record(Owner, _relation_Relation_QueryX, re, qxNew);
@@ -628,6 +628,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region Legacy  =======================================================
+        internal string GetTailTableName(QueryX qx)
+        {
+            var (_, tail) = GetHeadTail(qx);
+            return tail.GetNameId(Owner);
+        }
+        internal string GetRelationNameId(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation re) ? re.GetNameId(Owner) : InvalidItem;
+
         internal void SetWhereString(QueryX qx, string val)
         {
             qx.WhereString = val;
@@ -708,7 +715,7 @@ namespace ModelGraph.Core
         /// Return a query forest for the callers computeX.
         /// Also return a list of query's who's parent queryX has a valid select clause. 
         /// </summary>
-        private bool TryGetForest(ComputeX cx, Item seed, List<Query> selectors, out Query[] forest)
+        internal bool TryGetForest(ComputeX cx, Item seed, List<Query> selectors, out Query[] forest)
         {
             forest = null;
             if (_relation_ComputeX_QueryX.TryGetChildren(cx, out IList<QueryX> qxRoots))

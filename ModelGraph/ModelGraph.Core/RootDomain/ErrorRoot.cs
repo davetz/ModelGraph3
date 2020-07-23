@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ErrorRoot : StoreOf<Root, Error>
+    public class ErrorRoot : ChildOfStoreOf<Root, Error>
     {
         #region Constructors  =================================================
         internal ErrorRoot(Root root)
@@ -347,7 +347,6 @@ namespace ModelGraph.Core
             return (_itemErrorAux2.TryGetValue((item, aux1, aux2), out Error error)) ? error : null;
         }
         #endregion
-
 
         #endregion
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
@@ -138,9 +139,12 @@ namespace ModelGraph.Core
         private DummyQueryX _dummyQueryX;
 
         private Relation_QueryX_QueryX _relation_QueryX_QueryX;
+        private Relation_Store_QueryX _relation_Store_QueryX;
         private Relation_GraphX_QueryX _relation_GraphX_QueryX;
         private Relation_GraphX_SymbolX _relation_GraphX_SymbolX;
+        private Relation_GraphX_SymbolQueryX _relation_GraphX_SymbolQueryX;
         private Relation_Store_ColumnX _relation_Store_ColumnX;
+        private Relation_SymbolX_QueryX _relation_SymbolX_QueryX;
         private Relation_Relation_QueryX _relation_Relation_QueryX;
         private Relation_GraphX_ColorColumnX _relation_GraphX_ColorColumnX;
 
@@ -151,10 +155,13 @@ namespace ModelGraph.Core
             _dummyItem = root.Get<DummyItem>();
             _dummyQueryX = root.Get<DummyQueryX>();
 
+            _relation_Store_QueryX = root.Get<Relation_Store_QueryX>();
             _relation_QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();
             _relation_GraphX_QueryX = root.Get<Relation_GraphX_QueryX>();
             _relation_GraphX_SymbolX = root.Get<Relation_GraphX_SymbolX>();
+            _relation_GraphX_SymbolQueryX = root.Get<Relation_GraphX_SymbolQueryX>();
             _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
+            _relation_SymbolX_QueryX = root.Get<Relation_SymbolX_QueryX>();
             _relation_Relation_QueryX = root.Get<Relation_Relation_QueryX>();
             _relation_GraphX_ColorColumnX = root.Get<Relation_GraphX_ColorColumnX>();
         }
@@ -499,6 +506,29 @@ namespace ModelGraph.Core
 
             return anyChange;
         }
+        (List<SymbolX> symbols, List<QueryX> querys) GetSymbolXQueryX(GraphX gx, Store nodeOwner)
+        {
+            if (_relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> sqxList))
+            {
+                var sxList = new List<SymbolX>(sqxList.Count);
+                var qxList = new List<QueryX>(sqxList.Count);
+
+                foreach (var qx in sqxList)
+                {
+                    if (_relation_Store_QueryX.TryGetParent(qx, out Store store) && store == nodeOwner)
+                    {
+                        if (_relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx))
+                        {
+                            sxList.Add(sx);
+                            qxList.Add(qx);
+                        }
+                    }
+                }
+                if (sxList.Count > 0) return (sxList, qxList);
+            }
+            return (null, null);
+        }
+
         #endregion
 
         #region CreateGraph  ==================================================

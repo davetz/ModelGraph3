@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public abstract class EnumZ : StoreOf<EnumRoot, PairZ>
+    public abstract class EnumZ : ChildOfStoreOf<EnumRoot, PairZ>
     {
         internal EnumZ (EnumRoot owner)
         {

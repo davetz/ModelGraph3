@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public abstract class StoreOf<T1, T2> : Store where T1 : Item where T2 : Item
+    public abstract class ChildOfStoreOf<T1, T2> : Store where T1 : Item where T2 : Item
     {
-        private List<T2> _items = new List<T2>(0);    // list of child items
-        internal T1 Owner;
-        internal override Item GetOwner() => Owner;
+        internal T1 Owner;                          // my know it all mother
+        private List<T2> _items = new List<T2>(0);  // list of my dependent children
+        internal override Item GetOwner() => Owner; // used to walkup the hierarchal tree
 
         #region Count/Items/GetItems  =========================================
         public IList<T2> Items => (_items is null) ? new List<T2>(0).AsReadOnly() : _items.AsReadOnly(); // protected from accidental corruption
@@ -19,7 +19,7 @@ namespace ModelGraph.Core
 
         #region Methods  ======================================================
         internal override bool IsValidOwnerOf(Item item) => item is T2;
-        private T2 Cast(Item item) => (item is T2 child) ? child : throw new InvalidCastException("StoreOf");
+        private T2 Cast(Item item) => (item is T2 child) ? child : throw new InvalidCastException("ChildOfStoreOf");
         private void UpdateDelta() { ModelDelta++; ChildDelta++; }
 
         internal void SetCapacity(int exactCount)
@@ -32,12 +32,6 @@ namespace ModelGraph.Core
                 _items.Capacity = cap;
             }
         }
-
-        // Covert  ============================================================
-        internal void CovertAdd(T2 item) => _items.Add(item);
-        internal void CovertRemove(T2 item) => _items.Remove(item);
-        internal void CovertInsert(T2 item) => _items.Insert(0,item);
-        internal void CovertClear() => _items.Clear();
 
         // Add  =============================================================
         internal void Add(T2 item)

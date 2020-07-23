@@ -11,6 +11,6 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) { var root = DataRoot; return root.Get<Enum_ValueType>().GetEnumValueName(root, (int)root.GetValueType(Cast(item))); }
+        internal override string GetValue(Item item) => "Need to fix this";
     }
 }

@@ -3,7 +3,7 @@ using System;
 
 namespace ModelGraph.Core
 {
-    public abstract class ItemChange : ItemOf<ChangeSet>
+    public abstract class ItemChange : ChildOf<ChangeSet>
     {
         internal string _name;
         internal override string Name { get => _name; }

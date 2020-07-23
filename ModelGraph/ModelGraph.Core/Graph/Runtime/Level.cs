@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Level : ItemOf<Graph>
+    public class Level : ChildOf<Graph>
     {
         internal List<Path> Paths = new List<Path>();
         internal override IdKey IdKey => IdKey.Level;

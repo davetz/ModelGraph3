@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Query : ItemOf<QueryX>
+    public class Query : ChildOf<QueryX>
     {
         internal Item Item;
         internal Item[] Items;

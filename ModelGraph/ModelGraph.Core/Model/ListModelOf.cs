@@ -12,6 +12,7 @@ namespace ModelGraph.Core
         internal override void Add(LineModel child) => _items.Add(child);
         internal override void Remove(LineModel child) => _items.Remove(child);
         internal override void Clear() => _items.Clear();
+        internal void SetCapacity(int count) { if (count > _items.Capacity) _items.Capacity = count; }
 
         internal ListModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
