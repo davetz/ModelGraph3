@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_663_ParentRelatationList : ListModelOf<TableX, Relation>
+    public class Model_663_ParentRelatationList : List2ModelOf<TableX, Relation>
     {
         private Relation_StoreX_ParentRelation StoreX_ParentRelation;
         internal Model_663_ParentRelatationList(Model_654_Table owner, TableX item) : base(owner, item) 

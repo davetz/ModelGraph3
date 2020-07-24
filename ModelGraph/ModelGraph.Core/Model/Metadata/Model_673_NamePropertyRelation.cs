@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_673_NamePropertyRelation : ListModelOf<TableX, Property>
+    public class Model_673_NamePropertyRelation : List2ModelOf<TableX, Property>
     {
         Relation_Store_NameProperty _relation_Store_NameProperty;
 

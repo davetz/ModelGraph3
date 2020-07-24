@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_7F3_Store : ListModelOf<Store, Item>
+    public class Model_7F3_Store : List2ModelOf<Store, Item>
     {
         internal Model_7F3_Store(Model_7F1_PrimeStore owner, Store item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F3_Store;

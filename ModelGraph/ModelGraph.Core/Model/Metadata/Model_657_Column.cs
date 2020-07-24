@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_657_Column : StaticModelOf<ColumnX>
+    public class Model_657_Column : List1ModelOf<ColumnX>
     {
         internal Model_657_Column(Model_661_ColumnList owner, ColumnX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_657_Column;

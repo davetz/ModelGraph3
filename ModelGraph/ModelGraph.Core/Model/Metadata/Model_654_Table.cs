@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_654_Table : StaticModelOf<TableX>
+    public class Model_654_Table : List1ModelOf<TableX>
     {
         internal Model_654_Table(Model_643_TableList owner, TableX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_654_Table;

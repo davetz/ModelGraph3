@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace ModelGraph.Core
 {
-    public abstract class LineModelOf<T> : LineModel where T : Item
+    /// <summary>Does not have any child models</summary>
+    public abstract class ItemModelOf<T> : LineModel where T : Item
     {
         internal T Item;
         internal override Item GetItem() => Item;
 
-        internal LineModelOf() { }
+        internal ItemModelOf() { }
 
-        internal LineModelOf(LineModel owner, T item)
+        internal ItemModelOf(LineModel owner, T item)
         {
             Item = item;
             Owner = owner;

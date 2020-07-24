@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_666_ComputeList : ListModelOf<TableX, ComputeX>
+    public class Model_666_ComputeList : List2ModelOf<TableX, ComputeX>
     {
         private readonly Relation_Store_ComputeX Store_ComputeX;
 

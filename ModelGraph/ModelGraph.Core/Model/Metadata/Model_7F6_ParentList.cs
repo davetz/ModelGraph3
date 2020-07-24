@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_7F6_ParentList : LineModelOf<Relation>
+    public class Model_7F6_ParentList : ItemModelOf<Relation>
     {
         internal Model_7F6_ParentList(Model_7F4_Relation owner, Relation item) : base(owner, item) { }
         private Relation RX => Item as Relation;

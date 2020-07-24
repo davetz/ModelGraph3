@@ -4,7 +4,7 @@ using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public class Model_6B4_ParentRelationList : ListModelOf<RowX, Relation>
+    public class Model_6B4_ParentRelationList : List2ModelOf<RowX, Relation>
     {
         private Relation_StoreX_ParentRelation StoreX_ParentRelation;
         private RowX RX => Item as RowX;

@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_674_SummaryPropertyRelation : ListModelOf<TableX, Property>
+    public class Model_674_SummaryPropertyRelation : List2ModelOf<TableX, Property>
     {
         Relation_Store_SummaryProperty _relation_Store_SummaryProperty;
         internal Model_674_SummaryPropertyRelation(Model_654_Table owner, TableX item) : base(owner, item)

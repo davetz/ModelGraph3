@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_628_ChangeSet : ListModelOf<ChangeSet, ItemChange>
+    public class Model_628_ChangeSet : List2ModelOf<ChangeSet, ItemChange>
     {
         internal Model_628_ChangeSet(Model_622_ChangeRoot owner, ChangeSet item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_628_ChangeSet;

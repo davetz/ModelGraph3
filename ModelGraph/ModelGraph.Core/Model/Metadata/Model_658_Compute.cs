@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_658_Compute : LineModelOf<ComputeX>
+    public class Model_658_Compute : ItemModelOf<ComputeX>
     {
         internal Model_658_Compute(Model_666_ComputeList owner, ComputeX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_658_Compute;

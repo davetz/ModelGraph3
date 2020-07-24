@@ -4,10 +4,10 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public abstract class TreeModel : LineModelOf<Root>, IRootModel
+    public abstract class TreeModel : ItemModelOf<Root>, IRootModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
-        private LineModel _childModel;
+        private LineModel _childModel; // there will only be one child model
         internal override void Add(LineModel child) => _childModel = child;
 
         public Item RootItem => Item;

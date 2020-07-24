@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_612_Root : StaticModelOf<Root>
+    public class Model_612_Root : List1ModelOf<Root>
     {
         internal override IdKey IdKey => IdKey.Model_612_Root;
         public override bool CanExpandLeft => true;

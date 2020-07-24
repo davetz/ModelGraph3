@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace ModelGraph.Core
 {
-    public class Model_622_ChangeRoot : ListModelOf<ChangeRoot, ChangeSet>
+    public class Model_622_ChangeRoot : List2ModelOf<ChangeRoot, ChangeSet>
     {
         internal Model_622_ChangeRoot(Model_612_Root owner, ChangeRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_622_ChangeRoot;

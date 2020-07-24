@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
@@ -125,18 +124,16 @@ namespace ModelGraph.Core
             var anyChange = false;
             if (IsExpandedRight)
             {
-                int N = Count;
-                for (int i = 0; i < N; i++)
+                int L = Count - 1;
+                for (int i = L; i >= 0; i--)
                 {
-                    var item = Items[0];
+                    var item = Items[i];
                     if (item is PropertyModel)
                     {
                         anyChange = true;
-                        Remove(item);
+                        RemoveAt(i);
                         item.Discard();
                     }
-                    else
-                        break;
                 }
                 IsExpandedRight = false;
             }
@@ -234,9 +231,10 @@ namespace ModelGraph.Core
         internal virtual int Count => 0;
         internal virtual void Add(LineModel child) { }
         internal virtual void Remove(LineModel child) { }
+        internal virtual void RemoveAt(int index) { }
         internal virtual void Clear() { }
+        internal virtual void AddPropertyModel(PropertyModel child) { }
 
-        
         #endregion
     }
 }

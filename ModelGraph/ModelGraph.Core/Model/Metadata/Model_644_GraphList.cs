@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_644_GraphList : ListModelOf<GraphXRoot, GraphX>
+    public class Model_644_GraphList : List2ModelOf<GraphXRoot, GraphX>
     {
         internal Model_644_GraphList(Model_623_MetadataRoot owner, GraphXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_644_GraphList;

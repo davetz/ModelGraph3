@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_624_EnumList : ListModelOf<EnumXRoot,EnumX>
+    public class Model_624_EnumList : List2ModelOf<EnumXRoot,EnumX>
     {
         internal Model_624_EnumList(Model_623_MetadataRoot owner, EnumXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_624_EnumList;

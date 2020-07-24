@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_624_ModelingRoot : StaticModelOf<Root>
+    public class Model_624_ModelingRoot : List1ModelOf<Root>
     {
         internal Model_624_ModelingRoot(Model_612_Root owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_624_ModelingRoot;

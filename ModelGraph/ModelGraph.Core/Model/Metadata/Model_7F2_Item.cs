@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_7F2_Item : LineModelOf<Item>
+    public class Model_7F2_Item : ItemModelOf<Item>
     {
         internal Model_7F2_Item(LineModel owner, Item item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F2_Item;
