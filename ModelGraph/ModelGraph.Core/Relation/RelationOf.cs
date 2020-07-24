@@ -28,7 +28,7 @@ namespace ModelGraph.Core
 
             return $"({myName})    {headName} --> {tailName}";
         }
-        internal override (Store, Store) GetHeadTail() => (Owner as IRelationRoot).GetHeadTail();
+        internal override (Store, Store) GetHeadTail() => Owner is RelationRoot o1 ? o1.GetHeadTail(this) : Owner is RelationXRoot o2 ? o2.GetHeadTail(this) : (null, null);
         #endregion
 
         #region Initialize  ===================================================

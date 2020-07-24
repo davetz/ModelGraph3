@@ -4,17 +4,17 @@ namespace ModelGraph.Core
 {
     public class Model_673_NamePropertyRelation : ListModelOf<TableX, Property>
     {
-        Relation_Store_NameProperty Store_NameProperty;
+        Relation_Store_NameProperty _relation_Store_NameProperty;
 
         internal Model_673_NamePropertyRelation(Model_654_Table owner, TableX item) : base(owner, item) 
         {
-            Store_NameProperty = item.GetRoot().Get<Relation_Store_NameProperty>();
+            _relation_Store_NameProperty = item.Owner.Owner.Get<Relation_Store_NameProperty>();
         }
         internal override IdKey IdKey => IdKey.Model_673_NamePropertyRelation;
 
-        protected override int GetTotalCount() => Store_NameProperty.ChildCount(Item);
+        protected override int GetTotalCount() => _relation_Store_NameProperty.ChildCount(Item);
 
-        protected override IList<Property> GetChildItems() => Store_NameProperty.TryGetChildren(Item, out IList<Property> list) ? list : new Property[0];
+        protected override IList<Property> GetChildItems() => _relation_Store_NameProperty.TryGetChildren(Item, out IList<Property> list) ? list : new Property[0];
 
         protected override void CreateChildModel(Property np)
         {
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
             {
                 if (doDrop)
                 {
-                    ItemLinked.Record(root, root.Get<Relation_Store_NameProperty>(), Item, np);
+                    ItemLinked.Record(root, _relation_Store_NameProperty, Item, np);
                     ChildDelta++;
                     AutoExpandLeft = true;
                 }

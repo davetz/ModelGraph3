@@ -33,6 +33,7 @@ namespace ModelGraph.Core
 
             IsExpandedLeft = true;
 
+            SetCapacity(GetTotalCount());
             foreach (var itm in GetChildItems())
             {
                 CreateChildModel(itm);
@@ -42,6 +43,7 @@ namespace ModelGraph.Core
         }
         internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
         {
+            SetCapacity(GetTotalCount());
             var viewListChanged = false;
             if (IsExpandedLeft || AutoExpandLeft)
             {

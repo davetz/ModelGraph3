@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_672_ParentRelation : LineModelOf<Relation>
+    public class Model_672_ParentRelation : StaticModelOf<Relation>
     {
         internal Model_672_ParentRelation(Model_663_ParentRelatationList owner, Relation item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_672_ParentRelation;

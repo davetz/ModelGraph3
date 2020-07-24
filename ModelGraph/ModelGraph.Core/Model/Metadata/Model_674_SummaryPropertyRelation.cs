@@ -4,14 +4,16 @@ namespace ModelGraph.Core
 {
     public class Model_674_SummaryPropertyRelation : ListModelOf<TableX, Property>
     {
-        Relation_Store_SummaryProperty Store_SummaryProperty;
-        internal Model_674_SummaryPropertyRelation(Model_654_Table owner, TableX item) : base(owner, item) { }
-        private TableX TX => Item as TableX;
+        Relation_Store_SummaryProperty _relation_Store_SummaryProperty;
+        internal Model_674_SummaryPropertyRelation(Model_654_Table owner, TableX item) : base(owner, item)
+        {
+            _relation_Store_SummaryProperty = item.Owner.Owner.Get<Relation_Store_SummaryProperty>();
+        }
         internal override IdKey IdKey => IdKey.Model_674_SummaryPropertyRelation;
 
-        protected override int GetTotalCount() => Store_SummaryProperty.ChildCount(Item);
+        protected override int GetTotalCount() => _relation_Store_SummaryProperty.ChildCount(Item);
 
-        protected override IList<Property> GetChildItems() => Store_SummaryProperty.TryGetChildren(Item, out IList<Property> list) ? list : new Property[0];
+        protected override IList<Property> GetChildItems() => _relation_Store_SummaryProperty.TryGetChildren(Item, out IList<Property> list) ? list : new Property[0];
 
         protected override void CreateChildModel(Property np)
         {
@@ -24,7 +26,7 @@ namespace ModelGraph.Core
             {
                 if (doDrop)
                 {
-                    ItemLinked.Record(root, root.Get<Relation_Store_SummaryProperty>(), TX, np);
+                    ItemLinked.Record(root, _relation_Store_SummaryProperty, Item, np);
                     ChildDelta++;
                     AutoExpandLeft = true;
                 }

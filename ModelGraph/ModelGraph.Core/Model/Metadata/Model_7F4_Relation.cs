@@ -1,9 +1,7 @@
 ﻿
-using ModelGraph.Core.Model;
-
 namespace ModelGraph.Core
 {
-    public class Model_7F4_Relation : SelectModelOf<Relation>
+    public class Model_7F4_Relation : StaticModelOf<Relation>
     {
         internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item, 2) { }
         internal override IdKey IdKey => IdKey.Model_7F4_Relation;

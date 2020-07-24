@@ -2,16 +2,15 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_7F5_ChildList : LineModelOf<Relation>
+    public class Model_7F5_ChildList : StaticModelOf<Relation>
     {
         internal Model_7F5_ChildList(Model_7F4_Relation owner, Relation item) : base(owner, item) { }
-        private Relation RX => Item as Relation;
         internal override IdKey IdKey => IdKey.Model_7F5_ChildList;
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;
         public override bool CanSort => TotalCount > 1;
-        public override int TotalCount => RX.GetChildLinkPairCount();
+        public override int TotalCount => base.Item.GetChildLinkPairCount();
 
 
         internal override bool ExpandLeft(Root root)
@@ -20,10 +19,11 @@ namespace ModelGraph.Core
             if (TotalCount > 0)
             {
                 IsExpandedLeft = true;
+                SetCapacity(TotalCount);
 
-                foreach (var pair in RX.GetChildLinkPairList())
+                foreach (var pair in Item.GetChildLinkPairList())
                 {
-                    new Model_7F7_ParentChild(this, RX, pair);
+                    new Model_7F7_ParentChild(this, Item, pair);
                 }
             }
             return true;
@@ -32,38 +32,40 @@ namespace ModelGraph.Core
         internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
         {
             var prev2 = new Dictionary<(Item, Item), LineModel>(Count);
-
+            
             var viewListChanged = false;
             if (IsExpanded || AutoExpandLeft)
             {
                 AutoExpandLeft = false;
                 IsExpandedLeft = true;
 
-                if (ChildDelta != Item.ChildDelta)
+                if (ChildDelta != base.Item.ChildDelta)
                 {
-                    ChildDelta = Item.ChildDelta;
+                    ChildDelta = base.Item.ChildDelta;
 
                     prev.Clear();
-                    foreach (var child in Items)
+                    foreach (var child in base.Items)
                     {
                         var pc = child as Model_7F7_ParentChild;
                         prev2[pc.ItemPair] = pc;
                     }
-                    Clear();
+                    base.Clear();
 
                     if (TotalCount > 0)
                     {
-                        foreach (var pair in RX.GetChildLinkPairList())
+                        SetCapacity(TotalCount);
+
+                        foreach (var pair in Item.GetChildLinkPairList())
                         {
 
                             if (prev2.TryGetValue(pair, out LineModel m))
                             {
-                                Add(m);
+                                base.Add(m);
                                 prev.Remove(m.GetItem());
                             }
                             else
                             {
-                                new Model_7F7_ParentChild(this, RX, pair);
+                                new Model_7F7_ParentChild(this, Item, pair);
                                 viewListChanged = true;
                             }
                         }

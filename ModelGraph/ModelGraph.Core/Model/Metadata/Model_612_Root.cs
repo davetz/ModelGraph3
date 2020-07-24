@@ -1,12 +1,12 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_612_Root : LineModelOf<Root>
+    public class Model_612_Root : StaticModelOf<Root>
     {
         internal override IdKey IdKey => IdKey.Model_612_Root;
         public override bool CanExpandLeft => true;
 
-        internal Model_612_Root(LineModel owner, Root root) : base(owner, root) 
+        internal Model_612_Root(LineModel owner, Root root) : base(owner, root, 8) 
         {
             new Model_620_RootParm(this, Item);
             new Model_621_ErrorRoot(this, root.Get<ErrorRoot>());

@@ -1,9 +1,8 @@
-﻿using ModelGraph.Core.Model;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_6A1_Row : SelectModelOf<RowX>
+    public class Model_6A1_Row : StaticModelOf<RowX>
     {
         internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item, 4) { }
         internal override IdKey IdKey => IdKey.Model_6A1_Row;

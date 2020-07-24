@@ -7,12 +7,16 @@ namespace ModelGraph.Core
     public abstract class TreeModel : LineModelOf<Root>, IRootModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
+        private LineModel _childModel;
+        internal override void Add(LineModel child) => _childModel = child;
 
         public Item RootItem => Item;
+
         public IPageControl PageControl { get; set; } // reference the UI PageControl       
         public ControlType ControlType { get; private set; }
 
         #region Constructor  ==================================================
+        internal override Item GetOwner() => Item;
         internal TreeModel(Root root) //========== invoked in the RootModel constructor
         {
             Item = root;
@@ -62,7 +66,7 @@ namespace ModelGraph.Core
         /// <summary>We are scrolling back and forth in the flattened model hierarchy</summary>
         public (List<LineModel>, LineModel, bool, bool) GetCurrentView(int viewSize, LineModel leading, LineModel selected)
         {
-            if (_buffer.IsEmpty) _buffer.Refresh(Items[0], viewSize, leading);
+            if (_buffer.IsEmpty) _buffer.Refresh(_childModel, viewSize, leading);
 
             var (list, eov, sov) = _buffer.GetList();
 
@@ -95,37 +99,37 @@ namespace ModelGraph.Core
                 switch (change)
                 {
                     case ChangeType.OneUp:
-                        _buffer.Refresh(Items[0], viewSize, -1);
+                        _buffer.Refresh(_childModel, viewSize, -1);
                         break;
                     case ChangeType.TwoUp:
-                        _buffer.Refresh(Items[0], viewSize, -2);
+                        _buffer.Refresh(_childModel, viewSize, -2);
                         break;
                     case ChangeType.PageUp:
-                        _buffer.Refresh(Items[0], viewSize, -viewSize);
+                        _buffer.Refresh(_childModel, viewSize, -viewSize);
                         break;
                     case ChangeType.OneDown:
-                        _buffer.Refresh(Items[0], viewSize, 1);
+                        _buffer.Refresh(_childModel, viewSize, 1);
                         break;
                     case ChangeType.TwoDown:
-                        _buffer.Refresh(Items[0], viewSize, 2);
+                        _buffer.Refresh(_childModel, viewSize, 2);
                         break;
                     case ChangeType.PageDown:
-                        _buffer.Refresh(Items[0], viewSize, viewSize);
+                        _buffer.Refresh(_childModel, viewSize, viewSize);
                         break;
                     case ChangeType.ToggleLeft:
                         selected.ToggleLeft(Item);
-                        _buffer.Refresh(Items[0], viewSize, leading);
+                        _buffer.Refresh(_childModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleRight:
                         selected.ToggleRight(Item);
-                        _buffer.Refresh(Items[0], viewSize, leading);
+                        _buffer.Refresh(_childModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleFilter:
                         selected.IsFilterVisible = !selected.IsFilterVisible;
                         break;
                     case ChangeType.ViewListChanged:
                     case ChangeType.FilterSortChanged:
-                        _buffer.Refresh(Items[0], viewSize, leading);
+                        _buffer.Refresh(_childModel, viewSize, leading);
                         break;
                 }
             }

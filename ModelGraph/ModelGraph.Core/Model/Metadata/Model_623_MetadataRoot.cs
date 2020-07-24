@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Model_623_MetadataRoot : LineModelOf<Root>
+    public class Model_623_MetadataRoot : StaticModelOf<Root>
     {
         internal Model_623_MetadataRoot(Model_612_Root owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_623_MetadataRoot;

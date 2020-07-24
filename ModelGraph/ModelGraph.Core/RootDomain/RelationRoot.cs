@@ -70,23 +70,23 @@ namespace ModelGraph.Core
 
         #region RelationMethods  ==============================================
         //========================================== frequently used references
-        private Relation_Store_ChildRelation Store_ChildRelation;
-        private Relation_Store_ParentRelation Store_ParentRelation;
+        private Relation_Store_ChildRelation _relation_Store_ChildRelation;
+        private Relation_Store_ParentRelation _relation_Store_ParentRelation;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            Store_ChildRelation = root.Get<Relation_Store_ChildRelation>();
-            Store_ParentRelation = root.Get<Relation_Store_ParentRelation>();
+            _relation_Store_ChildRelation = root.Get<Relation_Store_ChildRelation>();
+            _relation_Store_ParentRelation = root.Get<Relation_Store_ParentRelation>();
         }
         #endregion
 
         #region GetHeadTail  ==================================================
-        public (Store, Store) GetHeadTail()
+        public (Store, Store) GetHeadTail(Relation rx)
         {
             Store head, tail;
-                Store_ChildRelation.TryGetParent(this, out head);
-                Store_ParentRelation.TryGetParent(this, out tail);
+                _relation_Store_ChildRelation.TryGetParent(rx, out head);
+                _relation_Store_ParentRelation.TryGetParent(rx, out tail);
 
             return (head, tail);
         }
