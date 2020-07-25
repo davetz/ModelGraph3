@@ -98,6 +98,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IPageControl  =================================================
+        public void Reload() { }
         public void CreateNewPage(IRootModel model, ControlType ctlType)
         {
             if (model is null) return;

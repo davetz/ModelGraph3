@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace ModelGraph.Core
 {
     public class Model_653_Enum : List1ModelOf<EnumX>
@@ -11,6 +13,12 @@ namespace ModelGraph.Core
 
         public override (string, string) GetKindNameId(Root root) => Item.GetKindNameId(root);
         public override string GetSummaryId(Root root) => Item.GetSummaryId(root);
+
+        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        {
+            list.Clear();
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
+        }
 
         internal override bool ExpandLeft(Root root)
         {

@@ -38,11 +38,10 @@ namespace ModelGraph.Core
         internal override bool ExpandRight(Root root)
         {
             if (IsExpandedRight) return false;
+            IsExpandedRight = true;
 
             root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
             root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
-
-            IsExpandedRight = true;
             return true;
         }
     }

@@ -51,9 +51,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region IdKey  ========================================================
-        internal bool IsCovert => (IdKey & IdKey.IsCovert) != 0;
-        internal bool IsExternal => (IdKey & IdKey.IsExternal) != 0;
-        internal bool IsReference => (IdKey & IdKey.IsReference) != 0;
+        internal bool IsCovert => (IdKey & IdKey.Is_Covert) != 0;
+        internal bool IsExternal => (IdKey & IdKey.Is_External) != 0;
+        internal bool IsReference => (IdKey & IdKey.Is_Reference) != 0;
 
         internal ushort ItemKey => (ushort)(IdKey & IdKey.KeyMask);
         #endregion

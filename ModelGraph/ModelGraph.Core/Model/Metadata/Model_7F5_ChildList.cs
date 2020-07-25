@@ -8,8 +8,8 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_7F5_ChildList;
 
 
-        protected override int GetTotalCount() => Item.GetParentLinkPairCount();
-        protected override IList<(Item, Item)> GetChildItems() => Item.GetParentLinkPairList();
+        protected override int GetTotalCount() => Item.GetChildLinkPairCount();
+        protected override IList<(Item, Item)> GetChildItems() => Item.GetChildLinkPairList();
         protected override (Item, Item) GetItemPair(LineModel child) => (child as Model_7F7_ParentChild).ItemPair;
         protected override void CreateChildModel((Item, Item) pair) => new Model_7F7_ParentChild(this, Item, pair);
     }

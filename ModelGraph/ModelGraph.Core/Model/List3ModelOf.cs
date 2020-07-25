@@ -6,7 +6,7 @@ namespace ModelGraph.Core
 {
     public abstract class List3ModelOf<T1> : List1ModelOf<T1> where T1 : Item
     {
-        internal List3ModelOf(LineModel owner, T1 item) : base(owner, item, 20) { }
+        internal List3ModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;

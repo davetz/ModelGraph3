@@ -168,7 +168,7 @@ namespace ModelGraph.Core
             w.WriteByte(_formatVersion);
             foreach (var item in referenceItems)
             {
-                w.WriteUInt16((ushort)item.ItemKey); //referenced internal item
+                w.WriteUInt16(item.ItemKey); //referenced internal item
             }
 
             foreach (var item in items)
@@ -179,7 +179,6 @@ namespace ModelGraph.Core
 
         public int GetSerializerItemCount() => 0;
         public void PopulateItemIndex(Dictionary<Item, int> itemIndex) { }
-        public void RegisterInternal(Dictionary<int, Item> internalItem) { }
         #endregion
     }
 }

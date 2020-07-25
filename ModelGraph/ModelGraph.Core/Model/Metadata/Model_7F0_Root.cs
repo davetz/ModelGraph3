@@ -3,7 +3,7 @@ namespace ModelGraph.Core
 {
     public class Model_7F0_Root : List1ModelOf<Root>
     {
-        internal Model_7F0_Root(Model_623_MetadataRoot owner, Root root) : base(owner, root, 20) { }
+        internal Model_7F0_Root(Model_623_MetadataRoot owner, Root root) : base(owner, root) { }
         internal override IdKey IdKey => IdKey.Model_7F0_Root;
 
         public override bool CanExpandLeft => TotalCount > 0;

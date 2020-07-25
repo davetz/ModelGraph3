@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal Relation_StoreX_ChildRelation(RelationRoot owner)
         {
             Owner = owner;
-            Pairing = Pairing.OneToMany;
+            Pairing = Pairing.ManyToMany;
             IsRequired = true;
             Initialize(25, 25);
             owner.Add(this);

@@ -145,12 +145,7 @@ namespace ModelGraph.Core
         internal void Validate()
         {
             var prev = new Dictionary<Item, LineModel>();
-            var viewListChanged = false;
-            foreach (var model in Items)
-            {
-                viewListChanged |= model.Validate(Item, prev);
-            }
-            if (viewListChanged) 
+            if (_childModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
                 RefreshViewList(ChangeType.ViewListChanged);
             else
                 PageControl?.Refresh();
@@ -159,6 +154,14 @@ namespace ModelGraph.Core
 
         #region OverrideMethods  ==============================================
         public override (string, string) GetKindNameId(Root root) => (null, BlankName);
+        public override void GetButtonCommands(Root root, List<LineCommand> list) => _childModel.GetButtonCommands(root, list);
+        #endregion
+
+        #region Save/SaveAs/Reload  ===========================================
+        internal void Reload()
+        {
+            PageControl?.Reload();
+        }
         #endregion
     }
 }

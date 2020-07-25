@@ -3,7 +3,7 @@ namespace ModelGraph.Core
 {
     public class Model_7F4_Relation : List1ModelOf<Relation>
     {
-        internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item, 2) { }
+        internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F4_Relation;
 
         public override bool CanExpandLeft => true;

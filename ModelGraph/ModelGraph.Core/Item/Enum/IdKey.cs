@@ -39,9 +39,9 @@ namespace ModelGraph.Core
         Empty = 0,
         Item = 1,
         //=====================================================================
-        IsCovert = 0x8000, // Don't include this item in the model change log
-        IsExternal = 0x4000, // This item is serialized/deserialize to/from a repository
-        IsReference = 0x2000, // This item can be referenced by an external item                            
+        Is_Covert = 0x8000, // Don't include this item in the model change log
+        Is_External = 0x4000, // This item is serialized/deserialize to/from a repository
+        Is_Reference = 0x2000, // This item can be referenced by an external item                            
 
         KeyMask = 0xFFF,
         FlagMask = 0xF000,
@@ -54,6 +54,7 @@ namespace ModelGraph.Core
 
         NewCommand = 0x21,
         SaveCommand = 0x23,
+        SaveAsCommand = 0x24,
         ReloadCommand = 0x25,
         CloseCommand = 0x26,
 
@@ -76,23 +77,23 @@ namespace ModelGraph.Core
         #region Store ================================================(0E0-0FF)
         // root level containers for the hierarchal item trees
 
-        EnumXRoot = 0x0E1 | IsReference,
-        ViewXRoot = 0x0E2 | IsReference,
-        TableXRoot = 0x0E3 | IsReference,
-        GraphXRoot = 0x0E4 | IsReference,
-        QueryXRoot = 0x0E5 | IsReference,
-        ValueXRoot = 0x0E6 | IsReference,
-        SymbolXRoot = 0x0E7 | IsReference,
-        ColumnXRoot = 0x0E8 | IsReference,
-        ComputeXRoot = 0x0E9 | IsReference,
-        RelationXRoot = 0x0EA | IsReference,
+        EnumXRoot = 0x0E1 | Is_Reference,
+        ViewXRoot = 0x0E2 | Is_Reference,
+        TableXRoot = 0x0E3 | Is_Reference,
+        GraphXRoot = 0x0E4 | Is_Reference,
+        QueryXRoot = 0x0E5 | Is_Reference,
+        ValueXRoot = 0x0E6 | Is_Reference,
+        SymbolXRoot = 0x0E7 | Is_Reference,
+        ColumnXRoot = 0x0E8 | Is_Reference,
+        ComputeXRoot = 0x0E9 | Is_Reference,
+        RelationXRoot = 0x0EA | Is_Reference,
 
         PrimeRoot = 0x0F0, // exposes internal tables (metadata / configuration)
         EnumZRoot = 0x0F1,
         ErrorRoot = 0x0F2,
         GroupRoot = 0x0F3,
-        PropertyRoot = 0x0F4 | IsReference,
-        RelationRoot = 0x0F5 | IsReference,
+        PropertyRoot = 0x0F4 | Is_Reference,
+        RelationRoot = 0x0F5 | Is_Reference,
         GraphParams = 0xFF,
 
         #endregion
@@ -100,8 +101,8 @@ namespace ModelGraph.Core
         #region Item  ================================================(100-1FF)
 
         //=========================================
-        DummyItem = 0x100 | IsReference,
-        DummyQueryX = 0x101 | IsReference,
+        DummyItem = 0x100 | Is_Reference,
+        DummyQueryX = 0x101 | Is_Reference,
 
         DataRoot = 0x112,
 
@@ -119,37 +120,37 @@ namespace ModelGraph.Core
 
         //=========================================
         // External (user-defined) item classes
-        RowX = 0x141 | IsExternal,
-        PairX = 0x142 | IsExternal,
-        EnumX = 0x143 | IsExternal,
-        ViewX = 0x144 | IsExternal,
-        TableX = 0x145 | IsExternal,
-        GraphX = 0x146 | IsExternal,
-        QueryX = 0x147 | IsExternal,
-        SymbolX = 0x148 | IsExternal,
-        ColumnX = 0x149 | IsExternal,
-        ComputeX = 0x14A | IsExternal,
-        CommandX = 0x14B | IsExternal,
-        RelationX = 0x14C | IsExternal,
+        RowX = 0x141 | Is_External,
+        PairX = 0x142 | Is_External,
+        EnumX = 0x143 | Is_External,
+        ViewX = 0x144 | Is_External,
+        TableX = 0x145 | Is_External,
+        GraphX = 0x146 | Is_External,
+        QueryX = 0x147 | Is_External,
+        SymbolX = 0x148 | Is_External,
+        ColumnX = 0x149 | Is_External,
+        ComputeX = 0x14A | Is_External,
+        CommandX = 0x14B | Is_External,
+        RelationX = 0x14C | Is_External,
 
         //=========================================
         // QueryX detail, used to lookup resource strings
-        QueryIsCorrupt = 0x150,
-        QueryGraphRoot = 0x151,
-        QueryGraphLink = 0x152,
-        QueryViewRoot = 0x153,
-        QueryViewHead = 0x154,
-        QueryViewLink = 0x155,
-        QueryPathHead = 0x156,
-        QueryPathLink = 0x157,
-        QueryGroupHead = 0x158,
-        QueryGroupLink = 0x159,
-        QuerySegueHead = 0x15A,
-        QuerySegueLink = 0x15B,
-        QueryValueRoot = 0x15C,
-        QueryValueHead = 0x15D,
-        QueryValueLink = 0x15E,
-        QueryNodeSymbol = 0x15F,
+        QueryIsCorrupt = 0x150 | Is_External,
+        QueryGraphRoot = 0x151 | Is_External,
+        QueryGraphLink = 0x152 | Is_External,
+        QueryViewRoot = 0x153 | Is_External,
+        QueryViewHead = 0x154 | Is_External,
+        QueryViewLink = 0x155 | Is_External,
+        QueryPathHead = 0x156 | Is_External,
+        QueryPathLink = 0x157 | Is_External,
+        QueryGroupHead = 0x158 | Is_External,
+        QueryGroupLink = 0x159 | Is_External,
+        QuerySegueHead = 0x15A | Is_External,
+        QuerySegueLink = 0x15B | Is_External,
+        QueryValueRoot = 0x15C | Is_External,
+        QueryValueHead = 0x15D | Is_External,
+        QueryValueLink = 0x15E | Is_External,
+        QueryNodeSymbol = 0x15F | Is_External,
 
         //=========================================
         QueryWhere = 0x161, // used to lookup kind resource string "Where"
@@ -212,46 +213,46 @@ namespace ModelGraph.Core
 
         Relation = 0x300,
         //=========================================
-        RowX_RowX = 0x301 | IsExternal,
+        RowX_RowX = 0x301 | Is_External,
 
         //=========================================
-        EnumX_ColumnX = 0x311 | IsReference,
-        Store_ColumnX = 0x312 | IsReference,
-        Store_NameProperty = 0x313 | IsReference,
-        Store_SummaryProperty = 0x314 | IsReference,
-        StoreX_ChildRelation = 0x315 | IsReference,
-        StoreX_ParentRelation = 0x316 | IsReference,
+        EnumX_ColumnX = 0x311 | Is_Reference,
+        Store_ColumnX = 0x312 | Is_Reference,
+        Store_NameProperty = 0x313 | Is_Reference,
+        Store_SummaryProperty = 0x314 | Is_Reference,
+        StoreX_ChildRelation = 0x315 | Is_Reference,
+        StoreX_ParentRelation = 0x316 | Is_Reference,
 
         //=========================================
         Item_Error = 0x331,
-        ViewX_ViewX = 0x332 | IsReference,
-        ViewX_QueryX = 0x333 | IsReference,
-        QueryX_ViewX = 0x334 | IsReference,
-        Property_ViewX = 0x335 | IsReference,
-        Relation_ViewX = 0x336 | IsReference,
-        ViewX_Property = 0x337 | IsReference,
-        QueryX_Property = 0x338 | IsReference,
+        ViewX_ViewX = 0x332 | Is_Reference,
+        ViewX_QueryX = 0x333 | Is_Reference,
+        QueryX_ViewX = 0x334 | Is_Reference,
+        Property_ViewX = 0x335 | Is_Reference,
+        Relation_ViewX = 0x336 | Is_Reference,
+        ViewX_Property = 0x337 | Is_Reference,
+        QueryX_Property = 0x338 | Is_Reference,
 
         //=========================================
-        GraphX_SymbolX = 0x341 | IsReference,
-        SymbolX_QueryX = 0x342 | IsReference,
-        GraphX_QueryX = 0x343 | IsReference,
-        QueryX_QueryX = 0x344 | IsReference,
-        GraphX_ColorColumnX = 0x345 | IsReference,
-        GraphX_SymbolQueryX = 0x346 | IsReference,
+        GraphX_SymbolX = 0x341 | Is_Reference,
+        SymbolX_QueryX = 0x342 | Is_Reference,
+        GraphX_QueryX = 0x343 | Is_Reference,
+        QueryX_QueryX = 0x344 | Is_Reference,
+        GraphX_ColorColumnX = 0x345 | Is_Reference,
+        GraphX_SymbolQueryX = 0x346 | Is_Reference,
 
         //=========================================
-        Store_QueryX = 0x351 | IsReference,
-        Relation_QueryX = 0x352 | IsReference,
+        Store_QueryX = 0x351 | Is_Reference,
+        Relation_QueryX = 0x352 | Is_Reference,
 
         //=========================================
-        Store_ComputeX = 0x361 | IsReference,
-        ComputeX_QueryX = 0x362 | IsReference,
+        Store_ComputeX = 0x361 | Is_Reference,
+        ComputeX_QueryX = 0x362 | Is_Reference,
 
         //=========================================
-        Store_Property = 0x3FD | IsReference,
-        Store_ChildRelation = 0x3FE | IsReference,
-        Store_ParentRelation = 0x3FF | IsReference,
+        Store_Property = 0x3FD | Is_Reference,
+        Store_ChildRelation = 0x3FE | Is_Reference,
+        Store_ParentRelation = 0x3FF | Is_Reference,
 
         #endregion
 
@@ -260,104 +261,104 @@ namespace ModelGraph.Core
         Property = 0x400,
 
         //=========================================
-        ItemNameProperty = 0x401 | IsReference, // works for all items
-        ItemSummaryProperty = 0x402 | IsReference, // works for all items
-        ItemDescriptionProperty = 0x403 | IsReference, // works for all items
+        ItemNameProperty = 0x401 | Is_Reference, // works for all items
+        ItemSummaryProperty = 0x402 | Is_Reference, // works for all items
+        ItemDescriptionProperty = 0x403 | Is_Reference, // works for all items
 
         //=========================================
-        IncludeItemIdentityIndexProperty = 0x404 | IsCovert,
+        IncludeItemIdentityIndexProperty = 0x404 | Is_Covert,
 
         //=========================================
-        EnumNameProperty = 0x411 | IsReference,
-        EnumSummaryProperty = 0x412 | IsReference,
-        EnumTextProperty = 0x413 | IsReference,
-        EnumValueProperty = 0x414 | IsReference,
+        EnumNameProperty = 0x411 | Is_Reference,
+        EnumSummaryProperty = 0x412 | Is_Reference,
+        EnumTextProperty = 0x413 | Is_Reference,
+        EnumValueProperty = 0x414 | Is_Reference,
 
         //=========================================
-        TableNameProperty = 0x421 | IsReference,
-        TableSummaryProperty = 0x422 | IsReference,
+        TableNameProperty = 0x421 | Is_Reference,
+        TableSummaryProperty = 0x422 | Is_Reference,
 
         //=========================================
-        ColumnNameProperty = 0x431 | IsReference,
-        ColumnSummaryProperty = 0x432 | IsReference,
-        ColumnValueTypeProperty = 0x433 | IsReference,
-        ColumnIsChoiceProperty = 0x436 | IsReference,
+        ColumnNameProperty = 0x431 | Is_Reference,
+        ColumnSummaryProperty = 0x432 | Is_Reference,
+        ColumnValueTypeProperty = 0x433 | Is_Reference,
+        ColumnIsChoiceProperty = 0x436 | Is_Reference,
 
         //=========================================
-        RelationNameProperty = 0x441 | IsReference,
-        RelationSummaryProperty = 0x442 | IsReference,
-        RelationPairingProperty = 0x443 | IsReference,
-        RelationIsRequiredProperty = 0x444 | IsReference,
-        RelationIsReferenceProperty = 0x445 | IsReference,
+        RelationNameProperty = 0x441 | Is_Reference,
+        RelationSummaryProperty = 0x442 | Is_Reference,
+        RelationPairingProperty = 0x443 | Is_Reference,
+        RelationIsRequiredProperty = 0x444 | Is_Reference,
+        RelationIsReferenceProperty = 0x445 | Is_Reference,
 
         //=========================================
-        GraphNameProperty = 0x451 | IsReference,
-        GraphSummaryProperty = 0x452 | IsReference,
-        GraphTerminalLengthProperty = 0x453 | IsReference,
-        GraphTerminalSpacingProperty = 0x454 | IsReference,
-        GraphTerminalStretchProperty = 0x455 | IsReference,
-        GraphSymbolSizeProperty = 0x456 | IsReference,
+        GraphNameProperty = 0x451 | Is_Reference,
+        GraphSummaryProperty = 0x452 | Is_Reference,
+        GraphTerminalLengthProperty = 0x453 | Is_Reference,
+        GraphTerminalSpacingProperty = 0x454 | Is_Reference,
+        GraphTerminalStretchProperty = 0x455 | Is_Reference,
+        GraphSymbolSizeProperty = 0x456 | Is_Reference,
 
         //=========================================
-        QueryXSelectProperty = 0x460 | IsReference,
-        QueryXWhereProperty = 0x461 | IsReference,
+        QueryXSelectProperty = 0x460 | Is_Reference,
+        QueryXWhereProperty = 0x461 | Is_Reference,
 
-        QueryXConnect1Property = 0x462 | IsReference,
-        QueryXConnect2Property = 0x463 | IsReference,
+        QueryXConnect1Property = 0x462 | Is_Reference,
+        QueryXConnect2Property = 0x463 | Is_Reference,
 
-        QueryXRelationProperty = 0x466 | IsReference,
-        QueryXIsReversedProperty = 0x467 | IsReference,
-        QueryXIsImmediateProperty = 0x468 | IsReference,
-        QueryXIsPersistentProperty = 0x469 | IsReference,
-        QueryXIsBreakPointProperty = 0x46A | IsReference,
-        QueryXExclusiveKeyProperty = 0x46B | IsReference,
-        QueryXAllowSelfLoopProperty = 0x46C | IsReference,
-        QueryXIsPathReversedProperty = 0x46D | IsReference,
-        QueryXIsFullTableReadProperty = 0x46E | IsReference,
-        QueryXFacet1Property = 0x46F | IsReference,
-        QueryXFacet2Property = 0x470 | IsReference,
-        ValueXWhereProperty = 0x471 | IsReference,
-        ValueXSelectProperty = 0x472| IsReference,
-        ValueXIsReversedProperty = 0x473 | IsReference,
-        ValueXValueTypeProperty = 0x474 | IsReference,
-        QueryXLineStyleProperty = 0x475 | IsReference,
-        QueryXDashStyleProperty = 0x476 | IsReference,
-        QueryXLineColorProperty = 0x477 | IsReference,
-
-        //=========================================
-        SymbolXNameProperty = 0x481 | IsReference,
-        SymbolXAttatchProperty = 0x486 | IsReference,
+        QueryXRelationProperty = 0x466 | Is_Reference,
+        QueryXIsReversedProperty = 0x467 | Is_Reference,
+        QueryXIsImmediateProperty = 0x468 | Is_Reference,
+        QueryXIsPersistentProperty = 0x469 | Is_Reference,
+        QueryXIsBreakPointProperty = 0x46A | Is_Reference,
+        QueryXExclusiveKeyProperty = 0x46B | Is_Reference,
+        QueryXAllowSelfLoopProperty = 0x46C | Is_Reference,
+        QueryXIsPathReversedProperty = 0x46D | Is_Reference,
+        QueryXIsFullTableReadProperty = 0x46E | Is_Reference,
+        QueryXFacet1Property = 0x46F | Is_Reference,
+        QueryXFacet2Property = 0x470 | Is_Reference,
+        ValueXWhereProperty = 0x471 | Is_Reference,
+        ValueXSelectProperty = 0x472| Is_Reference,
+        ValueXIsReversedProperty = 0x473 | Is_Reference,
+        ValueXValueTypeProperty = 0x474 | Is_Reference,
+        QueryXLineStyleProperty = 0x475 | Is_Reference,
+        QueryXDashStyleProperty = 0x476 | Is_Reference,
+        QueryXLineColorProperty = 0x477 | Is_Reference,
 
         //=========================================
-        NodeCenterXYProperty = 0x491 | IsCovert,
-        NodeSizeWHProperty = 0x492 | IsCovert,
-        NodeLabelingProperty = 0x493 | IsCovert,
-        NodeResizingProperty = 0x494 | IsCovert,
-        NodeBarWidthProperty = 0x495 | IsCovert,
-        NodeOrientationProperty = 0x496 | IsCovert,
-        NodeFlipRotateProperty = 0x497 | IsCovert,
+        SymbolXNameProperty = 0x481 | Is_Reference,
+        SymbolXAttatchProperty = 0x486 | Is_Reference,
 
         //=========================================
-        EdgeFace1Property = 0x4A1 | IsCovert,
-        EdgeFace2Property = 0x4A2 | IsCovert,
-        EdgeFacet1Property = 0x4A3 | IsCovert,
-        EdgeFacet2Property = 0x4A4 | IsCovert,
-        EdgeConnect1Property = 0x4A5 | IsCovert,
-        EdgeConnect2Property = 0x4A6 | IsCovert,
+        NodeCenterXYProperty = 0x491 | Is_Covert,
+        NodeSizeWHProperty = 0x492 | Is_Covert,
+        NodeLabelingProperty = 0x493 | Is_Covert,
+        NodeResizingProperty = 0x494 | Is_Covert,
+        NodeBarWidthProperty = 0x495 | Is_Covert,
+        NodeOrientationProperty = 0x496 | Is_Covert,
+        NodeFlipRotateProperty = 0x497 | Is_Covert,
 
         //=========================================
-        ComputeXNameProperty = 0x4B1 | IsReference,
-        ComputeXSummaryProperty = 0x4B2 | IsReference,
-        ComputeXCompuTypeProperty = 0x4B3 | IsReference,
-        ComputeXWhereProperty = 0x4B4 | IsReference,
-        ComputeXSelectProperty = 0x4B5 | IsReference,
-        ComputeXSeparatorProperty = 0x4B6 | IsReference,
-        ComputeXValueTypeProperty = 0x4B7 | IsReference,
-        ComputeXNumericSetProperty = 0x4B8 | IsReference,
-        ComputeXResultsProperty = 0x4B9 | IsReference,
-        ComputeXSortingProperty = 0x4BA | IsReference,
-        ComputeXTakeSetProperty = 0x4BB | IsReference,
-        ComputeXTakeLimitProperty = 0x4BC | IsReference,
+        EdgeFace1Property = 0x4A1 | Is_Covert,
+        EdgeFace2Property = 0x4A2 | Is_Covert,
+        EdgeFacet1Property = 0x4A3 | Is_Covert,
+        EdgeFacet2Property = 0x4A4 | Is_Covert,
+        EdgeConnect1Property = 0x4A5 | Is_Covert,
+        EdgeConnect2Property = 0x4A6 | Is_Covert,
+
+        //=========================================
+        ComputeXNameProperty = 0x4B1 | Is_Reference,
+        ComputeXSummaryProperty = 0x4B2 | Is_Reference,
+        ComputeXCompuTypeProperty = 0x4B3 | Is_Reference,
+        ComputeXWhereProperty = 0x4B4 | Is_Reference,
+        ComputeXSelectProperty = 0x4B5 | Is_Reference,
+        ComputeXSeparatorProperty = 0x4B6 | Is_Reference,
+        ComputeXValueTypeProperty = 0x4B7 | Is_Reference,
+        ComputeXNumericSetProperty = 0x4B8 | Is_Reference,
+        ComputeXResultsProperty = 0x4B9 | Is_Reference,
+        ComputeXSortingProperty = 0x4BA | Is_Reference,
+        ComputeXTakeSetProperty = 0x4BB | Is_Reference,
+        ComputeXTakeLimitProperty = 0x4BC | Is_Reference,
         #endregion
 
         #region Model ================================================(600-7FF)

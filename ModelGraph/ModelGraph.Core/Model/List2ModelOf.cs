@@ -6,7 +6,7 @@ namespace ModelGraph.Core
 {
     public abstract class List2ModelOf<T1, T2> : List1ModelOf<T1> where T1 : Item where T2 : Item
     {
-        internal List2ModelOf(LineModel owner, T1 item) : base(owner, item, 20) { }
+        internal List2ModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;
@@ -21,17 +21,21 @@ namespace ModelGraph.Core
 
         internal override bool ExpandLeft(Root root)
         {
-            if (IsExpandedLeft) return false;
-
-            IsExpandedLeft = true;
-
-            SetCapacity(GetTotalCount());
-            foreach (var itm in GetChildItems())
+            if (!IsExpandedLeft)
             {
-                CreateChildModel(itm);
+                var N = TotalCount;
+                if (N > 0)
+                {
+                    IsExpandedLeft = true;
+                    SetCapacity(N);
+                    foreach (var itm in GetChildItems())
+                    {
+                        CreateChildModel(itm);
+                    }
+                    return true;
+                }
             }
-
-            return true;
+            return false;
         }
         internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
         {

@@ -217,6 +217,15 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IPageControl  =================================================
+        public void Reload()
+        {
+            _ = ReloadAsync();
+        }
+        public async System.Threading.Tasks.Task ReloadAsync()
+        {
+            var pageService = ModelPageService.Current;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.ReloadModelAsync(this); });
+        }
         public void CreateNewPage(IRootModel model, ControlType ctlType)
         {
             if (model is null) return;
@@ -595,7 +604,7 @@ namespace ModelGraph.Controls
         private void RefreshRoot()
         {
             var buttonCommands = new List<LineCommand>();
-           //_treeRoot.ButtonComands(buttonCommands);
+           TreeRoot.GetButtonCommands(DataRoot, buttonCommands);
 
             var N = buttonCommands.Count;
             var M = ControlPanel.Children.Count;

@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class Model_6A1_Row : List1ModelOf<RowX>
     {
-        internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item, 4) { }
+        internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6A1_Row;
 
         public override bool CanExpandLeft => true;
