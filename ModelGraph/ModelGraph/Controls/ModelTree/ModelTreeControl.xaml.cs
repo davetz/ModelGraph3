@@ -217,14 +217,20 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IPageControl  =================================================
-        public void Reload()
-        {
-            _ = ReloadAsync();
-        }
-        public async System.Threading.Tasks.Task ReloadAsync()
+        public async void Save()
         {
             var pageService = ModelPageService.Current;
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.ReloadModelAsync(this); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.SaveModel(this); });
+        }
+        public async void SaveAs()
+        {
+            var pageService = ModelPageService.Current;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.SaveModelAs(this); });
+        }
+        public async void Reload()
+        {
+            var pageService = ModelPageService.Current;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.ReloadModel(this); });
         }
         public void CreateNewPage(IRootModel model, ControlType ctlType)
         {

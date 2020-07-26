@@ -49,31 +49,51 @@ namespace ModelGraph.Services
         }
         #endregion
 
-        #region ReloadModel  ==================================================
-        public async Task<bool> ReloadModelAsync(IModelPageControl ctrl)
+        #region SaveModel  ====================================================
+        public async Task<bool> SaveModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
+            var root = ctrl.IModel.DataRoot;
+            if (root.Repository is StorageFileRepo repo)
+                _ = await repo.SaveAsync(root);
+            return false;
+        }
+        #endregion
 
-            var oldRootModel = ctrl.IModel;
-            var oldChef = oldRootModel.DataRoot;
-            var repo = oldChef.Repository;
+        #region SaveModelAs  ==================================================
+        public async Task<bool> SaveModelAs(IModelPageControl ctrl)
+        {
+            if (ctrl is null) return false;
+            var root = ctrl.IModel.DataRoot;
+            if (root.Repository is StorageFileRepo repo)
+                _ = await repo.SaveAsAsync(root);
+            return false;
+        }
+        #endregion
 
-            RemoveModelPage(oldRootModel);
-            oldRootModel.Release();
-
-            WindowManagerService.Current.CloseRelatedModels(oldRootModel);
-
-            var rootModel = new RootModel();
-            var newChef = rootModel.DataRoot;
-
-            _ = await repo.ReloadAsync(newChef).ConfigureAwait(true);
-
-            await ctrl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+        #region ReloadModel  ==================================================
+        public async Task<bool> ReloadModel(IModelPageControl ctrl)
+        {
+            if (ctrl is null) return false;
+            var oldModel = ctrl.IModel;
+            if (oldModel.DataRoot.Repository is StorageFileRepo repo)
             {
-                InsertModelPage(rootModel);
-            });
+                RemoveModelPage(oldModel);
+                oldModel.Release();
 
-            return true;
+                WindowManagerService.Current.CloseRelatedModels(oldModel);
+
+                var rootModel = new RootModel();
+                var newRoot = rootModel.DataRoot;
+
+                _ = await repo.ReloadAsync(newRoot).ConfigureAwait(true);
+
+                await ctrl.Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
+                {
+                    InsertModelPage(rootModel);
+                });
+            }
+            return false;
         }
         #endregion
 

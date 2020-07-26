@@ -158,6 +158,14 @@ namespace ModelGraph.Core
         #endregion
 
         #region Save/SaveAs/Reload  ===========================================
+        internal void Save()
+        {
+            PageControl?.Save();
+        }
+        internal void SaveAs()
+        {
+            PageControl?.SaveAs();
+        }
         internal void Reload()
         {
             PageControl?.Reload();

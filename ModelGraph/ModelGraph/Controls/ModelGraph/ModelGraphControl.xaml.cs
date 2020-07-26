@@ -50,6 +50,8 @@ namespace ModelGraph.Controls
 
         #region IPageControl  =================================================
         public void Reload() { }
+        public void SaveAs() { }
+        public void Save() { }
         public void Refresh()
         {
             if (EditorCanvas == null) return;

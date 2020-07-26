@@ -23,8 +23,11 @@ namespace ModelGraph.Core
         {
             var treeModel = Owner as TreeModel;
             list.Clear();
-            list.Add(new SaveCommand(this, () => { root.Repository.SaveAsync(root); }));
-            list.Add(new RelaodCommand(this, () => { treeModel.Reload(); }));
+            if (root.Repository.HasNoStorage)
+                list.Add(new SaveAsCommand(this, treeModel.SaveAs));
+            else
+                list.Add(new SaveCommand(this, treeModel.Save));
+            list.Add(new RelaodCommand(this, treeModel.Reload));
         }
     }
 }

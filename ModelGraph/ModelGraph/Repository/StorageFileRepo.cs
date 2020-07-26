@@ -3,11 +3,9 @@ using ModelGraph.Helpers;
 using ModelGraph.Core;
 using Windows.Storage;
 using Windows.Storage.Streams;
-using Windows.UI.Core;
 using Windows.Storage.Pickers;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using ModelGraph.Services;
 
 namespace ModelGraph.Repository
 {
@@ -20,7 +18,7 @@ namespace ModelGraph.Repository
 
         public StorageFileRepo() { }
 
-        #region Properties  ===================================================
+        #region IRepository  ==================================================
         public bool HasNoStorage => _storageFile is null;
         public string FullName => (_storageFile is null) ? InstanceName : _storageFile.Path;
         public string Name
@@ -39,20 +37,20 @@ namespace ModelGraph.Repository
         #endregion
 
         #region New  ==========================================================
-        public void New(Root chef)
+        internal void New(Root root)
         {
-            if (chef is null) throw new ArgumentNullException(nameof(chef));
-            chef.Repository = this;
+            if (root is null) throw new ArgumentNullException(nameof(root));
+            root.Repository = this;
             _instanceCount += 1;
             _instanceId = _instanceCount;
         }
         #endregion
 
         #region Open  =========================================================
-        public async Task<bool> OpenAsync(Root chef)
+        internal async Task<bool> OpenAsync(Root root)
         {
-            if (chef is null) throw new ArgumentNullException(nameof(chef));
-            chef.Repository = this;
+            if (root is null) throw new ArgumentNullException(nameof(root));
+            root.Repository = this;
 
             var openPicker = new FileOpenPicker
             {
@@ -65,25 +63,25 @@ namespace ModelGraph.Repository
             if (_storageFile is null)
                 return false;
 
-            bool success = await ReadAsync(chef).ConfigureAwait(true);
+            bool success = await ReadAsync(root).ConfigureAwait(true);
             return success;
         }
         #endregion
 
         #region Save  =========================================================
-        public async Task<bool> SaveAsync(Root chef)
+        internal async Task<bool> SaveAsync(Root root)
         {
-            if (chef is null) throw new ArgumentNullException(nameof(chef));
+            if (root is null) throw new ArgumentNullException(nameof(root));
             if (_storageFile is null)
                 return false;
 
-            bool success = await WriteAsync(chef).ConfigureAwait(true); ;
+            bool success = await WriteAsync(root).ConfigureAwait(true); ;
             return success;
         }
         #endregion
 
         #region Reload  =======================================================
-        public async Task<bool> ReloadAsync(Root newChef)
+        internal async Task<bool> ReloadAsync(Root newChef)
         {
             if (newChef is null) throw new ArgumentNullException(nameof(newChef));
             newChef.Repository = this;
@@ -93,12 +91,7 @@ namespace ModelGraph.Repository
         #endregion
 
         #region SaveAs  =======================================================
-        public void SaveAS(Root chef)
-        {
-            SaveAsAsync(chef).ConfigureAwait(false);
-        }
-
-        private async Task<bool> SaveAsAsync(Root chef)
+        internal async Task<bool> SaveAsAsync(Root root)
         {
             var savePicker = new FileSavePicker
             {
@@ -112,15 +105,15 @@ namespace ModelGraph.Repository
             if (_storageFile is null)
                 return false ;
 
-            bool success = await WriteAsync(chef).ConfigureAwait(true);
+            bool success = await WriteAsync(root).ConfigureAwait(true);
             return success;
         }
         #endregion
 
         #region Read  =========================================================
-        private async Task<bool> ReadAsync(Root chef)
+        private async Task<bool> ReadAsync(Root root)
         {
-            if (chef is null) throw new ArgumentNullException(nameof(chef));
+            if (root is null) throw new ArgumentNullException(nameof(root));
             try
             {
                 using (var stream = await _storageFile.OpenAsync(FileAccessMode.Read))
@@ -128,18 +121,18 @@ namespace ModelGraph.Repository
                     using (DataReader r = new DataReader(stream))
                     {
                         r.ByteOrder = ByteOrder.LittleEndian;
-                        UInt64 size = stream.Size;
+                        ulong size = stream.Size;
                         if (size < UInt32.MaxValue)
                         {
                             var byteCount = await r.LoadAsync((UInt32)size);
-                            chef.Deserialize(r);
+                            root.Deserialize(r);
                         }
                     }
                 }
             }
             catch (Exception ex)
             {
-                //chef.AddRepositorReadError(ex.Message);
+                //root.AddRepositorReadError(ex.Message);
                 return false;
             }
             return true;
@@ -147,9 +140,9 @@ namespace ModelGraph.Repository
         #endregion
 
         #region Write  ========================================================
-        private async Task<bool> WriteAsync(Root chef)
+        private async Task<bool> WriteAsync(Root root)
         {
-            if (chef is null) throw new ArgumentNullException(nameof(chef));
+            if (root is null) throw new ArgumentNullException(nameof(root));
             try
             {
                 using (var tran = await _storageFile.OpenTransactedWriteAsync())
@@ -157,7 +150,7 @@ namespace ModelGraph.Repository
                     using (var w = new DataWriter(tran.Stream))
                     {
                         w.ByteOrder = ByteOrder.LittleEndian;
-                        chef.Serialize(w);
+                        root.Serialize(w);
                         tran.Stream.Size = await w.StoreAsync(); // reset stream size to override the file
                         await tran.CommitAsync();
                     }
@@ -165,7 +158,7 @@ namespace ModelGraph.Repository
             }
             catch (Exception ex)
             {
-                //chef.AddRepositorWriteError(ex.Message);
+                //root.AddRepositorWriteError(ex.Message);
                 return false;
             }
             return true;
