@@ -32,9 +32,9 @@ namespace ModelGraph.Services
         #endregion
 
         #region Dispatch  =====================================================
-        internal async Task CreateNewPageAsync(IRootModel model, ControlType ctlType)
+        internal async Task CreateNewPageAsync(IDataModel model)
         {
-            var viewLifetimeControl = await WindowManagerService.Current.TryShowAsStandaloneAsync(model.TitleName, typeof(ModelPage), model).ConfigureAwait(true);
+            var viewLifetimeControl = await WindowManagerService.Current.TryShowAsStandaloneAsync(model.TitleName, typeof(ModelPage), model);
             viewLifetimeControl.Released += ViewLifetimeControl_Released;
         }
 
@@ -43,7 +43,7 @@ namespace ModelGraph.Services
             if (sender is ViewLifetimeControl ctrl)
             {
                 ctrl.Released -= ViewLifetimeControl_Released;
-                var modelControl = ctrl.IModel?.PageControl as IModelPageControl;
+                var modelControl = ctrl.DataModel?.PageControl as IModelPageControl;
                 modelControl?.Release();
             }
         }
@@ -53,7 +53,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.IModel.DataRoot;
+            var root = ctrl.DataModel.DataRoot;
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsync(root);
             return false;
@@ -64,7 +64,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModelAs(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.IModel.DataRoot;
+            var root = ctrl.DataModel.DataRoot;
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsAsync(root);
             return false;
@@ -75,7 +75,7 @@ namespace ModelGraph.Services
         public async Task<bool> ReloadModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var oldModel = ctrl.IModel;
+            var oldModel = ctrl.DataModel;
             if (oldModel.DataRoot.Repository is StorageFileRepo repo)
             {
                 RemoveModelPage(oldModel);
@@ -134,7 +134,7 @@ namespace ModelGraph.Services
         }
         #endregion
 
-        public Action<IRootModel> InsertModelPage { get; set; } //coordination with ShellPage NavigationView
-        public Action<IRootModel> RemoveModelPage { get; set; } //coordination with ShellPage NavigationView
+        public Action<IDataModel> InsertModelPage { get; set; } //coordination with ShellPage NavigationView
+        public Action<IDataModel> RemoveModelPage { get; set; } //coordination with ShellPage NavigationView
     }
 }

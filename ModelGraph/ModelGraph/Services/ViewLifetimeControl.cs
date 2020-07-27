@@ -1,4 +1,5 @@
 ﻿using System;
+using ModelGraph.Controls;
 using ModelGraph.Core;
 using ModelGraph.Helpers;
 
@@ -33,11 +34,11 @@ namespace ModelGraph.Services
         public string Title { get; set; }
 
         #region ModelPageService  =============================================
-        public IRootModel IModel { get; set; }
+        public IDataModel DataModel { get; set; }
         public void CloseModel()
         {
-            if (IModel is null) return;
-            IModel = null;
+            if (DataModel is null) return;
+            DataModel = null;
 
             var task = Dispatcher.RunAsync(CoreDispatcherPriority.Low, () =>
             {

@@ -30,12 +30,12 @@ namespace ModelGraph.Services
         public CoreDispatcher MainDispatcher { get; private set; }
 
         #region ModelPageService  =============================================
-        public void CloseRelatedModels(IRootModel model)
+        public void CloseRelatedModels(IDataModel model)
         {
             var views = SecondaryViews.ToArray();
             foreach (var view in views)
             {
-                var m = view.IModel;
+                var m = view.DataModel;
 
                 if (m is null) continue;
                 if (m.DataRoot != m.DataRoot) continue;
@@ -43,16 +43,22 @@ namespace ModelGraph.Services
                 view.CloseModel();
             }
         }
-        public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync(string windowTitle, Type pageType, IRootModel model)
+        public async Task<ViewLifetimeControl> TryShowAsStandaloneAsync(string windowTitle, Type pageType, IDataModel model)
         {
             ViewLifetimeControl viewControl = await CreateViewLifetimeControlAsync(windowTitle, pageType, model);
             SecondaryViews.Add(viewControl);
             viewControl.StartViewInUse();
-            var viewShown = await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);
+            await ApplicationViewSwitcher.TryShowAsViewModeAsync(viewControl.Id, ApplicationViewMode.Default);
             viewControl.StopViewInUse();
             return viewControl;
+
+            //SecondaryViews.Add(viewControl);
+            //viewControl.StartViewInUse();
+            //await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);
+            //viewControl.StopViewInUse();
+            //return viewControl;
         }
-        private async Task<ViewLifetimeControl> CreateViewLifetimeControlAsync(string windowTitle, Type pageType, IRootModel model = null)
+        private async Task<ViewLifetimeControl> CreateViewLifetimeControlAsync(string windowTitle, Type pageType, IDataModel model = null)
         {
             ViewLifetimeControl viewControl = null;
 
@@ -60,7 +66,7 @@ namespace ModelGraph.Services
             {
                 viewControl = ViewLifetimeControl.CreateForCurrentView();
                 viewControl.Title = windowTitle;
-                viewControl.IModel = model;
+                viewControl.DataModel = model;
                 viewControl.StartViewInUse();
                 var frame = new Frame
                 {

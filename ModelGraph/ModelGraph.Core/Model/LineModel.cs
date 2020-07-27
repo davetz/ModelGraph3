@@ -155,15 +155,14 @@ namespace ModelGraph.Core
                 child.DiscardChildren();
             }
         }
-        /// <summary>Walk up item tree hierachy to find the parent RootTreeModel</summary>
-        public RootModel RootModel => GetRootModel();
-        private RootModel GetRootModel()
+        /// <summary>Walk up item tree hierachy to find the parent TreeModel</summary>
+        internal TreeModel GetTreeModel()
         {
             var item = this;
             while (item != null)
             {
-                if (item is RootModel root) return root;
-                item = item.Owner as LineModel;
+                if (item is TreeModel treeModel) return treeModel;
+                item = item.Owner;
             }
             throw new Exception("GetRootModel: Corrupted item hierarchy"); // I seriously hope this never happens
         }

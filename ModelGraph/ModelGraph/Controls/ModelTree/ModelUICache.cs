@@ -9,7 +9,7 @@ namespace ModelGraph.Controls
     internal class ModelUICache
     {
         #region Properties  ===================================================
-        private readonly ModelTreeControl TC;
+        private readonly RefreshMain TC;
         internal TreeModel TreeRoot { get; private set; }
         internal Canvas TreeCanvas { get; private set; }
         public LineModel Model { get; private set; }
@@ -40,7 +40,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        private ModelUICache(ModelTreeControl tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot)
+        private ModelUICache(RefreshMain tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot)
         {
             TC = tc;
             DataRoot = dataRoot;
@@ -50,7 +50,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Allocate  =====================================================
-        internal static void Allocate(ModelTreeControl tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot, int count, Stack<ModelUICache> stack)
+        internal static void Allocate(RefreshMain tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot, int count, Stack<ModelUICache> stack)
         {
             for (int i = 0; i < count; i++)
             {

@@ -11,11 +11,11 @@ using Windows.System;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class ModelTreeControl : Page, IPageControl, IModelPageControl
+    public sealed partial class RefreshMain : Page, IPageControl, IModelPageControl
     {
         #region Properties  ===================================================
         Root DataRoot;
-        TreeModel TreeRoot;
+        TreeModel TreeModel;
         LineModel Selected;
         private List<LineModel> ViewList = new List<LineModel>(0);
         readonly List<LineCommand> MenuCommands = new List<LineCommand>();
@@ -92,15 +92,19 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        public ModelTreeControl(TreeModel root)
+        public RefreshMain(IDataModel dataModel)
         {
-            if (root is null) throw new NullReferenceException();
-            TreeRoot = root;
-            DataRoot = root.DataRoot;
+            if (dataModel is TreeModel treeModel)
+            {
+                TreeModel = treeModel;
+                DataRoot = treeModel.DataRoot;
 
-            InitializeComponent();
-            Initialize();
-            Loaded += ModelTreeControl_Loaded;
+                InitializeComponent();
+                Initialize();
+                Loaded += ModelTreeControl_Loaded;
+            }
+            else
+                throw new NullReferenceException();
         }
         private void ModelTreeControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -117,7 +121,7 @@ namespace ModelGraph.Controls
 
         private void InitializeCache()
         {
-            ModelUICache.Allocate(this, TreeCanvas, TreeRoot, DataRoot, 31, FreeCacheStack);
+            ModelUICache.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
         }
         private void DiscardCache()
         {
@@ -149,7 +153,7 @@ namespace ModelGraph.Controls
                 }
                 else
                 {
-                    if (FreeCacheStack.Count == 0) ModelUICache.Allocate(this, TreeCanvas, TreeRoot, DataRoot, 31, FreeCacheStack);
+                    if (FreeCacheStack.Count == 0) ModelUICache.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
                     var c = FreeCacheStack.Pop();
                     c.Initialize(m, i);
                     Model_Cache.Add(m, c);
@@ -176,21 +180,21 @@ namespace ModelGraph.Controls
         {
             var (leading, selected) = GetLeadingSelected();
             //ResetCacheDelta(_selected);
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeRoot.RefreshViewList(ViewSize, leading, selected, change); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.RefreshViewList(ViewSize, leading, selected, change); });
         }
         private async System.Threading.Tasks.Task SetUsageAsync(LineModel model, Usage usage)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeRoot.SetUsage(model, usage); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetUsage(model, usage); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private async System.Threading.Tasks.Task SetSortingAsync(LineModel model, Sorting sorting)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeRoot.SetSorting(model, sorting); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetSorting(model, sorting); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private async System.Threading.Tasks.Task SetFilterAsync(LineModel model, string text)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeRoot.SetFilter(model, text); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetFilter(model, text); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private (LineModel, LineModel) GetLeadingSelected()
@@ -204,7 +208,7 @@ namespace ModelGraph.Controls
         #region SetSize  ======================================================
         public void SetSize(double width, double height)
         {
-            if (TreeRoot is null || TreeCanvas is null) return;
+            if (TreeModel is null || TreeCanvas is null) return;
             if (height > 0)
             {
                 TreeCanvas.Width = Width = width;
@@ -232,12 +236,16 @@ namespace ModelGraph.Controls
             var pageService = ModelPageService.Current;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.ReloadModel(this); });
         }
-        public void CreateNewPage(IRootModel model, ControlType ctlType)
+        public void NewView(IDataModel model)
         {
             if (model is null) return;
-            _ = ModelPageService.Current.CreateNewPageAsync(model, ctlType);
+            _ = ModelPageService.Current.CreateNewPageAsync(model);
         }
-        public IRootModel IModel => TreeRoot;
+        public void Refresh()
+        {
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { RefreshAll(); });
+        }
+        public IDataModel DataModel => TreeModel;
         #endregion
 
         #region IModelControl  ================================================
@@ -336,7 +344,7 @@ namespace ModelGraph.Controls
             ItemIdentityTip.Opened -= ItemIdentityTip_Opened;
             ModelIdentityTip.Opened -= ModelIdentityTip_Opened;
 
-            TreeRoot = null;
+            TreeModel = null;
             Selected = null;
             ViewList.Clear();
             MenuCommands.Clear();
@@ -575,13 +583,15 @@ namespace ModelGraph.Controls
         #endregion
 
 
-        #region Refresh  ======================================================
-        public void Refresh()
+        #region RefreshAll  ===================================================
+        private void RefreshAll()
         {
+            if (TreeModel is null) return;
+
             _pointWheelEnabled = false;
 
             var (oldLeading, oldSelected) = GetLeadingSelected();
-            var (newModels, newSelected, atStart, atEnd) = TreeRoot.GetCurrentView(ViewSize, oldLeading, oldSelected);
+            var (newModels, newSelected, atStart, atEnd) = TreeModel.GetCurrentView(ViewSize, oldLeading, oldSelected);
 
             AtEnd = atEnd;
             AtStart = atStart;
@@ -610,7 +620,7 @@ namespace ModelGraph.Controls
         private void RefreshRoot()
         {
             var buttonCommands = new List<LineCommand>();
-           TreeRoot.GetButtonCommands(DataRoot, buttonCommands);
+           TreeModel.GetButtonCommands(DataRoot, buttonCommands);
 
             var N = buttonCommands.Count;
             var M = ControlPanel.Children.Count;
@@ -632,7 +642,7 @@ namespace ModelGraph.Controls
                     }
                 }
             }
-            ModelTitle.Text = TreeRoot.TitleName;
+            ModelTitle.Text = TreeModel.TitleName;
            //_root.IsChanged = false;
         }
 

@@ -9,6 +9,6 @@ namespace ModelGraph.Core
         void SaveAs();
         void Save();
         
-        void CreateNewPage(IRootModel model, ControlType ctlType);
+        void NewView(IDataModel model);
     }
 }

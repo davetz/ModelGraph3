@@ -12,9 +12,9 @@ namespace ModelGraph.Controls
         private Root _root;
         private Graph _graph;
         private readonly Size _desiredSize = new Size { Height = 800, Width = 800 };
-        public IRootModel Model { get; }
+        public IDataModel Model { get; }
 
-        public ModelGraphControl(IRootModel model)
+        public ModelGraphControl(IDataModel model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
             _root = model.DataRoot;
@@ -59,10 +59,10 @@ namespace ModelGraph.Controls
             CheckGraphSymbols();
             EditorCanvas.Invalidate();
         }
-        public void CreateNewPage(IRootModel model, ControlType ctlType)
+        public void NewView(IDataModel model)
         {
             if (model is null) return;
-            _ = ModelPageService.Current.CreateNewPageAsync(model, ctlType);
+            _ = ModelPageService.Current.CreateNewPageAsync(model);
         }
         #endregion
 
@@ -76,7 +76,7 @@ namespace ModelGraph.Controls
 
             EditorCanvas.RemoveFromVisualTree();
             EditorCanvas = null;
-            IModel?.Release();
+            DataModel?.Release();
         }
         public void Revert() { }
         private void CheckGraphSymbols()
@@ -130,7 +130,7 @@ namespace ModelGraph.Controls
         }
         public (int Width, int Height) PreferredSize => (400, 320);
 
-        public IRootModel IModel => throw new NotImplementedException();
+        public IDataModel DataModel => throw new NotImplementedException();
 
         public void SetSize(double width, double height)
         {

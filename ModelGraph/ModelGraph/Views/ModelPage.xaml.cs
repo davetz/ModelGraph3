@@ -29,25 +29,24 @@ namespace ModelGraph.Views
         #region NavigatedTo/From  =============================================
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            NavigatedTo(e.Parameter);
+            NavigatedToAsync(e.Parameter);
         }
 
-        internal void NavigatedTo(object parm)
+        internal async System.Threading.Tasks.Task NavigatedToAsync(object parm)
         {
             if (parm is RootModel m1)
             {
                 GetModelControl(m1);
                 NavigationService.ActiveModelPage = this;
             }
-            else if (parm is ViewLifetimeControl viewControl && viewControl.IModel is RootModel m2)
+            else if (parm is ViewLifetimeControl viewControl && viewControl.DataModel is IDataModel m2)
             {
                 GetModelControl(m2);
-                //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { viewControl.PageControl = new IModelControl(viewControl.IModel); ModelControl = viewControl.PageControl;  ControlGrid.Children.Add(viewControl.PageControl); });
             }
             ControlGrid.Children.Add(PageControl as UIElement);
 
 
-            void GetModelControl(RootModel m)
+            void GetModelControl(IDataModel m)
             {
                 if (m.PageControl is null)
                 {
@@ -57,7 +56,7 @@ namespace ModelGraph.Views
                     {
                         case ControlType.PrimaryTree:
                         case ControlType.PartialTree:
-                            var treeControl = new ModelTreeControl(m);
+                            var treeControl = new RefreshMain(m);
                             treeControl.Loaded += TreeControll_Loaded;
                             m.PageControl = treeControl;
                             break;
@@ -76,7 +75,7 @@ namespace ModelGraph.Views
 
         private void TreeControll_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is ModelTreeControl treeControl && sender is IModelPageControl pageControl)
+            if (sender is RefreshMain treeControl && sender is IModelPageControl pageControl)
             {
                 treeControl.Loaded -= TreeControll_Loaded;
                 pageControl.SetSize(ActualWidth, ActualHeight); // initializes number of lines per page

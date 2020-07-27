@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public abstract class TreeModel : ItemModelOf<Root>, IRootModel
+    public class TreeModel : ItemModelOf<Root>, IDataModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
         private LineModel _childModel; // there will only be one child model
@@ -17,23 +17,25 @@ namespace ModelGraph.Core
 
         #region Constructor  ==================================================
         internal override Item GetOwner() => Item;
-        internal TreeModel(Root root) //========== invoked in the RootModel constructor
+        internal TreeModel() //========== invoked in the RootModel constructor
         {
-            Item = root;
+            Item = new Root();
             Depth = 254;
             ControlType = ControlType.PrimaryTree;
+            Item.Add(this);
 
-            new Model_612_Root(this, root);
-            root.Add(this);
+            new Model_612_Root(this, Item);
         }
-        internal TreeModel(Root root, Action<Root,TreeModel> newLineModel)
+        internal TreeModel(Root root, Action<TreeModel> createChildModel)
         {
             Item = root;
             Depth = 254;
             ControlType = ControlType.PartialTree;
+            Item.Add(this);
 
-            newLineModel(root, this);
-            root.Add(this);
+            createChildModel(this);
+            _childModel.ExpandLeft(Item);
+            if (_childModel.Count > 0) RefreshViewList(20, _childModel.Items[0], _childModel.Items[0], ChangeType.None);
         }
         #endregion
 
@@ -169,6 +171,21 @@ namespace ModelGraph.Core
         internal void Reload()
         {
             PageControl?.Reload();
+        }
+        internal void NewView(Action<TreeModel> createChildModel = null)
+        {
+            var model = new TreeModel(Item, createChildModel);
+            PageControl?.NewView(model);
+        }
+        internal void NewView(ControlType type)
+        {
+            switch (type)
+            {
+                case ControlType.SymbolEditor:
+                    break;
+                case ControlType.GraphDisplay:
+                    break;
+            }
         }
         #endregion
     }
