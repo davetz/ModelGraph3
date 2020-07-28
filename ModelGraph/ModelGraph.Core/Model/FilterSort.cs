@@ -200,7 +200,7 @@ namespace ModelGraph.Core
                         var child = model.Items[I];
                         var used = child.IsItemUsed;
                         var tIN = used ? (Usage == Usage.IsUsed) : (Usage == Usage.IsNotUsed);
-                        tIN |= _filterRx.IsMatch(TX);
+                        tIN &= _filterRx.IsMatch(TX);
                         if (tIN) Count++;
                         if (tIN != IN) Selector[i] = (I, tIN, TX);
                     }
@@ -223,7 +223,7 @@ namespace ModelGraph.Core
                 _sortChanged = false;
                 if (Sorting == Sorting.Unsorted)
                 {
-                    Selector.Sort(RestoreSelectorOrder);
+                    Selector.Sort(RestoreNoSortOrder);
                 }
                 else
                 {
@@ -234,7 +234,7 @@ namespace ModelGraph.Core
             }
         }
         private static int AlphaSortSelector((int, bool, string) a, (int, bool, string) b) => a.Item3.CompareTo(b.Item3);
-        private static int RestoreSelectorOrder((int, bool, string) a, (int, bool, string) b) => a.Item1.CompareTo(b.Item1);
+        private static int RestoreNoSortOrder((int, bool, string) a, (int, bool, string) b) => a.Item1.CompareTo(b.Item1);
         #endregion
 
     }

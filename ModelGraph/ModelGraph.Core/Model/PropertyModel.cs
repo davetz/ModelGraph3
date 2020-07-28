@@ -8,6 +8,8 @@ namespace ModelGraph.Core
         internal Item Item;
         internal override Item GetItem() => Item;
 
+        internal override bool IsItemUsed => !(Property is ColumnX cx) || (cx.Value.IsSpecific(Item));
+
         internal PropertyModel(LineModel owner, Item item, Property prop)
         {
             Item = item;

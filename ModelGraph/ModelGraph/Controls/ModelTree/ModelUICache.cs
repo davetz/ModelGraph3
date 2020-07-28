@@ -863,7 +863,7 @@ namespace ModelGraph.Controls
                             AddFilterText(filterText);
                             AddFilterCount(filterCount);
                         }
-                        else if (Model.IsUsedFilter || Model.IsNotUsedFilter)
+                        else if (usage != Usage.None)
                         {
                             AddFilterCount(filterCount);
                         }

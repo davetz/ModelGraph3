@@ -1140,24 +1140,23 @@ namespace ModelGraph.Controls
         {
             if (obj != null && obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
             {
-                if (mdl.IsUsedFilter)
+                Usage usage;
+                if (obj.Text == UsageIsUsed)
                 {
-                    mdl.IsUsedFilter = false;
-                    mdl.IsNotUsedFilter = true;
                     obj.Text = UsageIsNotUsed;
+                    usage = Usage.IsNotUsed;
                 }
-                else if (mdl.IsNotUsedFilter)
+                else if (obj.Text == UsageAll)
                 {
-                    mdl.IsUsedFilter = false;
-                    mdl.IsNotUsedFilter = false;
-                    obj.Text = UsageAll;
+                    obj.Text = UsageIsUsed;
+                    usage = Usage.IsUsed;
                 }
                 else
                 {
-                    mdl.IsUsedFilter = true;
-                    obj.Text = UsageIsUsed;
-                }
-                _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
+                    obj.Text = UsageAll;
+                    usage = Usage.None;
+                }                
+                _ = SetUsageAsync(mdl, usage);
             }
         }
         #endregion
