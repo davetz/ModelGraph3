@@ -10,12 +10,6 @@ namespace ModelGraph.Core
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.RelationXRoot;
 
-        internal PropertyOf<Relation, string> NameProperty;
-        internal PropertyOf<Relation, string> SummaryProperty;
-        internal PropertyOf<Relation, string> PairingProperty;
-        internal PropertyOf<Relation, bool> IsRequiredProperty;
-
-
         #region Constructor  ==================================================
         internal RelationXRoot(Root root)
         {
@@ -24,7 +18,6 @@ namespace ModelGraph.Core
             new RelationXLink(root, this);
         }
         #endregion
-
 
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
@@ -56,7 +49,7 @@ namespace ModelGraph.Core
         };
         #endregion
 
-        #region IRelationStore  ===============================================
+        #region IRelationRoot  ================================================
         public Relation[] GetRelationArray()
         {
             var relationArray = new Relation[Count];
@@ -64,6 +57,7 @@ namespace ModelGraph.Core
             {
                 relationArray[i] = Items[i];
             }
+
             return relationArray;
         }
         #endregion

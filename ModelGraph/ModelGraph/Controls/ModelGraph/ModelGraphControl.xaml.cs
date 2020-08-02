@@ -52,6 +52,7 @@ namespace ModelGraph.Controls
         public void Reload() { }
         public void SaveAs() { }
         public void Save() { }
+        public void Close() { }
         public void Refresh()
         {
             if (EditorCanvas == null) return;

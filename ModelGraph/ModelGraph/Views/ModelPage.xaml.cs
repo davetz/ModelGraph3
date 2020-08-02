@@ -56,7 +56,7 @@ namespace ModelGraph.Views
                     {
                         case ControlType.PrimaryTree:
                         case ControlType.PartialTree:
-                            var treeControl = new RefreshMain(m);
+                            var treeControl = new ModelTreeControl(m);
                             treeControl.Loaded += TreeControll_Loaded;
                             m.PageControl = treeControl;
                             break;
@@ -75,7 +75,7 @@ namespace ModelGraph.Views
 
         private void TreeControll_Loaded(object sender, RoutedEventArgs e)
         {
-            if (sender is RefreshMain treeControl && sender is IModelPageControl pageControl)
+            if (sender is ModelTreeControl treeControl && sender is IModelPageControl pageControl)
             {
                 treeControl.Loaded -= TreeControll_Loaded;
                 pageControl.SetSize(ActualWidth, ActualHeight); // initializes number of lines per page

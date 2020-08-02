@@ -71,6 +71,21 @@ namespace ModelGraph.Services
         }
         #endregion
 
+        #region CloseModel  ==================================================
+        public void CloseModel(IModelPageControl ctrl)
+        {
+            if (ctrl is null) return;
+            var model = ctrl.DataModel;
+            if (model.DataRoot.Repository is StorageFileRepo repo)
+            {
+                RemoveModelPage(model);
+                model.Release();
+
+                WindowManagerService.Current.CloseRelatedModels(model);
+            }
+        }
+        #endregion
+
         #region ReloadModel  ==================================================
         public async Task<bool> ReloadModel(IModelPageControl ctrl)
         {

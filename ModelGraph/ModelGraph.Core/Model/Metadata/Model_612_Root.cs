@@ -28,6 +28,7 @@ namespace ModelGraph.Core
             else
                 list.Add(new SaveCommand(this, treeModel.Save));
             list.Add(new RelaodCommand(this, treeModel.Reload));
+            list.Add(new CloseCommand(this, treeModel.Close));
         }
     }
 }

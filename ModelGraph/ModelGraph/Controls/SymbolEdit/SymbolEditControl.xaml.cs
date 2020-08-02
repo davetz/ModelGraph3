@@ -101,6 +101,7 @@ namespace ModelGraph.Controls
         public void Reload() { }
         public void SaveAs() { }
         public void Save() { }
+        public void Close() { }
         public void NewView(IDataModel model)
         {
             if (model is null) return;

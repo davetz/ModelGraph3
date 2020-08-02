@@ -79,7 +79,6 @@ namespace ModelGraph.Core
                 if (item is IPrimeRoot pr) pr.CreateSecondaryHierarchy(this);
             }
 
-
             foreach (var item in instanceList)
             {
                 if (item is IPrimeRoot pr) pr.RegisterRelationalReferences(this);

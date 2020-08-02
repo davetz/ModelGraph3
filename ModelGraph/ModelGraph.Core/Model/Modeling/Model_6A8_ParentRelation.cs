@@ -24,5 +24,22 @@ namespace ModelGraph.Core
             new Model_6A1_Row(this, childItem);
         }
         #endregion
+
+        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
+        {
+            if (dropModel.GetItem() is RowX rx)
+            {
+                var (head, _) = _relationX_RowX_RowX.GetHeadTail();
+                if (head == rx.Owner)
+                {
+                    if (doDrop)
+                    {
+                        ItemLinked.Record(root, _relationX_RowX_RowX, Item, rx);
+                    }
+                    return DropAction.Link;
+                }
+            }
+            return DropAction.None;
+        }
     }
 }

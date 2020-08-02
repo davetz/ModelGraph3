@@ -11,7 +11,7 @@ using Windows.System;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class RefreshMain : Page, IPageControl, IModelPageControl
+    public sealed partial class ModelTreeControl : Page, IPageControl, IModelPageControl
     {
         #region Properties  ===================================================
         Root DataRoot;
@@ -92,7 +92,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        public RefreshMain(IDataModel dataModel)
+        public ModelTreeControl(IDataModel dataModel)
         {
             if (dataModel is TreeModel treeModel)
             {
@@ -221,6 +221,11 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IPageControl  =================================================
+        public async void Close()
+        {
+            var pageService = ModelPageService.Current;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { pageService.CloseModel(this); });
+        }
         public async void Save()
         {
             var pageService = ModelPageService.Current;

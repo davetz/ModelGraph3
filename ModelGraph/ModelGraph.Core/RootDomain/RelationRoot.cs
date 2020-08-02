@@ -7,13 +7,12 @@ namespace ModelGraph.Core
         {
             Owner = root;
             SetCapacity(30);
+            new RelationLink(root, this);
         }
 
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            new RelationLink(root, this);
-
             root.RegisterPrivateItem(new Relation_Item_Error(this));
 
             root.RegisterReferenceItem(new Relation_ComputeX_QueryX(this));
@@ -40,10 +39,6 @@ namespace ModelGraph.Core
 
             root.RegisterReferenceItem(new Relation_StoreX_ChildRelation(this));
             root.RegisterReferenceItem(new Relation_StoreX_ParentRelation(this));
-
-
-            Add(root.Get<Relation_Store_ChildRelation>());
-            Add(root.Get<Relation_Store_ParentRelation>());
         }
         public void RegisterRelationalReferences(Root root)
         {
@@ -51,7 +46,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GetRelationArray  =============================================
+        #region IRelationRoot  ================================================
         public Relation[] GetRelationArray()
         {
             var relationArray = new Relation[Count];

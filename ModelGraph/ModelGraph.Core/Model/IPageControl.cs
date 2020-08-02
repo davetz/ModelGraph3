@@ -8,6 +8,7 @@ namespace ModelGraph.Core
         void Reload();
         void SaveAs();
         void Save();
+        void Close();
         
         void NewView(IDataModel model);
     }
