@@ -7,16 +7,16 @@ namespace ModelGraph.Core
     internal abstract class LinkSerializer 
     {
         static byte _formatVersion = 1;
-        protected IRelationRoot _relationStore;
+        protected IRelationRoot _relationRoot;
 
-        internal LinkSerializer(IRelationRoot relStore)
+        internal LinkSerializer(IRelationRoot relRoot)
         {
-            _relationStore = relStore;
+            _relationRoot = relRoot;
         }
 
         public bool HasData()
         {
-            var rlationArray = _relationStore.GetRelationArray();
+            var rlationArray = _relationRoot.GetRelationArray();
             foreach (var rel in rlationArray)
             {
                 if (rel.HasLinks) return true;
@@ -190,7 +190,7 @@ namespace ModelGraph.Core
         #region WriteData  ====================================================
         public void WriteData(DataWriter w, Dictionary<Item, int> itemIndex)
         {
-            var rlationArray = _relationStore.GetRelationArray();
+            var rlationArray = _relationRoot.GetRelationArray();
             var N = 0;
             foreach (var rel in rlationArray) { if (rel.HasLinks) N++; } //count number of serialized relations 
 

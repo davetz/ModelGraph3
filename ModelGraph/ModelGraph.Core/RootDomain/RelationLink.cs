@@ -12,24 +12,7 @@ namespace ModelGraph.Core
             root.RegisterLinkSerializer((_serializerGuid, this));
         }
 
-        public void PopulateItemIndex(Dictionary<Item, int> itemIndex)
-        {
-            var relationArray = _relationStore.GetRelationArray();
-            foreach (var rel in relationArray)
-            {
-                if (rel.HasLinks)
-                {
-                    itemIndex[rel] = 0;
-                    var len = rel.GetLinks(out List<Item> parents, out List<Item> children);
-                    for (int i = 0; i < len; i++)
-                    {
-                        itemIndex[parents[i]] = 0;
-                        itemIndex[children[i]] = 0;
-                    }
-                }
-            }
-        }
+        public void PopulateItemIndex(Dictionary<Item, int> itemIndex) { }
         public int GetSerializerItemCount() => 0;
-        public void RegisterInternal(Dictionary<int, Item> internalItem) { }
     }
 }

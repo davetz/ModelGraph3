@@ -13,8 +13,6 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            root.RegisterPrivateItem(new Relation_Item_Error(this));
-
             root.RegisterReferenceItem(new Relation_ComputeX_QueryX(this));
             root.RegisterReferenceItem(new Relation_EnumX_ColumnX(this));
             root.RegisterReferenceItem(new Relation_GraphX_ColorColumnX(this));
@@ -39,6 +37,11 @@ namespace ModelGraph.Core
 
             root.RegisterReferenceItem(new Relation_StoreX_ChildRelation(this));
             root.RegisterReferenceItem(new Relation_StoreX_ParentRelation(this));
+
+            // 2 extra items shown in internal Relations but not serialized
+            //=================================================================
+            Add(root.Get<Relation_Store_ChildRelation>());
+            Add(root.Get<Relation_Store_ParentRelation>());
         }
         public void RegisterRelationalReferences(Root root)
         {
@@ -49,8 +52,9 @@ namespace ModelGraph.Core
         #region IRelationRoot  ================================================
         public Relation[] GetRelationArray()
         {
-            var relationArray = new Relation[Count];
-            for (int i = 0; i < Count; i++)
+            var N = Count - 2;
+            var relationArray = new Relation[N];
+            for (int i = 0; i < N; i++)
             {
                 relationArray[i] = Items[i];
             }

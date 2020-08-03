@@ -142,6 +142,8 @@ namespace ModelGraph.Core
                             items[i] = property_QueryX_Select;
                         else if (key == (ushort)(IdKey.ValueXWhereProperty & IdKey.KeyMask))
                             items[i] = property_QueryX_Where;
+                        else if (key == (ushort)IdKey.Store_ChildRelation || key == (ushort)IdKey.Store_ParentRelation)
+                            continue;
                         else
                             throw new Exception("Unkown key reference");
                     }

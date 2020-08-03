@@ -30,6 +30,9 @@ namespace ModelGraph.Core
             Internal_Store_ChildRelation = new Relation_Store_ChildRelation(this);
             Internal_Store_ParentRelation = new Relation_Store_ParentRelation(this);
 
+            RegisterPrivateItem(Internal_Store_ChildRelation);
+            RegisterPrivateItem(Internal_Store_ParentRelation);
+
             Initialize(); 
 
             if (createTestModel) CreateTestModel();
@@ -53,8 +56,6 @@ namespace ModelGraph.Core
         private void Initialize()
         {
             RegisterReferenceItem(new DummyItem(this));
-            RegisterReferenceItem(Internal_Store_ChildRelation);
-            RegisterReferenceItem(Internal_Store_ParentRelation);
 
             RegisterReferenceItem(new RelationRoot(this));
             RegisterReferenceItem(new PropertyRoot(this));

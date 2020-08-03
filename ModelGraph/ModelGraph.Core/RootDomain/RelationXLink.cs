@@ -13,7 +13,6 @@ namespace ModelGraph.Core
         }
 
         public void PopulateItemIndex(Dictionary<Item, int> itemIndex) { }
-
         public int GetSerializerItemCount() => 0;
     }
 }

@@ -94,6 +94,7 @@ namespace ModelGraph.Core
         GroupRoot = 0x0F3,
         PropertyRoot = 0x0F4 | Is_Reference,
         RelationRoot = 0x0F5 | Is_Reference,
+        RelationZRoot = 0x0FE,
         GraphParams = 0xFF,
 
         #endregion
@@ -251,8 +252,8 @@ namespace ModelGraph.Core
 
         //=========================================
         Store_Property = 0x3FD | Is_Reference,
-        Store_ChildRelation = 0x3FE | Is_Reference,
-        Store_ParentRelation = 0x3FF | Is_Reference,
+        Store_ChildRelation = 0x3FE,
+        Store_ParentRelation = 0x3FF,
 
         #endregion
 
