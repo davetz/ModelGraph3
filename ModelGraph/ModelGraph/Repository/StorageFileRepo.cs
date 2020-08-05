@@ -63,8 +63,8 @@ namespace ModelGraph.Repository
             if (_storageFile is null)
                 return false;
 
-            bool success = await ReadAsync(root).ConfigureAwait(true);
-            return success;
+            await ReadAsync(root).ConfigureAwait(true);
+            return true;
         }
         #endregion
 
@@ -105,8 +105,8 @@ namespace ModelGraph.Repository
             if (_storageFile is null)
                 return false ;
 
-            bool success = await WriteAsync(root).ConfigureAwait(true);
-            return success;
+            await WriteAsync(root).ConfigureAwait(true);
+            return true;
         }
         #endregion
 

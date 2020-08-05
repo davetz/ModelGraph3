@@ -19,7 +19,7 @@
         IsSettingsVisible="True"
         AlwaysShowHeader="False"
         CompactModeThresholdWidth="300"
-        ExpandedModeThresholdWidth="1024"
+        ExpandedModeThresholdWidth="4096"
 
         Background="{ThemeResource SystemControlBackgroundAltHighBrush}">
         <winui:NavigationView.MenuItems>

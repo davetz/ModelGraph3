@@ -108,11 +108,12 @@ namespace ModelGraph.Core
                     }
                     else
                     {//==================================Refactor Patch
+                        key &= (ushort)IdKey.KeyMask;
                         if (key == (ushort)(IdKey.Relation_Store_ChildRelation & IdKey.KeyMask))
                             items[i] = relation_StoreX_ChildRelation;
                         else if (key == (ushort)(IdKey.Relation_Store_ParentRelation & IdKey.KeyMask))
                             items[i] = relation_StoreX_ParentRelation;
-                        if (key == (ushort)(IdKey.EnumNameProperty & IdKey.KeyMask))
+                        else if (key == (ushort)(IdKey.EnumNameProperty & IdKey.KeyMask))
                             items[i] = property_Item_Name;
                         else if (key == (ushort)(IdKey.TableNameProperty & IdKey.KeyMask))
                             items[i] = property_Item_Name;
