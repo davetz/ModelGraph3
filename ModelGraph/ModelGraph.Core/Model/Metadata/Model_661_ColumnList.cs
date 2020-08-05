@@ -11,7 +11,7 @@ namespace ModelGraph.Core
             Store_ColumnX = item.GetRoot().Get<Relation_Store_ColumnX>();
         }
         internal override IdKey IdKey => IdKey.Model_661_ColumnList;
-        internal override string GetFilterSortId(Root root) => GetNameId(root);
+        internal override string GetFilterSortId() => GetNameId();
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => Store_ColumnX.ChildCount(Item);

@@ -35,13 +35,13 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.ComputeX;
-        public override string GetNameId(Root root) => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetSummaryId(Root root) => Summary;
-        public override string GetDescriptionId(Root root) => Description;
+        public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
+        public override string GetSummaryId() => Summary;
+        public override string GetDescriptionId() => Description;
         #endregion
 
         #region Properties  ===================================================
-        public override string GetParentId(Root root) => Owner.GetParentId(root, this);
+        public override string GetParentId() => Owner.GetParentId(this);
 
         internal void SetCompuType(CompuType ct) => Owner.SetComputeTypeProperty(this, ct);
 

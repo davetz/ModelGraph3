@@ -37,22 +37,22 @@ namespace ModelGraph.Core
         #region Identity  =====================================================
         internal override IdKey IdKey => GetIdKey();
 
-        public override string GetNameId(Root root)
+        public override string GetNameId()
         {
             string name;
             var (head, tail) = GetHeadTail();
             if (head is null) return InvalidItem;
 
             if (IsRoot)
-                name = head.GetDoubleNameId(root);
+                name = head.GetDoubleNameId();
             else
-                name = $"{head.GetNameId(root)} --> {tail.GetNameId(root)}";
+                name = $"{head.GetNameId()} --> {tail.GetNameId()}";
 
             if (HasSelect || HasWhere || IsRoot || IsHead || IsTail)
             {
                 name = $"{name}      [";
-                if (HasWhere) name = $"{name}{root.GetNameId(IdKey.QueryWhere)}( {WhereString} )";
-                if (HasSelect) name = $"{name} {root.GetNameId(IdKey.QuerySelect)}( {SelectString} )";
+                if (HasWhere) name = $"{name}{Owner.Owner.GetNameId(IdKey.QueryWhere)}( {WhereString} )";
+                if (HasSelect) name = $"{name} {Owner.Owner.GetNameId(IdKey.QuerySelect)}( {SelectString} )";
 
                 if (IsRoot || IsHead || IsTail)
                 {

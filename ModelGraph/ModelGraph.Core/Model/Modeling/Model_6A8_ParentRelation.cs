@@ -11,8 +11,8 @@ namespace ModelGraph.Core
             _relationX_RowX_RowX = rel as RelationX_RowX_RowX;
         }
         internal override IdKey IdKey => IdKey.Model_6A8_ParentRelation;
-        public override (string, string) GetKindNameId(Root root = null) => _relationX_RowX_RowX.GetKindNameId(root);
-        internal override string GetFilterSortId(Root root) => _relationX_RowX_RowX.GetNameId(root);
+        public override (string, string) GetKindNameId() => _relationX_RowX_RowX.GetKindNameId();
+        internal override string GetFilterSortId() => _relationX_RowX_RowX.GetNameId();
 
         internal override bool IsItemUsed => _relationX_RowX_RowX.ParentCount(Item) > 0;
 

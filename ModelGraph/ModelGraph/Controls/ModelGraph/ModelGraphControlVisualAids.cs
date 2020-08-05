@@ -12,13 +12,13 @@ namespace ModelGraph.Controls
         {
             if (node != null)
             {
-                ItemToolTip.Text = node.Item.GetDoubleNameId(_root);
+                ItemToolTip.Text = node.Item.GetDoubleNameId();
                 ShowTooltip();
             }
         }
         private void ShowEdgeTooltip(Edge edge)
         {
-            ItemToolTip.Text = $"({edge.Node1.Item.GetDoubleNameId(_root)})  -->  ({edge.Node2.Item.GetDoubleNameId(_root)})";
+            ItemToolTip.Text = $"({edge.Node1.Item.GetDoubleNameId()})  -->  ({edge.Node2.Item.GetDoubleNameId()})";
             ShowTooltip();
         }
         private void ShowTooltip()

@@ -28,10 +28,10 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.ColumnX;
-        public override string GetNameId(Root root) => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetParentId(Root root) => root.Get<Relation_Store_ColumnX>().TryGetParent(this, out Store p) ? p.GetNameId(root) : GetKindId(root);
-        public override string GetSummaryId(Root root) => Summary;
-        public override string GetDescriptionId(Root root) => Description;
+        public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
+        public override string GetParentId() => Owner.GetColumnXParentId(this);
+        public override string GetSummaryId() => Summary;
+        public override string GetDescriptionId() => Description;
         #endregion
 
         #region TrySetValueType  ==============================================

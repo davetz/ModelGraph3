@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         internal int Count => Paths.Count;
         internal void Add(Path path) { Paths.Add(path); }
         internal Graph Graph { get { return Owner as Graph; } }
-        public override string GetNameId(Root root) => Graph.Levels.IndexOf(this).ToString();
+        public override string GetNameId() => Graph.Levels.IndexOf(this).ToString();
         #endregion
     }
 }

@@ -12,6 +12,6 @@ namespace ModelGraph.Core
 
         internal override string GetValue(Item item) => Cast(item).SelectString;
         internal override void SetValue(Item item, string val) =>  Cast(item).SelectString = val;
-        internal override string GetParentName(Root root, Item item) => Cast(item).GetTailTableName();
+        internal override string GetParentName(Item item) => Cast(item).GetTailTableName();
     }
 }

@@ -268,7 +268,7 @@
 
         internal bool HasOpenPaths => (OpenPathIndex >= 0);
         internal int OpenPathCount => (Graph == null) ? 0 : Graph.OpenPathCount(OpenPathIndex);
-        public override string ToString() => Item.GetDoubleNameId(DataRoot);
+        public override string ToString() => Item.GetDoubleNameId();
         #endregion
     }
 }

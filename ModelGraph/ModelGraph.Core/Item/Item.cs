@@ -19,15 +19,15 @@ namespace ModelGraph.Core
         internal virtual string Summary { get => ""; set => _ = value; }        //most external items have a summary string
         internal virtual string Description { get => ""; set => _ = value; }    //most external items may have a discription
 
-        public virtual string GetKindId(Root root = null) => root is null ? GetRoot().GetKindId(IdKey) : root.GetKindId(IdKey);
-        public virtual string GetNameId(Root root = null) { var name = root is null ? GetRoot().GetNameId(IdKey) : root.GetNameId(IdKey); return string.IsNullOrWhiteSpace(name) ? GetIndexId() : name; }
-        public virtual string GetParentId(Root root = null) => GetOwner().GetNameId(root);
-        public virtual string GetDoubleNameId(Root root = null) => $"{GetParentId(root)} : {GetNameId(root)}";
-        public virtual string GetChangeLogId(Root root = null) => GetDoubleNameId(root);
-        public virtual (string, string) GetKindNameId(Root root = null) => (GetKindId(root), GetNameId(root));
-        public virtual string GetSummaryId(Root root = null) => root is null ? GetRoot().GetSummaryId(IdKey) : root.GetSummaryId(IdKey);
-        public virtual string GetDescriptionId(Root root = null) => root is null ? GetRoot().GetDescriptionId(IdKey) : root.GetDescriptionId(IdKey);
-        public virtual string GetAcceleratorId(Root root = null) => root is null ? GetRoot().GetAcceleratorId(IdKey) : root.GetAcceleratorId(IdKey);
+        public virtual string GetKindId() => GetRoot().GetKindId(IdKey);
+        public virtual string GetNameId() => GetRoot().GetNameId(IdKey);
+        public virtual string GetParentId() => GetOwner().GetNameId();
+        public virtual string GetDoubleNameId() => $"{GetParentId()} : {GetNameId()}";
+        public virtual string GetChangeLogId() => GetDoubleNameId();
+        public virtual (string, string) GetKindNameId() => (GetKindId(), GetNameId());
+        public virtual string GetSummaryId() => GetRoot().GetSummaryId(IdKey);
+        public virtual string GetDescriptionId() => GetRoot().GetDescriptionId(IdKey);
+        public virtual string GetAcceleratorId() => GetRoot().GetAcceleratorId(IdKey);
         internal string GetIndexId()
         {
             var inx = Index;

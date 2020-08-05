@@ -631,9 +631,9 @@ namespace ModelGraph.Core
         internal string GetTailTableName(QueryX qx)
         {
             var (_, tail) = GetHeadTail(qx);
-            return tail.GetNameId(Owner);
+            return tail.GetNameId();
         }
-        internal string GetRelationNameId(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation re) ? re.GetNameId(Owner) : InvalidItem;
+        internal string GetRelationNameId(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation re) ? re.GetNameId() : InvalidItem;
 
         internal void SetWhereString(QueryX qx, string val)
         {

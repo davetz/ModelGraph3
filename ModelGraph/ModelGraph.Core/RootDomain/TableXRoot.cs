@@ -28,6 +28,8 @@ namespace ModelGraph.Core
             root.RegisterChildRelation(this, root.Get<Relation_Store_ComputeX>());
             root.RegisterChildRelation(this, root.Get<Relation_Store_NameProperty>());
             root.RegisterChildRelation(this, root.Get<Relation_Store_SummaryProperty>());
+
+            InitializeLocalReferences(root);
         }
 
         private Property[] GetProps(Root root) => new Property[]
@@ -116,6 +118,28 @@ namespace ModelGraph.Core
                 }
             }
         }
+        #endregion
+
+        #region RowXMethods  ==================================================
+        //========================================== frequently used references
+        private Relation_Store_NameProperty _relation_Store_NameProperty;
+        private Relation_Store_SummaryProperty _relation_Store_SummaryProperty;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            _relation_Store_NameProperty = root.Get<Relation_Store_NameProperty>();
+            _relation_Store_SummaryProperty = root.Get<Relation_Store_SummaryProperty>();
+        }
+        #endregion
+
+        internal string GetRowXNameId(RowX rx)
+        {
+            var text = _relation_Store_NameProperty.TryGetChild(rx.Owner, out Property p) ? p.Value.GetString(rx) : string.Empty;
+            return string.IsNullOrWhiteSpace(text) ? rx.GetIndexId() : text;
+        }
+
+        internal string GetRowXSummaryId(RowX rx) =>  _relation_Store_SummaryProperty.TryGetChild(rx.Owner, out Property p) ? p.Value.GetString(rx) : string.Empty;
         #endregion
     }
 }

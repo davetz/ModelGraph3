@@ -194,7 +194,7 @@ namespace ModelGraph.Core
         internal virtual bool IsItemUsed => true;
 
         public virtual int TotalCount => 0;
-        internal virtual string GetFilterSortId(Root root) => $"{GetItem().GetKindId(root)}{GetItem().GetNameId(root)}";
+        internal virtual string GetFilterSortId() => $"{GetItem().GetKindId()}{GetItem().GetNameId()}";
 
         public byte ItemDelta => (byte)(GetItem().ChildDelta + GetItem().ModelDelta);
         public virtual bool CanDrag => false;

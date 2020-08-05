@@ -30,6 +30,8 @@ namespace ModelGraph.Core
             root.RegisterChildRelation(this, root.Get<Relation_SymbolX_QueryX>());
 
             root.RegisterParentRelation(this, root.Get<Relation_GraphX_SymbolX>());
+
+            InitializeLocalReferences(root);
         }
 
         private Property[] GetProps(Root root) => new Property[]
@@ -129,5 +131,22 @@ namespace ModelGraph.Core
             }
         }
         #endregion
+
+
+        #region SymbolXMethods  ===============================================
+        //========================================== frequently used references
+        private Relation_GraphX_SymbolX _relation_GraphX_SymbolX;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            _relation_GraphX_SymbolX = root.Get<Relation_GraphX_SymbolX>();
+        }
+        #endregion
+
+        internal string GetSymbolXParentId(SymbolX sx) => _relation_GraphX_SymbolX.TryGetParent(this, out GraphX p) ? p.GetNameId() : GetKindId();
+
+        #endregion
+
     }
 }

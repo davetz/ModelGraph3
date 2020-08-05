@@ -10,7 +10,7 @@
         internal override IdKey IdKey =>  IdKey.ItemLinked;
 
         #region Constructor  ==================================================
-        internal ItemLinked(ChangeSet owner, Relation relation, Item parent, Item child, int parentIndex, int childIndex, string name)
+        private ItemLinked(ChangeSet owner, Relation relation, Item parent, Item child, int parentIndex, int childIndex, string name)
         {
             Owner = owner;
             _name = name;
@@ -28,13 +28,14 @@
         #region Record  =======================================================
         static internal void Record(Root root, Relation rel, Item item1, Item item2)
         {
-            var nam1 = item1.GetDoubleNameId(root);
-            var nam2 = item2.GetDoubleNameId(root);
-            var rnam = rel.GetNameId(root);
+            var nam1 = item1.GetDoubleNameId();
+            var nam2 = item2.GetDoubleNameId();
+            var rnam = rel.GetNameId();
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";
             (int parentIndex, int chilldIndex) = rel.AppendLink(item1, item2);
-            new ItemLinked(root.Get<ChangeRoot>().ChangeSet, rel, item1, item2, parentIndex, chilldIndex, name);
+            new ItemLinked(root.Get<ChangeRoot>().ChangeSet, rel, item1, item2, parentIndex, chilldIndex, name).DoNow();
+            
         }
         #endregion
 

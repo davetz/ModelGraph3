@@ -7,8 +7,8 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_671_ChildRelation;
 
 
-        public override (string, string) GetKindNameId(Root root) => Item.GetKindNameId(root);
-        public override string GetSummaryId(Root root) => Item.GetSummaryId(root);
+        public override (string, string) GetKindNameId() => Item.GetKindNameId();
+        public override string GetSummaryId() => Item.GetSummaryId();
 
         public override bool CanDrag => true;
         

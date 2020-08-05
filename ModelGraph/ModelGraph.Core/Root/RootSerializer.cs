@@ -108,9 +108,9 @@ namespace ModelGraph.Core
                     }
                     else
                     {//==================================Refactor Patch
-                        if (key == (ushort)(IdKey.Store_ChildRelation & IdKey.KeyMask))
+                        if (key == (ushort)(IdKey.Relation_Store_ChildRelation & IdKey.KeyMask))
                             items[i] = relation_StoreX_ChildRelation;
-                        else if (key == (ushort)(IdKey.Store_ParentRelation & IdKey.KeyMask))
+                        else if (key == (ushort)(IdKey.Relation_Store_ParentRelation & IdKey.KeyMask))
                             items[i] = relation_StoreX_ParentRelation;
                         if (key == (ushort)(IdKey.EnumNameProperty & IdKey.KeyMask))
                             items[i] = property_Item_Name;
@@ -142,8 +142,6 @@ namespace ModelGraph.Core
                             items[i] = property_QueryX_Select;
                         else if (key == (ushort)(IdKey.ValueXWhereProperty & IdKey.KeyMask))
                             items[i] = property_QueryX_Where;
-                        else if (key == (ushort)IdKey.Store_ChildRelation || key == (ushort)IdKey.Store_ParentRelation)
-                            continue;
                         else
                             throw new Exception("Unkown key reference");
                     }

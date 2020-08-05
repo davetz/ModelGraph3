@@ -8,15 +8,14 @@ namespace ModelGraph.Core
 
         public override bool CanExpandLeft => true;
 
-        public override (string, string) GetKindNameId(Root root)
+        public override (string, string) GetKindNameId()
         {
-            var prop = root.Get<Property_Relation_Pairing>();
-            var kind = Item.GetKindId(root);
-            var name = $"{Item.GetNameId(root)}        [{prop.GetValue(Item)}]";
+            var kind = Item.GetKindId();
+            var name = $"{Item.GetNameId()}        [{Item.Pairing}]";
             return (kind, name);
         }
-        public override string GetSummaryId(Root root) => Item.GetSummaryId(root);
-        internal override string GetFilterSortId(Root root) => Item.GetNameId(root);
+        public override string GetSummaryId() => Item.GetSummaryId();
+        internal override string GetFilterSortId() => Item.GetNameId();
 
         internal override bool ExpandLeft(Root root)
         {

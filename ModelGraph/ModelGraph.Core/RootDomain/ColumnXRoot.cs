@@ -35,6 +35,8 @@ namespace ModelGraph.Core
             root.RegisterParentRelation(this, root.Get<Relation_Store_NameProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_Store_SummaryProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_QueryX_Property>());
+
+            InitializeLocalReferences(root);
         }
 
         private Property[] GetProps(Root root) => new Property[]
@@ -109,6 +111,22 @@ namespace ModelGraph.Core
                 }
             }
         }
+        #endregion
+        #endregion
+
+        #region ColumnXMethods  ===============================================
+        //========================================== frequently used references
+        private Relation_Store_ColumnX _relation_Store_ColumnX;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
+        }
+        #endregion
+
+        #region GetColumnXParentId  ===========================================
+        internal string GetColumnXParentId(ColumnX cx) => _relation_Store_ColumnX.TryGetParent(this, out Store p) ? p.GetNameId() : GetKindId();
         #endregion
         #endregion
     }

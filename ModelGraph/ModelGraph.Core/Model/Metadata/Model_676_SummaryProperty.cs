@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_676_SummaryProperty(Model_674_SummaryPropertyRelation owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_676_SummaryProperty;
-        public override (string, string) GetKindNameId(Root root) => Item.GetKindNameId(root);
+        public override (string, string) GetKindNameId() => Item.GetKindNameId();
 
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {

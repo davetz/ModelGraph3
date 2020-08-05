@@ -31,7 +31,7 @@ namespace ModelGraph.Core
         internal static void Record(ChangeSet owner, Root root, Item item)
         {
             var inx = item.Index;
-            var name = item.GetChangeLogId(root);
+            var name = item.GetChangeLogId();
 
             if (root.Get<Relation_Store_ColumnX>().TryGetChildren(owner, out IList<ColumnX> cols))
             {

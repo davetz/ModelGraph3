@@ -161,7 +161,7 @@ namespace ModelGraph.Core
                 Selector = new List<(int I, bool IN, string ID)>(model.Count);
                 for (int i = 0; i < model.Count; i++)
                 {
-                    Selector.Add((i, true, model.Items[i].GetFilterSortId(root)));
+                    Selector.Add((i, true, model.Items[i].GetFilterSortId()));
                 }
                 #endregion
             }

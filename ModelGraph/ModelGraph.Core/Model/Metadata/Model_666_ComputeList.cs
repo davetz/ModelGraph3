@@ -14,7 +14,7 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
 
-        internal override string GetFilterSortId(Root root) => GetNameId(root);
+        internal override string GetFilterSortId() => GetNameId();
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => Store_ComputeX.ChildCount(Item);

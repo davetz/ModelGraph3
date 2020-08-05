@@ -20,7 +20,7 @@ namespace ModelGraph.Core
         #endregion
 
  
-        public override string GetKindId(Root root) => root.GetKindId(IdKey.Relation);
+        public override string GetKindId() => GetRoot().GetKindId(IdKey.Relation);
 
         #region RequiredMethods  ==============================================
         internal bool HasNoParent(Item key)

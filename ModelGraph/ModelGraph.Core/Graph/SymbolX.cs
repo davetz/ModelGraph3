@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices.ComTypes;
 
 namespace ModelGraph.Core
 {
@@ -33,10 +34,10 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.SymbolX;
-        public override string GetNameId(Root root) => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetParentId(Root root) => root.Get<Relation_GraphX_SymbolX>().TryGetParent(this, out GraphX p) ? p.GetNameId(root) : GetKindId(root);
-        public override string GetSummaryId(Root root) => Summary;
-        public override string GetDescriptionId(Root root) => Description;
+        public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
+        public override string GetParentId() => Owner.GetSymbolXParentId(this);
+        public override string GetSummaryId() => Summary;
+        public override string GetDescriptionId() => Description;
         #endregion
 
         #region Properties/Methods  ===========================================

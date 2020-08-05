@@ -214,46 +214,45 @@ namespace ModelGraph.Core
 
         Relation = 0x300,
         //=========================================
-        RowX_RowX = 0x301 | Is_External,
+        Relation_RowX_RowX = 0x301 | Is_External,
 
         //=========================================
-        EnumX_ColumnX = 0x311 | Is_Reference,
-        Store_ColumnX = 0x312 | Is_Reference,
-        Store_NameProperty = 0x313 | Is_Reference,
-        Store_SummaryProperty = 0x314 | Is_Reference,
-        StoreX_ChildRelation = 0x315 | Is_Reference,
-        StoreX_ParentRelation = 0x316 | Is_Reference,
+        Relation_EnumX_ColumnX = 0x311 | Is_Reference,
+        Relation_Store_ColumnX = 0x312 | Is_Reference,
+        Relation_Store_NameProperty = 0x313 | Is_Reference,
+        Relation_Store_SummaryProperty = 0x314 | Is_Reference,
+        Relation_StoreX_ChildRelation = 0x315 | Is_Reference,
+        Relation_StoreX_ParentRelation = 0x316 | Is_Reference,
 
         //=========================================
-        Item_Error = 0x331,
-        ViewX_ViewX = 0x332 | Is_Reference,
-        ViewX_QueryX = 0x333 | Is_Reference,
-        QueryX_ViewX = 0x334 | Is_Reference,
-        Property_ViewX = 0x335 | Is_Reference,
-        Relation_ViewX = 0x336 | Is_Reference,
-        ViewX_Property = 0x337 | Is_Reference,
-        QueryX_Property = 0x338 | Is_Reference,
+        Relation_ViewX_ViewX = 0x332 | Is_Reference,
+        Relation_ViewX_QueryX = 0x333 | Is_Reference,
+        Relation_QueryX_ViewX = 0x334 | Is_Reference,
+        Relation_Property_ViewX = 0x335 | Is_Reference,
+        Relation_Relation_ViewX = 0x336 | Is_Reference,
+        Relation_ViewX_Property = 0x337 | Is_Reference,
+        Relation_QueryX_Property = 0x338 | Is_Reference,
 
         //=========================================
-        GraphX_SymbolX = 0x341 | Is_Reference,
-        SymbolX_QueryX = 0x342 | Is_Reference,
-        GraphX_QueryX = 0x343 | Is_Reference,
-        QueryX_QueryX = 0x344 | Is_Reference,
-        GraphX_ColorColumnX = 0x345 | Is_Reference,
-        GraphX_SymbolQueryX = 0x346 | Is_Reference,
+        Relation_GraphX_SymbolX = 0x341 | Is_Reference,
+        Relation_SymbolX_QueryX = 0x342 | Is_Reference,
+        Relation_GraphX_QueryX = 0x343 | Is_Reference,
+        Relation_QueryX_QueryX = 0x344 | Is_Reference,
+        Relation_GraphX_ColorColumnX = 0x345 | Is_Reference,
+        Relation_GraphX_SymbolQueryX = 0x346 | Is_Reference,
 
         //=========================================
-        Store_QueryX = 0x351 | Is_Reference,
-        Relation_QueryX = 0x352 | Is_Reference,
+        Relation_Store_QueryX = 0x351 | Is_Reference,
+        Relation_Relation_QueryX = 0x352 | Is_Reference,
 
         //=========================================
-        Store_ComputeX = 0x361 | Is_Reference,
-        ComputeX_QueryX = 0x362 | Is_Reference,
+        Relation_Store_ComputeX = 0x361 | Is_Reference,
+        Relation_ComputeX_QueryX = 0x362 | Is_Reference,
 
         //=========================================
-        Store_Property = 0x3FD | Is_Reference,
-        Store_ChildRelation = 0x3FE,
-        Store_ParentRelation = 0x3FF,
+        Relation_Store_Property = 0x3FD | Is_Reference,
+        Relation_Store_ChildRelation = 0x3FE,
+        Relation_Store_ParentRelation = 0x3FF,
 
         #endregion
 

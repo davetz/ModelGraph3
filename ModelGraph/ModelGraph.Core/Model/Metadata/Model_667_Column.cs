@@ -7,6 +7,6 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_667_Column;
         public override bool CanDrag => true;
 
-        public override (string, string) GetKindNameId(Root root) => (Item.GetKindId(root), Item.GetDoubleNameId(root));
+        public override (string, string) GetKindNameId() => (Item.GetKindId(), Item.GetDoubleNameId());
     }
 }

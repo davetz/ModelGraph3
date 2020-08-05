@@ -10,7 +10,7 @@ namespace ModelGraph.Core
             StoreX_ParentRelation = item.GetRoot().Get<Relation_StoreX_ParentRelation>();
         }
         internal override IdKey IdKey => IdKey.Model_663_ParentRelatationList;
-        internal override string GetFilterSortId(Root root) => GetNameId(root);
+        internal override string GetFilterSortId() => GetNameId();
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => StoreX_ParentRelation.ChildCount(Item);

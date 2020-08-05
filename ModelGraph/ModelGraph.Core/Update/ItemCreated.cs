@@ -25,7 +25,7 @@
         {
             var cs = root.Get<ChangeRoot>().ChangeSet;
 
-            string name = item.GetChangeLogId(root);
+            string name = item.GetChangeLogId();
             var store = item.GetOwner() as Store;
 
             new ItemCreated(cs, item, store.IndexOf(item), name);

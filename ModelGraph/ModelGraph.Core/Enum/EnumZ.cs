@@ -14,7 +14,7 @@ namespace ModelGraph.Core
         {
             foreach (var pz in Items)
             {
-                if (name == pz.GetNameId(root)) return pz.EnumKey;
+                if (name == pz.GetNameId()) return pz.EnumKey;
             }
             return 0;
         }
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
             for (int i = 0; i < Count; i++)
             {
                 var pz = Items[i];
-                if (name == pz.GetNameId(root)) return i;
+                if (name == pz.GetNameId()) return i;
             }
             return 0;
         }
@@ -43,15 +43,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetEnumName  =================================================
-        internal string GetEnumValueName(Root root, int key)
+        internal string GetEnumValueName(int key)
         {
             foreach (var pz in Items)
             {
-                if (pz.EnumKey == key) return pz.GetNameId(root);
+                if (pz.EnumKey == key) return pz.GetNameId();
             }
             return InvalidItem;
         }
-        internal string GetEnumIndexName(Root root, int index) =>  (index >= 0 && index < Count) ? Items[index].GetNameId(root) : InvalidItem;
+        internal string GetEnumIndexName(int index) =>  (index >= 0 && index < Count) ? Items[index].GetNameId() : InvalidItem;
         #endregion
 
         #region GetEnumNames  ================================================
@@ -61,7 +61,7 @@ namespace ModelGraph.Core
 
             for (int i = 0; i < Count; i++)
             {
-                s[i] = Items[i].GetNameId(root);
+                s[i] = Items[i].GetNameId();
             }
             return s;
         }

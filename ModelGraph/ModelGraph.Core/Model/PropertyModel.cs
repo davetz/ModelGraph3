@@ -23,8 +23,8 @@ namespace ModelGraph.Core
             else
                 Owner.Add(this);
         }
-        internal override string GetFilterSortId(Root root) => Property.GetNameId(root);
-        public override string GetSummaryId(Root root) => Property.GetSummaryId(root);
+        internal override string GetFilterSortId() => Property.GetNameId();
+        public override string GetSummaryId() => Property.GetSummaryId();
 
         public bool IsReadOnly => Property.IsReadonly;
         public bool IsMultiline => Property.IsMultiline;
@@ -43,11 +43,11 @@ namespace ModelGraph.Core
         public void PostSetBoolValue(Root root, bool val) { if (val != GetBoolValue(root)) root.PostSetBoolValue(GetItem(), Property, val); }
         public void PostSetTextValue(Root root, string val) { if (val != GetTextValue(root)) root.PostSetTextValue(GetItem(), Property, val); }
 
-        public override (string, string) GetKindNameId(Root root)
+        public override (string, string) GetKindNameId()
         {
-            var name = Property.GetNameId(root);
+            var name = Property.GetNameId();
 
-            return (null, Property.HasParentName ? Property.GetParentName(root, GetItem()) : name);
+            return (null, Property.HasParentName ? Property.GetParentName(GetItem()) : name);
         }
 
         public override string GetModelIdentity() => $"{IdKey}{Environment.NewLine}{Property.IdKey}  ({Property.ItemKey:X3}";

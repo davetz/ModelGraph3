@@ -7,6 +7,6 @@ namespace ModelGraph.Core
         internal Model_7F7_ParentChild(Model_7F5_ChildList owner, Relation item, (Item, Item) itemPair) : base(owner, item) { ItemPair = itemPair; }
         internal override IdKey IdKey => IdKey.Model_7F7_ParentChild;
 
-        public override (string, string) GetKindNameId(Root root) => (GetKindId(root), $"({ItemPair.Item1.GetParentId(root)} : {ItemPair.Item1.GetNameId(root)}) --> ({ItemPair.Item2.GetParentId(root)} : {ItemPair.Item2.GetNameId(root)})");
+        public override (string, string) GetKindNameId() => (GetKindId(), $"({ItemPair.Item1.GetParentId()} : {ItemPair.Item1.GetNameId()}) --> ({ItemPair.Item2.GetParentId()} : {ItemPair.Item2.GetNameId()})");
     }
 }

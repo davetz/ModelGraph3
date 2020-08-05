@@ -115,7 +115,7 @@ namespace ModelGraph.Controls
                 ToolTipService.SetToolTip(obj, TC.ItemIdentityTip);
             }
 
-            obj.Text = kind;
+            obj.Text = kind is null ? string.Empty : kind;
             obj.CanDrag = Model.CanDrag;
             obj.AllowDrop = true;
 
@@ -155,7 +155,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.Text = name;
+            obj.Text = name is null ? string.Empty : name;
             obj.CanDrag = Model.CanDrag;
             obj.AllowDrop = true;
 
@@ -798,7 +798,7 @@ namespace ModelGraph.Controls
             sp.Children.Clear();
             ModelDelta = Model.ItemDelta;
 
-            var (kind, name) = Model.GetKindNameId(DataRoot);
+            var (kind, name) = Model.GetKindNameId();
 
             AddModelIdentity();
             AddTreeIndent();

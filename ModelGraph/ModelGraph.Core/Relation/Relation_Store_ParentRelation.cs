@@ -3,7 +3,7 @@ namespace ModelGraph.Core
 {
     public class Relation_Store_ParentRelation : RelationOf<Root, Store, Relation>
     {
-        internal override IdKey IdKey => IdKey.Store_ParentRelation;
+        internal override IdKey IdKey => IdKey.Relation_Store_ParentRelation;
 
         internal Relation_Store_ParentRelation(Root owner)
         {
@@ -12,7 +12,7 @@ namespace ModelGraph.Core
             IsRequired = true;
             Initialize(25, 25);
         }
-        public override string GetNameId(Root root)
+        public override string GetNameId()
         {
             var myName = Name;
             if (string.IsNullOrWhiteSpace(myName) || myName.StartsWith("?")) myName = string.Empty;

@@ -18,13 +18,13 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override string Name { get => GetType().Name; set => _ = value; }
-        public override string GetNameId(Root root)
+        public override string GetNameId()
         {
             var (head, tail) = GetHeadTail();
             var myName = Name;
             if (string.IsNullOrWhiteSpace(myName) || myName.StartsWith("?")) myName = string.Empty;
-            var headName = head is null ? BlankName : head.GetNameId(root);
-            var tailName = tail is null ? BlankName : tail.GetNameId(root);
+            var headName = head is null ? BlankName : head.GetNameId();
+            var tailName = tail is null ? BlankName : tail.GetNameId();
 
             return $"({myName})    {headName} --> {tailName}";
         }

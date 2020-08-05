@@ -26,9 +26,9 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.EnumX;
-        public override string GetNameId(Root root) => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetSummaryId(Root root) => Summary;
-        public override string GetDescriptionId(Root root) => Description;
+        public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
+        public override string GetSummaryId() => Summary;
+        public override string GetDescriptionId() => Description;
         #endregion
 
     }

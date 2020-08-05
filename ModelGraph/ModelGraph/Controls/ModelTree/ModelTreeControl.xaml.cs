@@ -538,7 +538,7 @@ namespace ModelGraph.Controls
             if (tip.DataContext is ModelUICache mc)
             {
                 var mdl = mc.Model;
-                var content = mdl?.GetSummaryId(DataRoot);
+                var content = mdl?.GetSummaryId();
                 tip.Content = string.IsNullOrWhiteSpace(content) ? null : content;
             }
             else
@@ -637,9 +637,9 @@ namespace ModelGraph.Controls
                     {
                         var cmd = buttonCommands[i];
                         btn.Tag = cmd;
-                        btn.Content = cmd.GetNameId(DataRoot);
+                        btn.Content = cmd.GetNameId();
                         btn.Visibility = Visibility.Visible;
-                        ToolTipService.SetToolTip(btn, cmd.GetSummaryId(DataRoot));
+                        ToolTipService.SetToolTip(btn, cmd.GetSummaryId());
                     }
                     else
                     {
@@ -709,10 +709,10 @@ namespace ModelGraph.Controls
             }
 
 
-            if (Selected.GetDescriptionId(DataRoot) != null)
+            if (Selected.GetDescriptionId() != null)
             {
                 HelpButton.Visibility = Visibility.Visible;
-                PopulateItemHelp(Selected.GetDescriptionId(DataRoot));
+                PopulateItemHelp(Selected.GetDescriptionId());
             }
             else
             {
@@ -732,10 +732,10 @@ namespace ModelGraph.Controls
                 {
                     var cmd = ButtonCommands[i];
                     ItemButtons[i].DataContext = cmd;
-                    ItemButtons[i].Content = cmd.GetNameId(DataRoot);
-                    ItemButtonTips[i].Content = cmd.GetSummaryId(DataRoot);
+                    ItemButtons[i].Content = cmd.GetNameId();
+                    ItemButtonTips[i].Content = cmd.GetSummaryId();
                     ItemButtons[i].Visibility = Visibility.Visible;
-                    var key = cmd.GetAcceleratorId(DataRoot);
+                    var key = cmd.GetAcceleratorId();
                     if (cmd.IsInsertCommand)
                     {
                         var acc = new KeyboardAccelerator { Key = VirtualKey.Insert };
@@ -782,8 +782,8 @@ namespace ModelGraph.Controls
                     {
                         var cmd = cmds[i];
                         MenuItems[i].DataContext = cmd;
-                        MenuItems[i].Text = cmd.GetNameId(DataRoot);
-                        MenuItemTips[i].Content = cmd.GetSummaryId(DataRoot);
+                        MenuItems[i].Text = cmd.GetNameId();
+                        MenuItemTips[i].Content = cmd.GetSummaryId();
                     }
                 }
             }

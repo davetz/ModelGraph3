@@ -3,7 +3,7 @@ namespace ModelGraph.Core
 {
     public class Relation_Store_ComputeX : RelationOf<RelationRoot, Store, ComputeX>
     {
-        internal override IdKey IdKey => IdKey.Store_ComputeX;
+        internal override IdKey IdKey => IdKey.Relation_Store_ComputeX;
 
         internal Relation_Store_ComputeX(RelationRoot owner)
         {

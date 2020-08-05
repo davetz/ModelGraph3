@@ -20,7 +20,7 @@
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.PairX;
-        public override string GetNameId(Root root) => string.IsNullOrWhiteSpace(DisplayValue) ? BlankName : DisplayValue;
+        public override string GetNameId() => string.IsNullOrWhiteSpace(DisplayValue) ? BlankName : DisplayValue;
         #endregion
     }
 }

@@ -35,7 +35,7 @@
             var n1 = index1 + 1;
             var n2 = index2 + 1;
 
-            var name = $" [{relation.GetNameId(root)}]     {item.GetDoubleNameId(root)}     {n1}->{n2}";
+            var name = $" [{relation.GetNameId()}]     {item.GetDoubleNameId()}     {n1}->{n2}";
             var chg = new ItemChildMoved(root.Get<ChangeRoot>().ChangeSet, relation, key, item, index1, index2, name);
             chg.Redo();
         }

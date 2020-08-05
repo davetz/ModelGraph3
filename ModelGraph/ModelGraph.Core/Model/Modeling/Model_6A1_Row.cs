@@ -11,8 +11,8 @@ namespace ModelGraph.Core
         public override bool CanDrag => true;
 
         #region Identity  =====================================================
-        public override (string, string) GetKindNameId(Root root) => root.Get<Relation_Store_NameProperty>().TryGetChild(Item.Owner, out Property prop) ? (Item.Owner.GetNameId(root), prop.Value.GetString(Item)) : (Item.Owner.GetNameId(root), Item.GetIndexId());
-        public override string GetSummaryId(Root root) => root.Get<Relation_Store_SummaryProperty>().TryGetChild(Item.Owner, out Property prop) ? prop.Value.GetString(Item) : string.Empty;
+        public override (string, string) GetKindNameId() => (null, Item.GetNameId());
+        public override string GetSummaryId() => Item.GetSummaryId();
         #endregion
 
         public override void GetMenuCommands(Root root, List<LineCommand> list)
