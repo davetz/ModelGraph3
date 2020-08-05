@@ -7,6 +7,9 @@ namespace ModelGraph.Core
     {
         internal Model_623_MetadataRoot(LineModel owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_623_MetadataRoot;
+
+        public override (string, string) GetKindNameId() => (string.Empty, Item.GetNameId(IdKey));
+
         public override bool CanExpandLeft => true;
 
         internal override bool ExpandLeft(Root root)
@@ -15,7 +18,7 @@ namespace ModelGraph.Core
             IsExpandedLeft = true;
 
             new Model_631_ViewList(this, root.Get<ViewXRoot>());
-            new Model_624_EnumList(this, root.Get<EnumXRoot>());
+            new Model_642_EnumList(this, root.Get<EnumXRoot>());
             new Model_643_TableList(this, root.Get<TableXRoot>());
             new Model_644_GraphList(this, root.Get<GraphXRoot>());
             new Model_7F0_Root(this, root);

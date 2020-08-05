@@ -393,7 +393,7 @@ namespace ModelGraph.Core
         ViewItem_Model = 0x63C,
         ViewQuery_Model = 0x63D,
         //=====================================================================
-        Model_624_EnumList = 0x642,
+        Model_642_EnumList = 0x642,
         Model_643_TableList = 0x643,
         Model_644_GraphList = 0x644,
         Model_645_SymbolList = 0x645,

@@ -6,11 +6,9 @@ namespace ModelGraph.Core
         internal Model_658_Compute(Model_666_ComputeList owner, ComputeX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_658_Compute;
 
-        public override bool CanExpandRight => true;
         public override bool CanDrag => true;
 
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-
+        public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)
         {
             if (IsExpandedRight) return false;

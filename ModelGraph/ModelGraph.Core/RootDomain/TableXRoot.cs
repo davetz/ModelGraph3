@@ -124,22 +124,37 @@ namespace ModelGraph.Core
         //========================================== frequently used references
         private Relation_Store_NameProperty _relation_Store_NameProperty;
         private Relation_Store_SummaryProperty _relation_Store_SummaryProperty;
+        private Relation_Store_ColumnX _relation_Store_ColumnX;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
             _relation_Store_NameProperty = root.Get<Relation_Store_NameProperty>();
             _relation_Store_SummaryProperty = root.Get<Relation_Store_SummaryProperty>();
+            _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
         }
         #endregion
 
-        internal string GetRowXNameId(RowX rx)
+            internal string GetRowXNameId(RowX rx)
         {
             var text = _relation_Store_NameProperty.TryGetChild(rx.Owner, out Property p) ? p.Value.GetString(rx) : string.Empty;
             return string.IsNullOrWhiteSpace(text) ? rx.GetIndexId() : text;
         }
 
         internal string GetRowXSummaryId(RowX rx) =>  _relation_Store_SummaryProperty.TryGetChild(rx.Owner, out Property p) ? p.Value.GetString(rx) : string.Empty;
+
+        internal IList<ColumnX> GetChoiceProperties(TableX tx)
+        {
+            var selectList = new List<ColumnX>(5);
+            if (_relation_Store_ColumnX.TryGetChildren(tx, out IList<ColumnX> cxList))
+            {
+                foreach (var cx in cxList)
+                {
+                    if (cx.IsChoice) selectList.Add(cx);
+                }
+            }
+            return selectList;
+        }
         #endregion
     }
 }

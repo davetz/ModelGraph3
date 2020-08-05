@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     public class Model_653_Enum : List1ModelOf<EnumX>
     {
-        internal Model_653_Enum(Model_624_EnumList owner, EnumX item) : base(owner, item) { }
+        internal Model_653_Enum(Model_642_EnumList owner, EnumX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_653_Enum;
 
         public override bool CanExpandLeft => true;

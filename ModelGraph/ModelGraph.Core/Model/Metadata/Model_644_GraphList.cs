@@ -6,6 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_644_GraphList(Model_623_MetadataRoot owner, GraphXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_644_GraphList;
+        public override (string, string) GetKindNameId() => (string.Empty, Item.Owner.GetNameId(IdKey));
 
         protected override void CreateChildModel(GraphX gx)
         {

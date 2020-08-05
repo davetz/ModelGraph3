@@ -7,6 +7,7 @@ namespace ModelGraph.Core
     {
         internal Model_624_ModelingRoot(LineModel owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_624_ModelingRoot;
+        public override (string, string) GetKindNameId() => (string.Empty, Item.GetNameId(IdKey));
         public override bool CanExpandLeft => true;
 
         internal override bool ExpandLeft(Root root)

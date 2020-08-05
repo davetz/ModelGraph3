@@ -5,5 +5,7 @@ namespace ModelGraph.Core
     {
         internal Model_620_RootParm(Model_612_Root owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_620_RootParm;
+
+        public override (string, string) GetKindNameId() => (string.Empty, Item.GetNameId(IdKey));
     }
 }

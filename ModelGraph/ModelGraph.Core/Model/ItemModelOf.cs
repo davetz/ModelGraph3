@@ -9,6 +9,9 @@ namespace ModelGraph.Core
 
         internal ItemModelOf() { }
 
+        public override (string, string) GetKindNameId() => Item.GetKindNameId();
+        internal override string GetFilterSortId() => Item.GetNameId();
+
         internal ItemModelOf(LineModel owner, T item)
         {
             Item = item;

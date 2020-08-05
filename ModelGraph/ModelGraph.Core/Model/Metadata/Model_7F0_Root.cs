@@ -5,6 +5,7 @@ namespace ModelGraph.Core
     {
         internal Model_7F0_Root(Model_623_MetadataRoot owner, Root root) : base(owner, root) { }
         internal override IdKey IdKey => IdKey.Model_7F0_Root;
+        public override (string, string) GetKindNameId() => (string.Empty, Item.GetNameId(IdKey));
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;

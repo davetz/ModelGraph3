@@ -28,6 +28,7 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.ColumnX;
+        public override string GetDoubleNameId() => $"{Owner.GetColumnXParentId(this)} : {GetNameId()}";
         public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
         public override string GetParentId() => Owner.GetColumnXParentId(this);
         public override string GetSummaryId() => Summary;

@@ -13,6 +13,7 @@ namespace ModelGraph.Core
             StoreX_ParentRelation = item.GetRoot().Get<Relation_StoreX_ParentRelation>();
         }
         internal override IdKey IdKey => IdKey.Model_6B4_ParentRelationList;
+        public override (string, string) GetKindNameId() => (string.Empty, Item.Owner.Owner.Owner.GetNameId(IdKey));
         public override bool CanFilterUsage => true;
 
         #region RequiredMethods  ==============================================

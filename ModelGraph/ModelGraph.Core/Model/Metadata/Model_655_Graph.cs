@@ -4,7 +4,5 @@
     {
         internal Model_655_Graph(LineModel owner, GraphX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_655_Graph;
-
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
     }
 }
