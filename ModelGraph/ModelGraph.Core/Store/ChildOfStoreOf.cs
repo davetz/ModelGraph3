@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace ModelGraph.Core
 {
@@ -10,11 +11,12 @@ namespace ModelGraph.Core
         internal override Item GetOwner() => Owner; // used to walkup the hierarchal tree
 
         #region Count/Items/GetItems  =========================================
-        public IList<T2> Items => (_items is null) ? new List<T2>(0).AsReadOnly() : _items.AsReadOnly(); // protected from accidental corruption
-        internal override int Count => (_items is null) ? 0 : _items.Count;
+        public IList<T2> Items => _items.AsReadOnly(); // protected from accidental corruption
+        internal override int Count => _items.Count;
         internal override List<Item> GetItems() => new List<Item>(_items);
         internal override void RemoveAll() { _items.Clear(); UpdateDelta(); }
         internal override Type GetChildType() => typeof(T2);
+        public List<T2> ItemsReversed => new List<T2>(_items.Reverse<T2>());
         #endregion
 
         #region Methods  ======================================================

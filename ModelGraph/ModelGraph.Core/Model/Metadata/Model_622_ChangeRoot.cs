@@ -13,7 +13,7 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Item.Count;
 
-        protected override IList<ChangeSet> GetChildItems() => Item.Items;
+        protected override IList<ChangeSet> GetChildItems() => Item.ItemsReversed;
 
         protected override void CreateChildModel(ChangeSet cs)
         {

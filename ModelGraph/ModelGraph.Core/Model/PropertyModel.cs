@@ -18,7 +18,7 @@ namespace ModelGraph.Core
 
             Depth = (byte)(owner.Depth + 1);
 
-            if (prop.IsReference)
+            if (owner.CanExpandRight)
                 owner.AddPropertyModel(this);
             else
                 Owner.Add(this);
