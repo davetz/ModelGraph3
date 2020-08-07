@@ -61,8 +61,8 @@ namespace ModelGraph.Core
             (int parentIndex, int childIndex) = rel.GetIndex(item1, item2);
             if (parentIndex < 0 || childIndex < 0) return false; //appearently the relationship doesn't exists
 
-            var nam1 = item1.GetDoubleNameId();
-            var nam2 = item2.GetDoubleNameId();
+            var nam1 = item1.GetFullNameId();
+            var nam2 = item2.GetFullNameId();
             var rnam = rel.GetNameId();
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";
@@ -75,8 +75,8 @@ namespace ModelGraph.Core
             (int parentIndex, int childIndex) = rel.GetIndex(item1, item2);
             if (parentIndex < 0 || childIndex < 0) return false; //appearently the relationship doesn't exists
 
-            var nam1 = item1.GetDoubleNameId();
-            var nam2 = item2.GetDoubleNameId();
+            var nam1 = item1.GetFullNameId();
+            var nam2 = item2.GetFullNameId();
             var rnam = rel.GetNameId();
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";

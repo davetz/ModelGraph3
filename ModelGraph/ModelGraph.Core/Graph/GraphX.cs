@@ -35,14 +35,12 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal GraphXRoot Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.GraphX;
         public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetParentId() => GetKindId();
         public override string GetSummaryId() => Summary;
         public override string GetDescriptionId() => Description;
         #endregion

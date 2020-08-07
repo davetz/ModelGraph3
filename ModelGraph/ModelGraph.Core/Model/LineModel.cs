@@ -7,7 +7,7 @@ namespace ModelGraph.Core
     {
         static readonly List<LineModel> _noItems = new List<LineModel>(0);
         virtual internal List<LineModel> Items => _noItems;
-        
+
         private ModelFlags _modelFlags;
         public byte Depth;      // depth of tree hierarchy
 
@@ -148,7 +148,7 @@ namespace ModelGraph.Core
 
         internal override void DiscardChildren()
         {
-            foreach (var child in Items) 
+            foreach (var child in Items)
             {
                 FilterSort.ReleaseFilter(child);
                 child.IsDiscarded = true;
@@ -194,7 +194,7 @@ namespace ModelGraph.Core
         internal virtual bool IsItemUsed => true;
 
         public virtual int TotalCount => 0;
-        internal virtual string GetFilterSortId() => $"{GetItem().GetKindId()}{GetItem().GetNameId()}";
+        internal virtual string GetFilterSortId() => GetItem().GetKindId() + GetItem().GetNameId();
 
         public byte ItemDelta => (byte)(GetItem().ChildDelta + GetItem().ModelDelta);
         public virtual bool CanDrag => false;

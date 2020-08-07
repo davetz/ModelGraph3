@@ -11,9 +11,6 @@ namespace ModelGraph.Core
         public override bool CanExpandLeft => true;
         public override bool CanExpandRight => true;
 
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-        public override string GetSummaryId() => Item.GetSummaryId();
-
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();

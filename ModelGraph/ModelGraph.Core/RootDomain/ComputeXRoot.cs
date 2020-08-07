@@ -146,9 +146,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Identity  =====================================================
-        internal string GetParentId(ComputeX cx) => _relation_Store_ComputeX.TryGetParent(cx, out Store p) ? p.GetNameId() : GetKindId();
-        #endregion
+        internal bool TryGetParent(ComputeX cx, out Store p) => _relation_Store_ComputeX.TryGetParent(cx, out p);
 
         #region ResetCacheValues  =============================================
         internal void ResetCacheValues()

@@ -8,8 +8,6 @@ namespace ModelGraph.Core
         public override bool CanExpandRight => true;
         public override bool CanDrag => true;
 
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-
         internal override bool ExpandRight(Root root)
         {
             if (IsExpandedRight) return false;

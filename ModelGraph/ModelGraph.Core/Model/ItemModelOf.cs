@@ -6,12 +6,12 @@ namespace ModelGraph.Core
     {
         internal T Item;
         internal override Item GetItem() => Item;
+        public override string GetKindId() => Item.GetKindId();
+        public override string GetNameId() => Item.GetNameId();
+        public override string GetSummaryId() => Item.GetSummaryId();
+        public override string GetDescriptionId() => Item.GetDescriptionId();
 
         internal ItemModelOf() { }
-
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-        internal override string GetFilterSortId() => Item.GetNameId();
-
         internal ItemModelOf(LineModel owner, T item)
         {
             Item = item;

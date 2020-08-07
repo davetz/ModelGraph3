@@ -44,7 +44,7 @@ namespace ModelGraph.Core
             if (head is null) return InvalidItem;
 
             if (IsRoot)
-                name = head.GetDoubleNameId();
+                name = head.GetFullNameId();
             else
                 name = $"{head.GetNameId()} --> {tail.GetNameId()}";
 

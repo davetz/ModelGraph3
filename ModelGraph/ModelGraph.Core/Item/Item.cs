@@ -21,10 +21,9 @@ namespace ModelGraph.Core
 
         public virtual string GetKindId() => GetRoot().GetKindId(IdKey);
         public virtual string GetNameId() => GetRoot().GetNameId(IdKey);
-        public virtual string GetParentId() => GetOwner().GetNameId();
-        public virtual string GetDoubleNameId() => $"{GetParentId()} : {GetNameId()}";
-        public virtual string GetChangeLogId() => GetDoubleNameId();
-        public virtual (string, string) GetKindNameId() => (GetKindId(), GetNameId());
+        public virtual Item GetParent() => GetOwner();
+        public virtual string GetFullNameId() => $"{GetParent().GetNameId()} : {GetNameId()}";
+        public virtual string GetChangeLogId() => GetFullNameId();
         public virtual string GetSummaryId() => GetRoot().GetSummaryId(IdKey);
         public virtual string GetDescriptionId() => GetRoot().GetDescriptionId(IdKey);
         public virtual string GetAcceleratorId() => GetRoot().GetAcceleratorId(IdKey);

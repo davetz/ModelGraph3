@@ -11,6 +11,8 @@ namespace ModelGraph.Core
             StoreX_ChildRelation = item.GetRoot().Get<Relation_StoreX_ChildRelation>();
         }
         internal override IdKey IdKey => IdKey.Model_662_ChildRelationList;
+        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetKindId() => string.Empty;
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => StoreX_ChildRelation.ChildCount(Item);

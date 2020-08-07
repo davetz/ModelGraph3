@@ -798,7 +798,7 @@ namespace ModelGraph.Controls
             sp.Children.Clear();
             ModelDelta = Model.ItemDelta;
 
-            var (kind, name) = Model.GetKindNameId();
+            var name = Model.GetNameId();
 
             AddModelIdentity();
             AddTreeIndent();
@@ -830,6 +830,7 @@ namespace ModelGraph.Controls
             }
             else
             {
+                var kind = Model.GetKindId();
                 var (filterCount, sorting, usage, filterText) = TreeRoot.GetFilterParms(Model);
                 AddItemKind(kind);
                 AddItemName(name);

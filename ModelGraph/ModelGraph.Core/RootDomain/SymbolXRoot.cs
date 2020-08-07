@@ -132,7 +132,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-
         #region SymbolXMethods  ===============================================
         //========================================== frequently used references
         private Relation_GraphX_SymbolX _relation_GraphX_SymbolX;
@@ -144,8 +143,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        internal string GetSymbolXParentId(SymbolX sx) => _relation_GraphX_SymbolX.TryGetParent(this, out GraphX p) ? p.GetNameId() : GetKindId();
-
+        internal bool TryGetParent(SymbolX sx, out GraphX p) => _relation_GraphX_SymbolX.TryGetParent(sx, out p);
         #endregion
 
     }

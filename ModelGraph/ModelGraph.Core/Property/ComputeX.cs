@@ -38,11 +38,10 @@ namespace ModelGraph.Core
         public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
         public override string GetSummaryId() => Summary;
         public override string GetDescriptionId() => Description;
+        public override Item GetParent() => Owner.TryGetParent(this, out Store p) ? p : GetOwner();
         #endregion
 
         #region Properties  ===================================================
-        public override string GetParentId() => Owner.GetParentId(this);
-
         internal void SetCompuType(CompuType ct) => Owner.SetComputeTypeProperty(this, ct);
 
         internal string GetWhereString() => Owner.GetWhereString(this);

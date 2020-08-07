@@ -6,10 +6,6 @@ namespace ModelGraph.Core
         internal Model_671_ChildRelation(Model_662_ChildRelationList owner, Relation item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_671_ChildRelation;
 
-
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-        public override string GetSummaryId() => Item.GetSummaryId();
-
         public override bool CanDrag => true;
         
         public override bool CanExpandRight => true;

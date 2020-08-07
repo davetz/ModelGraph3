@@ -27,7 +27,6 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.PropertyRoot;
-        public override string GetParentId() => GetKindId();
         #endregion
 
     }

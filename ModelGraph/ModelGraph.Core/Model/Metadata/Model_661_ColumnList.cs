@@ -11,6 +11,9 @@ namespace ModelGraph.Core
             Store_ColumnX = item.GetRoot().Get<Relation_Store_ColumnX>();
         }
         internal override IdKey IdKey => IdKey.Model_661_ColumnList;
+        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetKindId() => string.Empty;
+
         internal override string GetFilterSortId() => GetNameId();
 
         #region RequiredMethods  ==============================================

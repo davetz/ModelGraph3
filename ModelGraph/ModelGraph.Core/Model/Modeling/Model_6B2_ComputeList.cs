@@ -11,7 +11,7 @@ namespace ModelGraph.Core
             Store_ComputeX = item.GetRoot().Get<Relation_Store_ComputeX>();
         }
         internal override IdKey IdKey => IdKey.Model_6B2_ComputeList;
-        public override (string, string) GetKindNameId() => (string.Empty, Item.Owner.Owner.Owner.GetNameId(IdKey));
+        public override string GetNameId() => Item.Owner.Owner.Owner.GetNameId(IdKey);
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => Store_ComputeX.ChildCount(Item.Owner);

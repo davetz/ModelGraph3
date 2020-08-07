@@ -8,8 +8,6 @@ namespace ModelGraph.Core
         internal Model_628_ChangeSet(Model_622_ChangeRoot owner, ChangeSet item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_628_ChangeSet;
 
-        public override (string, string) GetKindNameId() => (null, Item.GetNameId());
-
         protected override int GetTotalCount() => Item.Count;
 
         protected override IList<ItemChange> GetChildItems() => Item.Items;

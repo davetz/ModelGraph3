@@ -7,8 +7,6 @@ namespace ModelGraph.Core
         internal Model_7F3_Store(Model_7F1_PrimeStore owner, Store item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F3_Store;
 
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => Item.Count;
         protected override IList<Item> GetChildItems() => Item.GetItems();

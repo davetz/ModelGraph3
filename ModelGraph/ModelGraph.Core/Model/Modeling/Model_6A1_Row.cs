@@ -9,11 +9,6 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
 
-        #region Identity  =====================================================
-        public override (string, string) GetKindNameId() => (null, Item.GetNameId());
-        public override string GetSummaryId() => Item.GetSummaryId();
-        #endregion
-
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();

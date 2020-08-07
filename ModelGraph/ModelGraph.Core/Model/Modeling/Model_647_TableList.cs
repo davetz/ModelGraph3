@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_647_TableList(Model_624_ModelingRoot owner, TableXRoot item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_647_TableList;
-        public override (string, string) GetKindNameId() => (string.Empty, Item.Owner.GetNameId(IdKey));
+        public override string GetNameId() => Item.Owner.GetNameId(IdKey);
 
         private TableXRoot TXR => Item as TableXRoot;
 

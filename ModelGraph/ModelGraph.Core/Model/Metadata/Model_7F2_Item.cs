@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal Model_7F2_Item(LineModel owner, Item item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F2_Item;
 
-        public override (string, string) GetKindNameId() => (Item.GetKindId(), Item.GetDoubleNameId()) ;
-        internal override string GetFilterSortId() => $"{Item.GetKindId()} {Item.GetDoubleNameId()}";
+        public override string GetNameId() => Item.GetFullNameId();
+        internal override string GetFilterSortId() => $"{Item.GetKindId()} {Item.GetFullNameId()}";
     }
 }

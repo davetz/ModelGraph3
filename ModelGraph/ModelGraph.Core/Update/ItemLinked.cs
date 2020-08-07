@@ -28,8 +28,8 @@
         #region Record  =======================================================
         static internal void Record(Root root, Relation rel, Item item1, Item item2)
         {
-            var nam1 = item1.GetDoubleNameId();
-            var nam2 = item2.GetDoubleNameId();
+            var nam1 = item1.GetFullNameId();
+            var nam2 = item2.GetFullNameId();
             var rnam = rel.GetNameId();
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";

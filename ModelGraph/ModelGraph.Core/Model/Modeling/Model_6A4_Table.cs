@@ -9,7 +9,6 @@ namespace ModelGraph.Core
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.Model_6A4_Table;
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
         public override string GetSummaryId() => Item.GetSummaryId();
         #endregion
 

@@ -125,9 +125,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GetColumnXParentId  ===========================================
-        internal string GetColumnXParentId(ColumnX cx) => _relation_Store_ColumnX.TryGetParent(cx, out Store p) ? p.GetNameId() : GetKindId();
-        #endregion
+        internal bool TryGetParent(ColumnX cx, out Store p) => _relation_Store_ColumnX.TryGetParent(cx, out p);
         #endregion
     }
 }

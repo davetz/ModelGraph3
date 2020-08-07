@@ -4,7 +4,7 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace ModelGraph.Core
 {
-    public class SymbolX : Item
+    public class SymbolX : ChildOf<SymbolXRoot>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;
@@ -28,16 +28,15 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal SymbolXRoot Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.SymbolX;
         public override string GetNameId() => string.IsNullOrWhiteSpace(Name) ? BlankName : Name;
-        public override string GetParentId() => Owner.GetSymbolXParentId(this);
         public override string GetSummaryId() => Summary;
         public override string GetDescriptionId() => Description;
+        public override Item GetParent() => Owner.TryGetParent(this, out GraphX p) ? p : GetOwner(); 
         #endregion
 
         #region Properties/Methods  ===========================================

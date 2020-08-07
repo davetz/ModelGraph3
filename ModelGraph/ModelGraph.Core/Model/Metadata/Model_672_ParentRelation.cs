@@ -7,9 +7,6 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_672_ParentRelation;
         public override bool CanExpandRight => true;
 
-        public override (string, string) GetKindNameId() => Item.GetKindNameId();
-        public override string GetSummaryId() => Item.GetSummaryId();
-
         public override bool CanDrag => true;
 
         internal override bool ExpandRight(Root root)

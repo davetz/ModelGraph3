@@ -11,7 +11,6 @@ namespace ModelGraph.Core
             _relationX_RowX_RowX = rel as RelationX_RowX_RowX;
         }
         internal override IdKey IdKey => IdKey.Model_6A8_ParentRelation;
-        public override (string, string) GetKindNameId() => _relationX_RowX_RowX.GetKindNameId();
         internal override string GetFilterSortId() => _relationX_RowX_RowX.GetNameId();
 
         internal override bool IsItemUsed => _relationX_RowX_RowX.ParentCount(Item) > 0;
@@ -34,7 +33,7 @@ namespace ModelGraph.Core
                 {
                     if (doDrop)
                     {
-                        ItemLinked.Record(root, _relationX_RowX_RowX, Item, rx);
+                        ItemLinked.Record(root, _relationX_RowX_RowX, rx, Item);
                     }
                     return DropAction.Link;
                 }

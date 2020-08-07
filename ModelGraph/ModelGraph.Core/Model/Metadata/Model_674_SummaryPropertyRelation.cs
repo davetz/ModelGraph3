@@ -10,6 +10,8 @@ namespace ModelGraph.Core
             _relation_Store_SummaryProperty = item.Owner.Owner.Get<Relation_Store_SummaryProperty>();
         }
         internal override IdKey IdKey => IdKey.Model_674_SummaryPropertyRelation;
+        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetKindId() => string.Empty;
 
         protected override int GetTotalCount() => _relation_Store_SummaryProperty.ChildCount(Item);
 

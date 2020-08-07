@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 
         internal Property_ComputeX_CompuType(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_CompuType>()) { }
 
-        internal override string GetParentName(Item item) => Cast(item).GetParentId();
+        internal override string GetParentName(Item item) => item.GetParent().GetNameId();
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).CompuType;
 

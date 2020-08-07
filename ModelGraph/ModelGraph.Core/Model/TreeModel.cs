@@ -155,7 +155,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverrideMethods  ==============================================
-        public override (string, string) GetKindNameId() => (null, BlankName);
+        public override string GetNameId() => BlankName;
         public override void GetButtonCommands(Root root, List<LineCommand> list) => _childModel.GetButtonCommands(root, list);
         #endregion
 

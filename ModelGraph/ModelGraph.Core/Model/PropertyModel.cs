@@ -43,11 +43,11 @@ namespace ModelGraph.Core
         public void PostSetBoolValue(Root root, bool val) { if (val != GetBoolValue(root)) root.PostSetBoolValue(GetItem(), Property, val); }
         public void PostSetTextValue(Root root, string val) { if (val != GetTextValue(root)) root.PostSetTextValue(GetItem(), Property, val); }
 
-        public override (string, string) GetKindNameId()
+        public override string GetNameId()
         {
             var name = Property.GetNameId();
 
-            return (null, Property.HasParentName ? Property.GetParentName(GetItem()) : name);
+            return Property.HasParentName ? Property.GetParentName(GetItem()) : name;
         }
 
         public override string GetModelIdentity() => $"{IdKey}{Environment.NewLine}{Property.IdKey}  ({Property.ItemKey:X3}";
