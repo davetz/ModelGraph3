@@ -15,6 +15,7 @@ namespace ModelGraph.Core
 
         private readonly List<(Guid, ISerializer)> ItemSerializers = new List<(Guid, ISerializer)>(20); //serialized first
         private readonly List<(Guid, ISerializer)> LinkSerializers = new List<(Guid, ISerializer)>(10); //serialized last
+        private readonly List<IPrimeRoot> PrimeRoots = new List<IPrimeRoot>();
 
         public IRepository Repository { get; set; }
         public static LineModel DragDropSource;
@@ -74,16 +75,11 @@ namespace ModelGraph.Core
             RegisterReferenceItem(new ComputeXRoot(this));
             RegisterReferenceItem(new RelationXRoot(this));
 
-            var instanceList = Type_InstanceOf.Values.ToArray(); // instance of things that I just created and regestered
-            foreach (var item in instanceList)
-            {
-                if (item is IPrimeRoot pr) pr.CreateSecondaryHierarchy(this);
-            }
+            foreach (var item in Type_InstanceOf.Values) { if (item is IPrimeRoot r) PrimeRoots.Add(r); }
 
-            foreach (var item in instanceList)
-            {
-                if (item is IPrimeRoot pr) pr.RegisterRelationalReferences(this);
-            }
+            foreach (var pr in PrimeRoots) { pr.CreateSecondaryHierarchy(this); }
+
+            foreach (var pr in PrimeRoots) { pr.RegisterRelationalReferences(this); }
         }
         #endregion
 

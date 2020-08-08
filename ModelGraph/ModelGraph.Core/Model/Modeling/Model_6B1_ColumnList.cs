@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         }
         internal override IdKey IdKey => IdKey.Model_6B1_ColumnList;
         public override string GetNameId() => Item.Owner.Owner.Owner.GetNameId(IdKey);
-
+        public override string GetKindId() => string.Empty;
 
         public override bool CanFilterUsage => true;
 

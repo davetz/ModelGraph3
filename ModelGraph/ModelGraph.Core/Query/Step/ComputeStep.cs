@@ -5,9 +5,9 @@ using System.Text;
 namespace ModelGraph.Core
 {/*
     ComputeStep is a node in an expression tree. The expression tree is used in
-    a query's where/select clause. When employed in a select statement, it computes
-    a value based on an item's properties. In the context of a where clause it can
-    qualify specific relational paths based on row properties encountered rows
+    a query's where/select clause. 
+    In the select clause, it computes a value based on an item's properties. 
+    In the where clause it qualifies specific relational paths based on row properties 
     while traversing the path.
 
     The evaluation function is set durring the where/select clause
@@ -32,7 +32,7 @@ namespace ModelGraph.Core
         internal ComputeStep(StepType stepType)
         {
             StepType = stepType;
-            Evaluate = ComputeXRoot.LiteralUnresolved;
+            Evaluate = Value.LiteralUnresolved;
         }
         #endregion
 

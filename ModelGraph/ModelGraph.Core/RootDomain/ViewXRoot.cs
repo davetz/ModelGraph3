@@ -33,6 +33,8 @@ namespace ModelGraph.Core
             root.RegisterParentRelation(this, root.Get<Relation_Property_ViewX>());
         }
 
+        public void ValidateDomain(Root root) { }
+
         private Property[] GetProps(Root root) => new Property[]
         {
             root.Get<Property_Item_Name>(),

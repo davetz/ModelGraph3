@@ -47,6 +47,7 @@ namespace ModelGraph.Core
         {
             InitializeLocalReferences(root);
         }
+        public void ValidateDomain(Root root) { }
         #endregion
 
         #region IRelationRoot  ================================================

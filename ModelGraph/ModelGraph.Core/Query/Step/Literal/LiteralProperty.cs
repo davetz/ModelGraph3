@@ -14,7 +14,7 @@ namespace ModelGraph.Core
         }
         internal Property Property { get; }
 
-        internal override ValType ValType => (Property is ComputeX cx && cx.Value == ComputeXRoot.ValuesUnknown) ? cx.Owner.AllocateValueCache(cx) : Property.Value.ValType;
+        internal override ValType ValType => (Property is ComputeX cx && cx.Value == Value.ValuesUnknown) ? cx.Owner.AllocateValueCache(cx) : Property.Value.ValType;
         internal override string Text => (Property is ColumnX col) ? col.Name : ((Property is ComputeX cx) ? cx.Name : Property.GetNameId());
 
         internal override bool AsBool()

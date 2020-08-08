@@ -31,7 +31,10 @@ namespace ModelGraph.Core
         public void RegisterRelationalReferences(Root root)
         {
             root.RegisterChildRelation(this, root.Get<Relation_EnumX_ColumnX>());
+
+            InitializeLocalReferences(root);
         }
+        public void ValidateDomain(Root root) { ValidateMyDomain(root); }
 
         private Property[] GetProps1(Root root) => new Property[]
         {
@@ -130,6 +133,27 @@ namespace ModelGraph.Core
                         w.WriteByte((byte)0);
                     }
                 }
+            }
+        }
+        #endregion
+
+        #region EnumXMethods  =================================================
+        //========================================== frequently used references
+        private Relation_EnumX_ColumnX _relation_EnumX_ColumnX;
+
+        #region InitializeLocalReferences  ====================================
+        private void InitializeLocalReferences(Root root)
+        {
+            _relation_EnumX_ColumnX = root.Get<Relation_EnumX_ColumnX>();
+        }
+        #endregion
+
+        private void ValidateMyDomain(Root root)
+        {
+            foreach (var e in _relation_EnumX_ColumnX.GetChildLinkPairList())
+            {
+                var cx = e.Item2 as ColumnX;
+                cx.IsEnumerated = true;
             }
         }
         #endregion

@@ -31,6 +31,7 @@ namespace ModelGraph.Core
 
             InitializeLocalReferences(root);
         }
+        public void ValidateDomain(Root root) { }
 
         private Property[] GetProps(Root root) => new Property[]
         {

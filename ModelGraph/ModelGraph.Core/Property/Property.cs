@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     public abstract class Property : Item
     {
-        internal Value Value = ComputeXRoot.ValuesUnknown;
+        internal Value Value = Value.ValuesUnknown;
         protected virtual Type PropetyModelType => typeof(Model_617_TextProperty);
 
         internal virtual bool HasParentName => false;

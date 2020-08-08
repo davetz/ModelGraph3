@@ -98,6 +98,7 @@ namespace ModelGraph.Core
         internal bool IsUnsable { get => IsDeleted || IsDiscarded; }
         internal bool AutoExpandLeft { get { return (_flags & B4) != 0; } set { _flags = value ? (byte)(_flags | B4) : (byte)(_flags & ~B4); } }
         internal bool AutoExpandRight { get { return (_flags & B5) != 0; } set { _flags = value ? (byte)(_flags | B5) : (byte)(_flags & ~B5); } }
+        internal bool IsEnumerated { get { return (_flags & B6) != 0; } set { _flags = value ? (byte)(_flags | B6) : (byte)(_flags & ~B6); } } // used for property values
         #endregion
 
         #region StringKeys  ===================================================

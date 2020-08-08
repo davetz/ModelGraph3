@@ -42,7 +42,7 @@ namespace ModelGraph.Core
 
             InitializeLocalReferences(root);
         }
-
+        public void ValidateDomain(Root root) { }
 
         private Property[] GetProps(Root root) => new Property[]
         {
@@ -121,11 +121,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region ComputeXMethods  ==============================================
-        internal static ValueUnknown ValuesUnknown = new ValueUnknown();
-        internal static ValueInvalid ValuesInvalid = new ValueInvalid();
-        internal static ValueCircular ValuesCircular = new ValueCircular();
-        internal static ValueUnresolved ValuesUnresolved = new ValueUnresolved();
-        internal static LiteralUnresolved LiteralUnresolved = new LiteralUnresolved();
         //========================================== frequently used references
         private QueryXRoot _queryXRoot;
 
@@ -263,7 +258,7 @@ namespace ModelGraph.Core
                 case CompuType.RowValue:
 
                     if (!_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX vx) || vx.Select == null || vx.Select.ValueType == ValType.IsInvalid)
-                        cx.Value = ValuesInvalid;
+                        cx.Value = Value.ValuesInvalid;
                     else
                         AllocateCache(vx);
                     break;
@@ -292,13 +287,13 @@ namespace ModelGraph.Core
                 if (type < ValType.MaximumType)
                     cx.Value = Value.Create(type);
                 else if (type == ValType.IsUnknown)
-                    cx.Value = ValuesUnknown;
+                    cx.Value = Value.ValuesUnknown;
                 else if (type == ValType.IsCircular)
-                    cx.Value = ValuesCircular;
+                    cx.Value = Value.ValuesCircular;
                 else if (type == ValType.IsUnresolved)
-                    cx.Value = ValuesUnresolved;
+                    cx.Value = Value.ValuesUnresolved;
                 else
-                    cx.Value = ValuesInvalid;
+                    cx.Value = Value.ValuesInvalid;
             }
         }
         #endregion

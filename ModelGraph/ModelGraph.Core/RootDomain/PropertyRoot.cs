@@ -23,6 +23,7 @@ namespace ModelGraph.Core
             root.RegisterParentRelation(this, root.Get<Relation_Store_NameProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_Store_SummaryProperty>());
         }
+        public void ValidateDomain(Root root) { }
         #endregion
 
         #region Identity  =====================================================

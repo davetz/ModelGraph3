@@ -59,7 +59,7 @@ namespace ModelGraph.Core
 
             InitializeLocalReferences(root);
         }
-
+        public void ValidateDomain(Root root) { }
 
         private Property[] GetProps(Root root) => new Property[]
         {
@@ -246,7 +246,7 @@ namespace ModelGraph.Core
         private void ValidateComputeQuery(ComputeX cx, bool clearError = false)
         {
             cx.Value.Clear();
-            cx.Value = ComputeXRoot.ValuesUnknown;
+            cx.Value = Value.ValuesUnknown;
             if (clearError)
             {
                 _errorRoot.ClearError(cx);
@@ -255,7 +255,7 @@ namespace ModelGraph.Core
             cx.ModelDelta++;
             if (!_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx))
             {
-                cx.Value = ComputeXRoot.ValuesInvalid;
+                cx.Value = Value.ValuesInvalid;
                 _errorRoot.TryAddErrorNone(cx, IdKey.ComputeMissingRootQueryError);
             }
             else

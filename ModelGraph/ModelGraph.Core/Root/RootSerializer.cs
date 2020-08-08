@@ -53,6 +53,10 @@ namespace ModelGraph.Core
                 }
                 if (!found) throw new Exception("Unknown serializer guid reference");
             }
+            foreach (var pr in PrimeRoots)
+            {
+                pr.ValidateDomain(this);
+            }
         }
         Dictionary<Item, int> GetItemIndexDictionary()
         {

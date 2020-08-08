@@ -96,7 +96,7 @@ namespace ModelGraph.Core
         #region Read String/Bytes  ============================================
         internal static string ReadString(DataReader r)
         {
-            var len = (UInt32)r.ReadUInt16();
+            var len = (uint)r.ReadUInt16();
             var str = r.ReadString(len);
             return (str == "^") ? string.Empty : str;
         }
