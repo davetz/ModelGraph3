@@ -5,7 +5,6 @@ namespace ModelGraph.Core
     public class Model_6B3_ChildRelationList : List2ModelOf<RowX, Relation>
     {
         private Relation_StoreX_ChildRelation StoreX_ChildRelation;
-        private RowX RX => Item as RowX;
 
         internal Model_6B3_ChildRelationList(Model_6A1_Row owner, RowX item) : base(owner, item) 
         {
@@ -21,7 +20,7 @@ namespace ModelGraph.Core
         protected override IList<Relation> GetChildItems() => StoreX_ChildRelation.TryGetChildren(Item.GetOwner(), out IList<Relation> list) ? list : new Relation[0];
         protected override void CreateChildModel(Relation childItem)
         {
-            new Model_6A7_ChildRelation(this, RX, childItem);
+            new Model_6A7_ChildRelation(this, Item, childItem);
         }
         #endregion
 

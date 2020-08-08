@@ -160,10 +160,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region Save/SaveAs/Reload  ===========================================
+        public bool IsClosed { get; private set; }
         internal void Close()
         {
+            IsClosed = true;
             PageControl?.Close();
         }
+
         internal void Save()
         {
             PageControl?.Save();

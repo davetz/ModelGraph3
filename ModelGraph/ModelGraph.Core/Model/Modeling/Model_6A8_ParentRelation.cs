@@ -4,20 +4,22 @@ namespace ModelGraph.Core
 {
     public class Model_6A8_ParentRelation : List2ModelOf<RowX, RowX>
     {
-        private readonly RelationX_RowX_RowX _relationX_RowX_RowX;
+        private readonly RelationX_RowX_RowX _relation_RowX_RowX;
 
         internal Model_6A8_ParentRelation(Model_6B4_ParentRelationList owner, RowX item, Relation rel) : base(owner, item) 
         {
-            _relationX_RowX_RowX = rel as RelationX_RowX_RowX;
+            _relation_RowX_RowX = rel as RelationX_RowX_RowX;
         }
         internal override IdKey IdKey => IdKey.Model_6A8_ParentRelation;
-        internal override string GetFilterSortId() => _relationX_RowX_RowX.GetNameId();
+        public override string GetNameId() => _relation_RowX_RowX.GetNameId();
+        internal override string GetFilterSortId() => GetNameId();
+        public override string GetKindId() => string.Empty;
 
-        internal override bool IsItemUsed => _relationX_RowX_RowX.ParentCount(Item) > 0;
+        internal override bool IsItemUsed => _relation_RowX_RowX.ParentCount(Item) > 0;
 
         #region RequiredMethods  ==============================================
-        protected override int GetTotalCount() => _relationX_RowX_RowX.ParentCount(Item);
-        protected override IList<RowX> GetChildItems() => _relationX_RowX_RowX.TryGetParents(Item, out IList<RowX> list) ? list : new RowX[0];
+        protected override int GetTotalCount() => _relation_RowX_RowX.ParentCount(Item);
+        protected override IList<RowX> GetChildItems() => _relation_RowX_RowX.TryGetParents(Item, out IList<RowX> list) ? list : new RowX[0];
         protected override void CreateChildModel(RowX childItem)
         {
             new Model_6A1_Row(this, childItem);
@@ -28,12 +30,12 @@ namespace ModelGraph.Core
         {
             if (dropModel.GetItem() is RowX rx)
             {
-                var (head, _) = _relationX_RowX_RowX.GetHeadTail();
+                var (head, _) = _relation_RowX_RowX.GetHeadTail();
                 if (head == rx.Owner)
                 {
                     if (doDrop)
                     {
-                        ItemLinked.Record(root, _relationX_RowX_RowX, rx, Item);
+                        ItemLinked.Record(root, _relation_RowX_RowX, rx, Item);
                     }
                     return DropAction.Link;
                 }

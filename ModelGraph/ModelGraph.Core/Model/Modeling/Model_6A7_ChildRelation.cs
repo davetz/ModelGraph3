@@ -12,7 +12,9 @@ namespace ModelGraph.Core
         }
         internal override IdKey IdKey => IdKey.Model_6A7_ChildRelation;
 
-        internal override string GetFilterSortId() => _relation_RowX_RowX.GetNameId();
+        public override string GetNameId() => _relation_RowX_RowX.GetNameId();
+        internal override string GetFilterSortId() => GetNameId();
+        public override string GetKindId() => string.Empty;
 
         internal override bool IsItemUsed => _relation_RowX_RowX.ChildCount(Item) > 0;
 

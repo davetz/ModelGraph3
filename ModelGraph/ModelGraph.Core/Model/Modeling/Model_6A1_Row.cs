@@ -6,6 +6,8 @@ namespace ModelGraph.Core
     {
         internal Model_6A1_Row(LineModel owner, RowX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6A1_Row;
+        public override string GetNameId() => Owner is Model_6A4_Table ? Item.GetNameId() : Item.GetFullNameId();
+        public override string GetKindId() => Owner is Model_6A4_Table ? Item.GetKindId() : string.Empty;
 
         public override bool CanDrag => true;
 
