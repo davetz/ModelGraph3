@@ -23,8 +23,8 @@ namespace ModelGraph.Core
             var (head, tail) = GetHeadTail();
             var myName = Name;
             if (string.IsNullOrWhiteSpace(myName) || myName.StartsWith("?")) myName = string.Empty;
-            var headName = head is null ? BlankName : head.GetNameId();
-            var tailName = tail is null ? BlankName : tail.GetNameId();
+            var headName = head is null ? BlankName : head.IsExternal ? head.GetNameId() : head.GetKindId();
+            var tailName = tail is null ? BlankName : tail.IsExternal ? tail.GetNameId() : tail.GetKindId();
 
             return $"({myName})    {headName} --> {tailName}";
         }

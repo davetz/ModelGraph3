@@ -248,7 +248,7 @@ namespace ModelGraph.Controls
         }
         public void Refresh()
         {
-           if (!TreeModel.IsClosed) 
+            if (TreeModel is null || TreeModel.IsClosed) return;
             _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { RefreshAll(); });
         }
         public IDataModel DataModel => TreeModel;

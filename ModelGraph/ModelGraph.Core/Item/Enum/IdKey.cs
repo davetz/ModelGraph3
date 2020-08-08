@@ -82,14 +82,13 @@ namespace ModelGraph.Core
         TableXRoot = 0x0E3 | Is_Reference,
         GraphXRoot = 0x0E4 | Is_Reference,
         QueryXRoot = 0x0E5 | Is_Reference,
-        ValueXRoot = 0x0E6 | Is_Reference,
         SymbolXRoot = 0x0E7 | Is_Reference,
         ColumnXRoot = 0x0E8 | Is_Reference,
         ComputeXRoot = 0x0E9 | Is_Reference,
         RelationXRoot = 0x0EA | Is_Reference,
 
         PrimeRoot = 0x0F0, // exposes internal tables (metadata / configuration)
-        EnumZRoot = 0x0F1,
+        EnumRoot = 0x0F1,
         ErrorRoot = 0x0F2,
         GroupRoot = 0x0F3,
         PropertyRoot = 0x0F4 | Is_Reference,
@@ -506,6 +505,8 @@ namespace ModelGraph.Core
         Model_7F6_ParentList = 0x7F6,
         Model_7F7_ParentChild = 0x7F7,
         Model_7F8_ChildParent = 0x7F8,
+
+        Model_7FF_RelatedItems = 0x7FF,
 
         #endregion
 

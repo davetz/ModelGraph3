@@ -19,7 +19,6 @@ namespace ModelGraph.Core
         internal abstract bool HasLinks { get; }
         #endregion
 
- 
         public override string GetKindId() => GetRoot().GetKindId(IdKey.Relation);
 
         #region RequiredMethods  ==============================================

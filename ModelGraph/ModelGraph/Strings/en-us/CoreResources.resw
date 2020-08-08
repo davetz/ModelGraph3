@@ -246,23 +246,35 @@
   <data name="03DS" xml:space="preserve">
     <value>Make this an egress sequence</value>
   </data>
+  <data name="0E1K" xml:space="preserve">
+    <value>Enum</value>
+  </data>
   <data name="0E1N" xml:space="preserve">
     <value>EnumStore</value>
+  </data>
+  <data name="0E2K" xml:space="preserve">
+    <value>View</value>
   </data>
   <data name="0E2N" xml:space="preserve">
     <value>ViewStore</value>
   </data>
+  <data name="0E3K" xml:space="preserve">
+    <value>Table</value>
+  </data>
   <data name="0E3N" xml:space="preserve">
     <value>TableStore</value>
+  </data>
+  <data name="0E4K" xml:space="preserve">
+    <value>Graph</value>
   </data>
   <data name="0E4N" xml:space="preserve">
     <value>GraphStore</value>
   </data>
+  <data name="0E5K" xml:space="preserve">
+    <value>Query</value>
+  </data>
   <data name="0E5N" xml:space="preserve">
     <value>QueryStore</value>
-  </data>
-  <data name="0E6N" xml:space="preserve">
-    <value>ValueStore</value>
   </data>
   <data name="0E7K" xml:space="preserve">
     <value>Symbol</value>
@@ -270,11 +282,20 @@
   <data name="0E7N" xml:space="preserve">
     <value>SymbolStore</value>
   </data>
+  <data name="0E8K" xml:space="preserve">
+    <value>Column</value>
+  </data>
   <data name="0E8N" xml:space="preserve">
     <value>ColumnStore</value>
   </data>
+  <data name="0E9K" xml:space="preserve">
+    <value>Compute</value>
+  </data>
   <data name="0E9N" xml:space="preserve">
     <value>ComputeStore</value>
+  </data>
+  <data name="0EAK" xml:space="preserve">
+    <value>Relation</value>
   </data>
   <data name="0EAN" xml:space="preserve">
     <value>RelationStore</value>
@@ -283,7 +304,7 @@
     <value>PrimeStore</value>
   </data>
   <data name="0F1N" xml:space="preserve">
-    <value>EnumZStore</value>
+    <value>Internal Enums</value>
   </data>
   <data name="0F2N" xml:space="preserve">
     <value>ErrorStore</value>
@@ -296,9 +317,6 @@
   </data>
   <data name="0F5N" xml:space="preserve">
     <value>Internal Relations</value>
-  </data>
-  <data name="0F6N" xml:space="preserve">
-    <value>Internal RelationZ</value>
   </data>
   <data name="132N" xml:space="preserve">
     <value>Saved</value>

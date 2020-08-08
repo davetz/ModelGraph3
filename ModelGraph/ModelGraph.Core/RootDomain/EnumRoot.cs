@@ -25,7 +25,7 @@
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.EnumZRoot;
+        internal override IdKey IdKey => IdKey.EnumRoot;
         #endregion
     }
 }

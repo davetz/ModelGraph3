@@ -39,21 +39,21 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region IRootModel  ===================================================
-        public string TitleName => DataRoot.TitleName;
-        public string TitleSummary => DataRoot.TitleSummary;
+        #region IDataModel  ===================================================
+        public string TitleName => Item.TitleName;
+        public string TitleSummary => Item.TitleSummary;
 
         public void Release()
         {
-            if (Owner is null) return;
+            if (Item is null) return;
 
-            DataRoot.Remove(this);
+            Item.Remove(this);
             Discard(); //discard myself and recursivly discard all my children
 
             if (this is RootModel)
                 DataRoot.Discard(); //kill off the dataChef
 
-            Owner = null;
+            Item = null;
         }
         #endregion
 
