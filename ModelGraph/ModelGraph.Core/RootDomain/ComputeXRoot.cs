@@ -10,7 +10,6 @@ namespace ModelGraph.Core
         static Guid _serializerGuid = new Guid("35522B27-A925-4CE0-8D65-EDEF451097F2");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.ComputeXRoot;
-
         internal ComputeXRoot(Root root)
         {
             Owner = root;
@@ -155,7 +154,7 @@ namespace ModelGraph.Core
         internal string GetSelectString(ComputeX cx) => _relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx) ? (qx.HasSelect ? qx.SelectString : null) : InvalidItem;
 
         internal void SetWhereString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.WhereString = value; }
-        internal void SetSelectString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.SelectString = value; }
+        internal void SetSelectString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.SelectString = value; _queryXRoot.ValidateQueryDependants(qx); }
         #endregion
 
         #region SetComputeType  ===============================================

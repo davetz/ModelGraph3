@@ -59,7 +59,10 @@ namespace ModelGraph.Core
 
             InitializeLocalReferences(root);
         }
-        public void ValidateDomain(Root root) { }
+        public void ValidateDomain(Root root) 
+        {
+            ValidateQueryXStore();
+        }
 
         private Property[] GetProps(Root root) => new Property[]
         {

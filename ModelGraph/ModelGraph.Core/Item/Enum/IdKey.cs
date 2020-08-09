@@ -1,28 +1,6 @@
 ﻿
 namespace ModelGraph.Core
 {
-    /*
-        Item		- X,R,Z
-        Enum		- X,Z
-        Event		- V
-        Action		- A
-        Store		- X,R,Z
-        Model 		- X,R
-        Group		- X,R
-        Proptery	- X,R
-        Relation	- X,R,Z
-
-        instence    - Y
-        modeling
-        runtime
-        external
-        reference
-        private
-
-        X,Y,Z
-        A,V,I,E,V,S,M,G,P,R
-    */
-
     public enum IdKey : ushort
     {/*
         Provides identity for item, enum, pair, store, model, relation, property, and commands. 

@@ -41,6 +41,7 @@ namespace ModelGraph.Core
             ItemCreated.Record(root, qx);
             ItemLinked.Record(root, Store_ComputeX, Item, cx);
             ItemLinked.Record(root, root.Get<Relation_ComputeX_QueryX>(), cx, qx);
+            ItemLinked.Record(root, root.Get<Relation_Store_QueryX>(), Item, qx);
         }
     }
 }
