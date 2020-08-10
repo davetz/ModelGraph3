@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    internal abstract class ValueOfType<T> : Value
+    internal abstract class ValueOfScalar<T> : Value
     {
         protected IValueStore<T> _valueStore;
 

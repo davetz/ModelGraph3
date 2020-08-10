@@ -5,9 +5,9 @@ namespace ModelGraph.Core
     internal class LiteralInt32 : ValueOfInt32
     {
         private string _text;
-        private Int32 _value;
+        private int _value;
 
-        internal LiteralInt32(ComputeStep step, Int32 value, string text)
+        internal LiteralInt32(ComputeStep step, int value, string text)
         {
             _step = step;
             _text = text;
@@ -15,6 +15,6 @@ namespace ModelGraph.Core
         }
         internal override string Text => _text;
 
-        protected override Int32 GetVal() => _step.IsNegated ? -_value : _value;
+        protected override int GetVal() => _step.IsNegated ? -_value : _value;
     }
 }

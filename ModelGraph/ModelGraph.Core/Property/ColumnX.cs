@@ -10,7 +10,6 @@ namespace ModelGraph.Core
         private string _summary;
         internal override string Description { get => _description; set => _description = value; }
         private string _description;
-        internal override State State { get; set; } //ColumnX uses the State bits
 
         #region Constructors  =================================================
         internal ColumnX(ColumnXRoot owner, bool autoExpand = false)
@@ -72,7 +71,7 @@ namespace ModelGraph.Core
                                 for (int i = 0; i < N; i++)
                                 {
                                     var key = rows[i];
-                                    Value.GetValue(key, out Int64 v);
+                                    Value.GetValue(key, out long v);
                                     if (!value.SetValue(key, v)) return;
                                 }
                                 break;

@@ -23,9 +23,9 @@ namespace ModelGraph.Core
                 val = false;
             return (_step.IsNegated) ? !val : val;
         }
-        internal override Int64 AsInt64()
+        internal override long AsInt64()
         {
-            if (!Property.Value.GetValue(_getItem(), out Int64 val))
+            if (!Property.Value.GetValue(_getItem(), out long val))
                 val = 0;
             return (_step.IsNegated) ? ~val : val;
         }
@@ -48,9 +48,9 @@ namespace ModelGraph.Core
             return val;
         }
 
-        internal override Int32 AsLength()
+        internal override int AsLength()
         {
-            if (!Property.Value.GetLength(_getItem(), out Int32 val))
+            if (!Property.Value.GetLength(_getItem(), out int val))
                 val = 0;
             return val;
         }
@@ -61,10 +61,10 @@ namespace ModelGraph.Core
                 val = new bool[0];
             return val;
         }
-        internal override Int64[] AsInt64Array()
+        internal override long[] AsInt64Array()
         {
-            if (!Property.Value.GetValue(_getItem(), out Int64[] val))
-                val = new Int64[0];
+            if (!Property.Value.GetValue(_getItem(), out long[] val))
+                val = new long[0];
             return val;
         }
         internal override double[] AsDoubleArray()

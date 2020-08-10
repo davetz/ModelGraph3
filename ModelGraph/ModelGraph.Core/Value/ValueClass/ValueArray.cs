@@ -123,15 +123,15 @@ namespace ModelGraph.Core
             value = null;
             return false;
         }
-        static protected bool ValueArray(Array a, out Int64[] value, Func<int, (bool, Int64)> valueAt)
+        static protected bool ValueArray(Array a, out long[] value, Func<int, (bool, long)> valueAt)
         {
             var N = (a == null) ? 0 : a.Length;
             if (N > 0)
             {
-                value = new Int64[N];
+                value = new long[N];
                 for (int i = 0; i < N; i++)
                 {
-                    (bool ok, Int64 v) = valueAt(i);
+                    (bool ok, long v) = valueAt(i);
                     if (!ok) return false; // abort
                     value[i] = v;
                 }

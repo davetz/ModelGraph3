@@ -4,25 +4,28 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    internal class UInt64Value : ValueOfType<ulong>
+    internal class DecimalValue : ValueOfScalar<decimal>
     {
-        internal override ValType ValType => ValType.UInt64;
+        internal override ValType ValType => ValType.Decimal;
 
-        internal ValueDictionaryOf<ulong> ValueDictionary => _valueStore as ValueDictionaryOf<ulong>;
+        internal ValueDictionaryOf<decimal> ValueDictionary => _valueStore as ValueDictionaryOf<decimal>;
         internal override bool IsSpecific(Item key) => _valueStore.IsSpecific(key);
 
         #region Constructor, WriteData  =======================================
-        internal UInt64Value(IValueStore<ulong> store) { _valueStore = store; }
+        internal DecimalValue(IValueStore<decimal> store) { _valueStore = store; }
 
-        internal UInt64Value(DataReader r, int count, Item[] items)
+        internal DecimalValue(DataReader r, int count, Item[] items)
         {
             if (count == 0)
             {
-                _valueStore = new ValueDictionaryOf<ulong>(count, default);
+                _valueStore = new ValueDictionaryOf<decimal>(count, default);
             }
             else
             {
-                var vs = new ValueDictionaryOf<ulong>(count, r.ReadUInt64());
+                var str = ReadString(r);
+                var val = decimal.Parse(str);
+
+                var vs = new ValueDictionaryOf<decimal>(count, val);
                 _valueStore = vs;
 
                 for (int i = 0; i < count; i++)
@@ -33,7 +36,10 @@ namespace ModelGraph.Core
                     var rx = items[inx];
                     if (rx == null) throw new Exception($"Column row is null, index {inx}");
 
-                    vs.LoadValue(rx, r.ReadUInt64());
+                    str = ReadString(r);
+                    val = decimal.Parse(str);
+
+                    vs.LoadValue(rx, val);
                 }
             }
         }
@@ -47,7 +53,7 @@ namespace ModelGraph.Core
 
             if (N > 0)
             {
-                w.WriteUInt64(vd.DefaultValue);
+                WriteString(w, vd.DefaultValue.ToString());
 
                 var keys = vd.GetKeys();
                 var vals = vd.GetValues();
@@ -58,7 +64,7 @@ namespace ModelGraph.Core
                     var val = vals[i];
 
                     w.WriteInt32(itemIndex[key]);
-                    w.WriteUInt64(val);
+                    WriteString(w, val.ToString());
                 }
             }
         }
@@ -78,42 +84,43 @@ namespace ModelGraph.Core
             var k = q.Items[0];
             if (k == null) return false;
 
-            return (qx.Select.GetValue(k, out Int64 v)) ? SetValue(key, v) : false;
+            return (qx.Select.GetValue(k, out double v)) ? SetValue(key, v) : false;
         }
         #endregion
 
         #region GetValue  =====================================================
         internal override bool GetValue(Item key, out bool value)
         {
-            var b = GetVal(key, out ulong v);
+            var b = GetVal(key, out decimal v);
             value = (v != 0);
             return b;
         }
 
         internal override bool GetValue(Item key, out int value)
         {
-            var b = (GetVal(key, out ulong v) && !(v > int.MaxValue));
+            var b = (GetVal(key, out decimal v) && !(v < int.MinValue || v > int.MaxValue));
             value = (int)v;
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64 value)
+        internal override bool GetValue(Item key, out long value)
         {
-            var b = GetVal(key, out ulong v);
-            value = (Int64)v;
+            var b = (GetVal(key, out decimal v) && !(v < long.MinValue || v > long.MaxValue));
+            value = (long)v;
             return b;
         }
-    internal override bool GetValue(Item key, out double value)
+
+        internal override bool GetValue(Item key, out double value)
         {
-            var b = GetVal(key, out ulong v);
-            value = v;
+            var b = GetVal(key, out decimal v);
+            value = (double)v;
             return b;
         }
 
         internal override bool GetValue(Item key, out string value)
         {
-            var b = GetVal(key, out ulong v);
-            value = ValueFormat(v, Format);
+            var b = GetVal(key, out decimal v);
+            value = ValueFormat((double)v, Format);
             return b;
         }
         #endregion
@@ -133,10 +140,10 @@ namespace ModelGraph.Core
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
-            var b = GetValue(key, out Int64 v);
-            value = new Int64[] { v };
+            var b = GetValue(key, out long v);
+            value = new long[] { v };
             return b;
         }
 
@@ -162,19 +169,20 @@ namespace ModelGraph.Core
         #endregion
 
         #region SetValue ======================================================
-        internal override bool SetValue(Item key, bool value) => SetVal(key, (ulong)(value ? 1 : 0));
+        internal override bool SetValue(Item key, bool value) => SetVal(key, value ? 1 : 0);
 
-        internal override bool SetValue(Item key, int value) => SetVal(key, (ulong)value);
+        internal override bool SetValue(Item key, int value) => SetVal(key, value);
 
-        internal override bool SetValue(Item key, Int64 value) => SetVal(key, (ulong)value);
+        internal override bool SetValue(Item key, long value) => SetVal(key, value);
 
-        internal override bool SetValue(Item key, double value) => (value < ulong.MinValue || value > ulong.MaxValue) ? false : SetVal(key, (ulong)value);
+        internal override bool SetValue(Item key, double value) => SetVal(key, (decimal)value);
 
         internal override bool SetValue(Item key, string value)
         {
-            var (ok, val) = UInt64Parse(value);
+            var (ok, val) = DecimalParse(value);
             return (ok) ? SetVal(key, val) : false;
         }
         #endregion
     }
 }
+

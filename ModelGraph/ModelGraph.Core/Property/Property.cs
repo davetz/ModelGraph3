@@ -6,6 +6,8 @@ namespace ModelGraph.Core
     public abstract class Property : Item
     {
         internal Value Value = Value.ValuesUnknown;
+        internal override State State { get; set; } //Properties uses the State bits
+
         protected virtual Type PropetyModelType => typeof(Model_617_TextProperty);
 
         internal virtual bool HasParentName => false;

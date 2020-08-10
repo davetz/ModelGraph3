@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     internal class ValueDictionaryOf<T> : ValueDictionary, IValueStore<T>
     {
-        ComputeX _owner;
+        Property _owner;
         Dictionary<Item, T> _values;
         protected T _default;
 
@@ -34,7 +34,7 @@ namespace ModelGraph.Core
             if (_values != null)
                 _values.Remove(key);
         }
-        public void SetOwner(ComputeX cx) => _owner = cx;
+        public void SetOwner(Property p) => _owner = p;
 
         //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =
 
@@ -49,19 +49,12 @@ namespace ModelGraph.Core
             if (_values != null && _values.TryGetValue(key, out val))
                 return true;
 
-            if (_owner == null)
+            if (_owner is ComputeX cx && cx.Owner.TryGetComputedValue(cx, key))
             {
-                val = _default;
-                return false;
-            }
-
-            if (_owner.Owner.TryGetComputedValue(_owner, key))
                 return _values.TryGetValue(key, out val);
-            else
-            {
-                val = _default;
-                return false;
             }
+            val = _default;
+            return false;
         }
 
         //= = = = = = = = = = = = = = = = = = = = = = = = = = = = = =

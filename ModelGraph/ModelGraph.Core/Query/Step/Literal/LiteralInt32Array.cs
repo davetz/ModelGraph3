@@ -5,9 +5,9 @@ namespace ModelGraph.Core
     internal class LiteralInt32Array : ValueOfInt32Array
     {
         private string _text;
-        private Int32[] _value;
+        private int[] _value;
 
-        internal LiteralInt32Array(ComputeStep step, Int32[] value, string text)
+        internal LiteralInt32Array(ComputeStep step, int[] value, string text)
         {
             _step = step;
             _text = text;
@@ -15,12 +15,12 @@ namespace ModelGraph.Core
         }
         internal override string Text => _text;
 
-        protected override Int32[] GetVal()
+        protected override int[] GetVal()
         {
             if (_step.IsNegated)
             {
                 var N = _value.Length;
-                var negate = new Int32[N];
+                var negate = new int[N];
                 for (int i = 0; i < N; i++) { negate[i] = -_value[i]; }
                 return negate;
             }

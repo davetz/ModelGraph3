@@ -8,7 +8,7 @@ namespace ModelGraph.Core
 
         internal override string Text => "Count";
 
-        protected override Int32 GetVal()
+        protected override int GetVal()
         {
             return _step.Input[0].Evaluate.AsLength();
         }

@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    internal abstract class ValueOfArray<T> : ValueOfType<T[]>
+    internal abstract class ValueOfArray<T> : ValueOfScalar<T[]>
     {
         protected bool GetValAt(Item key, out T value, int index)
         {

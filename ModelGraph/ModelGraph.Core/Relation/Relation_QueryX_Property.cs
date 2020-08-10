@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal Relation_QueryX_Property(RelationRoot owner)
         {
             Owner = owner;
-            Pairing = Pairing.OneToMany;
+            Pairing = Pairing.ManyToMany;
             IsRequired = false;
             Initialize(25, 25);
 

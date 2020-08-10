@@ -7,7 +7,7 @@ namespace ModelGraph.Core
         internal PlusLong(ComputeStep step) { _step = step; }
         internal override string Text => " + ";
 
-        protected override Int64 GetVal()
+        protected override long GetVal()
         {
             var N = _step.Count;
             var val = _step.Input[0].Evaluate.AsInt64();

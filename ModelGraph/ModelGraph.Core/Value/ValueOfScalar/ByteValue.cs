@@ -1,28 +1,29 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    internal class DoubleValue : ValueOfType<double>
+    internal class ByteValue : ValueOfScalar<byte>
     {
-        internal override ValType ValType => ValType.Double;
+        internal override ValType ValType => ValType.Byte;
 
-        internal ValueDictionaryOf<double> ValueDictionary => _valueStore as ValueDictionaryOf<double>;
+        internal ValueDictionaryOf<byte> ValueDictionary => _valueStore as ValueDictionaryOf<byte>;
         internal override bool IsSpecific(Item key) => _valueStore.IsSpecific(key);
 
         #region Constructor, WriteData  =======================================
-        internal DoubleValue(IValueStore<double> store) { _valueStore = store; }
+        internal ByteValue(IValueStore<byte> store) { _valueStore = store; }
 
-        internal DoubleValue(DataReader r, int count, Item[] items)
+        internal ByteValue(DataReader r, int count, Item[] items)
         {
             if (count == 0)
             {
-                _valueStore = new ValueDictionaryOf<double>(count, default);
+                _valueStore = new ValueDictionaryOf<byte>(count, default);
             }
             else
             {
-                var vs = new ValueDictionaryOf<double>(count, r.ReadDouble());
+                var vs = new ValueDictionaryOf<byte>(count, r.ReadByte());
                 _valueStore = vs;
 
                 for (int i = 0; i < count; i++)
@@ -33,7 +34,7 @@ namespace ModelGraph.Core
                     var rx = items[inx];
                     if (rx == null) throw new Exception($"Column row is null, index {inx}");
 
-                    vs.LoadValue(rx, r.ReadDouble());
+                    vs.LoadValue(rx, r.ReadByte());
                 }
             }
         }
@@ -47,7 +48,7 @@ namespace ModelGraph.Core
 
             if (N > 0)
             {
-                w.WriteDouble(vd.DefaultValue);
+                w.WriteByte(vd.DefaultValue);
 
                 var keys = vd.GetKeys();
                 var vals = vd.GetValues();
@@ -58,7 +59,7 @@ namespace ModelGraph.Core
                     var val = vals[i];
 
                     w.WriteInt32(itemIndex[key]);
-                    w.WriteDouble(val);
+                    w.WriteByte(val);
                 }
             }
         }
@@ -78,37 +79,42 @@ namespace ModelGraph.Core
             var k = q.Items[0];
             if (k == null) return false;
 
-            return (qx.Select.GetValue(k, out double v)) ? SetValue(key, v) : false;
+            return (qx.Select.GetValue(k, out long v)) ? SetValue(key, v) : false;
         }
         #endregion
 
         #region GetValue  =====================================================
         internal override bool GetValue(Item key, out bool value)
         {
-            var b = GetVal(key, out double v);
+            var b = GetVal(key, out byte v);
             value = (v != 0);
             return b;
         }
 
         internal override bool GetValue(Item key, out int value)
         {
-            var b = (GetVal(key, out double v) && !(v < int.MinValue || v > int.MaxValue));
-            value = (int)v;
+            var b = GetVal(key, out byte v);
+            value = v;
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64 value)
+        internal override bool GetValue(Item key, out long value)
         {
-            var b = (GetVal(key, out double v) && !(v < Int64.MinValue || v > Int64.MaxValue));
-            value = (Int64)v;
+            var b = GetVal(key, out byte v);
+            value = v;
             return b;
         }
 
-        internal override bool GetValue(Item key, out double value) => GetVal(key, out value);
+        internal override bool GetValue(Item key, out double value)
+        {
+            var b = GetVal(key, out byte v);
+            value = v;
+            return b;
+        }
 
         internal override bool GetValue(Item key, out string value)
         {
-            var b = GetVal(key, out double v);
+            var b = GetVal(key, out byte v);
             value = ValueFormat(v, Format);
             return b;
         }
@@ -129,10 +135,10 @@ namespace ModelGraph.Core
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
-            var b = GetValue(key, out Int64 v);
-            value = new Int64[] { v };
+            var b = GetValue(key, out long v);
+            value = new long[] { v };
             return b;
         }
 
@@ -160,15 +166,15 @@ namespace ModelGraph.Core
         #region SetValue ======================================================
         internal override bool SetValue(Item key, bool value) => SetVal(key, (byte)(value ? 1 : 0));
 
-        internal override bool SetValue(Item key, int value) => SetVal(key, value);
+        internal override bool SetValue(Item key, int value) => (value < byte.MinValue || value > byte.MaxValue) ? false : SetVal(key, (byte)value);
+        
+        internal override bool SetValue(Item key, long value) => (value < byte.MinValue || value > byte.MaxValue) ? false : SetVal(key, (byte)value);
 
-        internal override bool SetValue(Item key, Int64 value) => SetVal(key, value);
-
-        internal override bool SetValue(Item key, double value) => SetVal(key, value);
+        internal override bool SetValue(Item key, double value) => (value < byte.MinValue || value > byte.MaxValue) ? false : SetVal(key, (byte)value);
 
         internal override bool SetValue(Item key, string value)
         {
-            var (ok, val) = DoubleParse(value);
+            var (ok, val) = ByteParse(value);
             return (ok) ? SetVal(key, val) : false;
         }
         #endregion

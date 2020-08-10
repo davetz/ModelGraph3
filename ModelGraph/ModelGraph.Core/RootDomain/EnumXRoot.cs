@@ -153,7 +153,7 @@ namespace ModelGraph.Core
             foreach (var e in _relation_EnumX_ColumnX.GetChildLinkPairList())
             {
                 var cx = e.Item2 as ColumnX;
-                cx.IsEnumerated = true;
+                cx.HasEnumXRef = true;
             }
         }
         #endregion

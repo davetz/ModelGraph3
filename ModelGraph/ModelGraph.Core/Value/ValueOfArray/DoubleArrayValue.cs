@@ -139,10 +139,10 @@ namespace ModelGraph.Core
             return b;
         }
 
-        internal override bool GetValueAt(Item key, out Int64 value, int index)
+        internal override bool GetValueAt(Item key, out long value, int index)
         {
-            var b = (GetValAt(key, out double v, index) && !(v < Int64.MinValue || v > Int64.MaxValue));
-            value = (Int64)v;
+            var b = (GetValAt(key, out double v, index) && !(v < long.MinValue || v > long.MaxValue));
+            value = (long)v;
             return b;
         }
 
@@ -189,10 +189,10 @@ namespace ModelGraph.Core
             return b && c;
         }
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
             var b = GetVal(key, out double[] v);
-            var c = ValueArray(v, out value, (i) => (!(v[i] < Int64.MinValue || v[i] > Int64.MaxValue), (Int64)v[i]));
+            var c = ValueArray(v, out value, (i) => (!(v[i] < long.MinValue || v[i] > long.MaxValue), (long)v[i]));
             return b && c;
         }
 
@@ -227,7 +227,7 @@ namespace ModelGraph.Core
             return b && c;
         }
 
-        internal override bool SetValue(Item key, Int64[] value)
+        internal override bool SetValue(Item key, long[] value)
         {
             var c = ValueArray(value, out double[] v, (i) => (true, value[i]));
             var b = SetVal(key, v);

@@ -90,7 +90,7 @@ namespace ModelGraph.Core
                 if (!qx.HasSelect) continue;
                 foreach (var k in q.Items) { if (k != null) N++; }
             }
-            var v = new Int64[N];
+            var v = new long[N];
             var i = 0;
 
             foreach (var q in qList)
@@ -134,7 +134,7 @@ namespace ModelGraph.Core
 
         internal override bool GetValueAt(Item key, out int value, int index) => GetValAt(key, out value, index);
 
-        internal override bool GetValueAt(Item key, out Int64 value, int index)
+        internal override bool GetValueAt(Item key, out long value, int index)
         {
             var b = GetValAt(key, out int v, index);
             value = v;
@@ -179,7 +179,7 @@ namespace ModelGraph.Core
 
         internal override bool GetValue(Item key, out int[] value) => GetVal(key, out value);
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
             var b = GetVal(key, out int[] v);
             var c = ValueArray(v, out value, (i) => (true, v[i]));
@@ -212,7 +212,7 @@ namespace ModelGraph.Core
 
         internal override bool SetValue(Item key, int[] value) => SetVal(key, value);
 
-        internal override bool SetValue(Item key, Int64[] value)
+        internal override bool SetValue(Item key, long[] value)
         {
             var c = ValueArray(value, out int[] v, (i) => (!(value[i] < int.MinValue || value[i] > int.MaxValue), (int)value[i]));
             var b = SetVal(key, v);

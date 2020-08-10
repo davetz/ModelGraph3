@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    internal enum FormatType : Byte
+    internal enum FormatType : byte
     {
         None = 0,       // default T.ToString() (int,bool,float)
 

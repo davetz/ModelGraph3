@@ -1,4 +1,6 @@
 ﻿
+using System.Collections.Generic;
+
 namespace ModelGraph.Core
 {
     public class Model_658_Compute : List1ModelOf<ComputeX>
@@ -7,6 +9,11 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_658_Compute;
 
         public override bool CanDrag => true;
+        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        {
+            list.Clear();
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
+        }
 
         public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)

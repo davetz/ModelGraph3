@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ItemRemoved;
 
         #region Constructor  ==================================================
-        internal ItemRemoved(ChangeSet owner, Item item, int index, string name, IList<ColumnX> columns = null, List<String> values = null)
+        internal ItemRemoved(ChangeSet owner, Item item, int index, string name, IList<ColumnX> columns = null, List<string> values = null)
         {
             Owner = owner;
             _name = name;

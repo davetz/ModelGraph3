@@ -25,7 +25,7 @@
         public void Clear() { }
         public bool IsSpecific(Item key) => true;
         public void Remove(Item key) { }
-        public void SetOwner(ComputeX cx) { }
+        public void SetOwner(Property p) { }
 
         public bool GetVal(Item key, out T2 val) { val = GetValue(key); return true; }
         public bool SetVal(Item key, T2 value) { if (IsReadonly) return false; SetValue(key, value); return true; }

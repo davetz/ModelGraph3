@@ -9,7 +9,7 @@ namespace ModelGraph.Core
 
         internal override string Text => "Descend";
 
-        protected override Int64[] GetVal()
+        protected override long[] GetVal()
         {
             var v = _step.Input[0].Evaluate.AsInt64Array();
             return v.OrderByDescending((s) => s).ToArray();

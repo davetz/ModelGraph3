@@ -98,7 +98,7 @@ namespace ModelGraph.Core
             value = (isValid) ? _root.Evaluate.AsBool() : false;
             return isValid;
         }
-        internal bool GetValue(Item item, out Int64 value)
+        internal bool GetValue(Item item, out long value)
         {
             var isValid = (_root != null && IsValid);
 

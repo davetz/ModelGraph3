@@ -84,6 +84,9 @@ namespace ModelGraph.Core
         internal bool IsVirgin { get { return GetFlag(State.IsVirgin); } set { SetFlag(State.IsVirgin, value); } }
         internal bool IsCongealed { get { return GetFlag(State.IsCongealed); } set { SetFlag(State.IsCongealed, value); } }
 
+        internal bool HasEnumXRef { get { return GetFlag(State.HasEnumXRef); } set { SetFlag(State.HasEnumXRef, value); } }
+        internal bool HasQueryXRef { get { return GetFlag(State.HasQueryXRef); } set { SetFlag(State.HasQueryXRef, value); } }
+
         internal bool IsChoice { get { return GetFlag(State.IsChoice); } set { SetFlag(State.IsChoice, value); } }
 
         internal bool IsPersistent { get { return GetFlag(State.IsPersistent); } set { SetFlag(State.IsPersistent, value); } }
@@ -98,7 +101,6 @@ namespace ModelGraph.Core
         internal bool IsUnsable { get => IsDeleted || IsDiscarded; }
         internal bool AutoExpandLeft { get { return (_flags & B4) != 0; } set { _flags = value ? (byte)(_flags | B4) : (byte)(_flags & ~B4); } }
         internal bool AutoExpandRight { get { return (_flags & B5) != 0; } set { _flags = value ? (byte)(_flags | B5) : (byte)(_flags & ~B5); } }
-        internal bool IsEnumerated { get { return (_flags & B6) != 0; } set { _flags = value ? (byte)(_flags | B6) : (byte)(_flags & ~B6); } } // used for property values
         #endregion
 
         #region StringKeys  ===================================================

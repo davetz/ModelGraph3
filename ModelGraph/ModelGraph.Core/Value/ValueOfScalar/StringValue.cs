@@ -4,25 +4,25 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    internal class UInt32Value : ValueOfType<uint>
+    internal class StringValue : ValueOfScalar<string>
     {
-        internal override ValType ValType => ValType.UInt32;
+        internal override ValType ValType => ValType.String;
 
-        internal ValueDictionaryOf<uint> ValueDictionary => _valueStore as ValueDictionaryOf<uint>;
+        internal ValueDictionaryOf<string> ValueDictionary => _valueStore as ValueDictionaryOf<string>;
         internal override bool IsSpecific(Item key) => _valueStore.IsSpecific(key);
 
         #region Constructor, WriteData  =======================================
-        internal UInt32Value(IValueStore<uint> store) { _valueStore = store; }
+        internal StringValue(IValueStore<string> store) { _valueStore = store; }
 
-        internal UInt32Value(DataReader r, int count, Item[] items)
+        internal StringValue(DataReader r, int count, Item[] items)
         {
             if (count == 0)
             {
-                _valueStore = new ValueDictionaryOf<uint>(count, default);
+                _valueStore = new ValueDictionaryOf<string>(count, default);
             }
             else
             {
-                var vs = new ValueDictionaryOf<uint>(count, r.ReadUInt32());
+                var vs = new ValueDictionaryOf<string>(count, ReadString(r));
                 _valueStore = vs;
 
                 for (int i = 0; i < count; i++)
@@ -33,7 +33,7 @@ namespace ModelGraph.Core
                     var rx = items[inx];
                     if (rx == null) throw new Exception($"Column row is null, index {inx}");
 
-                    vs.LoadValue(rx, r.ReadUInt32());
+                    vs.LoadValue(rx, ReadString(r));
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace ModelGraph.Core
 
             if (N > 0)
             {
-                w.WriteUInt32(vd.DefaultValue);
+                WriteString(w, vd.DefaultValue);
 
                 var keys = vd.GetKeys();
                 var vals = vd.GetValues();
@@ -58,7 +58,7 @@ namespace ModelGraph.Core
                     var val = vals[i];
 
                     w.WriteInt32(itemIndex[key]);
-                    w.WriteUInt32(val);
+                    WriteString(w, val);
                 }
             }
         }
@@ -78,44 +78,34 @@ namespace ModelGraph.Core
             var k = q.Items[0];
             if (k == null) return false;
 
-            return (qx.Select.GetValue(k, out Int64 v)) ? SetValue(key, v) : false;
+            return (qx.Select.GetValue(k, out string v)) ? SetValue(key, v) : false;
         }
         #endregion
 
         #region GetValue  =====================================================
-        internal override bool GetValue(Item key, out bool value)
-        {
-            var b = GetVal(key, out uint v);
-            value = (v != 0);
-            return b;
-        }
+        internal override bool GetValue(Item key, out bool value) => (GetVal(key, out string v) && bool.TryParse(v, out value)) ? true : NoValue(out value);
 
-        internal override bool GetValue(Item key, out int value)
-        {
-            var b = GetVal(key, out uint v);
-            value = (int)v;
-            return b;
-        }
+        internal override bool GetValue(Item key, out int value) => (GetVal(key, out string v) && int.TryParse(v, out value)) ? true : NoValue(out value);
 
-        internal override bool GetValue(Item key, out Int64 value)
-        {
-            var b = GetVal(key, out uint v);
-            value = v;
-            return b;
-        }
+        internal override bool GetValue(Item key, out long value) => (GetVal(key, out string v) && long.TryParse(v, out value)) ? true : NoValue(out value);
 
-        internal override bool GetValue(Item key, out double value)
-        {
-            var b = GetVal(key, out uint v);
-            value = v;
-            return b;
-        }
+        internal override bool GetValue(Item key, out double value) => (GetVal(key, out string v) && double.TryParse(v, out value)) ? true : NoValue(out value);
 
-        internal override bool GetValue(Item key, out string value)
+        internal override bool GetValue(Item key, out DateTime value) => (GetVal(key, out string v) && DateTime.TryParse(v, out value)) ? true : NoValue(out value);
+
+        internal override bool GetValue(Item key, out string value) => GetVal(key, out value);
+        #endregion
+
+        #region GetLength  ====================================================
+        internal override bool GetLength(Item key, out int value)
         {
-            var b = GetVal(key, out uint v);
-            value = ValueFormat(v, Format);
-            return b;
+            if (GetVal(key, out string v))
+            {
+                value = v.Length;
+                return true;
+            }
+            value = 0;
+            return false;
         }
         #endregion
 
@@ -134,10 +124,10 @@ namespace ModelGraph.Core
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
-            var b = GetValue(key, out Int64 v);
-            value = new Int64[] { v };
+            var b = GetValue(key, out long v);
+            value = new long[] { v };
             return b;
         }
 
@@ -163,19 +153,17 @@ namespace ModelGraph.Core
         #endregion
 
         #region SetValue ======================================================
-        internal override bool SetValue(Item key, bool value) => SetVal(key, (uint)(value ? 1 : 0));
+        internal override bool SetValue(Item key, bool value) => SetVal(key, value.ToString());
 
-        internal override bool SetValue(Item key, int value) => SetVal(key, (uint)value);
+        internal override bool SetValue(Item key, int value) => SetVal(key, value.ToString());
 
-        internal override bool SetValue(Item key, Int64 value) => (value < uint.MinValue || value > uint.MaxValue) ? false : SetVal(key, (uint)value);
+        internal override bool SetValue(Item key, long value) => SetVal(key, value.ToString());
 
-        internal override bool SetValue(Item key, double value) => (value < uint.MinValue || value > uint.MaxValue) ? false : SetVal(key, (uint)value);
+        internal override bool SetValue(Item key, double value) => SetVal(key, value.ToString());
 
-        internal override bool SetValue(Item key, string value)
-        {
-            var (ok, val) = UInt32Parse(value);
-            return (ok) ? SetVal(key, val) : false;
-        }
+        internal override bool SetValue(Item key, DateTime value) => SetVal(key, value.ToString());
+
+        internal override bool SetValue(Item key, string value) => SetVal(key, value);
         #endregion
     }
 }

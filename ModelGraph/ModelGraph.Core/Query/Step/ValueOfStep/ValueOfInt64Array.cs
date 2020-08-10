@@ -2,11 +2,11 @@
 
 namespace ModelGraph.Core
 {
-    internal abstract class ValueOfInt64Array : ValueOfStep<Int64[]>
+    internal abstract class ValueOfInt64Array : ValueOfStep<long[]>
     {
         internal override ValType ValType => ValType.Int64Array;
 
-       internal override Int64[] AsInt64Array() => GetVal();
+       internal override long[] AsInt64Array() => GetVal();
         internal override int AsLength() => AsInt64Array().Length;
         internal override string AsString()
         {

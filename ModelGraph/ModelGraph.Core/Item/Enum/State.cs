@@ -19,6 +19,7 @@ namespace ModelGraph.Core
         HasEnumXRef = 0x2, // ColumnX
 
         IsCongealed = 0x4, // ChangeSet
+        HasQueryXRef = 0x4, // ColumnX
 
         IsRoot = 0x8, // QueryX, Query
 

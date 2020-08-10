@@ -120,17 +120,17 @@ namespace ModelGraph.Core
 
 
             var len = w.MeasureString(txt);
-            if (len > UInt16.MaxValue)
+            if (len > ushort.MaxValue)
             {
-                var r = (double)len / (double)UInt16.MaxValue;
-                var n = (UInt16)((txt.Length / r) - 2);
+                var r = (double)len / (double)ushort.MaxValue;
+                var n = (ushort)((txt.Length / r) - 2);
                 var trucated = txt.Substring(0, n);
-                w.WriteUInt16((UInt16)w.MeasureString(trucated));
+                w.WriteUInt16((ushort)w.MeasureString(trucated));
                 w.WriteString(trucated);
             }
             else
             {
-                w.WriteUInt16((UInt16)len);
+                w.WriteUInt16((ushort)len);
                 w.WriteString(txt);
             }
         }

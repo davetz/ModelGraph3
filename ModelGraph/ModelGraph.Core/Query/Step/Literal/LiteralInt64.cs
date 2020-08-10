@@ -5,9 +5,9 @@ namespace ModelGraph.Core
     internal class LiteralInt64 : ValueOfInt64
     {
         private string _text;
-        private Int64 _value;
+        private long _value;
 
-        internal LiteralInt64(ComputeStep step, Int64 value, string text)
+        internal LiteralInt64(ComputeStep step, long value, string text)
         {
             _step = step;
             _text = text;
@@ -15,6 +15,6 @@ namespace ModelGraph.Core
         }
         internal override string Text => _text;
 
-        protected override Int64 GetVal() => _step.IsNegated ? -_value : _value;
+        protected override long GetVal() => _step.IsNegated ? -_value : _value;
     }
 }

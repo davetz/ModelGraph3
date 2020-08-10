@@ -173,7 +173,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region QueryXMethods  ================================================
+        #region QueryMethods  =================================================
         //========================================== frequently used references
         private ErrorRoot _errorRoot;
         private GraphXRoot _graphXRoot;
@@ -655,7 +655,7 @@ namespace ModelGraph.Core
 
         #endregion
 
-        #region QueryXForest  =================================================
+        #region QueryForest  ==================================================
 
         #region GetForest  ====================================================
         /// <summary>

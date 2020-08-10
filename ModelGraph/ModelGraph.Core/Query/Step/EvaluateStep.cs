@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         internal virtual string AsString() => throw new NotImplementedException(); // failed type check
         internal virtual DateTime AsDateTime() => throw new NotImplementedException(); // failed type check
 
-        internal virtual Int32 AsLength() => 1; // default length
+        internal virtual int AsLength() => 1; // default length
 
         internal virtual bool[] AsBoolArray() => throw new NotImplementedException(); // failed type check
         internal virtual int[] AsInt32Array() => throw new NotImplementedException(); // failed type check

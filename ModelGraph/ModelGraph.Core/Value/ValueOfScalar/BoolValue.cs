@@ -4,26 +4,26 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    internal class Int16Value : ValueOfType<short>
+    internal class BoolValue : ValueOfScalar<bool>
     {
-        internal override ValType ValType => ValType.Int16;
+        internal override ValType ValType => ValType.Bool;
 
-        internal ValueDictionaryOf<short> ValueDictionary => _valueStore as ValueDictionaryOf<short>;
+        internal ValueDictionaryOf<bool> ValueDictionary => _valueStore as ValueDictionaryOf<bool>;
+
         internal override bool IsSpecific(Item key) => _valueStore.IsSpecific(key);
 
         #region Constructor, WriteData  =======================================
-        internal Int16Value(IValueStore<short> store) { _valueStore = store; }
+        internal BoolValue(IValueStore<bool> store) { _valueStore = store; }
 
-        internal Int16Value(DataReader r, int count, Item[] items)
+        internal BoolValue(DataReader r, int count, Item[] items)
         {
             if (count == 0)
             {
-                _valueStore = new ValueDictionaryOf<short>(count, default);
+                _valueStore = new ValueDictionaryOf<bool>(count, default);
             }
             else
             {
-                var vs = new ValueDictionaryOf<short>(count, r.ReadInt16());
-                _valueStore = vs;
+                var vs = new ValueDictionaryOf<bool>(count, r.ReadBoolean());
 
                 for (int i = 0; i < count; i++)
                 {
@@ -33,7 +33,7 @@ namespace ModelGraph.Core
                     var rx = items[inx];
                     if (rx == null) throw new Exception($"Column row is null, index {inx}");
 
-                    vs.LoadValue(rx, r.ReadInt16());
+                    vs.LoadValue(rx, r.ReadBoolean());
                 }
             }
         }
@@ -47,7 +47,7 @@ namespace ModelGraph.Core
 
             if (N > 0)
             {
-                w.WriteInt16(vd.DefaultValue);
+                w.WriteBoolean(vd.DefaultValue);
 
                 var keys = vd.GetKeys();
                 var vals = vd.GetValues();
@@ -58,7 +58,7 @@ namespace ModelGraph.Core
                     var val = vals[i];
 
                     w.WriteInt32(itemIndex[key]);
-                    w.WriteInt16(val);
+                    w.WriteBoolean(val);
                 }
             }
         }
@@ -71,49 +71,44 @@ namespace ModelGraph.Core
 
             var q = qList[0];
             if (q.Items == null || q.Items.Length == 0) return false;
-
+            
             var qx = q.QueryX;
             if (!qx.HasSelect) return false;
 
             var k = q.Items[0];
             if (k == null) return false;
 
-            return (qx.Select.GetValue(k, out Int64 v)) ? SetValue(key, v) : false;
+            return (qx.Select.GetValue(k, out bool v)) ? SetValue(key, v) : false;
         }
         #endregion
 
         #region GetValue  =====================================================
-        internal override bool GetValue(Item key, out bool value)
-        {
-            var b = GetVal(key, out short v);
-            value = (v != 0);
-            return b;
-        }
+        internal override bool GetValue(Item key, out bool value) => GetVal(key, out value);
 
         internal override bool GetValue(Item key, out int value)
         {
-            var b = GetVal(key, out short v);
-            value = v;
+            var b = (GetVal(key, out bool v));
+            value = v ? 1 : 0;
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64 value)
+        internal override bool GetValue(Item key, out long value)
         {
-            var b = GetVal(key, out short v);
-            value = v;
+            var b = (GetVal(key, out bool v));
+            value = v ? 1 : 0;
             return b;
         }
 
         internal override bool GetValue(Item key, out double value)
         {
-            var b = GetVal(key, out short v);
-            value = v;
+            var b = (GetVal(key, out bool v));
+            value = v ? 1 : 0;
             return b;
         }
 
         internal override bool GetValue(Item key, out string value)
         {
-            var b = GetVal(key, out short v);
+            var b = (GetVal(key, out bool v));
             value = ValueFormat(v, Format);
             return b;
         }
@@ -134,10 +129,10 @@ namespace ModelGraph.Core
             return b;
         }
 
-        internal override bool GetValue(Item key, out Int64[] value)
+        internal override bool GetValue(Item key, out long[] value)
         {
-            var b = GetValue(key, out Int64 v);
-            value = new Int64[] { v };
+            var b = GetValue(key, out long v);
+            value = new long[] { v };
             return b;
         }
 
@@ -163,18 +158,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region SetValue ======================================================
-        internal override bool SetValue(Item key, bool value) => SetVal(key, (short)(value ? 1 : 0));
+        internal override bool SetValue(Item key, bool value) => SetVal(key, value);
 
-        internal override bool SetValue(Item key, int value) => (value < short.MinValue || value > short.MaxValue) ? false : SetVal(key, (short)value);
+        internal override bool SetValue(Item key, int value) => SetVal(key, (value != 0));
 
-        internal override bool SetValue(Item key, Int64 value) => (value < short.MinValue || value > short.MaxValue) ? false : SetVal(key, (short)value);
+        internal override bool SetValue(Item key, long value) => SetVal(key, (value != 0));
 
-        internal override bool SetValue(Item key, double value) => (value < short.MinValue || value > short.MaxValue) ? false : SetVal(key, (short)value);
+        internal override bool SetValue(Item key, double value) => SetVal(key, (value != 0));
 
         internal override bool SetValue(Item key, string value)
         {
-            var (ok, val) = Int16Parse(value);
-            return (ok) ? SetVal(key, val) : false;
+            (var ok, var v) = BoolParse(value);
+            return ok ? SetVal(key, v) : false;
         }
         #endregion
     }
