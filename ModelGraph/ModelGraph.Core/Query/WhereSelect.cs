@@ -9,6 +9,7 @@ namespace ModelGraph.Core
     {
         private Item _item;
         private ComputeStep _root; // root of the expression tree
+        internal void GetPropertyRefs(HashSet<Property> list) => _root?.GetPropertyRefs(list);
 
         #region Constructor  ==================================================
         internal WhereSelect(string text)

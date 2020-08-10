@@ -108,6 +108,19 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region GetPropertyRefs  ===============================================
+        internal void GetPropertyRefs(HashSet<Property> list)
+        {
+            if (Input != null)
+            {
+                foreach (var step in Input)
+                {
+                    if (step.Evaluate is LiteralProperty lp) list.Add(lp.Property);
+                }
+            }
+        }
+        #endregion
+
         #region TryValidate  ==================================================
         internal bool TryValidate(Store sto, Func<Item> getItem)
         {

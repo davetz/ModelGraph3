@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
@@ -196,5 +197,14 @@ namespace ModelGraph.Core
                 Select = new WhereSelect(value);
         }
         #endregion
+
+        #region GetPropertyRefs  ===============================================
+        internal void GetPropertyRefs(HashSet<Property> list)
+        {
+            Where?.GetPropertyRefs(list);
+            Select?.GetPropertyRefs(list);
+        }
+        #endregion
+
     }
 }

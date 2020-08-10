@@ -354,8 +354,8 @@ namespace ModelGraph.Core
         Model_623_MetadataRoot = 0x623,
         Model_624_ModelingRoot = 0x624,
         //=====================================================================
-        ErrorTypeModel_626 = 0x626,
-        ErrorTextModel_627 = 0x627,
+        Model_626_ErrorType = 0x626,
+        Model_627_ErrorText = 0x627,
         //=====================================================================
         Model_628_ChangeSet = 0x628,
         Model_629_ChangeItem = 0x629,
