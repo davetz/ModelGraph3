@@ -420,8 +420,8 @@ namespace ModelGraph.Core
         GraphEgressLink_MetaModel = 0x698,
         GraphNodeSymbol_MetaModel = 0x699,
 
-        ValueHead_MetaModel = 0x69E,
-        ValueLink_MetaModel = 0x69F,
+        Model_69E_ValueHead = 0x69E,
+        Model_69F_ValueLink = 0x69F,
         //=====================================================================
         Model_6A1_Row = 0x6A1,
         Model_6A4_Table = 0x6A4,

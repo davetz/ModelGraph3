@@ -4,6 +4,7 @@
     {
         internal Item Aux1;
         internal Item Aux2;
+        internal override bool IsErrorAux2 => true;
 
         #region Constructor  ==================================================
         internal ErrorNoneAux2(ErrorRoot owner, Item item, Item aux1, Item aux2, IdKey idKe) : base(owner, item, idKe)
