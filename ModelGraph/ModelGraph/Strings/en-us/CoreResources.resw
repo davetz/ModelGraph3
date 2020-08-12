@@ -829,7 +829,7 @@
     <value>Full size width/height of symbols (12 to 255)</value>
   </data>
   <data name="460N" xml:space="preserve">
-    <value>Rows Where</value>
+    <value>Row Value Select</value>
   </data>
   <data name="460S" xml:space="preserve">
     <value>Select expresion string</value>

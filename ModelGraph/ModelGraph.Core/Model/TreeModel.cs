@@ -126,6 +126,14 @@ namespace ModelGraph.Core
                         selected.ToggleRight(Item);
                         _buffer.Refresh(_childModel, viewSize, leading);
                         break;
+                    case ChangeType.ExpandAllLeft:
+                        selected.ExpandAllLeft(Item);
+                        _buffer.Refresh(_childModel, viewSize, leading);
+                        break;
+                    case ChangeType.ExpandAllRight:
+                        selected.ExpandAllRight(Item);
+                        _buffer.Refresh(_childModel, viewSize, leading);
+                        break;
                     case ChangeType.ToggleFilter:
                         selected.IsFilterVisible = !selected.IsFilterVisible;
                         break;

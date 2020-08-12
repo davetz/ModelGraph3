@@ -402,11 +402,27 @@ namespace ModelGraph.Controls
             }
             args.Handled = true;
         }
+        private void KeyCtrlLeft_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (Selected.CanExpandAll)
+            {
+                _ = RefreshViewListAsync(ChangeType.ExpandAllLeft);
+            }
+            args.Handled = true;
+        }
         private void KeyRight_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (Selected.CanExpandRight)
             {
                 _ = RefreshViewListAsync(ChangeType.ToggleRight);
+            }
+            args.Handled = true;
+        }
+        private void KeyCtrlRight_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (Selected.CanExpandAll )
+            {
+                _ = RefreshViewListAsync(ChangeType.ExpandAllRight);
             }
             args.Handled = true;
         }

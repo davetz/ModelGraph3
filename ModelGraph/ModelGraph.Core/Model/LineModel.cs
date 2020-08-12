@@ -110,6 +110,50 @@ namespace ModelGraph.Core
         internal bool ToggleLeft(Root root) => IsExpandedLeft ? CollapseLeft() : ExpandLeft(root);
         internal bool ToggleRight(Root root) => IsExpandedRight ? CollapseRight() : ExpandRight(root);
 
+        internal bool ExpandAllLeft(Root root)
+        {
+            var anyChange = false;
+            if (CanExpandLeft && Depth < 10)
+            {
+                anyChange |= ExpandLeft(root);
+                foreach (var m in Items)
+                {
+                    anyChange |= m.ExpandAllLeft(root);
+                }
+            }
+            return anyChange;
+        }
+        internal bool ExpandAllRight(Root root)
+        {
+            var anyChange = false;
+            if (Depth < 10)
+            {
+                if (CanExpandLeft && !CanExpandRight)
+                {
+                    anyChange |= ExpandLeft(root);
+                    foreach (var m in Items)
+                    {
+                        anyChange |= m.ExpandAllRight(root);
+                    }
+                }
+                else if (!CanExpandLeft && CanExpandRight)
+                {
+                    anyChange |= ExpandRight(root);
+                }
+                else if (CanExpandLeft && CanExpandRight)
+                {
+                    anyChange |= ExpandRight(root);
+                    anyChange |= ExpandLeft(root);
+                    foreach (var m in Items)
+                    {
+                        if (m.CanExpandLeft || m.CanExpandRight)
+                            anyChange |= m.ExpandAllRight(root);
+                    }
+                }
+            }
+            return anyChange;
+        }
+
         protected bool CollapseLeft()
         {
             IsExpandedLeft = false;
@@ -200,6 +244,7 @@ namespace ModelGraph.Core
         public virtual bool CanDrag => false;
         public virtual bool CanSort => false;
         public virtual bool CanFilter => false;
+        public virtual bool CanExpandAll => false;
         public virtual bool CanExpandLeft => false;
         public virtual bool CanExpandRight => false;
         public virtual bool CanFilterUsage => false;

@@ -157,6 +157,26 @@ namespace ModelGraph.Core
         internal void SetSelectString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.SelectString = value; _queryXRoot.ValidateQueryDependants(qx); }
         #endregion
 
+        #region Model_658_Compute  ============================================
+        internal int GetQueryXCount(ComputeX cx) => _relation_ComputeX_QueryX.TryGetChild(cx, out QueryX q1) ? _relation_QueryX_QueryX.ChildCount(q1) : 0;
+        internal IList<QueryX> GetQueryXList(ComputeX cx) => _relation_ComputeX_QueryX.TryGetChild(cx, out QueryX q1) && _relation_QueryX_QueryX.TryGetChildren(q1, out IList<QueryX> list) ? list : new QueryX[0];
+        internal bool ComputeXRelationDrop(ComputeX cx, Relation rx, bool doDrop)
+        {
+            if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx1) && _relation_Store_ComputeX.TryGetParent(cx, out Store st) && !_relation_QueryX_QueryX.HasChildLink(qx1))
+            {
+                var (head, tail) = rx.GetHeadTail();
+                if (st == head || st == tail)
+                {
+                    if (doDrop) _queryXRoot.AddComputeXQueryX(cx, qx1, rx, st == tail);
+                    return true;
+                }
+            }
+            return false;
+        }
+
+
+        #endregion
+
         #region SetComputeType  ===============================================
         internal void SetComputeTypeProperty(ComputeX cx, CompuType type)
         {

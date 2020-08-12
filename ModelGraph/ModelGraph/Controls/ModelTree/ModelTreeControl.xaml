@@ -644,6 +644,9 @@
                             <KeyboardAccelerator Key="Left" Invoked="KeyLeft_Invoked"/>
                             <KeyboardAccelerator Key="Right" Invoked="KeyRight_Invoked"/>
 
+                            <KeyboardAccelerator Key="Left" Modifiers="Control" Invoked="KeyCtrlLeft_Invoked"/>
+                            <KeyboardAccelerator Key="Right" Modifiers="Control" Invoked="KeyCtrlRight_Invoked"/>
+
                             <KeyboardAccelerator Key="End" Invoked="KeyEnd_Invoked"/>
                             <KeyboardAccelerator Key="Home" Invoked="KeyHome_Invoked"/>
 

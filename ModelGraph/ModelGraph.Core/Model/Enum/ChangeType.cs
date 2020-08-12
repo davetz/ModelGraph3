@@ -17,6 +17,8 @@
         ToggleLeft,
         ToggleRight,
         ToggleFilter,
+        ExpandAllLeft,
+        ExpandAllRight,
         ViewListChanged,
         FilterSortChanged,
     }

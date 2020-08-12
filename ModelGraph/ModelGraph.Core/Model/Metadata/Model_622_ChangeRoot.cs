@@ -13,6 +13,8 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Item.Count;
 
+        public override bool CanExpandAll => true;
+
         protected override IList<ChangeSet> GetChildItems() => Item.ItemsReversed;
 
         protected override void CreateChildModel(ChangeSet cs)

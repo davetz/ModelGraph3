@@ -216,6 +216,45 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region LineModelMethods  =============================================
+        internal int QueryQueryChildCount(QueryX qx) => _relation_QueryX_QueryX.ChildCount(qx);
+        internal IList<QueryX> QueryQueryChildList(QueryX qx) => _relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> list) ? list : new QueryX[0];
+
+        internal bool QueryRelationDrop(QueryX qx1, Relation r2, bool doDrop)
+        {
+            if (_relation_Relation_QueryX.TryGetParent(qx1, out Relation r1))
+            {
+                var (_, t1) = r1.GetHeadTail();
+                var (h2, t2) = r2.GetHeadTail();
+                if (t1 == h2 || t1 == t2)
+                {
+                    if (doDrop)
+                    {
+                        qx1.IsTail = false;
+                        var qx2 = new QueryX(this, QueryType.Value);
+                        qx2.IsReversed = t1 == t2;
+                        ItemCreated.Record(Owner, qx2);
+                        ItemLinked.Record(Owner, _relation_QueryX_QueryX, qx1, qx2);
+                        ItemLinked.Record(Owner, _relation_Relation_QueryX, r2, qx2);
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        internal void AddComputeXQueryX(ComputeX cx, QueryX qx1, Relation rx, bool isReversed)
+        {
+            qx1.IsTail = false;
+            var qx2 = new QueryX(this, QueryType.Value);
+            qx2.IsReversed = isReversed;
+            ItemCreated.Record(Owner, qx2);
+            ItemLinked.Record(Owner, _relation_QueryX_QueryX, qx1, qx2);
+            ItemLinked.Record(Owner, _relation_Relation_QueryX, rx, qx2);
+
+        }
+        #endregion
+
         #region ValidateQueryXStore  ==========================================
         private void ValidateQueryXStore()
         {
