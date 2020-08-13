@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.LabelingEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Labeling(EnumRoot owner) : base(owner)
+        internal Enum_Labeling(EnumManager owner) : base(owner)
         {
             CreateChildren();
         }

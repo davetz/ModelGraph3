@@ -5,13 +5,14 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.QueryXSelectProperty;
 
-        internal Property_QueryX_Select(PropertyRoot owner) : base(owner)
+        internal Property_QueryX_Select(PropertyManager owner) : base(owner)
         {
             Value = new StringValue(this);
         }
 
         internal override string GetValue(Item item) => Cast(item).SelectString;
         internal override void SetValue(Item item, string val) =>  Cast(item).SelectString = val;
-        internal override string GetParentName(Item item) => Cast(item).GetTailTableName();
+        internal override bool HasTargetName => true;
+        internal override string GetTargetName(Item item) => $"{Cast(item).GetWhereSelectTargetName()}  {Owner.Owner.GetNameId(IdKey)}";
     }
 }

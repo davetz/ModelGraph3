@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class QueryX : ChildOf<QueryXRoot>
+    public class QueryX : ChildOf<QueryXManager>
     {
         internal WhereSelect Where;
         internal WhereSelect Select;
@@ -14,7 +14,7 @@ namespace ModelGraph.Core
 
         #region Constructor  ==================================================
         internal QueryX() { }
-        internal QueryX(QueryXRoot owner, QueryType kind, bool isRoot = false, bool isHead = false)
+        internal QueryX(QueryXManager owner, QueryType kind, bool isRoot = false, bool isHead = false)
         {
             Owner = owner;
             QueryKind = kind;
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal QueryX(QueryXRoot owner)
+        internal QueryX(QueryXManager owner)
         {
             Owner = owner;
 
@@ -124,7 +124,7 @@ namespace ModelGraph.Core
 
         #region DependantMethods  =============================================
         (Store, Store) GetHeadTail() => Owner.GetHeadTail(this);
-        internal string GetTailTableName() => Owner.GetTailTableName(this);
+        internal string GetWhereSelectTargetName() => Owner.GetWhereSelectTargetName(this);
         #endregion
 
         #region Validation  ===================================================

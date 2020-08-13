@@ -10,8 +10,8 @@ namespace ModelGraph.Core
 
         protected virtual Type PropetyModelType => typeof(Model_617_TextProperty);
 
-        internal virtual bool HasParentName => false;
-        internal virtual string GetParentName(Item itm) => default;
+        internal virtual bool HasTargetName => false;
+        internal virtual string GetTargetName(Item itm) => default;
 
         internal virtual bool IsReadonly => false;
         internal virtual bool IsMultiline => false;

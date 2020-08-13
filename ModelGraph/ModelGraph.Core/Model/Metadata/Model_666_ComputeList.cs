@@ -33,8 +33,8 @@ namespace ModelGraph.Core
         }
         private void AddNewComputeX(Root root)
         {
-            var cx = new ComputeX(root.Get<ComputeXRoot>(), true);
-            var qx = new QueryX(root.Get<QueryXRoot>());
+            var cx = new ComputeX(root.Get<ComputeXManager>(), true);
+            var qx = new QueryX(root.Get<QueryXManager>());
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(root, cx);

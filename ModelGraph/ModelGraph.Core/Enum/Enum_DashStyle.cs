@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.DashStyleEnum;
 
         #region Constructor  ==================================================
-        internal Enum_DashStyle(EnumRoot owner) : base(owner)
+        internal Enum_DashStyle(EnumManager owner) : base(owner)
         {
             CreateChildren();
         }

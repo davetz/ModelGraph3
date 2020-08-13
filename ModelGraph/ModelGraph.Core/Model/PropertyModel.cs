@@ -47,7 +47,7 @@ namespace ModelGraph.Core
         {
             var name = Property.GetNameId();
 
-            return Property.HasParentName ? Property.GetParentName(GetItem()) : name;
+            return Property.HasTargetName ? Property.GetTargetName(GetItem()) : name;
         }
 
         public override string GetModelIdentity() => $"{IdKey}{Environment.NewLine}{Property.IdKey}  ({Property.ItemKey:X3}";

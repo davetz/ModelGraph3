@@ -9,13 +9,12 @@ namespace ModelGraph.Core
         internal Model_658_Compute(Model_666_ComputeList owner, ComputeX item) : base(owner, item) { }
 
         public override bool CanDrag => true;
+        public override bool CanExpandAll => true;
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
         }
-
-        public override bool CanExpandAll => true;
 
         #region List2ModelOf  =================================================
         protected override int GetTotalCount() => Item.Owner.GetQueryXCount(Item);

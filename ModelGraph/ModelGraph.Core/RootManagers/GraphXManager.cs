@@ -6,13 +6,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class GraphXRoot : ExternalRoot<Root, GraphX>, ISerializer, IPrimeRoot
+    public class GraphXManager : ExternalManager<Root, GraphX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("48C7FA8C-88F1-4203-8E54-3255C1F8C528");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.GraphXRoot;
 
-        internal GraphXRoot(Root root) 
+        internal GraphXManager(Root root) 
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -22,7 +22,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyRoot>();
+            var sto = root.Get<PropertyManager>();
 
             root.RegisterReferenceItem(new Property_GraphX_TerminalLength(sto));
             root.RegisterReferenceItem(new Property_GraphX_TerminalSpacing(sto));
@@ -135,7 +135,7 @@ namespace ModelGraph.Core
 
         #region GraphXMethods  ================================================
         //========================================== frequently used references
-        private QueryXRoot _queryXRoot;
+        private QueryXManager _queryXRoot;
         private DummyItem _dummyItem;
         private DummyQueryX _dummyQueryX;
 
@@ -152,7 +152,7 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXRoot = root.Get<QueryXRoot>();
+            _queryXRoot = root.Get<QueryXManager>();
             _dummyItem = root.Get<DummyItem>();
             _dummyQueryX = root.Get<DummyQueryX>();
 

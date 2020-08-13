@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.NodeLabelingProperty;
 
-        internal Property_Node_Labeling(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_Labeling>()) { }
+        internal Property_Node_Labeling(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_Labeling>()) { }
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).Labeling;
         internal override void SetItemPropertyValue(Item item, int key) => Cast(item).Labeling = (Labeling)key;

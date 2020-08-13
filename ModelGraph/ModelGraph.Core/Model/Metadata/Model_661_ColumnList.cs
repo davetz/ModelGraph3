@@ -32,7 +32,7 @@ namespace ModelGraph.Core
         }
         private void AddNewColumnX(Root root)
         {
-            var cx = new ColumnX(root.Get<ColumnXRoot>(), true);
+            var cx = new ColumnX(root.Get<ColumnXManager>(), true);
             var sto = Item as Store;
 
             // the data root implements undo/redo functionality

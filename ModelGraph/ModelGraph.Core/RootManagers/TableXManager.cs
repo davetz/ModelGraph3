@@ -4,13 +4,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class TableXRoot : ExternalRoot<Root, TableX>, ISerializer, IPrimeRoot
+    public class TableXManager : ExternalManager<Root, TableX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("93EC136C-6C38-474D-844B-6B8326526CB5");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.TableXRoot;
 
-        internal TableXRoot(Root root)
+        internal TableXManager(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));

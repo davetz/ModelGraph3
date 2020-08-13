@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.NodeSizeWHProperty;
 
-        internal Property_Node_SizeWH(PropertyRoot owner) : base(owner)
+        internal Property_Node_SizeWH(PropertyManager owner) : base(owner)
         {
             Value = new Int32ArrayValue(this);
         }

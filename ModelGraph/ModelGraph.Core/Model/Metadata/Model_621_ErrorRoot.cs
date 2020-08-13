@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_621_ErrorRoot : List2ModelOf<ErrorRoot, Error>
+    public class Model_621_ErrorRoot : List2ModelOf<ErrorManager, Error>
     {
-        internal Model_621_ErrorRoot(LineModel owner, ErrorRoot item) : base(owner, item) { }
+        internal Model_621_ErrorRoot(LineModel owner, ErrorManager item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_621_ErrorRoot;
 
         protected override int GetTotalCount() => Item.Count;

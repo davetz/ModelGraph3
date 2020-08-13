@@ -2,13 +2,13 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_647_TableList : List2ModelOf<TableXRoot, TableX>
+    public class Model_647_TableList : List2ModelOf<TableXManager, TableX>
     {
-        internal Model_647_TableList(Model_624_ModelingRoot owner, TableXRoot item) : base(owner, item) { }
+        internal Model_647_TableList(Model_624_ModelingRoot owner, TableXManager item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_647_TableList;
         public override string GetNameId() => Item.Owner.GetNameId(IdKey);
 
-        private TableXRoot TXR => Item as TableXRoot;
+        private TableXManager TXR => Item as TableXManager;
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => TXR.Count;

@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class RelationRoot : InternalRoot<Root, Relation>, IPrimeRoot, IRelationRoot
+    public class RelationManager : InternalManager<Root, Relation>, IPrimeRoot, IRelationRoot
     {
-        internal RelationRoot(Root root)
+        internal RelationManager(Root root)
         {
             Owner = root;
             SetCapacity(30);

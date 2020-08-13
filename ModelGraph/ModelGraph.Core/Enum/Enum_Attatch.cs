@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.AttatchEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Attach(EnumRoot owner) : base(owner)
+        internal Enum_Attach(EnumManager owner) : base(owner)
         {
             CreateChildren();
         }

@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class EnumX : ChildOfStoreOf<EnumXRoot, PairX>
+    public class EnumX : ChildOfStoreOf<EnumXManager, PairX>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;
@@ -13,14 +13,14 @@ namespace ModelGraph.Core
         internal string GetActualValueAt(int index) => (index < 0 || index >= Count) ? InvalidItem : Items[index].ActualValue;
 
         #region Constructors  =================================================
-        internal EnumX(EnumXRoot owner, bool autoExpandRight = false)
+        internal EnumX(EnumXManager owner, bool autoExpandRight = false)
         {
             Owner = owner;
 
             if (autoExpandRight) AutoExpandRight = true;
             owner.Add(this);
         }
-        internal EnumXRoot Owner;
+        internal EnumXManager Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 

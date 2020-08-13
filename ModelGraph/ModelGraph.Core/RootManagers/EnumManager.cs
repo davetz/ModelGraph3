@@ -1,9 +1,9 @@
 ﻿namespace ModelGraph.Core
 {
-    public class EnumRoot : ChildOfStoreOf<Root, EnumZ>
+    public class EnumManager : ChildOfStoreOf<Root, EnumZ>
     {
         #region Constructors  =================================================
-        internal EnumRoot(Root root)
+        internal EnumManager(Root root)
         {
             Owner = root;
             SetCapacity(20);

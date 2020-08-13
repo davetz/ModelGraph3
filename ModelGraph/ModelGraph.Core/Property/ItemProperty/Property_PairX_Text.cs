@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.EnumTextProperty;
 
-        internal Property_PairX_Text(PropertyRoot owner) : base(owner)
+        internal Property_PairX_Text(PropertyManager owner) : base(owner)
         {
             Value = new StringValue(this);
         }

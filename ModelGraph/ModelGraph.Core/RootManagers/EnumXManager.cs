@@ -4,13 +4,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class EnumXRoot : ExternalRoot<Root, EnumX>, ISerializer, IPrimeRoot
+    public class EnumXManager : ExternalManager<Root, EnumX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("8D4CEAD8-E3C5-4342-88AC-1B4B625A9A4C");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.EnumXRoot;
 
-        internal EnumXRoot(Root root)
+        internal EnumXManager(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyRoot>();
+            var sto = root.Get<PropertyManager>();
 
             root.RegisterReferenceItem(new Property_PairX_Text(sto));
             root.RegisterReferenceItem(new Property_PairX_Value(sto));

@@ -4,7 +4,7 @@ using System.Runtime.InteropServices.ComTypes;
 
 namespace ModelGraph.Core
 {
-    public class SymbolX : ChildOf<SymbolXRoot>
+    public class SymbolX : ChildOf<SymbolXManager>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;
@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         
 
         #region Constructors  =================================================
-        public SymbolX(SymbolXRoot owner, bool autoExpand = false)
+        public SymbolX(SymbolXManager owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;

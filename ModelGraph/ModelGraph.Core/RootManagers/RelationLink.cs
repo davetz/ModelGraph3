@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    class RelationXLink : LinkSerializer, ISerializer
+    class RelationLink : LinkSerializer, ISerializer
     {
-        static Guid _serializerGuid => new Guid("61662F08-F43A-44D9-A9BB-9B0126492B8C");
+        static Guid _serializerGuid => new Guid("6E4E6626-98BC-483E-AC9B-C7799511ECF2");
 
-        internal RelationXLink(Root root, RelationXRoot relationStore) : base(relationStore)
+        internal RelationLink(Root root, RelationManager relationStore) : base(relationStore)
         {
             root.RegisterLinkSerializer((_serializerGuid, this));
         }

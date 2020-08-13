@@ -5,12 +5,12 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class ComputeXRoot : ExternalRoot<Root, ComputeX>, ISerializer, IPrimeRoot
+    public class ComputeXManager : ExternalManager<Root, ComputeX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("35522B27-A925-4CE0-8D65-EDEF451097F2");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.ComputeXRoot;
-        internal ComputeXRoot(Root root)
+        internal ComputeXManager(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyRoot>();
+            var sto = root.Get<PropertyManager>();
 
             root.RegisterReferenceItem(new Property_ComputeX_CompuType(sto));
             root.RegisterReferenceItem(new Property_ComputeX_Where(sto));
@@ -121,7 +121,7 @@ namespace ModelGraph.Core
 
         #region ComputeXMethods  ==============================================
         //========================================== frequently used references
-        private QueryXRoot _queryXRoot;
+        private QueryXManager _queryXRoot;
 
         private Relation_QueryX_QueryX _relation_QueryX_QueryX;
         private Relation_Store_ComputeX _relation_Store_ComputeX;
@@ -131,7 +131,7 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXRoot = root.Get<QueryXRoot>();
+            _queryXRoot = root.Get<QueryXManager>();
 
             _relation_QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();
             _relation_Store_ComputeX = root.Get<Relation_Store_ComputeX>();
@@ -173,8 +173,6 @@ namespace ModelGraph.Core
             }
             return false;
         }
-
-
         #endregion
 
         #region SetComputeType  ===============================================
@@ -413,7 +411,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetSelectorName  ==============================================
-        internal string GetSelectorName(ComputeX item) => _relation_Store_ComputeX.TryGetParent(item, out Store tbl) ? tbl.GetNameId() : "Select";
+        internal string GetSelectClauseTargetName(ComputeX cx)
+        {
+            return _relation_Store_ComputeX.TryGetParent(cx, out Store tbl) ? tbl.GetNameId() : "Select";
+        }
+
         internal int GetValueType(QueryX qx) => qx.Select is null ? (int)ValType.IsUnknown : (int)qx.Select.ValueType;
         #endregion
 

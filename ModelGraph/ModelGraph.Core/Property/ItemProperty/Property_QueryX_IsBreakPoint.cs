@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.QueryXIsBreakPointProperty;
         protected override Type PropetyModelType => typeof(Model_618_CheckProperty);
 
-        internal Property_QueryX_IsBreakPoint(PropertyRoot owner) : base(owner)
+        internal Property_QueryX_IsBreakPoint(PropertyManager owner) : base(owner)
         {
             Value = new BoolValue(this);
         }

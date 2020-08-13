@@ -5,13 +5,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class QueryXRoot : ExternalRoot<Root, QueryX>, ISerializer, IPrimeRoot
+    public class QueryXManager : ExternalManager<Root, QueryX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("33B9B8A4-9332-4902-A3C1-37C5F971B6FF");
         static byte _formatVersion = 1;
         internal override IdKey IdKey => IdKey.QueryXRoot;
 
-        internal QueryXRoot(Root root)
+        internal QueryXManager(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -22,7 +22,7 @@ namespace ModelGraph.Core
         {
             root.RegisterReferenceItem(new DummyQueryX(this));
 
-            var sto = root.Get<PropertyRoot>();
+            var sto = root.Get<PropertyManager>();
 
             root.RegisterReferenceItem(new Property_QueryX_Where(sto));
             root.RegisterReferenceItem(new Property_QueryX_Select(sto));
@@ -175,9 +175,9 @@ namespace ModelGraph.Core
 
         #region QueryMethods  =================================================
         //========================================== frequently used references
-        private ErrorRoot _errorRoot;
-        private GraphXRoot _graphXRoot;
-        private ComputeXRoot _computeXRoot;
+        private ErrorManager _errorRoot;
+        private GraphXManager _graphXRoot;
+        private ComputeXManager _computeXRoot;
 
         private Property_QueryX_Where _property_QueryX_Where;
         private Property_QueryX_Select _property_QueryX_Select;
@@ -196,9 +196,9 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _errorRoot = root.Get<ErrorRoot>();
-            _graphXRoot = root.Get<GraphXRoot>();
-            _computeXRoot = root.Get<ComputeXRoot>();
+            _errorRoot = root.Get<ErrorManager>();
+            _graphXRoot = root.Get<GraphXManager>();
+            _computeXRoot = root.Get<ComputeXManager>();
 
             _property_QueryX_Where = root.Get<Property_QueryX_Where>();
             _property_QueryX_Select = root.Get<Property_QueryX_Select>();
@@ -670,26 +670,12 @@ namespace ModelGraph.Core
         #endregion
 
         #region Legacy  =======================================================
-        internal string GetTailTableName(QueryX qx)
+        internal string GetWhereSelectTargetName(QueryX qx)
         {
             var (_, tail) = GetHeadTail(qx);
             return tail.GetNameId();
         }
         internal string GetRelationNameId(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation re) ? re.GetNameId() : InvalidItem;
-
-        internal void SetWhereString(QueryX qx, string val)
-        {
-            qx.WhereString = val;
-            ValidateQueryDependants(qx);
-        }
-
-        //= = = = = = = = = = = = = = = = = = = = = = = = = = = =
-
-        internal void SetSelectString(QueryX qx, string val)
-        {
-            qx.SelectString = val;
-            ValidateQueryDependants(qx);
-        }
         #endregion
 
         #endregion

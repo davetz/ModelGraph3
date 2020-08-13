@@ -829,7 +829,7 @@
     <value>Full size width/height of symbols (12 to 255)</value>
   </data>
   <data name="460N" xml:space="preserve">
-    <value>Row Value Select</value>
+    <value>Value Select</value>
   </data>
   <data name="460S" xml:space="preserve">
     <value>Select expresion string</value>
@@ -1083,7 +1083,7 @@ NEC – NWC – SEC - SWC</value>
     <value>Filter the rows for specific property values</value>
   </data>
   <data name="4B5N" xml:space="preserve">
-    <value>Row Value Select</value>
+    <value>Value Select</value>
   </data>
   <data name="4B5S" xml:space="preserve">
     <value>Value select expression</value>

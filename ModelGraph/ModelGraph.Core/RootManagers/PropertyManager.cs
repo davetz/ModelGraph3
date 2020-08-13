@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class PropertyRoot : InternalRoot<Root, Property>, IPrimeRoot
+    public class PropertyManager : InternalManager<Root, Property>, IPrimeRoot
     {
-        internal PropertyRoot(Root root)
+        internal PropertyManager(Root root)
         {
             Owner = root;
             SetCapacity(100);

@@ -58,22 +58,22 @@ namespace ModelGraph.Core
         {
             RegisterReferenceItem(new DummyItem(this));
 
-            RegisterReferenceItem(new RelationRoot(this));
-            RegisterReferenceItem(new PropertyRoot(this));
+            RegisterReferenceItem(new RelationManager(this));
+            RegisterReferenceItem(new PropertyManager(this));
             RegisterPrivateItem(new ChangeRoot(this));
-            RegisterPrivateItem(new ErrorRoot(this));
-            RegisterPrivateItem(new EnumRoot(this));
+            RegisterPrivateItem(new ErrorManager(this));
+            RegisterPrivateItem(new EnumManager(this));
 
-            RegisterReferenceItem(new EnumXRoot(this));
-            RegisterReferenceItem(new ViewXRoot(this));
-            RegisterReferenceItem(new TableXRoot(this));
-            RegisterReferenceItem(new GraphXRoot(this));
+            RegisterReferenceItem(new EnumXManager(this));
+            RegisterReferenceItem(new ViewXManager(this));
+            RegisterReferenceItem(new TableXManager(this));
+            RegisterReferenceItem(new GraphXManager(this));
 
-            RegisterReferenceItem(new QueryXRoot(this));
-            RegisterReferenceItem(new ColumnXRoot(this));
-            RegisterReferenceItem(new SymbolXRoot(this));
-            RegisterReferenceItem(new ComputeXRoot(this));
-            RegisterReferenceItem(new RelationXRoot(this));
+            RegisterReferenceItem(new QueryXManager(this));
+            RegisterReferenceItem(new ColumnXManager(this));
+            RegisterReferenceItem(new SymbolXManager(this));
+            RegisterReferenceItem(new ComputeXManager(this));
+            RegisterReferenceItem(new RelationXManager(this));
 
             foreach (var item in Type_InstanceOf.Values) { if (item is IPrimeRoot r) PrimeRoots.Add(r); }
 
@@ -155,17 +155,17 @@ namespace ModelGraph.Core
         #region PrimeStores  ==================================================
         internal Store[] PrimeStores => new Store[]
         {
-            Get<EnumXRoot>(),
-            Get<ViewXRoot>(),
-            Get<TableXRoot>(),
-            Get<GraphXRoot>(),
-            Get<QueryXRoot>(),
-            Get<ColumnXRoot>(),
-            Get<SymbolXRoot>(),
-            Get<ComputeXRoot>(),
-            Get<RelationXRoot>(),
-            Get<RelationRoot>(),
-            Get<PropertyRoot>(),
+            Get<EnumXManager>(),
+            Get<ViewXManager>(),
+            Get<TableXManager>(),
+            Get<GraphXManager>(),
+            Get<QueryXManager>(),
+            Get<ColumnXManager>(),
+            Get<SymbolXManager>(),
+            Get<ComputeXManager>(),
+            Get<RelationXManager>(),
+            Get<RelationManager>(),
+            Get<PropertyManager>(),
         };
         #endregion
 

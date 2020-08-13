@@ -350,13 +350,15 @@ namespace ModelGraph.Controls
             ItemIdentityTip.Opened -= ItemIdentityTip_Opened;
             ModelIdentityTip.Opened -= ModelIdentityTip_Opened;
 
-            TreeModel = null;
             Selected = null;
             ViewList.Clear();
             MenuCommands.Clear();
             ButtonCommands.Clear();
             ItemIdentityTip = null;
             ModelIdentityTip = null;
+
+            TreeModel?.Release();
+            TreeModel = null;
         }
         #endregion
 

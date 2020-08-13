@@ -10,14 +10,14 @@
         private string _description;
 
         #region Constructor  ======================================================
-        internal ViewX(ViewXRoot owner, bool autoExpandRight = false)
+        internal ViewX(ViewXManager owner, bool autoExpandRight = false)
         {
             Owner = owner;
 
             if (autoExpandRight) AutoExpandRight = true;
             owner.Add(this);
         }
-        internal ViewXRoot Owner;
+        internal ViewXManager Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 

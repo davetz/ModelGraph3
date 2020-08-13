@@ -6,12 +6,12 @@
         internal virtual void SetValue(Item item, T2 val) { }
 
         #region Constructor  ==================================================
-        internal PropertyOf(PropertyRoot owner)
+        internal PropertyOf(PropertyManager owner)
         {
             Owner = owner;
             owner.Add(this);
         }
-        internal PropertyRoot Owner;
+        internal PropertyManager Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 

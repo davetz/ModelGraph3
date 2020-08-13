@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public class TableX : ChildOfStoreOf<TableXRoot, RowX>
+    public class TableX : ChildOfStoreOf<TableXManager, RowX>
     {
         internal override string Name { get => _name; set => _name = value; }
         private string _name;
@@ -10,7 +10,7 @@
         private string _description;
 
         #region Constructors  =================================================
-        internal TableX(TableXRoot owner, bool autoExpand = false)
+        internal TableX(TableXManager owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;

@@ -6,7 +6,7 @@
         internal override bool IsErrorAux1 => true;
 
         #region Constructor  ==================================================
-        internal ErrorNoneAux(ErrorRoot owner, Item item, Item aux, IdKey idKe) : base(owner, item, idKe)
+        internal ErrorNoneAux(ErrorManager owner, Item item, Item aux, IdKey idKe) : base(owner, item, idKe)
         {
             Aux = aux;
         }

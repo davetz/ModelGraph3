@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         private string _description;
 
         #region Constructors  =================================================
-        internal ColumnX(ColumnXRoot owner, bool autoExpand = false)
+        internal ColumnX(ColumnXManager owner, bool autoExpand = false)
         {
             Owner = owner;
             if (autoExpand) AutoExpandRight = true;
@@ -21,7 +21,7 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal ColumnXRoot Owner;
+        internal ColumnXManager Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 
