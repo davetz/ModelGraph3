@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class RelationManager : InternalManager<Root, Relation>, IPrimeRoot, IRelationRoot
+    public class RelationManager : InternalManager<Root, Relation>, IManager, IRelationManager
     {
         internal RelationManager(Root root)
         {

@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class PropertyManager : InternalManager<Root, Property>, IPrimeRoot
+    public class PropertyManager : InternalManager<Root, Property>, IManager
     {
         internal PropertyManager(Root root)
         {

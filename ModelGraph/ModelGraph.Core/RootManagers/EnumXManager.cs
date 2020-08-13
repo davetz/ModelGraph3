@@ -4,7 +4,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class EnumXManager : ExternalManager<Root, EnumX>, ISerializer, IPrimeRoot
+    public class EnumXManager : ExternalManager<Root, EnumX>, ISerializer, IManager
     {
         static Guid _serializerGuid = new Guid("8D4CEAD8-E3C5-4342-88AC-1B4B625A9A4C");
         static byte _formatVersion = 1;

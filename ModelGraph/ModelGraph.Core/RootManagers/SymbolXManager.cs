@@ -4,7 +4,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class SymbolXManager : ExternalManager<Root, SymbolX>, ISerializer, IPrimeRoot
+    public class SymbolXManager : ExternalManager<Root, SymbolX>, ISerializer, IManager
     {
         static Guid _serializerGuid = new Guid("D3956312-BEC7-4988-8228-DCA95CF23781");
         static byte _formatVersion = 1;

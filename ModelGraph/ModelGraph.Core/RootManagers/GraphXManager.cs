@@ -6,7 +6,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class GraphXManager : ExternalManager<Root, GraphX>, ISerializer, IPrimeRoot
+    public class GraphXManager : ExternalManager<Root, GraphX>, ISerializer, IManager
     {
         static Guid _serializerGuid = new Guid("48C7FA8C-88F1-4203-8E54-3255C1F8C528");
         static byte _formatVersion = 1;

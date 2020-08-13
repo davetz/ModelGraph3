@@ -4,7 +4,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class RelationXManager : ExternalManager<Root, Relation>, ISerializer, IPrimeRoot, IRelationRoot
+    public class RelationXManager : ExternalManager<Root, Relation>, ISerializer, IManager, IRelationManager
     {
         static Guid _serializerGuid = new Guid("D950F508-B774-4838-B81A-757EFDC40518");
         static byte _formatVersion = 1;

@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    internal interface IPrimeRoot
+    internal interface IManager
     {
         /// <summary>Create secondary items in the domain</summary>
         void CreateSecondaryHierarchy(Root root);
