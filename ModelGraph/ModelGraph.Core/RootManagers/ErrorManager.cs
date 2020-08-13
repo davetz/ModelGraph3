@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.ErrorRoot;
+        internal override IdKey IdKey => IdKey.ErrorManager;
         #endregion
 
         #region ErrorMethods  =================================================

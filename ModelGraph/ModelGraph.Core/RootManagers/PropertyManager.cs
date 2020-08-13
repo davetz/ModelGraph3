@@ -27,7 +27,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.PropertyRoot;
+        internal override IdKey IdKey => IdKey.PropertyManager;
         #endregion
 
     }

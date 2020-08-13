@@ -55,24 +55,21 @@ namespace ModelGraph.Core
         #region Store ================================================(0E0-0FF)
         // root level containers for the hierarchal item trees
 
-        EnumXRoot = 0x0E1 | Is_Reference,
-        ViewXRoot = 0x0E2 | Is_Reference,
-        TableXRoot = 0x0E3 | Is_Reference,
-        GraphXRoot = 0x0E4 | Is_Reference,
-        QueryXRoot = 0x0E5 | Is_Reference,
-        SymbolXRoot = 0x0E7 | Is_Reference,
-        ColumnXRoot = 0x0E8 | Is_Reference,
-        ComputeXRoot = 0x0E9 | Is_Reference,
-        RelationXRoot = 0x0EA | Is_Reference,
+        EnumXManager = 0x0E1 | Is_Reference,
+        ViewXManager = 0x0E2 | Is_Reference,
+        TableXManager = 0x0E3 | Is_Reference,
+        GraphXManager = 0x0E4 | Is_Reference,
+        QueryXManager = 0x0E5 | Is_Reference,
+        SymbolXManager = 0x0E7 | Is_Reference,
+        ColumnXManager = 0x0E8 | Is_Reference,
+        ComputeXManager = 0x0E9 | Is_Reference,
+        RelationXManager = 0x0EA | Is_Reference,
 
-        PrimeRoot = 0x0F0, // exposes internal tables (metadata / configuration)
-        EnumRoot = 0x0F1,
-        ErrorRoot = 0x0F2,
-        GroupRoot = 0x0F3,
-        PropertyRoot = 0x0F4 | Is_Reference,
-        RelationRoot = 0x0F5 | Is_Reference,
-        RelationZRoot = 0x0FE,
-        GraphParams = 0xFF,
+        EnumManager = 0x0F1,
+        ErrorManager = 0x0F2,
+        GroupManager = 0x0F3,
+        PropertyManager = 0x0F4 | Is_Reference,
+        RelationManager = 0x0F5 | Is_Reference,
 
         #endregion
 
@@ -162,28 +159,28 @@ namespace ModelGraph.Core
 
         #region Error  ===============================================(200-2FF)
 
-        ExportError = 0x200,
-        ImportError = 0x201,
+        Error_200_ExportFailed = 0x200,
+        Error_201_ImportFailed = 0x201,
 
-        ComputeProblemRelatedWhereSelectError = 0x210,
-        ComputeMissingRelatedSelectError = 0x211,
-        ComputeUnresolvedSelectError = 0x212,
-        ComputeInvalidSelectError = 0x213,
-        ComputeCircularDependanceError = 0x214,
-        ComputeMissingSelectError = 0x215,
+        Error_210_ComputeProblemRelatedWhereSelect = 0x210,
+        Error_211_ComputeMissingRelatedSelect = 0x211,
+        Error_212_ComputeUnresolvedSelect = 0x212,
+        Error_213_ComputeInvalidSelect = 0x213,
+        Error_214_ComputeCircularDependance = 0x214,
+        Error_215_ComputeMissingSelect = 0x215,
 
-        ComputeMissingRootQueryError = 0x216,
-        ComputeValueOverflowError = 0x217,
+        Error_216_ComputeMissingRootQuery = 0x216,
+        Error_217_ComputeValueOverflow = 0x217,
 
-        QueryUnresolvedWhereError = 0x220,
-        QueryInvalidWhereError = 0x221,
+        Error_220_QueryUnresolvedWhere = 0x220,
+        Error_221_QueryInvalidWhere = 0x221,
 
-        QueryUnresolvedSelectError = 0x222,
-        QueryInvalidSelectError = 0x223,
-        QueryMissingSelectError = 0x224,
+        Error_222_QueryUnresolvedSelect = 0x222,
+        Error_223_QueryInvalidSelect = 0x223,
+        Error_224_QueryMissingSelect = 0x224,
 
-        QueryValueOverflowdWhereError = 0x225,
-        QueryValueOverflowSelectError = 0x226,
+        Error_225_QueryValueOverflowdWhere = 0x225,
+        Error_226_QueryValueOverflowSelect = 0x226,
 
         #endregion
 

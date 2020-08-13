@@ -9,7 +9,7 @@ namespace ModelGraph.Core
     {
         static Guid _serializerGuid = new Guid("33B9B8A4-9332-4902-A3C1-37C5F971B6FF");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.QueryXRoot;
+        internal override IdKey IdKey => IdKey.QueryXManager;
 
         internal QueryXManager(Root root)
         {
@@ -298,7 +298,7 @@ namespace ModelGraph.Core
             if (!_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx))
             {
                 cx.Value = Value.ValuesInvalid;
-                _errorRoot.TryAddErrorNone(cx, IdKey.ComputeMissingRootQueryError);
+                _errorRoot.TryAddErrorNone(cx, IdKey.Error_216_ComputeMissingRootQuery);
             }
             else
             {
@@ -306,7 +306,7 @@ namespace ModelGraph.Core
                 {
                     if (cx.CompuType == CompuType.RowValue)
                     {
-                        _errorRoot.TryAddErrorNone(cx, _property_ComputeX_Select, IdKey.ComputeMissingSelectError);
+                        _errorRoot.TryAddErrorNone(cx, _property_ComputeX_Select, IdKey.Error_215_ComputeMissingSelect);
                     }
                 }
                 else
@@ -384,13 +384,13 @@ namespace ModelGraph.Core
                         qx.Select.TryResolve();
                         if (qx.Select.AnyUnresolved)
                         {
-                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.QueryUnresolvedSelectError);
+                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_222_QueryUnresolvedSelect);
                             if (error != null) qx.Select.GetTree(error.List);
                         }
                     }
                     else
                     {
-                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.QueryInvalidSelectError);
+                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_223_QueryInvalidSelect);
                         if (error != null) qx.Select.GetTree(error.List);
                     }
                 }
@@ -401,13 +401,13 @@ namespace ModelGraph.Core
                         qx.Where.TryResolve();
                         if (qx.Where.AnyUnresolved)
                         {
-                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.QueryUnresolvedWhereError);
+                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_220_QueryUnresolvedWhere);
                             if (error != null) qx.Where.GetTree(error.List);
                         }
                     }
                     else
                     {
-                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.QueryInvalidWhereError);
+                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_221_QueryInvalidWhere);
                         if (error != null) qx.Where.GetTree(error.List);
                     }
                 }
@@ -426,14 +426,14 @@ namespace ModelGraph.Core
                     qx.Where.TryResolve();
                     if (qx.Where.AnyUnresolved)
                     {
-                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.QueryUnresolvedWhereError);
+                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_220_QueryUnresolvedWhere);
                         if (error != null) qx.Where.GetTree(error.List);
                         return false;
                     }
                 }
                 else
                 {
-                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.QueryInvalidWhereError);
+                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_221_QueryInvalidWhere);
                     if (error != null) qx.Where.GetTree(error.List);
                     return false;
                 }
@@ -453,14 +453,14 @@ namespace ModelGraph.Core
                     qx.Select.TryResolve();
                     if (qx.Select.AnyUnresolved)
                     {
-                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.QueryUnresolvedSelectError);
+                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_222_QueryUnresolvedSelect);
                         if (error != null) qx.Select.GetTree(error.List);
                         return false;
                     }
                 }
                 else
                 {
-                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.QueryInvalidSelectError);
+                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_223_QueryInvalidSelect);
                     if (error != null) qx.Select.GetTree(error.List);
                     return false;
                 }
