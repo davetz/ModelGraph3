@@ -48,6 +48,7 @@ namespace ModelGraph.Core
                 if (ChildDelta != Item.ChildDelta)
                 {
                     ChildDelta = Item.ChildDelta;
+                    viewListChanged = true;
 
                     prev.Clear();
                     foreach (var child in Items)

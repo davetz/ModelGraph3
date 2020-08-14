@@ -17,6 +17,10 @@ namespace ModelGraph.Core
             list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
         }
 
+        public override bool CanReorderItems => true;
+        public override bool ReorderItems(Root root, LineModel dropModel) => (dropModel is Model_6A1_Row m) && ReorderStoreItems(root, Item.Owner, Item, m.Item);
+
+
         public override bool CanExpandLeft => true;
         internal override bool ExpandLeft(Root root)
         {

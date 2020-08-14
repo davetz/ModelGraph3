@@ -1,7 +1,5 @@
 ﻿namespace ModelGraph.Core
-{/*
-
- */
+{
     public class ItemChildMoved : ItemChange
     {
         internal Item Key;

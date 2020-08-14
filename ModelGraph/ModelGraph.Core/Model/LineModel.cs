@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Windows.ApplicationModel.DataTransfer.DragDrop.Core;
 
 namespace ModelGraph.Core
 {
@@ -212,18 +213,71 @@ namespace ModelGraph.Core
         }
 
         public void DragStart(Root root) => Root.DragDropSource = this;
-        public DropAction DragEnter(Root root) => IsValidModel(Root.DragDropSource) ? ModelDrop(root, Root.DragDropSource, false) : DropAction.None;
+        public DropAction DragEnter(Root root)
+        {
+            var m = Root.DragDropSource;
+            return (IsValidModel(m) && this != m)  ? (Owner == m.Owner) ? CanReorderItems ? DropAction.Move : DropAction.None : ModelDrop(root, m, false) : DropAction.None;
+        }
         public void DragDrop(Root root)
         {
-            var dropModel = Root.DragDropSource;
-
-            if (IsValidModel(dropModel))
+            var m = Root.DragDropSource;
+            if (IsValidModel(m))
             {
-                ModelDrop(root, Root.DragDropSource, true);
-                root.PostRefresh();
+                if (Owner == m.Owner)
+                {
+                    if (CanReorderItems && ReorderItems(root, m))
+                    {
+                        Owner.ChildDelta -= 3;
+                        root.PostRefresh();
+                    }
+                }
+                else
+                {
+                    ModelDrop(root, Root.DragDropSource, true);
+                    root.PostRefresh();
+                }
             }
         }
-
+        protected bool ReorderStoreItems(Root root, Store sto, Item refItem, Item moveItem)
+        {
+            var index1 = sto.IndexOf(moveItem);
+            var index2 = sto.IndexOf(refItem);
+            if (!(index1 < 0 || index2 < 0 || index1 == index2))
+            {
+                ItemMoved.Record(root, moveItem, index1, index2);
+                return true;
+            }
+            return false;
+        }
+        protected bool ReorderChildItems(Root root, Relation rel, Item key, Item refItem, Item moveItem)
+        {
+            if (rel.TryGetChildren(key, out List<Item> list))
+            {
+                var index1 = list.IndexOf(moveItem);
+                var index2 = list.IndexOf(refItem);
+                if (!(index1 < 0 || index2 < 0 || index1 == index2))
+                {
+                    ItemChildMoved.Record(root, rel, key, moveItem, index1, index2);
+                    return true;
+                }
+            }
+            return false;
+        }
+        protected bool ReorderParentItems(Root root, Relation rel, Item key, Item refItem, Item moveItem)
+        {
+            if (rel.TryGetParents(key, out List<Item> list))
+            {
+                var index1 = list.IndexOf(moveItem);
+                var index2 = list.IndexOf(refItem);
+                if (index1 < 0 || index2 < 0 || index1 == index2) return false;
+                if (!(index1 < 0 || index2 < 0 || index1 == index2))
+                {
+                    ItemParentMoved.Record(root, rel, key, moveItem, index1, index2);
+                    return true;
+                }
+            }
+            return false;
+        }
         #endregion
 
         #region Virtual Functions  ============================================
@@ -244,6 +298,7 @@ namespace ModelGraph.Core
         public virtual bool CanDrag => false;
         public virtual bool CanSort => false;
         public virtual bool CanFilter => false;
+        public virtual bool CanReorderItems => false;
         public virtual bool CanExpandAll => false;
         public virtual bool CanExpandLeft => false;
         public virtual bool CanExpandRight => false;
@@ -255,7 +310,7 @@ namespace ModelGraph.Core
         public virtual void GetButtonCommands(Root root, List<LineCommand> list) { list.Clear(); }
 
         internal  virtual DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop ) => DropAction.None;
-        public virtual DropAction ReorderItems(Root root, LineModel target, bool doDrop) => DropAction.None;
+        public virtual bool ReorderItems(Root root, LineModel dropModel) => false;
 
         public virtual Error TryGetError(Root root) => default;
 

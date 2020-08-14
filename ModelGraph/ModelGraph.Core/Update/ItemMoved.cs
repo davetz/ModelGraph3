@@ -39,6 +39,7 @@
             var item = Item;
             var store = item.GetOwner() as Store;
             store.Move(item, Index1);
+            store.ChildDelta++;
             IsUndone = true;
         }
 
@@ -47,6 +48,7 @@
             var item = Item;
             var store = item.GetOwner() as Store;
             store.Move(item, Index2);
+            store.ChildDelta++;
             IsUndone = false;
         }
         #endregion
