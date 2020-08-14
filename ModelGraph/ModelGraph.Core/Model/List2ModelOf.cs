@@ -79,7 +79,8 @@ namespace ModelGraph.Core
                     }
                 }
             }
-            return viewListChanged || base.Validate(root, prev);
+            viewListChanged |= base.Validate(root, prev);
+            return viewListChanged;
         }
 
     }

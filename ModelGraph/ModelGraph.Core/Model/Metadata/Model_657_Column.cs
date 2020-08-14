@@ -9,6 +9,9 @@ namespace ModelGraph.Core
         public override bool CanExpandRight => true;
         public override bool CanDrag => true;
 
+        public override bool CanReorderItems => true;
+        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_661_ColumnList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
+
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();

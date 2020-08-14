@@ -15,6 +15,9 @@ namespace ModelGraph.Core
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
         }
+        public override bool CanReorderItems => true;
+        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
+
 
         #region List2ModelOf  =================================================
         protected override int GetTotalCount() => Item.Owner.GetQueryXCount(Item);
