@@ -13,10 +13,11 @@
         }
         internal PropertyManager Owner;
         internal override Item GetOwner() => Owner;
+
+        internal override void TriggerItemRefresh() => Owner.Owner.AddRefreshTriggerItem(this);
         #endregion
 
-
-        #region Property  =====================================================
+        #region Cast  =========================================================
         internal T1 Cast(Item item) { return item as T1; }
         #endregion
 

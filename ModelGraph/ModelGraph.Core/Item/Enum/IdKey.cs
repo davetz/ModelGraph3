@@ -421,6 +421,8 @@ namespace ModelGraph.Core
         Model_69F_ValueLink = 0x69F,
         //=====================================================================
         Model_6A1_Row = 0x6A1,
+        Model_6A2_ChildRow = 0x6A2,
+        Model_6A3_ParentRow = 0x6A3,
         Model_6A4_Table = 0x6A4,
 
         Model_6A5_Graph = 0x6A5,

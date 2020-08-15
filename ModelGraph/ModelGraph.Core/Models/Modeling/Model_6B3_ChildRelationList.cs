@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         private Relation_StoreX_ChildRelation StoreX_ChildRelation;
 
-        internal Model_6B3_ChildRelationList(Model_6A1_Row owner, RowX item) : base(owner, item) 
+        internal Model_6B3_ChildRelationList(LineModel owner, RowX item) : base(owner, item) 
         {
             StoreX_ChildRelation = item.GetRoot().Get<Relation_StoreX_ChildRelation>();
         }

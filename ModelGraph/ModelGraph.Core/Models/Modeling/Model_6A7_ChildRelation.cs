@@ -16,6 +16,8 @@ namespace ModelGraph.Core
         internal override string GetFilterSortId() => GetNameId();
         public override string GetKindId() => string.Empty;
 
+        internal Relation GetRelation() => _relation_RowX_RowX;
+
         internal override bool IsItemUsed => _relation_RowX_RowX.ChildCount(Item) > 0;
 
         #region RequiredMethods  ==============================================
@@ -23,7 +25,7 @@ namespace ModelGraph.Core
         protected override IList<RowX> GetChildItems() => _relation_RowX_RowX.TryGetChildren(Item, out IList<RowX> list) ? list : new RowX[0];
         protected override void CreateChildModel(RowX childItem)
         {
-            new Model_6A1_Row(this, childItem);
+            new Model_6A2_ChildRow(this, childItem);
         }
         #endregion
 

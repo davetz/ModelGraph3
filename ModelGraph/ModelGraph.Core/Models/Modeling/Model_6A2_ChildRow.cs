@@ -2,10 +2,10 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_6A1_Row : List1ModelOf<RowX>
+    public class Model_6A2_ChildRow : List1ModelOf<RowX>
     {
-        internal Model_6A1_Row(Model_6A4_Table owner, RowX item) : base(owner, item) { }
-        internal override IdKey IdKey => IdKey.Model_6A1_Row;
+        internal Model_6A2_ChildRow(Model_6A7_ChildRelation owner, RowX item) : base(owner, item) { }
+        internal override IdKey IdKey => IdKey.Model_6A2_ChildRow;
         public override string GetNameId() => Owner is Model_6A4_Table ? Item.GetNameId() : Item.GetFullNameId();
         public override string GetKindId() => Owner is Model_6A4_Table ? Item.GetKindId() : string.Empty;
 
@@ -18,7 +18,7 @@ namespace ModelGraph.Core
         }
 
         public override bool CanReorderItems => true;
-        public override bool ReorderItems(Root root, LineModel dropModel) => (dropModel is Model_6A1_Row m) && ReorderStoreItems(root, Item.Owner, Item, m.Item);
+        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_6A7_ChildRelation o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
 
 
         public override bool CanExpandLeft => true;

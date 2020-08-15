@@ -24,8 +24,8 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_PairX_Text(sto));
             root.RegisterReferenceItem(new Property_PairX_Value(sto));
 
-            root.RegisterStaticProperties(typeof(EnumX), GetProps1(root)); //used by property name lookup
-            root.RegisterStaticProperties(typeof(PairX), GetProps2(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(EnumX), GetProps1(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(PairX), GetProps2(root)); //used by property name lookup
         }
 
         public void RegisterRelationalReferences(Root root)

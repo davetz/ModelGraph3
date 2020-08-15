@@ -157,8 +157,6 @@ namespace ModelGraph.Core
             var prev = new Dictionary<Item, LineModel>();
             if (_childModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
                 RefreshViewList(ChangeType.ViewListChanged);
-            else
-                PageControl?.Refresh();
         }
         #endregion
 
@@ -202,6 +200,7 @@ namespace ModelGraph.Core
                     break;
             }
         }
+        public void TriggerUIRefresh() => PageControl?.Refresh();
         #endregion
     }
 }

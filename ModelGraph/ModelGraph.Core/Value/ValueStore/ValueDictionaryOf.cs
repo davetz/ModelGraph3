@@ -63,6 +63,8 @@ namespace ModelGraph.Core
         {
             if (_values == null) _values = new Dictionary<Item, T>();
 
+            if (_owner.IsRefreshTriggerItem) _owner.TriggerItemRefresh();
+
             if (_default == null)
             {
                 if (value != null)

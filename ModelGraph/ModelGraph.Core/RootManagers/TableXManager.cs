@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            root.RegisterStaticProperties(typeof(TableX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(TableX), GetProps(root)); //used by property name lookup
         }
         public void RegisterRelationalReferences(Root root)
         {

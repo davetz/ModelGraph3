@@ -24,7 +24,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_ColumnX_ValueType(sto));
             root.RegisterReferenceItem(new Property_ColumnX_IsChoice(sto));
 
-            root.RegisterStaticProperties(typeof(ColumnX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(ColumnX), GetProps(root)); //used by property name lookup
         }
 
         public void RegisterRelationalReferences(Root root)

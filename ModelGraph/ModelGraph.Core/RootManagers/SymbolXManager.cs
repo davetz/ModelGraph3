@@ -23,7 +23,7 @@ namespace ModelGraph.Core
 
             root.RegisterReferenceItem(new Property_SymbolX_Attatch(sto));
 
-            root.RegisterStaticProperties(typeof(SymbolX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(SymbolX), GetProps(root)); //used by property name lookup
         }
         public void RegisterRelationalReferences(Root root)
         {

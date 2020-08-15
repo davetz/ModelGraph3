@@ -28,7 +28,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_ComputeX_Separator(sto));
             root.RegisterReferenceItem(new Property_ComputeX_ValueType(sto));
 
-            root.RegisterStaticProperties(typeof(ComputeX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(ComputeX), GetProps(root)); //used by property name lookup
         }
 
         public void RegisterRelationalReferences(Root root)

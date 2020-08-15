@@ -256,6 +256,7 @@ namespace ModelGraph.Core
             _children2.Move(key, item, index);
 
             ChildDelta++;
+            if (IsRefreshTriggerItem && Owner.GetOwner() is Root root) root.AddRefreshTriggerItem(this);
         }
         internal override void MoveParent(Item keyRef, Item itemRef, int index)
         {
@@ -270,6 +271,7 @@ namespace ModelGraph.Core
             _parents2.Move(key, item, index);
 
             ChildDelta++;
+            if (IsRefreshTriggerItem && Owner.GetOwner() is Root root) root.AddRefreshTriggerItem(this);
         }
         override internal void InsertLink(Item parentItem, Item childItem, int parentIndex, int childIndex)
         {
@@ -317,6 +319,7 @@ namespace ModelGraph.Core
             ChildDelta++;
             parent.ModelDelta++;
             child.ModelDelta++;
+            if (IsRefreshTriggerItem && Owner.GetOwner() is Root root) root.AddRefreshTriggerItem(this); 
         }
         override internal (int ParentIndex, int ChildIndex) AppendLink(Item parentItem, Item childItem)
         {
@@ -363,6 +366,7 @@ namespace ModelGraph.Core
             ChildDelta++;
             parent.ModelDelta++;
             child.ModelDelta++;
+            if (IsRefreshTriggerItem && Owner.GetOwner() is Root root) root.AddRefreshTriggerItem(this);
             return GetIndex(parent, child);
         }
 
@@ -440,6 +444,7 @@ namespace ModelGraph.Core
             ChildDelta++;
             parent.ModelDelta++;
             child.ModelDelta++;
+            if (IsRefreshTriggerItem && Owner.GetOwner() is Root root) root.AddRefreshTriggerItem(this);
         }
         #endregion
 

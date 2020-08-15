@@ -1,10 +1,66 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace ModelGraph.Core
 {
     public partial class Root
     {
+        #region ItemTriggeredRefresh  =========================================
+        private readonly HashSet<Item> RefreshTriggerItems = new HashSet<Item>();
+        private readonly Dictionary<Item, HashSet<Item>> ItemTriggeredRefresh = new Dictionary<Item, HashSet<Item>>();
+
+        internal void ClearItemTriggeredRefresh()
+        {
+            foreach (var item in ItemTriggeredRefresh.Keys)
+            {
+                item.IsRefreshTriggerItem = false;
+            }
+            ItemTriggeredRefresh.Clear();
+        }
+        
+        internal void AddRefreshTriggerItem(Item item) => RefreshTriggerItems.Add(item);
+        internal void AddItemTriggeredRefresh(Relation r, Item ti) => GetRefreshHashSet(r).Add(ti);
+        internal void AddItemTriggeredRefresh(Property p, Item ti) => GetRefreshHashSet(p).Add(ti);
+        private HashSet<Item> GetRefreshHashSet(Item item)
+        {
+            if (!ItemTriggeredRefresh.TryGetValue(item, out HashSet<Item> hs))
+            {
+                hs = new HashSet<Item>();
+                ItemTriggeredRefresh.Add(item, hs);
+            }
+            return hs;
+        }
+
+        private void ExecuteItemTriggeredRefresh()
+        {
+            if (RefreshTriggerItems.Count > 0)
+            {
+                var items = RefreshTriggerItems.ToArray();
+                RefreshTriggerItems.Clear();
+
+                var doneItems = new HashSet<Item>();
+
+                foreach (var item in items)
+                {
+                    if (ItemTriggeredRefresh.TryGetValue(item, out HashSet<Item> hs))
+                    {
+                        foreach (var refreshItem in hs)
+                        {
+                            if (doneItems.Contains(refreshItem)) continue;
+
+                            if (refreshItem is GraphX gx) gx.Refresh(); ;
+                            if (refreshItem is ComputeX cx) cx.Value.Clear();
+
+                            doneItems.Add(refreshItem);
+                        }
+                    }
+                }
+            }
+        }
+        #endregion
+
         #region PostUIRequest  ================================================
         // These methods are called from the ui thread and typically they invoke 
         // some change to the dataChefs objects (create, remove, update, link, unlink)
@@ -42,11 +98,8 @@ namespace ModelGraph.Core
             await Task.Run(() => { ExecuteRequest(action); }); // runs on worker thread 
             //<=== control immediatley returns to the ui thread
             //(some time later the worker task completes and signals the ui thread)
-            //===> the ui thread returns here and continues executing the following code
-            foreach (var item in Items)
-            {
-                if (item is TreeModel tm) tm.Validate();
-            }
+            //===> the ui thread returns here and continues executing the following code            
+            foreach (var item in Items) { if (item is IDataModel dm) dm.TriggerUIRefresh(); }
         }
         private void ExecuteRequest(Action action)
         {
@@ -57,6 +110,10 @@ namespace ModelGraph.Core
                 action();
                 var cr = Get<ChangeManager>();
                 cr.RecordChanges();
+
+                ExecuteItemTriggeredRefresh();
+
+                foreach (var item in Items) { if (item is TreeModel tm) tm.Validate(); }
             }
         }
         #endregion

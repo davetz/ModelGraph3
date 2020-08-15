@@ -85,8 +85,6 @@ namespace ModelGraph.Core
         internal bool IsCongealed { get { return GetFlag(State.IsCongealed); } set { SetFlag(State.IsCongealed, value); } }
 
         internal bool HasEnumXRef { get { return GetFlag(State.HasEnumXRef); } set { SetFlag(State.HasEnumXRef, value); } }
-        internal bool HasQueryXRef { get { return GetFlag(State.HasQueryXRef); } set { SetFlag(State.HasQueryXRef, value); } }
-
         internal bool IsChoice { get { return GetFlag(State.IsChoice); } set { SetFlag(State.IsChoice, value); } }
 
         internal bool IsPersistent { get { return GetFlag(State.IsPersistent); } set { SetFlag(State.IsPersistent, value); } }
@@ -101,6 +99,7 @@ namespace ModelGraph.Core
         internal bool IsUnsable { get => IsDeleted || IsDiscarded; }
         internal bool AutoExpandLeft { get { return (_flags & B4) != 0; } set { _flags = value ? (byte)(_flags | B4) : (byte)(_flags & ~B4); } }
         internal bool AutoExpandRight { get { return (_flags & B5) != 0; } set { _flags = value ? (byte)(_flags | B5) : (byte)(_flags & ~B5); } }
+        internal bool IsRefreshTriggerItem { get { return (_flags & B6) != 0; } set { _flags = value ? (byte)(_flags | B6) : (byte)(_flags & ~B6); } }
         #endregion
 
         #region StringKeys  ===================================================
@@ -147,8 +146,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region BitFlags  =====================================================
-        // don't read/write missing or default-value propties
-        // these bit flags indicate which properties were non-default
+        // used during serialization to indicate properties with non-default values
         public const byte BZ = 0;
         public const byte B1 = 0x1;
         public const byte B2 = 0x2;

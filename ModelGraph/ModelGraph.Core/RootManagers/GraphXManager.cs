@@ -29,7 +29,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_GraphX_TerminalStretch(sto));
             root.RegisterReferenceItem(new Property_GraphX_SymbolSize(sto));
 
-            root.RegisterStaticProperties(typeof(GraphX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(GraphX), GetProps(root)); //used by property name lookup
         }
         public void RegisterRelationalReferences(Root root)
         {

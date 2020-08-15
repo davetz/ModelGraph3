@@ -111,13 +111,8 @@ namespace ModelGraph.Core
         #region GetPropertyRefs  ===============================================
         internal void GetPropertyRefs(HashSet<Property> list)
         {
-            if (Input != null)
-            {
-                foreach (var step in Input)
-                {
-                    if (step.Evaluate is LiteralProperty lp) list.Add(lp.Property);
-                }
-            }
+            if (Evaluate is LiteralProperty lp1) list.Add(lp1.Property);
+            if (Input != null) foreach (var step in Input) step.GetPropertyRefs(list);
         }
         #endregion
 

@@ -23,6 +23,7 @@ namespace ModelGraph.Core
         }
         internal ColumnXManager Owner;
         internal override Item GetOwner() => Owner;
+        internal override void TriggerItemRefresh() => Owner.Owner.AddRefreshTriggerItem(this);
         #endregion
 
         #region Identity  =====================================================

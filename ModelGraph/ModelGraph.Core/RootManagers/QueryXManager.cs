@@ -39,7 +39,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_QueryX_ExclusiveKey(sto));
             root.RegisterReferenceItem(new Property_QueryX_ValueType(sto));
 
-            root.RegisterStaticProperties(typeof(QueryX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(QueryX), GetProps(root)); //used by property name lookup
         }
 
         public void RegisterRelationalReferences(Root root)
@@ -62,6 +62,7 @@ namespace ModelGraph.Core
         public void ValidateDomain(Root root) 
         {
             ValidateQueryXStore();
+            ResetItemTriggeredRefresh();
         }
 
         private Property[] GetProps(Root root) => new Property[]
@@ -175,9 +176,9 @@ namespace ModelGraph.Core
 
         #region QueryMethods  =================================================
         //========================================== frequently used references
-        private ErrorManager _errorRoot;
-        private GraphXManager _graphXRoot;
-        private ComputeXManager _computeXRoot;
+        private ErrorManager _errorManager;
+        private GraphXManager _graphXManager;
+        private ComputeXManager _computeXManager;
 
         private Property_QueryX_Where _property_QueryX_Where;
         private Property_QueryX_Select _property_QueryX_Select;
@@ -196,9 +197,9 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _errorRoot = root.Get<ErrorManager>();
-            _graphXRoot = root.Get<GraphXManager>();
-            _computeXRoot = root.Get<ComputeXManager>();
+            _errorManager = root.Get<ErrorManager>();
+            _graphXManager = root.Get<GraphXManager>();
+            _computeXManager = root.Get<ComputeXManager>();
 
             _property_QueryX_Where = root.Get<Property_QueryX_Where>();
             _property_QueryX_Select = root.Get<Property_QueryX_Select>();
@@ -255,15 +256,62 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region ResetItemTriggeredRefresh  ====================================
+        private void ResetItemTriggeredRefresh()
+        {
+            var props = new HashSet<Property>();
+            var workQueue = new Queue<QueryX>();
+            Owner.ClearItemTriggeredRefresh();
+
+            foreach (var cx in _computeXManager.Items)
+            {
+                if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qh)) SetTriggers(cx, qh);
+            }
+
+            foreach (var gx in _graphXManager.Items)
+            {
+                if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> roots))
+                    foreach (var qh in roots) { SetTriggers(gx, qh); }
+            }
+
+            void SetTriggers(Item ti, QueryX qh)
+            {
+                workQueue.Clear();
+                workQueue.Enqueue(qh);
+                while(workQueue.Count > 0)
+                {
+                    var qx = workQueue.Dequeue();
+                    props.Clear();
+                    qx.GetPropertyRefs(props);
+                    foreach (var p in props)
+                    {
+                        p.IsRefreshTriggerItem = true;
+                        Owner.AddItemTriggeredRefresh(p, ti);
+                    }
+                    if (_relation_Relation_QueryX.TryGetParent(qx, out Relation r))
+                    {
+                        r.IsRefreshTriggerItem = true;
+                        Owner.AddItemTriggeredRefresh(r, ti);
+                    }
+                    if (_relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> list))
+                    {
+                        foreach (var q in list) { workQueue.Enqueue(q); }
+                    }
+                }
+            }
+
+        }
+        #endregion
+
         #region ValidateQueryXStore  ==========================================
         private void ValidateQueryXStore()
         {
-            foreach (var cx in _computeXRoot.Items)
+            foreach (var cx in _computeXManager.Items)
             {
                 ValidateComputeQuery(cx);
             }
             RevalidateUnresolved();
-            foreach (var gx in _graphXRoot.Items)
+            foreach (var gx in _graphXManager.Items)
             {
                 ValidateGraphQuery(gx);
             }
@@ -291,14 +339,14 @@ namespace ModelGraph.Core
             cx.Value = Value.ValuesUnknown;
             if (clearError)
             {
-                _errorRoot.ClearError(cx);
-                _errorRoot.ClearError(cx, _property_ComputeX_Select);
+                _errorManager.ClearError(cx);
+                _errorManager.ClearError(cx, _property_ComputeX_Select);
             }
             cx.ModelDelta++;
             if (!_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx))
             {
                 cx.Value = Value.ValuesInvalid;
-                _errorRoot.TryAddErrorNone(cx, IdKey.Error_216_ComputeMissingRootQuery);
+                _errorManager.TryAddErrorNone(cx, IdKey.Error_216_ComputeMissingRootQuery);
             }
             else
             {
@@ -306,7 +354,7 @@ namespace ModelGraph.Core
                 {
                     if (cx.CompuType == CompuType.RowValue)
                     {
-                        _errorRoot.TryAddErrorNone(cx, _property_ComputeX_Select, IdKey.Error_215_ComputeMissingSelect);
+                        _errorManager.TryAddErrorNone(cx, _property_ComputeX_Select, IdKey.Error_215_ComputeMissingSelect);
                     }
                 }
                 else
@@ -316,11 +364,11 @@ namespace ModelGraph.Core
             }
             if (_relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> children))
                 ValidateQueryHierarchy(children, clearError);
-            _computeXRoot.AllocateValueCache(cx);
+            _computeXManager.AllocateValueCache(cx);
         }
         private void ValidateGraphQuery(GraphX gx, bool clearError = false)
         {
-            if (clearError) _errorRoot.ClearError(gx);
+            if (clearError) _errorManager.ClearError(gx);
 
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> pathQuery))
                 ValidateQueryHierarchy(pathQuery, clearError);
@@ -336,7 +384,7 @@ namespace ModelGraph.Core
             {
                 var anyUnresolved = false;
 
-                foreach (var cx in _computeXRoot.Items)
+                foreach (var cx in _computeXManager.Items)
                 {
                     if (cx.Value.ValType == ValType.IsUnresolved)
                     {
@@ -359,8 +407,8 @@ namespace ModelGraph.Core
                 qx.ModelDelta++;
                 if (clearError)
                 {
-                    _errorRoot.ClearError(qx, _property_QueryX_Where);
-                    _errorRoot.ClearError(qx, _property_QueryX_Select);
+                    _errorManager.ClearError(qx, _property_QueryX_Where);
+                    _errorManager.ClearError(qx, _property_QueryX_Select);
                 }
 
                 if (_relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> children))
@@ -384,13 +432,13 @@ namespace ModelGraph.Core
                         qx.Select.TryResolve();
                         if (qx.Select.AnyUnresolved)
                         {
-                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_222_QueryUnresolvedSelect);
+                            var error = _errorManager.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_222_QueryUnresolvedSelect);
                             if (error != null) qx.Select.GetTree(error.List);
                         }
                     }
                     else
                     {
-                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_223_QueryInvalidSelect);
+                        var error = _errorManager.TryAddErrorMany(qx, _property_QueryX_Select, IdKey.Error_223_QueryInvalidSelect);
                         if (error != null) qx.Select.GetTree(error.List);
                     }
                 }
@@ -401,13 +449,13 @@ namespace ModelGraph.Core
                         qx.Where.TryResolve();
                         if (qx.Where.AnyUnresolved)
                         {
-                            var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_220_QueryUnresolvedWhere);
+                            var error = _errorManager.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_220_QueryUnresolvedWhere);
                             if (error != null) qx.Where.GetTree(error.List);
                         }
                     }
                     else
                     {
-                        var error = _errorRoot.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_221_QueryInvalidWhere);
+                        var error = _errorManager.TryAddErrorMany(qx, _property_QueryX_Where, IdKey.Error_221_QueryInvalidWhere);
                         if (error != null) qx.Where.GetTree(error.List);
                     }
                 }
@@ -415,7 +463,7 @@ namespace ModelGraph.Core
         }
         bool ValidateWhere(QueryX qx, Item item, Property prop, bool clearError)
         {
-            if (clearError) _errorRoot.ClearError(item, prop);
+            if (clearError) _errorManager.ClearError(item, prop);
 
             var sto = GetQueryXTarget(qx);
             if (qx.Where != null)
@@ -426,14 +474,14 @@ namespace ModelGraph.Core
                     qx.Where.TryResolve();
                     if (qx.Where.AnyUnresolved)
                     {
-                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_220_QueryUnresolvedWhere);
+                        var error = _errorManager.TryAddErrorMany(item, prop, IdKey.Error_220_QueryUnresolvedWhere);
                         if (error != null) qx.Where.GetTree(error.List);
                         return false;
                     }
                 }
                 else
                 {
-                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_221_QueryInvalidWhere);
+                    var error = _errorManager.TryAddErrorMany(item, prop, IdKey.Error_221_QueryInvalidWhere);
                     if (error != null) qx.Where.GetTree(error.List);
                     return false;
                 }
@@ -442,7 +490,7 @@ namespace ModelGraph.Core
         }
         bool ValidateSelect(QueryX qx, Item item, Property prop, bool clearError)
         {
-            if (clearError) _errorRoot.ClearError(item, prop);
+            if (clearError) _errorManager.ClearError(item, prop);
 
             var sto = GetQueryXTarget(qx);
             if (qx.Select != null)
@@ -453,14 +501,14 @@ namespace ModelGraph.Core
                     qx.Select.TryResolve();
                     if (qx.Select.AnyUnresolved)
                     {
-                        var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_222_QueryUnresolvedSelect);
+                        var error = _errorManager.TryAddErrorMany(item, prop, IdKey.Error_222_QueryUnresolvedSelect);
                         if (error != null) qx.Select.GetTree(error.List);
                         return false;
                     }
                 }
                 else
                 {
-                    var error = _errorRoot.TryAddErrorMany(item, prop, IdKey.Error_223_QueryInvalidSelect);
+                    var error = _errorManager.TryAddErrorMany(item, prop, IdKey.Error_223_QueryInvalidSelect);
                     if (error != null) qx.Select.GetTree(error.List);
                     return false;
                 }
@@ -669,7 +717,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Legacy  =======================================================
+        #region PropertyModels  ===============================================
         internal string GetWhereSelectTargetName(QueryX qx)
         {
             var (_, tail) = GetHeadTail(qx);
@@ -691,7 +739,7 @@ namespace ModelGraph.Core
             g.Forest = null;
             var gx = g.Owner;
 
-            _graphXRoot.RebuildGraphX_ARGBList_NodeOwners(gx);
+            _graphXManager.RebuildGraphX_ARGBList_NodeOwners(gx);
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> roots))
             {
                 var workList = new List<Query>();

@@ -27,7 +27,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_Relation_Pairing(sto));
             root.RegisterReferenceItem(new Property_Relation_IsRequired(sto));
 
-            root.RegisterStaticProperties(typeof(Relation), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(Relation), GetProps(root)); //used by property name lookup
         }
 
         public void RegisterRelationalReferences(Root root)

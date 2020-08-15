@@ -8,17 +8,17 @@ namespace ModelGraph.Core
     {
         private readonly Dictionary<Type, Item> Type_InstanceOf = new Dictionary<Type, Item>(200);  // used to get a specific type instance
         private readonly Dictionary<ushort, Item> IdKey_ReferenceItem = new Dictionary<ushort, Item>(200); // used to get specific type from its IdKey
-        private readonly Dictionary<Type, Property[]> Type_StaticProperties = new Dictionary<Type, Property[]>(100); // used for property name lookup
+        private readonly Dictionary<Type, Property[]> Type_InternalProperties = new Dictionary<Type, Property[]>(100); // used for property name lookup
 
         private readonly Relation_Store_ChildRelation Internal_Store_ChildRelation;     // used to enforce relational integrity
         private readonly Relation_Store_ParentRelation Internal_Store_ParentRelation;   // used to enforce relational integrity
 
         private readonly List<(Guid, ISerializer)> ItemSerializers = new List<(Guid, ISerializer)>(20); //serialized first
         private readonly List<(Guid, ISerializer)> LinkSerializers = new List<(Guid, ISerializer)>(10); //serialized last
-        private readonly List<IManager> PrimeRoots = new List<IManager>();
+        private readonly List<IManager> PrimeRootManagers = new List<IManager>();
 
         public IRepository Repository { get; set; }
-        public static LineModel DragDropSource;
+        public static LineModel DragDropSource; // source model at time of DragStart
         internal override IdKey IdKey => IdKey.DataRoot;
         internal string TitleName => Repository.Name;
         internal string TitleSummary => Repository.FullName;
@@ -44,13 +44,15 @@ namespace ModelGraph.Core
         private Func<string, string> _localize = (s) => s; //dummy default localizer
         public void SetLocalizer(Func<string, string> localizer) => _localize = localizer;
 
+        public override string GetNameId() => TitleName;
+        public override string GetSummaryId() => TitleSummary;
+
         internal string GetKindId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}K");
         internal string GetNameId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}N");
         internal string GetDoubleNameId(IdKey idKe1, IdKey idKe2) => $"{GetNameId(idKe1)} : {GetNameId(idKe2)}";
         internal string GetSummaryId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}S");
         internal string GetDescriptionId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}V");
         internal string GetAcceleratorId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}A".ToUpper());
-        internal (string, string) GetKindNameId(IdKey idKe) => (GetKindId(idKe), GetNameId(idKe));
         #endregion
 
         #region Initialize  ===================================================
@@ -75,11 +77,11 @@ namespace ModelGraph.Core
             RegisterReferenceItem(new ComputeXManager(this));
             RegisterReferenceItem(new RelationXManager(this));
 
-            foreach (var item in Type_InstanceOf.Values) { if (item is IManager r) PrimeRoots.Add(r); }
+            foreach (var item in Type_InstanceOf.Values) { if (item is IManager r) PrimeRootManagers.Add(r); }
 
-            foreach (var pr in PrimeRoots) { pr.CreateSecondaryHierarchy(this); }
+            foreach (var pr in PrimeRootManagers) { pr.CreateSecondaryHierarchy(this); }
 
-            foreach (var pr in PrimeRoots) { pr.RegisterRelationalReferences(this); }
+            foreach (var pr in PrimeRootManagers) { pr.RegisterRelationalReferences(this); }
         }
         #endregion
 
@@ -101,7 +103,7 @@ namespace ModelGraph.Core
 
         public void RegisterLinkSerializer((Guid, ISerializer) serializer) => LinkSerializers.Add(serializer); //link serializers will be called last
 
-        internal void RegisterStaticProperties(Type type, Property[] props) => Type_StaticProperties.Add(type, props);
+        internal void RegisterInternalProperties(Type type, Property[] props) => Type_InternalProperties.Add(type, props);
 
         internal void RegisterPrivateItem(Item item) => Type_InstanceOf[item.GetType()] = item;
 
@@ -141,7 +143,7 @@ namespace ModelGraph.Core
                     if (string.Compare(n, name, true) == 0) { prop = cd; return true; }
                 }
             }
-            if (Type_StaticProperties.TryGetValue(store.GetChildType(), out Property[] arr))
+            if (Type_InternalProperties.TryGetValue(store.GetChildType(), out Property[] arr))
             {
                 foreach (var pr in arr)
                 {
@@ -178,7 +180,7 @@ namespace ModelGraph.Core
             {
                 item.Discard();
             }
-            Type_StaticProperties.Clear();
+            Type_InternalProperties.Clear();
             Type_InstanceOf.Clear();
             IdKey_ReferenceItem.Clear();
             ItemSerializers.Clear();

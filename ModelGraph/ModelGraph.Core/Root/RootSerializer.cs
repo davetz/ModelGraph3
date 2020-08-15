@@ -53,7 +53,7 @@ namespace ModelGraph.Core
                 }
                 if (!found) throw new Exception("Unknown serializer guid reference");
             }
-            foreach (var pr in PrimeRoots)
+            foreach (var pr in PrimeRootManagers)
             {
                 pr.ValidateDomain(this);
             }
@@ -77,6 +77,8 @@ namespace ModelGraph.Core
             }
             return itemIndex;
         }
+        public void AddRepositorReadError(string msg) => Get<ErrorManager>().TryAddErrorOne(this, IdKey.Error_201_ImportFailed, msg);
+        public void AddRepositorWriteError(string msg) => Get<ErrorManager>().TryAddErrorOne(this, IdKey.Error_200_ExportFailed, msg);
         #endregion
 
         #region ISerializer  ==================================================

@@ -1,4 +1,7 @@
-﻿namespace ModelGraph.Core
+﻿using System.Runtime.CompilerServices;
+using Windows.UI.Composition.Interactions;
+
+namespace ModelGraph.Core
 {
     public class ItemUpdated : ItemChange
     {

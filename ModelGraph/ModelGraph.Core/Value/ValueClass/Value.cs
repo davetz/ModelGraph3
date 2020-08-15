@@ -8,7 +8,7 @@ namespace ModelGraph.Core
     {
         internal virtual void WriteData(DataWriter w, Dictionary<Item, int> itemIndex) { }
         internal virtual ValType ValType => ValType.IsUnknown;
-        internal virtual void SetOwner(ComputeX cx) { }
+        internal virtual void SetOwner(Property cx) { }
         internal bool IsEmpty => ValType > ValType.MaximumType;
 
         internal abstract int Count { get; }

@@ -32,8 +32,8 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_Edge_Facet1(sto));
             root.RegisterReferenceItem(new Property_Edge_Facet2(sto));
 
-            root.RegisterStaticProperties(typeof(Node), GetProps1(root)); //used by property name lookup
-            root.RegisterStaticProperties(typeof(Edge), GetProps2(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(Node), GetProps1(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(Edge), GetProps2(root)); //used by property name lookup
         }
         private Property[] GetProps1(Root root) => new Property[]
         {

@@ -17,12 +17,14 @@ namespace ModelGraph.Core
 
         internal override bool IsItemUsed => _relation_RowX_RowX.ParentCount(Item) > 0;
 
+        internal Relation GetRelation() => _relation_RowX_RowX;
+
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => _relation_RowX_RowX.ParentCount(Item);
         protected override IList<RowX> GetChildItems() => _relation_RowX_RowX.TryGetParents(Item, out IList<RowX> list) ? list : new RowX[0];
         protected override void CreateChildModel(RowX childItem)
         {
-            new Model_6A1_Row(this, childItem);
+            new Model_6A3_ParentRow(this, childItem);
         }
         #endregion
 

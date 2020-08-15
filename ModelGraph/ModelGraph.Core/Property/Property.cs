@@ -5,13 +5,16 @@ namespace ModelGraph.Core
 {
     public abstract class Property : Item
     {
-        internal Value Value = Value.ValuesUnknown;
+        private Value _value = Value.ValuesUnknown;
+        internal Value Value { get => _value; set { _value = value; _value.SetOwner(this); } }
         internal override State State { get; set; } //Properties uses the State bits
 
         protected virtual Type PropetyModelType => typeof(Model_617_TextProperty);
 
         internal virtual bool HasTargetName => false;
         internal virtual string GetTargetName(Item itm) => default;
+
+        internal virtual void TriggerItemRefresh() { }
 
         internal virtual bool IsReadonly => false;
         internal virtual bool IsMultiline => false;

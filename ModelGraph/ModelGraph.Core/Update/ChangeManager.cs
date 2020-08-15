@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class ChangeManager : ChildOfStoreOf<Root, ChangeSet>
     {
-        internal ChangeSet ChangeSet { get; private set; } //aggragates all changes made durring ModelRequest(Action)
+        internal ChangeSet ChangeSet { get; private set; } //aggragates all changes made durring a ModelRequest(Action)
         private string _infoText;
         private Item _infoItem;
         private int _infoCount;

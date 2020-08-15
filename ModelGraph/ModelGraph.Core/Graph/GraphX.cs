@@ -61,7 +61,8 @@ namespace ModelGraph.Core
             }
             graph = null;
             return false;
-        } 
+        }
+        internal void Refresh() { }
         #endregion
     }
 }
