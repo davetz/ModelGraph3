@@ -46,8 +46,13 @@ namespace ModelGraph.Core
             root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
             root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
             root.Get<Property_ComputeX_CompuType>().CreatePropertyModel(this, Item);
-            root.Get<Property_ComputeX_Separator>().CreatePropertyModel(this, Item);
-            root.Get<Property_ComputeX_Select>().CreatePropertyModel(this, Item);
+
+            if (Item.CompuType == CompuType.CompositeString || Item.CompuType == CompuType.CompositeReversed) 
+                root.Get<Property_ComputeX_Separator>().CreatePropertyModel(this, Item);
+
+            if (Item.CompuType != CompuType.RelatedValue) 
+                root.Get<Property_ComputeX_Select>().CreatePropertyModel(this, Item);
+
             root.Get<Property_ComputeX_ValueType>().CreatePropertyModel(this, Item);
 
             return true;

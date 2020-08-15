@@ -35,8 +35,19 @@ namespace ModelGraph.Core
             root.Get<Property_QueryX_Relation>().CreatePropertyModel(this, Item);
             root.Get<Property_QueryX_IsReversed>().CreatePropertyModel(this, Item);
             root.Get<Property_QueryX_Where>().CreatePropertyModel(this, Item);
-            root.Get<Property_QueryX_Select>().CreatePropertyModel(this, Item);
 
+            switch (GetCompuType())
+            {
+                case CompuType.RowValue:
+                    break;
+                case CompuType.RelatedValue when Item.IsTail:
+                        root.Get<Property_QueryX_Select>().CreatePropertyModel(this, Item);
+                    break;
+                case CompuType.CompositeString:
+                case CompuType.CompositeReversed:
+                    root.Get<Property_QueryX_Select>().CreatePropertyModel(this, Item);
+                    break;
+            }
             return true;
         }
 
