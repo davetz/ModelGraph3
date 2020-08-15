@@ -45,7 +45,7 @@ namespace ModelGraph.Core
         RemoveCommand = 0x36,
         CreateCommand = 0x37,
         RefreshCommand = 0x38,
-        ExpandAllCommand = 0x39,
+        ValidateCommand = 0x39,
         MakeRootLinkCommand = 0x3A,
         MakePathHeadCommand = 0x3B,
         MakeGroupHeadCommand = 0x3C,

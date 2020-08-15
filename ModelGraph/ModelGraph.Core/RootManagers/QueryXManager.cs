@@ -316,6 +316,13 @@ namespace ModelGraph.Core
                 ValidateGraphQuery(gx);
             }
         }
+        /// <summary>This should a manually initiated action</summary>
+        /// <param name="cx"></param>
+        internal void RevalidateComputeX(ComputeX cx)
+        {
+            ValidateComputeQuery(cx, true);
+            ResetItemTriggeredRefresh();
+        }
 
         internal void ValidateQueryDependants(QueryX qx)
         {

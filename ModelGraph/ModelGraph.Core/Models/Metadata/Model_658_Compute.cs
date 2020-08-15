@@ -15,6 +15,12 @@ namespace ModelGraph.Core
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
+        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        {
+            list.Clear();
+            list.Add(new ValidateCommand(this, () => Item.Owner.ValidateComputeX(Item)));
+        }
+
         public override bool CanReorderItems => true;
         public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
 
@@ -34,7 +40,7 @@ namespace ModelGraph.Core
         public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)
         {
-            if (IsExpandedRight) return false;
+            if (IsExpandedRight && Count > 0) return false;
             IsExpandedRight = true;
 
             root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);

@@ -145,6 +145,8 @@ namespace ModelGraph.Core
 
         internal bool TryGetParent(ComputeX cx, out Store p) => _relation_Store_ComputeX.TryGetParent(cx, out p);
 
+        internal void ValidateComputeX(ComputeX cx) =>  _queryXManager.RevalidateComputeX(cx);
+
         #region ResetCacheValues  =============================================
         internal void ResetCacheValues()
         {
