@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         {
             new Model_620_RootParm(this, Item);
             new Model_621_ErrorRoot(this, root.Get<ErrorManager>());
-            new Model_622_ChangeRoot(this, root.Get<ChangeRoot>());
+            new Model_622_ChangeRoot(this, root.Get<ChangeManager>());
             new Model_623_MetadataRoot(this, Item);
             new Model_624_ModelingRoot(this, Item);
 

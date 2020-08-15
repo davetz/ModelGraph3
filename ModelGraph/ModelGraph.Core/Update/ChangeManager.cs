@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ChangeRoot : ChildOfStoreOf<Root, ChangeSet>
+    public class ChangeManager : ChildOfStoreOf<Root, ChangeSet>
     {
         internal ChangeSet ChangeSet { get; private set; } //aggragates all changes made durring ModelRequest(Action)
         private string _infoText;
@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ChangeRoot;
 
         #region Constructor  ==================================================
-        internal ChangeRoot(Root root)
+        internal ChangeManager(Root root)
         {
             Owner = root;
             ChangeSet = new ChangeSet(this);

@@ -34,7 +34,7 @@
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";
             (int parentIndex, int chilldIndex) = rel.AppendLink(item1, item2);
-            new ItemLinked(root.Get<ChangeRoot>().ChangeSet, rel, item1, item2, parentIndex, chilldIndex, name).DoNow();
+            new ItemLinked(root.Get<ChangeManager>().ChangeSet, rel, item1, item2, parentIndex, chilldIndex, name).DoNow();
             
         }
         #endregion

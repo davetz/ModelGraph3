@@ -14,7 +14,7 @@ namespace ModelGraph.Core
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();
-            list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
 
         public override bool CanReorderItems => true;

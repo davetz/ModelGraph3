@@ -81,7 +81,7 @@ namespace ModelGraph.Core
 
             var name = $" [{rnam}]   ({nam1}) --> ({nam2})";
 
-            var ci = new ItemUnLinked(root.Get<ChangeRoot>().ChangeSet, rel, item1, item2, parentIndex, childIndex, name);
+            var ci = new ItemUnLinked(root.Get<ChangeManager>().ChangeSet, rel, item1, item2, parentIndex, childIndex, name);
             ci.DoNow();
 
             return true;

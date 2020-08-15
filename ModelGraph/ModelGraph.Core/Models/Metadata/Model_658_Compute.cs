@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         public override void GetMenuCommands(Root root, List<LineCommand> list)
         {
             list.Clear();
-            list.Add(new RemoveCommand(this, () => root.Get<ChangeRoot>().RemoveItem(Item)));
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
         public override bool CanReorderItems => true;
         public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());

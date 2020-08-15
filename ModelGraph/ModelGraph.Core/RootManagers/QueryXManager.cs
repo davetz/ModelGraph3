@@ -673,7 +673,7 @@ namespace ModelGraph.Core
         internal string GetWhereSelectTargetName(QueryX qx)
         {
             var (_, tail) = GetHeadTail(qx);
-            return tail.GetNameId();
+            return tail is null ? InvalidItem : tail.GetNameId();
         }
         internal string GetRelationNameId(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation re) ? re.GetNameId() : InvalidItem;
         #endregion

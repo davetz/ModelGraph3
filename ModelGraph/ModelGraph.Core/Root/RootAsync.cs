@@ -55,7 +55,7 @@ namespace ModelGraph.Core
             lock (this)
             {
                 action();
-                var cr = Get<ChangeRoot>();
+                var cr = Get<ChangeManager>();
                 cr.RecordChanges();
             }
         }

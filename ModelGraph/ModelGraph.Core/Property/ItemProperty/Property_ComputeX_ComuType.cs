@@ -11,6 +11,6 @@ namespace ModelGraph.Core
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).CompuType;
 
-        internal override void SetItemPropertyValue(Item item, int key) => Cast(item).CompuType = (CompuType)key;
+        internal override void SetItemPropertyValue(Item item, int key) => Cast(item).SetCompuType((CompuType)key);
     }
 }

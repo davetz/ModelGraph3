@@ -60,7 +60,7 @@ namespace ModelGraph.Core
 
             RegisterReferenceItem(new RelationManager(this));
             RegisterReferenceItem(new PropertyManager(this));
-            RegisterPrivateItem(new ChangeRoot(this));
+            RegisterPrivateItem(new ChangeManager(this));
             RegisterPrivateItem(new ErrorManager(this));
             RegisterPrivateItem(new EnumManager(this));
 

@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class ChangeSet : ChildOfStoreOf<ChangeRoot, ItemChange>
+    public class ChangeSet : ChildOfStoreOf<ChangeManager, ItemChange>
     {
         private static int SequenceCount;
         internal DateTime DateTime;
@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         internal override string Name => $"#{Sequence}";
 
         #region Constructor  ==================================================
-        internal ChangeSet(ChangeRoot owner)
+        internal ChangeSet(ChangeManager owner)
         {
             Owner = owner;
             DateTime = DateTime.Now;
@@ -24,7 +24,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Properties/Methods  ===========================================
-        internal ChangeRoot ChangeRoot => Owner as ChangeRoot;
+        internal ChangeManager ChangeRoot => Owner as ChangeManager;
         internal bool CanUndo => (!IsCongealed && !IsUndone);
         internal bool CanRedo => (!IsCongealed && IsUndone);
         internal bool CanMerge => ChangeRoot.CanMerge(this); 

@@ -23,7 +23,7 @@
         /// <summary>Record the new Item created event</summary>
         internal static void Record(Root root, Item item)
         {
-            var cs = root.Get<ChangeRoot>().ChangeSet;
+            var cs = root.Get<ChangeManager>().ChangeSet;
 
             string name = item.GetChangeLogId();
             var store = item.GetOwner() as Store;

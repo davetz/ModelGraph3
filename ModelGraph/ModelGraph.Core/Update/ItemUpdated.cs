@@ -48,7 +48,7 @@
                 var name = $"{itm.GetChangeLogId()}    {prop.GetNameId()}:  old<{oldValue}>  new<{newValue}>";
                 if (prop.Value.SetString(itm, newValue))
                 {
-                    new ItemUpdated(root.Get<ChangeRoot>().ChangeSet, itm, prop, oldValue, newValue, name);
+                    new ItemUpdated(root.Get<ChangeManager>().ChangeSet, itm, prop, oldValue, newValue, name);
                 }
             }
         }

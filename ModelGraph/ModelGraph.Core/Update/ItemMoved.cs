@@ -28,7 +28,7 @@
             var n1 = index1 + 1;
             var n2 = index2 + 1;
             var name = $"{item.GetFullNameId()}     {n1}->{n2}";
-            var cs = new ItemMoved(root.Get<ChangeRoot>().ChangeSet, item, index1, index2, name);
+            var cs = new ItemMoved(root.Get<ChangeManager>().ChangeSet, item, index1, index2, name);
             cs.DoNow();
         }
         #endregion

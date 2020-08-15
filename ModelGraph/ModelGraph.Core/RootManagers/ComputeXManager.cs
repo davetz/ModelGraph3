@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using Windows.Storage.Streams;
 
@@ -121,7 +122,8 @@ namespace ModelGraph.Core
 
         #region ComputeXMethods  ==============================================
         //========================================== frequently used references
-        private QueryXManager _queryXRoot;
+        private QueryXManager _queryXManager;
+        private ChangeManager _changeManager;
 
         private Relation_QueryX_QueryX _relation_QueryX_QueryX;
         private Relation_Store_ComputeX _relation_Store_ComputeX;
@@ -131,7 +133,8 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXRoot = root.Get<QueryXManager>();
+            _queryXManager = root.Get<QueryXManager>();
+            _changeManager = root.Get<ChangeManager>();
 
             _relation_QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();
             _relation_Store_ComputeX = root.Get<Relation_Store_ComputeX>();
@@ -154,7 +157,7 @@ namespace ModelGraph.Core
         internal string GetSelectString(ComputeX cx) => _relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx) ? (qx.HasSelect ? qx.SelectString : null) : InvalidItem;
 
         internal void SetWhereString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.WhereString = value; }
-        internal void SetSelectString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.SelectString = value; _queryXRoot.ValidateQueryDependants(qx); }
+        internal void SetSelectString(ComputeX cx, string value) { if (_relation_ComputeX_QueryX.TryGetChild(cx, out QueryX qx)) qx.SelectString = value; _queryXManager.ValidateQueryDependants(qx); }
         #endregion
 
         #region Model_658_Compute  ============================================
@@ -167,7 +170,7 @@ namespace ModelGraph.Core
                 var (head, tail) = rx.GetHeadTail();
                 if (st == head || st == tail)
                 {
-                    if (doDrop) _queryXRoot.AddComputeXQueryX(cx, qx1, rx, st == tail);
+                    if (doDrop) _queryXManager.AddComputeXQueryX(cx, qx1, rx, st == tail);
                     return true;
                 }
             }
@@ -178,10 +181,38 @@ namespace ModelGraph.Core
         #region SetComputeType  ===============================================
         internal void SetComputeTypeProperty(ComputeX cx, CompuType type)
         {
+            QueryX qh;
+            if (!_relation_ComputeX_QueryX.TryGetChild(cx, out qh))
+            {
+                qh = new QueryX(_queryXManager, QueryType.Value);
+                _relation_ComputeX_QueryX.SetLink(cx, qh);
+            }
             if (cx.CompuType != type)
             {
                 cx.CompuType = type;
                 cx.Value.Clear();
+
+                switch (type)
+                {
+                    case CompuType.RowValue:
+                        if (_relation_QueryX_QueryX.TryGetChildren(qh, out IList<QueryX> qxList))
+                        {
+                            foreach (var qx in qxList.ToArray())
+                            {
+                                _changeManager.RemoveItem(qx);
+                            }
+                            cx.ChildDelta++;
+                            cx.AutoExpandRight = true;
+                        }
+                        break;
+                    case CompuType.RelatedValue:
+                        break;
+                    case CompuType.CompositeString:
+                        break;
+                    case CompuType.CompositeReversed:
+                        break;
+                }
+
                 AllocateValueCache(cx);
             }
         }
@@ -222,7 +253,7 @@ namespace ModelGraph.Core
             bool TryGetRelated()
             {
                 var selectors = new List<Query>();
-                if (!_queryXRoot.TryGetForest(cx, key, selectors, out Query[] forest) || selectors.Count == 0) return false;
+                if (!_queryXManager.TryGetForest(cx, key, selectors, out Query[] forest) || selectors.Count == 0) return false;
 
                 return cx.Value.LoadCache(cx, key, selectors);
             }
@@ -230,7 +261,7 @@ namespace ModelGraph.Core
             bool TryGetCompositeString(bool reverse = false)
             {
                 var selectors = new List<Query>();
-                if (!_queryXRoot.TryGetForest(cx, key, selectors, out _) || selectors.Count == 0) return false;
+                if (!_queryXManager.TryGetForest(cx, key, selectors, out _) || selectors.Count == 0) return false;
 
                 var sb = new StringBuilder(128);
 
