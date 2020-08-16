@@ -86,9 +86,9 @@ namespace ModelGraph.Core
         internal void PostSetIndexValue(Item item, Property prop, int index)
         {
             if (prop is IEnumProperty enu)
-            {
                 PostSetTextValue(item, prop, enu.GetValue(index));
-            }
+            else if (prop is ColumnX cx)
+                PostSetTextValue(item, prop, cx.Owner.GetActualValueAt(cx, index)); 
         }
         #endregion
 

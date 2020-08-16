@@ -118,15 +118,27 @@ namespace ModelGraph.Core
         #region ColumnXMethods  ===============================================
         //========================================== frequently used references
         private Relation_Store_ColumnX _relation_Store_ColumnX;
+        private Relation_EnumX_ColumnX _relation_EumX_ColumnX;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
             _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
+            _relation_EumX_ColumnX = root.Get<Relation_EnumX_ColumnX>();
         }
         #endregion
 
         internal bool TryGetParent(ColumnX cx, out Store p) => _relation_Store_ColumnX.TryGetParent(cx, out p);
+
+        internal string[] GetEnumXlListValue(ColumnX cx) => (cx.HasEnumXRef && _relation_EumX_ColumnX.TryGetParent(cx, out EnumX ex)) ? ex.GetlListValue() : new string[0];
+        internal int GetEnumXlIndexValue(ColumnX cx, Item item) => (cx.HasEnumXRef && _relation_EumX_ColumnX.TryGetParent(cx, out EnumX ex)) ? ex.GetIndexValue(cx, item) : 0;
+        internal string GetActualValueAt(ColumnX cx, int index) => (cx.HasEnumXRef && _relation_EumX_ColumnX.TryGetParent(cx, out EnumX ex)) ? ex.GetActualValueAt(index) : InvalidItem;
+
+        internal void SetEnumXIndexValue(ColumnX cx, Item item, int index)
+        {
+            if (cx.HasEnumXRef && _relation_EumX_ColumnX.TryGetParent(cx, out EnumX ex))
+                ex.SetIndexValue(cx, item, index);
+        }
         #endregion
     }
 }

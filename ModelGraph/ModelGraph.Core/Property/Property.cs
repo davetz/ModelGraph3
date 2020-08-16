@@ -23,7 +23,7 @@ namespace ModelGraph.Core
         internal virtual int GetIndexValue(Item item) => 0;
         internal virtual void SetIndexValue(Item item, int val) { }
 
-        internal void CreatePropertyModel(LineModel owner, Item item)
+        internal virtual void CreatePropertyModel(LineModel owner, Item item)
         {
             if (PropetyModelType == typeof(Model_619_ComboProperty))
                 new Model_619_ComboProperty(owner, item, this);

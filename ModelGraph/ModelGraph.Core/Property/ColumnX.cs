@@ -103,5 +103,27 @@ namespace ModelGraph.Core
             }
         }
         #endregion
+
+        #region PropertyModel  ================================================
+        internal override string[] GetlListValue(Root root) => Owner.GetEnumXlListValue(this);
+        internal override int GetIndexValue(Item item) => Owner.GetEnumXlIndexValue(this, item);
+        internal override void SetIndexValue(Item item, int index) => Owner.SetEnumXIndexValue(this, item, index);
+
+        internal override void CreatePropertyModel(LineModel owner, Item item)
+        {
+            if (Value.ValType == ValType.Bool)
+                new Model_618_CheckProperty(owner, item, this);
+            else if (HasEnumXRef)
+            {
+                var vg = Value.GetValGroup(Value.ValType);
+                if (vg == ValGroup.Int || vg == ValGroup.Long || vg == ValGroup.String)
+                    new Model_619_ComboProperty(owner, item, this);
+                else
+                    new Model_617_TextProperty(owner, item, this);
+            }
+            else
+                new Model_617_TextProperty(owner, item, this);
+        }
+        #endregion
     }
 }

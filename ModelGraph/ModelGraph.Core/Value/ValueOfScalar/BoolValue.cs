@@ -24,6 +24,7 @@ namespace ModelGraph.Core
             else
             {
                 var vs = new ValueDictionaryOf<bool>(count, r.ReadBoolean());
+                _valueStore = vs;
 
                 for (int i = 0; i < count; i++)
                 {

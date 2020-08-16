@@ -156,6 +156,18 @@ namespace ModelGraph.Core
                 cx.HasEnumXRef = true;
             }
         }
+
+        internal int GetEnumColumnCount(EnumX ex) => _relation_EnumX_ColumnX.ChildCount(ex);
+        internal IList<ColumnX> GetEnumChildColumns(EnumX ex) => _relation_EnumX_ColumnX.TryGetChildren(ex, out IList<ColumnX> list) ? list : new ColumnX[0];
+        internal void AddEnumColumn(EnumX ex, ColumnX cx)
+        {
+            if (cx.HasEnumXRef && _relation_EnumX_ColumnX.TryGetParent(cx, out EnumX oldEx))
+            {
+                if (oldEx == ex) return;
+                _relation_EnumX_ColumnX.RemoveLink(oldEx, cx);
+            }
+            _relation_EnumX_ColumnX.AppendLink(ex, cx);
+        }
         #endregion
     }
 }

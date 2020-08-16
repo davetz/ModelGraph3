@@ -9,18 +9,24 @@ namespace ModelGraph.Core
         public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
 
         #region RequiredMethods  ==============================================
-        protected override int GetTotalCount() => DataRoot.Get<Relation_EnumX_ColumnX>().ChildCount(Item);
-        protected override IList<ColumnX> GetChildItems() => DataRoot.Get<Relation_EnumX_ColumnX>().TryGetChildren(Item, out IList<ColumnX> list) ? list : new ColumnX[0];
+        protected override int GetTotalCount() => Item.Owner.GetEnumColumnCount(Item);
+        protected override IList<ColumnX> GetChildItems() => Item.Owner.GetEnumChildColumns(Item);
         protected override void CreateChildModel(ColumnX childItem)
         {
             new Model_667_Column(this, childItem);
         }
         #endregion
 
-        //public override void GetMenuCommands(Root root, List<LineCommand> list)
-        //{
-        //    list.Clear();
-        //    list.Add(new RemoveCommand(this, () => ItemUnLinked.Record(root, root.Get<Relation_EnumX_ColumnX>(), )));
-        //}
+        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
+        {
+            if (dropModel.GetItem() is ColumnX cx)
+            {
+                if (doDrop)
+                    Item.Owner.AddEnumColumn(Item, cx);
+                return DropAction.Link;
+            }
+            return DropAction.None;
+        }
+
     }
 }

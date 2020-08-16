@@ -18,5 +18,8 @@ namespace ModelGraph.Core
 
             return true;
         }
+        public override bool CanReorderItems => true;
+        public override bool ReorderItems(Root root, LineModel dropModel) => (dropModel is Model_664_PairList m) && ReorderStoreItems(root, Item.Owner, Item, m.Item);
+
     }
 }

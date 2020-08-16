@@ -41,8 +41,6 @@ namespace ModelGraph.Core
                 case CompuType.RowValue:
                     break;
                 case CompuType.RelatedValue when Item.IsTail:
-                        root.Get<Property_QueryX_Select>().CreatePropertyModel(this, Item);
-                    break;
                 case CompuType.CompositeString:
                 case CompuType.CompositeReversed:
                     root.Get<Property_QueryX_Select>().CreatePropertyModel(this, Item);

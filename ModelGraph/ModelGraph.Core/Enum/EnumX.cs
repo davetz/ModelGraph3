@@ -31,5 +31,32 @@ namespace ModelGraph.Core
         public override string GetDescriptionId() => Description;
         #endregion
 
+        internal string[] GetlListValue()
+        {
+            var list = new string[Count];
+            for (int i = 0; i < Count; i++)
+            {
+                list[i] = Items[i].DisplayValue;
+            }
+            return list;
+        }
+
+        internal int GetIndexValue(ColumnX cx, Item item)
+        {
+            var val = cx.Value.GetString(item);
+            for (int i = 0; i < Count; i++)
+            {
+                if (Items[i].ActualValue == val) return i;
+            }
+            return 0;
+        }
+
+        internal void SetIndexValue(ColumnX cx, Item item, int index)
+        {
+            if (index >= 0 || index < Count)
+            {
+                cx.Value.SetString(item, Items[index].ActualValue);
+            }
+        }
     }
 }
