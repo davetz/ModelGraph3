@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using Windows.Storage.Streams;
@@ -133,9 +134,9 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GraphXMethods  ================================================
+        #region GraphXHelpers  ================================================
         //========================================== frequently used references
-        private QueryXManager _queryXRoot;
+        private QueryXManager _queryXManager;
         private DummyItem _dummyItem;
         private DummyQueryX _dummyQueryX;
 
@@ -152,7 +153,7 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXRoot = root.Get<QueryXManager>();
+            _queryXManager = root.Get<QueryXManager>();
             _dummyItem = root.Get<DummyItem>();
             _dummyQueryX = root.Get<DummyQueryX>();
 
@@ -631,7 +632,7 @@ namespace ModelGraph.Core
             var rt = g.SeedItem;
 
             g.Reset();
-            _queryXRoot.TryGetForest(g, rt, gx.NodeOwners);
+            _queryXManager.TryGetForest(g, rt, gx.NodeOwners);
             var anyChange = ValidateGraphParms(g);
 
             TryCreateQueryPaths(g);
@@ -1242,6 +1243,138 @@ namespace ModelGraph.Core
             #endregion
 
             return true;
+        }
+        #endregion
+
+        #endregion
+
+        #region ModelHelpers  =================================================
+
+        #region Model_682_GraphRootList  ======================================
+        internal int GetTotalCount(Model_682_GraphRootList m) => _relation_GraphX_QueryX.ChildCount(m.Item);
+        internal bool TryGetChildItems(Model_682_GraphRootList m, out Dictionary<Store, QueryX> dict)
+        {
+            if (_relation_GraphX_QueryX.TryGetChildren(m.Item, out IList<QueryX> qxList))
+            {
+                dict = new Dictionary<Store, QueryX>(qxList.Count);
+                foreach (var qx in qxList) { if (_relation_Store_QueryX.TryGetParent(qx, out Store st)) dict.Add(st, qx); }
+                return true;
+            }
+            dict = null;
+            return false;
+        }
+        internal bool ModelDrop(Model_682_GraphRootList m, LineModel dropModel, bool doDrop)
+        {
+            if (dropModel.GetItem() is Store st)
+            {
+                // reject duplicate entries
+                if (_relation_GraphX_QueryX.TryGetChildren(m.Item, out IList<QueryX> qxList))
+                {
+                    foreach (var qx in qxList) { if (_relation_Store_QueryX.TryGetParent(qx, out Store st2) && st2 == st) return false; }
+                }
+                if (doDrop)
+                {
+                    var qx = new QueryX(_queryXManager, QueryType.Graph, true);
+                    ItemCreated.Record(Owner, qx);
+                    ItemLinked.Record(Owner, _relation_GraphX_QueryX, m.Item, qx);
+                    ItemLinked.Record(Owner, _relation_Store_QueryX, st, qx);
+
+                    m.Item.ChildDelta++;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region Model_691_GraphRoot  ==========================================
+        internal int GetTotalCount(Model_691_GraphRoot m) => _relation_QueryX_QueryX.ChildCount(m.Aux2);
+        internal IList<QueryX> GetChildItems(Model_691_GraphRoot m) => _relation_QueryX_QueryX.TryGetChildren(m.Aux2, out IList<QueryX> list) ? list : new QueryX[0];
+        internal bool ModelDrop(Model_691_GraphRoot m, LineModel dropModel, bool doDrop)
+        {
+            if (dropModel.GetItem() is Relation r)
+            {
+                var (ok, isReversed) = CanFormRelationalLink(m.Item, r);
+                if (!ok) return false;
+
+                if (doDrop)
+                {
+                    var qx = new QueryX(_queryXManager, QueryType.Graph);
+                    qx.IsReversed = isReversed;
+
+                    ItemCreated.Record(Owner, qx);
+                    ItemLinked.Record(Owner, _relation_QueryX_QueryX, m.Aux2, qx);
+                    ItemLinked.Record(Owner, _relation_Relation_QueryX, r, qx);
+
+                    m.Item.ChildDelta++;
+                }
+                return true;
+            }
+            return false;
+        }
+
+        #endregion
+
+        #region Model_692_GraphLink  ==========================================
+        internal int GetTotalCount(Model_692_GraphLink m) => _relation_QueryX_QueryX.ChildCount(m.Item);
+        internal IList<QueryX> GetChildItems(Model_692_GraphLink m) => _relation_QueryX_QueryX.TryGetChildren(m.Item, out IList<QueryX> list) ? list : new QueryX[0];
+        internal bool ModelDrop(Model_692_GraphLink m, LineModel dropModel, bool doDrop)
+        {
+            if (dropModel.GetItem() is Relation r2)
+            {
+                var (ok, isReversed) = CanFormRelationalLink(m.Item, r2);
+                if (!ok) return false;
+
+                if (doDrop)
+                {
+                    var qx = new QueryX(_queryXManager, QueryType.Graph);
+                    qx.IsReversed = isReversed;
+
+                    ItemCreated.Record(Owner, qx);
+                    ItemLinked.Record(Owner, _relation_QueryX_QueryX, m.Item, qx);
+                    ItemLinked.Record(Owner, _relation_Relation_QueryX, r2, qx);
+
+                    m.Item.ChildDelta++;
+                }
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
+        #region Helper-Helpers  ===============================================
+        private (bool, bool) CanFormRelationalLink(Store s, Relation r)
+        {
+            var (h2, t2) = r.GetHeadTail();
+            if (h2 is null || t2 is null) return (false, false); // can't connect
+
+            if (s == h2) return (true, false); // (can connect, not reversed)
+            if (s == t2) return (true, true); // (can connect, is reversed)
+
+            return (false, false); // can't connect
+        }
+        private (bool, bool) CanFormRelationalLink(QueryX q, Relation r)
+        {
+            var (h1, t1) = GetHeadTail(q);
+            if (h1 is null || t1 is null) return (false, false); // can't connect
+
+            var (h2, t2) = r.GetHeadTail();
+            if (h2 is null || t2 is null) return (false, false); // can't connect
+
+            if (t1 == h2) return (true, false); // (can connect, not reversed)
+            if (t1 == t2) return (true, true); // (can connect, is reversed)
+
+            return (false, false); // can't connect
+        }
+        private (Store, Store) GetHeadTail(QueryX q1)
+        {
+            if (_relation_Relation_QueryX.TryGetParent(q1, out Relation r1))
+            {
+                var (h, t) = r1.GetHeadTail();
+                return q1.IsReversed ? (t, h) : (h, t);
+            }
+            return (null, null);
         }
         #endregion
 

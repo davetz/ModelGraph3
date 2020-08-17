@@ -7,8 +7,6 @@ namespace ModelGraph.Core
         internal Model_654_Table(Model_643_TableList owner, TableX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_654_Table;
 
-        public override bool CanExpandLeft => true;
-        public override bool CanExpandRight => true;
         public override bool CanDrag => true;
 
         public override void GetMenuCommands(Root root, List<LineCommand> list)
@@ -20,6 +18,7 @@ namespace ModelGraph.Core
         public override bool CanReorderItems => true;
         public override bool ReorderItems(Root root, LineModel dropModel) => (dropModel is Model_643_TableList m) && ReorderStoreItems(root, Item.Owner, Item, m.Item);
 
+        public override bool CanExpandLeft => true;
         internal override bool ExpandLeft(Root root)
         {
             if (IsExpandedLeft) return false;
@@ -34,6 +33,7 @@ namespace ModelGraph.Core
             return true;
         }
 
+        public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)
         {
             if (IsExpandedRight) return false;
