@@ -22,19 +22,11 @@ namespace ModelGraph.Core
         }
 
         public override bool CanReorderItems => true;
-        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
+        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, root.Get<Relation_Store_ComputeX>(), o.Item, Item, dropModel.GetItem());
 
-
-        #region List2ModelOf  =================================================
         protected override int GetTotalCount() => Item.Owner.GetQueryXCount(Item);
-
         protected override IList<QueryX> GetChildItems() => Item.Owner.GetQueryXList(Item);
-
-        protected override void CreateChildModel(QueryX qx)
-        {
-            new Model_69F_ValueLink(this, qx);
-        }
-        #endregion
+        protected override void CreateChildModel(QueryX qx) =>  new Model_69F_ValueLink(this, qx);
 
         #region ExpandRight  ==================================================
         public override bool CanExpandRight => true;

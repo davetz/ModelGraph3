@@ -125,6 +125,7 @@ namespace ModelGraph.Core
         #region DependantMethods  =============================================
         (Store, Store) GetHeadTail() => Owner.GetHeadTail(this);
         internal string GetWhereSelectTargetName() => Owner.GetWhereSelectTargetName(this);
+        internal Relation GetRelation() => Owner.GetRelation(this);
         #endregion
 
         #region Validation  ===================================================

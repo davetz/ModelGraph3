@@ -134,7 +134,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GraphXHelpers  ================================================
+        #region DomainMethods  ================================================
         //========================================== frequently used references
         private QueryXManager _queryXManager;
         private DummyItem _dummyItem;

@@ -121,22 +121,32 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region RowXMethods  ==================================================
+        #region DomainMethods  ================================================
         //========================================== frequently used references
+        private QueryXManager _queryXManager;
+        private ComputeXManager _computeXManager;
+
+        private Relation_Store_ColumnX _relation_Store_ColumnX;
+        private Relation_Store_ComputeX _relation_Store_ComputeX;
+        private Relation_ComputeX_QueryX _relation_ComputeX_QueryX;
         private Relation_Store_NameProperty _relation_Store_NameProperty;
         private Relation_Store_SummaryProperty _relation_Store_SummaryProperty;
-        private Relation_Store_ColumnX _relation_Store_ColumnX;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
+            _queryXManager = root.Get<QueryXManager>();
+            _computeXManager = root.Get<ComputeXManager>();
+
+            _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
+            _relation_Store_ComputeX = root.Get<Relation_Store_ComputeX>();
+            _relation_ComputeX_QueryX = root.Get<Relation_ComputeX_QueryX>();
             _relation_Store_NameProperty = root.Get<Relation_Store_NameProperty>();
             _relation_Store_SummaryProperty = root.Get<Relation_Store_SummaryProperty>();
-            _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
         }
         #endregion
 
-            internal string GetRowXNameId(RowX rx)
+        internal string GetRowXNameId(RowX rx)
         {
             var text = _relation_Store_NameProperty.TryGetChild(rx.Owner, out Property p) ? p.Value.GetString(rx) : string.Empty;
             return string.IsNullOrWhiteSpace(text) ? rx.GetIndexId() : text;
@@ -157,5 +167,27 @@ namespace ModelGraph.Core
             return selectList;
         }
         #endregion
+
+        #region ModelHelpers  =================================================
+
+        #region Model_666_ComputeList  ========================================
+        internal int GetTotalCount(Model_666_ComputeList m) => _relation_Store_ComputeX.ChildCount(m.Item);
+        internal IList<ComputeX> GetChildItems(Model_666_ComputeList m) => _relation_Store_ComputeX.TryGetChildren(m.Item, out IList<ComputeX> list) ? list : new ComputeX[0];
+        internal void AddNewComputeX(Model_666_ComputeList m)
+        {
+            var cx = new ComputeX(_computeXManager, true);
+            var qx = new QueryX(_queryXManager, QueryType.Value, true, true);
+
+            // the data root implements undo/redo functionality
+            ItemCreated.Record(Owner, cx);
+            ItemCreated.Record(Owner, qx);
+            ItemLinked.Record(Owner, _relation_Store_ComputeX, m.Item, cx);
+            ItemLinked.Record(Owner, _relation_ComputeX_QueryX, cx, qx);
+            ItemLinked.Record(Owner, _relation_Store_ComputeX, m.Item, qx);
+        }
+        #endregion
+
+        #endregion
+
     }
 }

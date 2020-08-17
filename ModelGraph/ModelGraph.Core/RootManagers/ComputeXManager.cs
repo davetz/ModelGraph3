@@ -120,7 +120,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region ComputeXMethods  ==============================================
+        #region DomainMethods  ================================================
         //========================================== frequently used references
         private QueryXManager _queryXManager;
         private ChangeManager _changeManager;
@@ -451,6 +451,11 @@ namespace ModelGraph.Core
 
         internal int GetValueType(QueryX qx) => qx.Select is null ? (int)ValType.IsUnknown : (int)qx.Select.ValueType;
         #endregion
+
+        #endregion
+
+        #region ModelHelpers  =================================================
+
 
         #endregion
     }
