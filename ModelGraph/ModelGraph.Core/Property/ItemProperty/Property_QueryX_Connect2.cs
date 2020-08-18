@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 
         internal Property_QueryX_Connect2(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_Connect>()) { }
 
-        internal override int GetItemPropertyValue(Item item) => (int)Cast(item).PathParm.Target2;
+        internal override int GetItemPropertyValue(Item item) => (Cast(item).PathParm is null) ? 0 : (int)Cast(item).PathParm.Target2;
         internal override void SetItemPropertyValue(Item item, int key) => Cast(item).PathParm.Target2 = (Target)key;
     }
 }

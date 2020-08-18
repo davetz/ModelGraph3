@@ -138,6 +138,15 @@
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasControl.xaml.cs">
+      <DependentUpon>ModelCanvasControl.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\ModelCanvas\ModelCanvasAlignmentGrid.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasCopyGrid.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasMoveGrid.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasResizerGrid.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasSelectorGrid.cs" />
+    <Compile Include="Controls\ModelCanvas\ModelCanvasToolTipGrid.cs" />
     <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
       <DependentUpon>ModelGraphControl.xaml</DependentUpon>
     </Compile>
@@ -227,6 +236,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Controls\ModelCanvas\ModelCanvasControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
     <Page Include="Controls\ModelGraph\ModelGraphControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

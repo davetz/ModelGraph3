@@ -10,7 +10,7 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) => Cast(item).PathParm.LineColor;
+        internal override string GetValue(Item item) => (Cast(item).PathParm is null) ? string.Empty : Cast(item).PathParm.LineColor;
         internal override void SetValue(Item item, string val) => Cast(item).PathParm.LineColor = val;
     }
 }

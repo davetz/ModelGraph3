@@ -9,6 +9,8 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_7F1_PrimeStore;
         public override string GetKindId() => string.Empty;
 
+        public override bool CanDrag => true;
+
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => ItemStore.Count;
         protected override IList<Item> GetChildItems() => ST.GetItems();

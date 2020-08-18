@@ -11,6 +11,7 @@ namespace ModelGraph.Core
         public override bool CanExpandLeft => true;
 
         public override string GetNameId() => $"{Item.GetNameId()}        [{Item.Pairing}]";
+        public override bool CanDrag => true;
 
         protected override int GetTotalCount() => Item.GetChildLinkPairCount();
         protected override IList<(Item, Item)> GetChildItems() => Item.GetChildLinkPairList();

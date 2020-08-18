@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 
         internal Property_QueryX_LineStyle(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_LineStyle>()) { }
 
-        internal override int GetItemPropertyValue(Item item) => (int)Cast(item).PathParm.LineStyle;
+        internal override int GetItemPropertyValue(Item item) => (Cast(item).PathParm is null) ? 0 : (int)Cast(item).PathParm.LineStyle;
         internal override void SetItemPropertyValue(Item item, int key) => Cast(item).PathParm.LineStyle = (LineStyle)key;
     }
 }
