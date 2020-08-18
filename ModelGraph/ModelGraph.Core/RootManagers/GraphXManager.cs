@@ -1341,6 +1341,34 @@ namespace ModelGraph.Core
             }
             return false;
         }
+        internal bool IsRadialSequence(Model_692_GraphLink m)
+        {
+            var qx = m.Item;
+            while(_relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> list))
+            {
+                if (list.Count > 1) return false;
+                qx = list[0];
+            }
+            return true;
+        }
+        internal void ConvertQuerySequence(Model_692_GraphLink m, QueryType qk)
+        {
+            var qx = m.Item;
+            var list = new List<QueryX>() { qx };
+            while (_relation_QueryX_QueryX.TryGetChild(qx, out qx)) { list.Add(qx); }
+
+            var N = list.Count;
+            var M = N - 1;
+
+            list[0].PathParm = (qk == QueryType.Path) ? new PathParm() : null;
+
+            for (int i = 0; i < N; i++)
+            {
+                list[i].QueryKind = qk;
+                list[i].IsHead = (i == 0);
+                list[i].IsTail = (i == M);
+            }
+        }
         #endregion
 
         #region Helper-Helpers  ===============================================

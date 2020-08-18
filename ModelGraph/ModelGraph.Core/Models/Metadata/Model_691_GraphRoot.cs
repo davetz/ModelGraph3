@@ -11,7 +11,15 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Aux1.Owner.GetTotalCount(this);
         protected override IList<QueryX> GetChildItems() => Aux1.Owner.GetChildItems(this);
-        protected override void CreateChildModel(QueryX childItem) => new Model_692_GraphLink(this, childItem, Aux1);
+        protected override void CreateChildModel(QueryX childItem) => new Model_692_GraphLink(this, childItem, Aux1, GetChildIdKey(childItem));
+        private IdKey GetChildIdKey(QueryX qx)
+        {
+            if (qx.QueryKind == QueryType.Path) return IdKey.Model_693_GraphPathHead;
+            if (qx.QueryKind == QueryType.Group) return IdKey.Model_695_GraphGroupHead;
+            if (qx.QueryKind == QueryType.Egress) return IdKey.Model_697_GraphEgressHead;
+
+            return IdKey.Model_692_GraphLink;
+        }
         internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
 
         public override bool CanExpandRight => true;
