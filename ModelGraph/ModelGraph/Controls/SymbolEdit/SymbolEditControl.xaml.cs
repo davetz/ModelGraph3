@@ -65,14 +65,14 @@ namespace ModelGraph.Controls
 
         public SymbolEditControl(IDataModel model)
         {
-            if (model is null || model.RootItem is null || !(model.RootItem is SymbolX))
+            if (model is null)
             {
                 _isScratchPad = true;
             }
             else
             {
                 _rootModel = model;
-                _symbol = model.RootItem as SymbolX;
+                _symbol = null;
                 _symbol.GetTargetContacts(Target_Contacts);
             }
 

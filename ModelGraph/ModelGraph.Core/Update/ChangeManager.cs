@@ -128,7 +128,7 @@ namespace ModelGraph.Core
         #region RemoveItem  ===================================================
         internal void RemoveItem(Item target)
         {
-            var root = DataRoot;// big daddy
+            var root = Owner;
             var hitList = new List<Item>();//======================== dependant items that also need to be killed off
             var stoCRels = root.Get<Relation_Store_ChildRelation>();//==== souce1 of relational integrity
             var stoPRels = root.Get<Relation_Store_ParentRelation>();//==== souce2 of relational integrity

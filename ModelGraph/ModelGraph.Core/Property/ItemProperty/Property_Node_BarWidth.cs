@@ -10,7 +10,7 @@ namespace ModelGraph.Core
             Value = new StringValue(this);
         }
 
-        internal override string GetValue(Item item) { var root = DataRoot; return root.Get<Enum_BarWidth>().GetEnumValueName((int)Cast(item).BarWidth); }
-        internal override void SetValue(Item item, string val) { var root = DataRoot; Cast(item).BarWidth = (BarWidth)root.Get<Enum_BarWidth>().GetKey(root, val); }
+        internal override string GetValue(Item item) { var root = Root; return root.Get<Enum_BarWidth>().GetEnumValueName((int)Cast(item).BarWidth); }
+        internal override void SetValue(Item item, string val) { var root = Root; Cast(item).BarWidth = (BarWidth)root.Get<Enum_BarWidth>().GetKey(root, val); }
     }
 }

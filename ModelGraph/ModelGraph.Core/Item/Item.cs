@@ -33,13 +33,13 @@ namespace ModelGraph.Core
             return (inx < 0) ? InvalidItem : $"#{inx}";
         }
 
-        public Root DataRoot => GetRoot();
+        public virtual Root Root => GetRoot();
         /// <summary>Walk up item tree hierachy to find the parent DataRoot</summary>
         internal abstract Item GetOwner();
         internal Root GetRoot()
         {
             var itm = this;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 20; i++)
             {
                 if (itm is null) break;
                 if (itm is Root root) return root;

@@ -50,7 +50,7 @@ namespace ModelGraph.Views
             {
                 if (m.PageControl is null)
                 {
-                    m.DataRoot.SetLocalizer(ResourceExtensions.CoreLocalizer());
+                    m.Root.SetLocalizer(ResourceExtensions.CoreLocalizer());
 
                     switch (m.ControlType)
                     {

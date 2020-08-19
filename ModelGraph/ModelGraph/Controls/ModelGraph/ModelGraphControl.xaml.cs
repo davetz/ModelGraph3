@@ -17,8 +17,8 @@ namespace ModelGraph.Controls
         public ModelGraphControl(IDataModel model)
         {
             Model = model ?? throw new ArgumentNullException(nameof(model));
-            _root = model.DataRoot;
-            _graph = model.RootItem as Graph;
+            _root = model.Root;
+            _graph = null;
 
             _selector = new Selector(_graph);
 

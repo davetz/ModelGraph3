@@ -50,7 +50,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.DataModel.DataRoot;
+            var root = ctrl.DataModel.Root;
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsync(root);
             return false;
@@ -61,7 +61,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModelAs(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.DataModel.DataRoot;
+            var root = ctrl.DataModel.Root;
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsAsync(root);
             return false;
@@ -73,7 +73,7 @@ namespace ModelGraph.Services
         {
             if (ctrl is null) return;
             var model = ctrl.DataModel;
-            if (model.DataRoot.Repository is StorageFileRepo repo)
+            if (model.Root.Repository is StorageFileRepo repo)
             {
                 RemoveModelPage(model);
                 model.Release();
@@ -88,7 +88,7 @@ namespace ModelGraph.Services
         {
             if (ctrl is null) return false;
             var oldModel = ctrl.DataModel;
-            if (oldModel.DataRoot.Repository is StorageFileRepo repo)
+            if (oldModel.Root.Repository is StorageFileRepo repo)
             {
                 RemoveModelPage(oldModel);
                 oldModel.Release();
@@ -96,7 +96,7 @@ namespace ModelGraph.Services
                 WindowManagerService.Current.CloseRelatedModels(oldModel);
 
                 var rootModel = new RootModel();
-                var newRoot = rootModel.DataRoot;
+                var newRoot = rootModel.Root;
 
                 _ = await repo.ReloadAsync(newRoot).ConfigureAwait(true);
 
@@ -116,7 +116,7 @@ namespace ModelGraph.Services
 
             var rootModel = new RootModel();
             var repo = new StorageFileRepo();
-            repo.New(rootModel.DataRoot);
+            repo.New(rootModel.Root);
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>
             {
@@ -134,7 +134,7 @@ namespace ModelGraph.Services
 
             var rootModel = new RootModel();
             var repo = new StorageFileRepo();
-            bool success = await repo.OpenAsync(rootModel.DataRoot).ConfigureAwait(true);
+            bool success = await repo.OpenAsync(rootModel.Root).ConfigureAwait(true);
 
 
             await dispatcher.RunAsync(CoreDispatcherPriority.Normal, () =>

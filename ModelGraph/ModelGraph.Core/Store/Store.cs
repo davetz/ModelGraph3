@@ -19,7 +19,7 @@ namespace ModelGraph.Core
 
         internal bool TryLookUpProperty(string name, out Property property)
         {
-            return DataRoot.TryLookUpProperty(this, name, out property);
+            return GetRoot().TryLookUpProperty(this, name, out property);
         }
     }
 }

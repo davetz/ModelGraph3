@@ -1,16 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using System.Text;
-using Windows.Foundation;
-using Windows.UI.Xaml;
 
 namespace ModelGraph.Core
 {
-    public abstract class CanvasModel : Item, ISelector
+    public abstract class CanvasModel : Item, ICanvasModel
     {
+        internal readonly Root Owner;
+        public override Root Root => Owner;
+        internal override Item GetOwner() => Owner;
+
+        #region Constructor  ==================================================
+        internal CanvasModel(Root root, ControlType controlType)
+        {
+            Owner = root;
+            ControlType = controlType;
+            root.Add(this);
+        }
+        #endregion
+
+        #region IDataModel  ===================================================
+        public string TitleName => "TestModelCanvasControl";
+        public string TitleSummary => string.Empty;
+        public ControlType ControlType { get; private set; }
+        public IPageControl PageControl { get; set; }
+        public void Release()
+        {
+            Owner.Remove(this);
+            Discard(); //discard myself and recursivly discard all my children
+        }
+        public void TriggerUIRefresh()
+        {
+            if (RootItem.ChildDelta != ChildDelta)
+            {
+                ChildDelta = RootItem.ChildDelta;
+                PageControl?.Refresh();
+            }
+        }
+        #endregion
+
+        #region RequiredMethods  ==============================================
+        abstract internal Item RootItem { get; }
         abstract public bool MoveNode();
         abstract public bool MoveRegion();
         abstract public bool CreateNode();
@@ -36,6 +65,7 @@ namespace ModelGraph.Core
         abstract public void ResizePropagate();
 
         abstract public void RefreshCanvasDrawData();
+        #endregion
 
         #region HitTest  ======================================================
         internal HitType Hit;
@@ -74,8 +104,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region CanvasDraw  ===================================================
-        public IList<(Extent Extent, (byte A, byte R, byte G, byte B) Color)> DrawRects => _drawRects;
-        protected IList<(Extent Extent, (byte A, byte R, byte G, byte B) Color)> _drawRects = new List<(Extent, (byte, byte, byte, byte))>();
+        public IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> DrawRects => _drawRects;
+        protected IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> _drawRects = new List<((float, float, float, float), (byte, byte, byte, byte))>();
 
         public IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines => _drawLines;
         protected IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> _drawLines = new List<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)>();

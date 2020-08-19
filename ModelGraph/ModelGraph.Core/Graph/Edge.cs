@@ -56,7 +56,6 @@
 
         public override string ToString()
         {
-            var root = DataRoot;
             var headName = Node1.Item.GetFullNameId();
             var tailName = Node2.Item.GetFullNameId();
             return $"{headName} --> {tailName}  ({LineColor})";

@@ -1,42 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿
 namespace ModelGraph.Core
 {
     public class GraphModel : CanvasModel, IDataModel
     {
-        internal GraphModel(Root root, Graph graph, ControlType ctlType)
+        internal override Item RootItem => _graph;
+        private readonly Graph _graph;
+        internal GraphModel(Root root, Graph graph) : base (root, ControlType.GraphDisplay)
         {
-            Owner = root;
-            RootItem = graph;
-            ControlType = ctlType;
-
-            root.Add(this);
-
+            _graph = graph;
             CreateTestData();
         }
-        internal Root Owner;
-        internal override Item GetOwner() => Owner;
 
         void CreateTestData()
         {
-            _drawRects.Add((new Extent(10, 10, 100, 100), (128, 255, 255, 0)));
-            _drawRects.Add((new Extent(50, 50, 200, 300), (200, 155, 205, 80)));
+            _drawRects.Add(((10, 10, 100, 100), (128, 255, 255, 0)));
+            _drawRects.Add(((50, 50, 200, 300), (200, 155, 205, 80)));
         }
 
-        #region IDataModel  ===================================================
-        public Root DataRoot => Owner;
-        public Item RootItem { get; private set; }
-        public string TitleName => "TestModelCanvasControl";
-        public string TitleSummary => string.Empty;
-        public ControlType ControlType { get; private set; }
-        public IPageControl PageControl { get; set; }
-        public void Release() { }
-        public void TriggerUIRefresh() { }
-        #endregion
-
-        #region ISelector  ====================================================
+        #region RequiredMethods  ==============================================
         public override bool MoveNode()
         {
             return false;

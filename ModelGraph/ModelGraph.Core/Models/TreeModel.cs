@@ -10,8 +10,6 @@ namespace ModelGraph.Core
         private LineModel _childModel; // there will only be one child model
         internal override void Add(LineModel child) => _childModel = child;
 
-        public Item RootItem => Item;
-
         public IPageControl PageControl { get; set; } // reference the UI PageControl       
         public ControlType ControlType { get; private set; }
 
@@ -51,10 +49,11 @@ namespace ModelGraph.Core
             Discard(); //discard myself and recursivly discard all my children
 
             if (this is RootModel)
-                DataRoot.Discard(); //kill off the dataChef
+                Root.Discard(); //kill off the dataChef
 
             Item = null;
         }
+        public void TriggerUIRefresh() => PageControl?.Refresh();
         #endregion
 
         #region FilterParms  ==================================================
@@ -204,7 +203,6 @@ namespace ModelGraph.Core
                     break;
             }
         }
-        public void TriggerUIRefresh() => PageControl?.Refresh();
         #endregion
     }
 }

@@ -55,7 +55,7 @@ namespace ModelGraph.Views
         {
             if (model is null) return;
 
-            model.DataRoot.SetLocalizer(Helpers.ResourceExtensions.CoreLocalizer());
+            model.Root.SetLocalizer(Helpers.ResourceExtensions.CoreLocalizer());
 
             var item = navigationView.MenuItems
                             .OfType<WinUI.NavigationViewItem>()

@@ -16,7 +16,7 @@ namespace ModelGraph.Controls
     public sealed partial class ModelCanvasControl : UserControl,  IModelPageControl, IPageControl
     {
         private IDataModel _model;
-        private ISelector _selector;
+        private ICanvasModel _selector;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _zoomFactor = 0.5f; //scale the view extent so that it fits on the canvas
@@ -27,10 +27,10 @@ namespace ModelGraph.Controls
         {
             this.InitializeComponent();
             DataContext = _model = model;
-            _selector = model as ISelector;
+            _selector = model as ICanvasModel;
         }
 
-        public void Initialize(IDataModel model, ISelector selector)
+        public void Initialize(IDataModel model, ICanvasModel selector)
         {
             DataContext = _model = model;
             _selector = selector;
@@ -70,6 +70,7 @@ namespace ModelGraph.Controls
 
         public void Refresh()
         {
+            EditorCanvas.Invalidate();
         }
 
         public void SetSize(double width, double height)
@@ -100,10 +101,9 @@ namespace ModelGraph.Controls
 
             var ds = args.DrawingSession;
 
-            foreach ((Extent ex, (byte A, byte R, byte G, byte B) c) in data.DrawRects)
+            foreach (var ((X1, Y1, X2, Y2), (A, R, G, B)) in data.DrawRects)
             {
-                var rect = new Rect(ex.X1, ex.Y1, ex.Width, ex.Hieght);
-                ds.FillRoundedRectangle(rect, 5, 5, Color.FromArgb(c.A, c.R, c.G, c.B));
+                ds.FillRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B));
             }
 
             foreach ((Vector2[] points, bool isDotted, byte w, (byte A, byte R, byte G, byte B) c) in data.DrawLines)

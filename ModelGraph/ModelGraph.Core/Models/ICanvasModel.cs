@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 
 namespace ModelGraph.Core
 {
-    public interface ISelector
+    public interface ICanvasModel : IDataModel
     {
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }
@@ -59,7 +59,7 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        IList<(Extent Extent, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
+        IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
         IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText { get; }
