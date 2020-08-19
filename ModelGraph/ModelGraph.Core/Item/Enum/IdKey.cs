@@ -450,7 +450,7 @@ namespace ModelGraph.Core
         QueryXEgressStep_Model = 0x6D6,
         QueryEgressTail_Model = 0x6D7,
         //=====================================================================
-        GraphRef_Model = 0x6E1,
+        Model_6E1_Graph = 0x6E1,
         GraphNodeList_Model = 0x6E2,
         GraphEdgeList_Model = 0x6E3,
         GraphRootList_Model = 0x6E4,

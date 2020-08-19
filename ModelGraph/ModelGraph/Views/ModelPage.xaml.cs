@@ -63,7 +63,7 @@ namespace ModelGraph.Views
 
                         case ControlType.SymbolEditor: m.PageControl = new SymbolEditControl(m); break;
 
-                        case ControlType.GraphDisplay: m.PageControl = new ModelGraphControl(m); break;
+                        case ControlType.GraphDisplay: m.PageControl = new ModelCanvasControl(m); break;
 
                         default:
                             throw new ArgumentException("Unknown ControlType");

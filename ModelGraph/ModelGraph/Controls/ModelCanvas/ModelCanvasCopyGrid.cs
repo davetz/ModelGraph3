@@ -1,7 +1,7 @@
 ﻿using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
-namespace ModelGraph.Controlss
+namespace ModelGraph.Controls
 {
     public sealed partial class ModelCanvasControl
     {

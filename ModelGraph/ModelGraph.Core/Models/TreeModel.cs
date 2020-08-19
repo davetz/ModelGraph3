@@ -185,6 +185,10 @@ namespace ModelGraph.Core
         {
             PageControl?.Reload();
         }
+        internal void NewView(GraphModel model)
+        {
+            PageControl?.NewView(model);
+        }
         internal void NewView(Action<TreeModel> createChildModel = null)
         {
             var model = new TreeModel(Item, createChildModel);

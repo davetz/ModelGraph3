@@ -8,7 +8,7 @@ using Windows.UI.Xaml;
 
 namespace ModelGraph.Core
 {
-    public interface ISelector : INotifyPropertyChanged
+    public interface ISelector
     {
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }
@@ -42,16 +42,6 @@ namespace ModelGraph.Core
         string ToolTip_Text1 { get; }
         string ToolTip_Text2 { get; }
 
-        Visibility NodePanel_Visible { get; }
-        string Node_Name { get; set; }
-        string Node_ToolTip { get; set; }
-        string Node_Description { get; }
-
-        Visibility NodeTypePanel_Visible { get; }
-        string NodeType_Name { get; set; }
-        string NodeType_ToolTip { get; set; }
-        string NodeType_Description { get; set; }
-
         void ResizeTop();
         void ResizeLeft();
         void ResizeRight();
@@ -69,7 +59,7 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        IList<(Rect Rect, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
+        IList<(Extent Extent, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
         IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText { get; }

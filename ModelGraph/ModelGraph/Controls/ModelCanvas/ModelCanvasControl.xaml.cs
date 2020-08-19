@@ -11,27 +11,69 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-namespace ModelGraph.Controlss
+namespace ModelGraph.Controls
 {
-    public sealed partial class ModelCanvasControl : UserControl
+    public sealed partial class ModelCanvasControl : UserControl,  IModelPageControl, IPageControl
     {
         private IDataModel _model;
         private ISelector _selector;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-        private float _zoomFactor = 1; //scale the view extent so that it fits on the canvas
+        private float _zoomFactor = 0.5f; //scale the view extent so that it fits on the canvas
         private Vector2 _offset = new Vector2(); //offset need to center the view extent on the canvas
 
         #region Constructor/Initialize  =======================================
-        public ModelCanvasControl()
+        public ModelCanvasControl(IDataModel model)
         {
             this.InitializeComponent();
+            DataContext = _model = model;
+            _selector = model as ISelector;
         }
 
         public void Initialize(IDataModel model, ISelector selector)
         {
             DataContext = _model = model;
             _selector = selector;
+        }
+        #endregion
+
+        #region IPageControl  =================================================
+        public void Reload()
+        {
+        }
+        public void SaveAs()
+        {
+        }
+        public void Save()
+        {
+        }
+        public void Close()
+        {
+        }
+        public void NewView(IDataModel model)
+        {
+        }
+        #endregion
+
+        #region IModelPageControl  ============================================
+        public void Apply()
+        {
+        }
+
+        public void Revert()
+        {
+        }
+
+        public void Release()
+        {
+        }
+
+        public void Refresh()
+        {
+        }
+
+        public void SetSize(double width, double height)
+        {
         }
         #endregion
 
@@ -58,8 +100,9 @@ namespace ModelGraph.Controlss
 
             var ds = args.DrawingSession;
 
-            foreach ((Rect rect, byte w, (byte A, byte R, byte G, byte B) c) in data.DrawRects)
+            foreach ((Extent ex, (byte A, byte R, byte G, byte B) c) in data.DrawRects)
             {
+                var rect = new Rect(ex.X1, ex.Y1, ex.Width, ex.Hieght);
                 ds.FillRoundedRectangle(rect, 5, 5, Color.FromArgb(c.A, c.R, c.G, c.B));
             }
 
@@ -253,6 +296,10 @@ namespace ModelGraph.Controlss
         StateType _state = StateType.Unknown;
         Dictionary<EventType, Action> Event_Action = new Dictionary<EventType, Action>();
 
+        public (int Width, int Height) PreferredSize => throw new NotImplementedException();
+
+        public IDataModel DataModel => throw new NotImplementedException();
+
         void Post(EventType evt) { if (Event_Action.TryGetValue(evt, out Action action)) action(); }
 
         bool SetState(StateType state)
@@ -317,7 +364,7 @@ namespace ModelGraph.Controlss
             {
                 if (_selector.IsHitNode)
                 {
-                    _selector.ShowPropertyPanel();
+                    //_selector.ShowPropertyPanel();
                     ShowResizerGrid();
                 }
             }
@@ -327,7 +374,7 @@ namespace ModelGraph.Controlss
                 HideAlignmentGrid();
                 HideTootlip();
                 SetViewOnVoidTap();
-                _selector.HidePropertyPanel();
+                //_selector.HidePropertyPanel();
             }
         }
 
