@@ -41,18 +41,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        private Func<string, string> _localize = (s) => s; //dummy default localizer
-        public void SetLocalizer(Func<string, string> localizer) => _localize = localizer;
+        private static Func<string, string> _localize = (s) => s; //dummy default localizer
+        public static void SetLocalizer(Func<string, string> localizer) => _localize = localizer;
 
         public override string GetNameId() => TitleName;
         public override string GetSummaryId() => TitleSummary;
 
-        internal string GetKindId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}K");
-        internal string GetNameId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}N");
-        internal string GetDoubleNameId(IdKey idKe1, IdKey idKe2) => $"{GetNameId(idKe1)} : {GetNameId(idKe2)}";
-        internal string GetSummaryId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}S");
-        internal string GetDescriptionId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}V");
-        internal string GetAcceleratorId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}A".ToUpper());
+        internal static string GetKindId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}K");
+        internal static string GetNameId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}N");
+        internal static string GetDoubleNameId(IdKey idKe1, IdKey idKe2) => $"{GetNameId(idKe1)} : {GetNameId(idKe2)}";
+        internal static string GetSummaryId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}S");
+        internal static string GetDescriptionId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}V");
+        internal static string GetAcceleratorId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}A".ToUpper());
         #endregion
 
         #region Initialize  ===================================================

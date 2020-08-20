@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         {
             var treeModel = GetTreeModel();
             list.Clear();
-            list.Add(new CreateCommand(this, () => { new Graph(Item, null); }));
+            list.Add(new CreateCommand(this, () => { Item.CreateGraph(); }));
         }
 
         protected override int GetTotalCount() => Item.Count;

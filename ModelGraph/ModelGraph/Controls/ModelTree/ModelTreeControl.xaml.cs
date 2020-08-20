@@ -97,7 +97,7 @@ namespace ModelGraph.Controls
             if (dataModel is TreeModel treeModel)
             {
                 TreeModel = treeModel;
-                DataRoot = treeModel.Root;
+                DataRoot = treeModel.GetRoot();
 
                 InitializeComponent();
                 Initialize();

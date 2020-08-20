@@ -18,7 +18,7 @@ namespace ModelGraph.Core
 
         public string GetValue(int index) => EnumZ.GetEnumIndexName(index);
         internal override string GetValue(Item item) => EnumZ.GetEnumValueName(GetItemPropertyValue(item));
-        internal override void SetValue(Item item, string val) => SetItemPropertyValue(item, EnumZ.GetKey(Root, val));
+        internal override void SetValue(Item item, string val) => SetItemPropertyValue(item, EnumZ.GetKey(val));
 
         internal override int GetIndexValue(Item item) => EnumZ.GetEnumIndex(GetItemPropertyValue(item));
         internal override void SetIndexValue(Item item, int index) => SetItemPropertyValue(item, EnumZ.GetActualValueAt(index));

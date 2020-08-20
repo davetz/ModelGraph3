@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_665_ColumnList(Model_653_Enum owner, EnumX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_665_ColumnList;
-        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
 
         #region RequiredMethods  ==============================================
         protected override int GetTotalCount() => Item.Owner.GetEnumColumnCount(Item);

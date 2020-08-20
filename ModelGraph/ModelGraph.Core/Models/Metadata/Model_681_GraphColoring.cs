@@ -9,8 +9,8 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_681_GraphColoring;
 
         public override string GetKindId() => string.Empty;
-        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
-        public override string GetSummaryId() => Item.Owner.Owner.GetSummaryId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
+        public override string GetSummaryId() => Root.GetSummaryId(IdKey);
 
         protected override int GetTotalCount() => 0;
         protected override IList<Property> GetChildItems() => new Property[0];

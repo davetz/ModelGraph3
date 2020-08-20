@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Windows.UI.Xaml.Automation;
 
 namespace ModelGraph.Core
 {
@@ -46,19 +47,24 @@ namespace ModelGraph.Core
         #endregion
 
         #region Properties/Methods  ===========================================
+        internal Graph CreateGraph(Item seed = null)
+        {
+            foreach (var gt in Items) 
+            { 
+                if (gt.SeedItem == seed) return RefreshedGraph(gt); 
+            }
+            return RefreshedGraph(new Graph(this, seed));
+                        
+            Graph RefreshedGraph(Graph g)
+            {
+                Owner.RefreshGraph(g);
+                return g;
+            }
+        }
+
         public float SymbolScale => SymbolSize;
         internal bool TryGetGraph(Item root, out Graph graph)
         {
-            if (Count > 0)
-            {
-                foreach (var item in Items)
-                {
-                    var g = item as Graph;
-                    if (g.SeedItem != root) continue;
-                    graph = g;
-                    return true;
-                }
-            }
             graph = null;
             return false;
         }

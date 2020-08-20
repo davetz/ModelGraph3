@@ -38,7 +38,7 @@ namespace ModelGraph.Services
                 var m = view.DataModel;
 
                 if (m is null) continue;
-                if (m.Root != m.Root) continue;
+                if (m.GetRoot() != m.GetRoot()) continue;
 
                 view.CloseModel();
             }

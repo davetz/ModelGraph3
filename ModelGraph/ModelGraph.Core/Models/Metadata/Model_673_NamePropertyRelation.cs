@@ -11,7 +11,7 @@ namespace ModelGraph.Core
             _relation_Store_NameProperty = item.Owner.Owner.Get<Relation_Store_NameProperty>();
         }
         internal override IdKey IdKey => IdKey.Model_673_NamePropertyRelation;
-        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetKindId() => string.Empty;
 
         protected override int GetTotalCount() => _relation_Store_NameProperty.ChildCount(Item);

@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         private IdKey _idKey = IdKey.Model_692_GraphLink;
 
         internal Model_692_GraphLink(LineModel owner, QueryX item, GraphX aux1, IdKey idKey) : base(owner, item) { Aux1 = aux1; _idKey = idKey; }
-        public override string GetKindId() => Item.Owner.Owner.GetKindId(IdKey);
+        public override string GetKindId() => Root.GetKindId(IdKey);
 
         protected override int GetTotalCount() => Aux1.Owner.GetTotalCount(this);
         protected override IList<QueryX> GetChildItems() => Aux1.Owner.GetChildItems(this);

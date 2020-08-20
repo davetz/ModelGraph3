@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_7F4_Relation : List3ModelOf<Relation>
+    public class Model_7F4_Relation : List3ModelOf<Relation, Item>
     {
         internal Model_7F4_Relation(Model_7F1_PrimeStore owner, Relation item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_7F4_Relation;

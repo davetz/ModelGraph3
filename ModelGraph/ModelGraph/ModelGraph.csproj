@@ -147,14 +147,6 @@
     <Compile Include="Controls\ModelCanvas\ModelCanvasResizerGrid.cs" />
     <Compile Include="Controls\ModelCanvas\ModelCanvasSelectorGrid.cs" />
     <Compile Include="Controls\ModelCanvas\ModelCanvasToolTipGrid.cs" />
-    <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
-      <DependentUpon>ModelGraphControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ModelGraph\ModelGraphControlActions.cs" />
-    <Compile Include="Controls\ModelGraph\ModelGraphControlDrawing.cs" />
-    <Compile Include="Controls\ModelGraph\ModelGraphControlEvents.cs" />
-    <Compile Include="Controls\ModelGraph\ModelGraphControlPanel.cs" />
-    <Compile Include="Controls\ModelGraph\ModelGraphControlVisualAids.cs" />
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
     </Compile>
@@ -237,10 +229,6 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\ModelCanvas\ModelCanvasControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ModelGraph\ModelGraphControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

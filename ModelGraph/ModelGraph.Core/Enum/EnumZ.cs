@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         }
 
         #region GetEnumKey  ==================================================
-        internal int GetKey(Root root, string name)
+        internal int GetKey(string name)
         {
             foreach (var pz in Items)
             {

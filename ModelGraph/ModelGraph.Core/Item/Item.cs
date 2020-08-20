@@ -19,24 +19,23 @@ namespace ModelGraph.Core
         internal virtual string Summary { get => ""; set => _ = value; }        //most external items have a summary string
         internal virtual string Description { get => ""; set => _ = value; }    //most external items may have a discription
 
-        public virtual string GetKindId() => GetRoot().GetKindId(IdKey);
-        public virtual string GetNameId() => GetRoot().GetNameId(IdKey);
+        public virtual string GetKindId() => Root.GetKindId(IdKey);
+        public virtual string GetNameId() => Root.GetNameId(IdKey);
         public virtual Item GetParent() => GetOwner();
         public virtual string GetFullNameId() => $"{GetParent().GetNameId()} : {GetNameId()}";
         public virtual string GetChangeLogId() => GetFullNameId();
-        public virtual string GetSummaryId() => GetRoot().GetSummaryId(IdKey);
-        public virtual string GetDescriptionId() => GetRoot().GetDescriptionId(IdKey);
-        public virtual string GetAcceleratorId() => GetRoot().GetAcceleratorId(IdKey);
+        public virtual string GetSummaryId() => Root.GetSummaryId(IdKey);
+        public virtual string GetDescriptionId() => Root.GetDescriptionId(IdKey);
+        public virtual string GetAcceleratorId() => Root.GetAcceleratorId(IdKey);
         internal string GetIndexId()
         {
             var inx = Index;
             return (inx < 0) ? InvalidItem : $"#{inx}";
         }
 
-        public virtual Root Root => GetRoot();
         /// <summary>Walk up item tree hierachy to find the parent DataRoot</summary>
         internal abstract Item GetOwner();
-        internal Root GetRoot()
+        public Root GetRoot()
         {
             var itm = this;
             for (int i = 0; i < 20; i++)

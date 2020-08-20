@@ -52,8 +52,8 @@ namespace ModelGraph.Core
             if (HasSelect || HasWhere || IsRoot || IsHead || IsTail)
             {
                 name = $"{name}      [";
-                if (HasWhere) name = $"{name}{Owner.Owner.GetNameId(IdKey.QueryWhere)}( {WhereString} )";
-                if (HasSelect) name = $"{name} {Owner.Owner.GetNameId(IdKey.QuerySelect)}( {SelectString} )";
+                if (HasWhere) name = $"{name}{Root.GetNameId(IdKey.QueryWhere)}( {WhereString} )";
+                if (HasSelect) name = $"{name} {Root.GetNameId(IdKey.QuerySelect)}( {SelectString} )";
 
                 if (IsRoot || IsHead || IsTail)
                 {

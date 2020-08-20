@@ -6,7 +6,6 @@ namespace ModelGraph.Core
     public abstract class CanvasModel : Item, ICanvasModel
     {
         internal readonly Root Owner;
-        public override Root Root => Owner;
         internal override Item GetOwner() => Owner;
 
         #region Constructor  ==================================================

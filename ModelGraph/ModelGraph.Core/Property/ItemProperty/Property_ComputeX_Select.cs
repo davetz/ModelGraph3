@@ -14,6 +14,6 @@ namespace ModelGraph.Core
         internal override void SetValue(Item item, string val) => Cast(item).SetSelectString(val);
 
         internal override bool HasTargetName => true;
-        internal override string GetTargetName(Item itm) => $"{Cast(itm).Owner.GetSelectClauseTargetName(Cast(itm))}  {Owner.Owner.GetNameId(IdKey)}";
+        internal override string GetTargetName(Item itm) => $"{Cast(itm).Owner.GetSelectClauseTargetName(Cast(itm))}  {Root.GetNameId(IdKey)}";
     }
 }

@@ -533,18 +533,6 @@ namespace ModelGraph.Core
 
         #endregion
 
-        #region CreateGraph  ==================================================
-        private bool CreateGraph(GraphX gx, out Graph graph, Item seed = null)
-        {
-            if (!gx.TryGetGraph(seed, out graph))
-                graph = new Graph(gx, seed);
-
-            RefreshGraph(graph);
-
-            return true;
-        }
-        #endregion
-
         #region RefreshGraph  =================================================
         internal void RefreshAllGraphs()
         {
@@ -626,7 +614,7 @@ namespace ModelGraph.Core
             }
         }
 
-        private void RefreshGraph(Graph g)
+        internal void RefreshGraph(Graph g)
         {
             var gx = g.Owner;
             var rt = g.SeedItem;

@@ -4,14 +4,14 @@ namespace ModelGraph.Core
 {
     public partial class Graph : ChildOf<GraphX>
     {
-        public Item SeedItem;    // seed of query forest 
-        public Query[] Forest;   // roots of the query forest
-        public SymbolX[] Symbols; // referenced by [Node.Symbol][Node.FlipRotate]
+        internal Item SeedItem;    // seed of query forest 
+        internal Query[] Forest;   // roots of the query forest
+        internal SymbolX[] Symbols; // referenced by [Node.Symbol][Node.FlipRotate]
 
-        public List<Node> Nodes = new List<Node>();
-        public List<Edge> Edges = new List<Edge>();
-        public List<Path> Paths = new List<Path>();
-        public List<Level> Levels = new List<Level>();
+        internal List<Node> Nodes = new List<Node>();
+        internal List<Edge> Edges = new List<Edge>();
+        internal List<Path> Paths = new List<Path>();
+        internal List<Level> Levels = new List<Level>();
         internal List<(Query, Query)> PathQuerys = new List<(Query, Query)>();  // completed path query sequences
         internal List<(Query, Query)> OpenQuerys = new List<(Query, Query)>();  // incomplete path query sequences
         internal List<(Query, Query)> GroupQuerys = new List<(Query, Query)>(); // completed group query sequences
@@ -25,7 +25,11 @@ namespace ModelGraph.Core
 
         public Extent Extent;  // current x,y extent of this graph
 
+        #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.Graph;
+        public override string GetNameId() => $"{Owner.GetNameId()}  {GetSeedItemName()}";
+        private string GetSeedItemName() => (SeedItem is null) ? string.Empty : SeedItem.GetNameId();
+        #endregion
 
         #region Constructor  ==================================================
         internal Graph(GraphX owner, Item seedItem = null)

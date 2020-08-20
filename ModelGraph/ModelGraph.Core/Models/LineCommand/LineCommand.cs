@@ -15,7 +15,7 @@ namespace ModelGraph.Core
         public void Execute() 
         {
             if (IsValid(GetOwner()))
-                Root.PostCommand(this);
+                GetRoot().PostCommand(this);
             if (IsInsertCommand)
             {
                 Owner.AutoExpandLeft = true;

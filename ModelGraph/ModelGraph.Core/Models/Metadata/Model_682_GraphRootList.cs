@@ -9,8 +9,8 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_682_GraphRootList;
 
         public override string GetKindId() => string.Empty;
-        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
-        public override string GetSummaryId() => Item.Owner.Owner.GetSummaryId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
+        public override string GetSummaryId() => Root.GetSummaryId(IdKey);
 
         protected override int GetTotalCount() => Item.Owner.GetTotalCount(this);
         protected override IList<Store> GetChildItems() => Item.Owner.TryGetChildItems(this, out _store_QueryX) ? _store_QueryX.Keys.ToArray() : new Store[0];

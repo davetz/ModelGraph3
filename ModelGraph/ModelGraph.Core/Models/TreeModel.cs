@@ -49,7 +49,7 @@ namespace ModelGraph.Core
             Discard(); //discard myself and recursivly discard all my children
 
             if (this is RootModel)
-                Root.Discard(); //kill off the dataChef
+                Item.Discard(); //kill off the dataChef
 
             Item = null;
         }

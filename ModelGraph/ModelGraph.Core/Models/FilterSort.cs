@@ -152,7 +152,6 @@ namespace ModelGraph.Core
         #region Refresh  ======================================================
         internal void Refresh(LineModel model)
         {
-            var root = model.Root;
             if (_delta != model.ChildDelta || Selector is null || Selector.Count != model.Count)
             {
                 #region need to build to new selector

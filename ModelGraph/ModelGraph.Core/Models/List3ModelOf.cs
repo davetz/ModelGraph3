@@ -1,10 +1,11 @@
 ﻿
 using System.Collections.Generic;
+using Windows.UI.Xaml.Automation;
 using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
-    public abstract class List3ModelOf<T1> : List1ModelOf<T1> where T1 : Item
+    public abstract class List3ModelOf<T1, T2> : List1ModelOf<T1> where T1 : Item where T2 : Item
     {
         internal List3ModelOf(LineModel owner, T1 item) : base(owner, item) { }
 
@@ -15,9 +16,9 @@ namespace ModelGraph.Core
 
         #region RequiredMethodes  =============================================
         protected abstract int GetTotalCount();
-        protected abstract IList<(Item,Item)> GetChildItems();
-        protected abstract (Item, Item) GetItemPair(LineModel child);
-        protected abstract void CreateChildModel((Item,Item) childItem);
+        protected abstract IList<(T2,T2)> GetChildItems();
+        protected abstract (T2, T2) GetItemPair(LineModel child);
+        protected abstract void CreateChildModel((T2,T2) childItem);
         #endregion
 
         internal override bool ExpandLeft(Root root)
@@ -38,7 +39,7 @@ namespace ModelGraph.Core
         }
         internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
         {
-            var prev2 = new Dictionary<(Item, Item), LineModel>(Count);
+            var prev2 = new Dictionary<(T2, T2), LineModel>(Count);
 
             var viewListChanged = false;
             if (IsExpandedLeft || AutoExpandLeft)

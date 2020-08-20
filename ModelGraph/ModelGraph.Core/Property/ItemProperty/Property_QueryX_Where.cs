@@ -13,6 +13,6 @@ namespace ModelGraph.Core
         internal override string GetValue(Item item) => Cast(item).WhereString;
         internal override void SetValue(Item item, string val) => Cast(item).WhereString = val;
         internal override bool HasTargetName => true;
-        internal override string GetTargetName(Item item) => $"{Cast(item).GetWhereSelectTargetName()}  {Owner.Owner.GetNameId(IdKey)}";
+        internal override string GetTargetName(Item item) => $"{Cast(item).GetWhereSelectTargetName()}  {Root.GetNameId(IdKey)}";
     }
 }

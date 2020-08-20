@@ -7,8 +7,6 @@ namespace ModelGraph.Core
         internal Model_6A5_Graph(Model_6E1_Graph owner, Graph item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6A5_Graph;
 
-        public override string GetNameId() => $"{Item.Owner.GetNameId()} {Item.Index}";
-
         public override bool CanDrag => true;
 
         public override void GetMenuCommands(Root root, List<LineCommand> list)
@@ -28,12 +26,11 @@ namespace ModelGraph.Core
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
 
-            //new Model_661_ColumnList(this, Item);
-            //new Model_666_ComputeList(this, Item);
-            //new Model_662_ChildRelationList(this, Item);
-            //new Model_663_ParentRelatationList(this, Item);
-            //new Model_673_NamePropertyRelation(this, Item);
-            //new Model_674_SummaryPropertyRelation(this, Item);
+            new Model_6E2_NodeList(this, Item);
+            new Model_6E3_EdgeList(this, Item);
+            new Model_6EB_OpenList(this, Item);
+            new Model_6E4_RootList(this, Item);
+            new Model_6E5_LevelList(this, Item);
             return true;
         }
     }

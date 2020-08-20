@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal Model_622_ChangeRoot(Model_612_Root owner, ChangeManager item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_622_ChangeRoot;
 
-        public override string GetNameId() => Item.Owner.GetNameId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
 
 
         protected override int GetTotalCount() => Item.Count;

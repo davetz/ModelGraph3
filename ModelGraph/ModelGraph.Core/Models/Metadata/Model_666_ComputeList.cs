@@ -9,7 +9,7 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
 
-        public override string GetNameId() => Item.Owner.Owner.GetNameId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetKindId() => string.Empty;
 
         protected override int GetTotalCount() => Item.Owner.GetTotalCount(this);

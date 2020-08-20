@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_643_TableList(Model_623_MetadataRoot owner, TableXManager item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_643_TableList;
-        public override string GetNameId() => Item.Owner.GetNameId(IdKey);
+        public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetKindId() => string.Empty;
 
         protected override int GetTotalCount() => Item.Count;
