@@ -434,7 +434,7 @@ namespace ModelGraph.Core
         Model_6B3_ChildRelationList = 0x6B3,
         Model_6B4_ParentRelationList = 0x6B4,
         //=====================================================================
-        QueryXRootLink_Model = 0x6C1,
+        Model_6C1_QueryLink = 0x6C1,
         QueryXPathHead_Model = 0x6C2,
         QueryXPathLink_Model = 0x6C3,
         QueryXGroupHead_Model = 0x6C4,
@@ -442,7 +442,7 @@ namespace ModelGraph.Core
         QueryXEgressHead_Model = 0x6C6,
         QueryXEgressLink_Model = 0x6C7,
         //=====================================================================
-        QueryXRootItem_Model = 0x6D1,
+        Model_6D1_QueryItem = 0x6D1,
         QueryXPathStep_Model = 0x6D2,
         QueryXPathTail_Model = 0x6D3,
         QueryXGroupStep_Model = 0x6D4,

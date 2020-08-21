@@ -185,7 +185,7 @@ namespace ModelGraph.Core
 
             foreach (var (q1, q2) in g.PathQuerys)
             {
-                var qx = q1.QueryX;
+                var qx = q1.Owner;
                 if (!validPathPairs.TryGetValue(qx, out validItemPair))
                 {
                     validItemPair = new List<(Item, Item)>(g.PathQuerys.Count);

@@ -41,14 +41,14 @@ namespace ModelGraph.Core
             }
             #endregion
 
-            var gx = node.Graph.Owner;
+            var gx = node.Owner.Owner;
             var tpSkew = gx.TerminalSkew;
             var tmLen = gx.TerminalLength;
             var tmSpc = gx.TerminalSpacing / 2f;
             var barSize = ((node.BarWidth == BarWidth.Thin) ? gx.ThinBusSize : (node.BarWidth == BarWidth.Wide) ? gx.WideBusSize : gx.ExtraBusSize) / 2;
 
             var si = node.Symbol - 2;
-            var symbols = node.Graph.Symbols;
+            var symbols = node.Owner.Symbols;
 
             var (ncx, ncy, ndx, ndy) = node.Values(); //node's center x,y and node's half width,height
 

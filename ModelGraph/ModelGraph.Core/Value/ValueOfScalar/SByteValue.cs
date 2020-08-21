@@ -73,7 +73,7 @@ namespace ModelGraph.Core
             var q = qList[0];
             if (q.Items == null || q.Items.Length == 0) return false;
 
-            var qx = q.QueryX;
+            var qx = q.Owner;
             if (!qx.HasSelect) return false;
 
             var k = q.Items[0];

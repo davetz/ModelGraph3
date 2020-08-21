@@ -150,7 +150,9 @@ namespace ModelGraph.Core
                         else if (key == (ushort)(IdKey.ValueXWhereProperty & IdKey.KeyMask))
                             items[i] = property_QueryX_Where;
                         else
-                            throw new Exception("Unkown key reference");
+                        {
+                            //throw new Exception("Unkown key reference");
+                        }
                     }
                 }
             }

@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         #region Constructor  ==================================================
         internal Query(QueryX qx, Query parent, Item item, Item[] items)
         {
-            Owner = qx;
+            base.Owner = qx;
 
             Item = item;
             Items = items;
@@ -28,7 +28,8 @@ namespace ModelGraph.Core
 
         #region Properties/Methods  ===========================================
         internal Query GetHeadQuery() { var q = this; while (!q.IsHead && q.Parent != null) { q = q.Parent; } return q; }
-        internal QueryX QueryX { get { return Owner as QueryX; } }
+
+        internal Store GetStore() => Owner.Owner.GetStore(Owner);
 
         internal bool IsEmpty => (Items == null || Items.Length == 0);
         internal Item GetItem(int index) { return Items[index]; }
@@ -42,7 +43,7 @@ namespace ModelGraph.Core
             var q = this;
             while (q != null) // don't run off the end
             {
-                var select = q.QueryX.Select;
+                var select = q.Owner.Select;
                 if (select != null && q.Items != null)
                 {
                     foreach (var item in q.Items)

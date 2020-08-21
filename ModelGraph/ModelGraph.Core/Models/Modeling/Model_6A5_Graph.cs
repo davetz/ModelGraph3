@@ -6,6 +6,7 @@ namespace ModelGraph.Core
     {
         internal Model_6A5_Graph(Model_6E1_Graph owner, Graph item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6A5_Graph;
+        public override string GetKindId() =>  Item.GetKindId();
 
         public override bool CanDrag => true;
 

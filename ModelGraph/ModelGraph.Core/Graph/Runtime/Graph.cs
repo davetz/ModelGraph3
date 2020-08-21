@@ -17,13 +17,13 @@ namespace ModelGraph.Core
         internal List<(Query, Query)> GroupQuerys = new List<(Query, Query)>(); // completed group query sequences
         internal List<(Query, Query)> SegueQuerys = new List<(Query, Query)>(); // completed segue query sequences
 
-        public HashSet<Item> NodeItems = new HashSet<Item>(); // hash of Node.Item for all nodes
-        public Dictionary<Node, List<Edge>> Node_Edges = new Dictionary<Node, List<Edge>>(); // list of edges for each node
-        public Dictionary<Item, Node> Item_Node = new Dictionary<Item, Node>();              // look up item -> node
+        internal HashSet<Item> NodeItems = new HashSet<Item>(); // hash of Node.Item for all nodes
+        internal Dictionary<Node, List<Edge>> Node_Edges = new Dictionary<Node, List<Edge>>(); // list of edges for each node
+        internal Dictionary<Item, Node> Item_Node = new Dictionary<Item, Node>();              // look up item -> node
 
-        public List<(byte A, byte R, byte G, byte B)> ARGBList => Owner.ARGBList;
+        internal List<(byte A, byte R, byte G, byte B)> ARGBList => Owner.ARGBList;
 
-        public Extent Extent;  // current x,y extent of this graph
+        internal Extent Extent;  // current x,y extent of this graph
 
         #region Identity  =====================================================
         internal override IdKey IdKey => IdKey.Graph;
@@ -99,7 +99,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region (GraphRef -> RootModel) Interface  ============================
+        #region Helpers  ======================================================
         private void SetExtent()
         {
             Extent = new Extent();

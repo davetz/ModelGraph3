@@ -10,6 +10,6 @@ namespace ModelGraph.Core
         protected override int GetTotalCount() => Item.Nodes.Count;
         protected override IList<Node> GetChildItems() => Item.Nodes;
 
-        protected override void CreateChildModel(Node childItem) { }// => new Model_6A5_Graph(this, childItem);
+        protected override void CreateChildModel(Node childItem) => new Model_6E9_Node(this, childItem);
     }
 }

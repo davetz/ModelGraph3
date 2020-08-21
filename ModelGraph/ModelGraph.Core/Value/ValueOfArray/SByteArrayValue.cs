@@ -85,7 +85,7 @@ namespace ModelGraph.Core
             foreach (var q in qList)
             {
                 if (q.Items == null) continue;
-                var qx = q.QueryX;
+                var qx = q.Owner;
                 if (!qx.HasSelect) continue;
                 foreach (var k in q.Items) { if (k != null) N++; }
             }
@@ -95,7 +95,7 @@ namespace ModelGraph.Core
             foreach (var q in qList)
             {
                 if (q.Items == null) continue;
-                var qx = q.QueryX;
+                var qx = q.Owner;
                 if (!qx.HasSelect) continue;
                 foreach (var k in q.Items)
                 {

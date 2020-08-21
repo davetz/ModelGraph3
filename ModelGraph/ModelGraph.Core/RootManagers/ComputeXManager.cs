@@ -275,7 +275,7 @@ namespace ModelGraph.Core
                 foreach (var q in selectors)
                 {
                     if (q.Items == null) continue;
-                    var qt = q.QueryX;
+                    var qt = q.Owner;
 
                     foreach (var k in q.Items)
                     {

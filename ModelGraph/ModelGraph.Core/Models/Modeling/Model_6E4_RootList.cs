@@ -8,9 +8,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_6E4_RootList;
         public override string GetNameId() => Root.GetNameId(IdKey);
 
-        protected override int GetTotalCount() => Item.Count;
-        protected override IList<Query> GetChildItems() => new Query[0];//Item.Items;
+        protected override int GetTotalCount() => Item.Forest.Length;
+        protected override IList<Query> GetChildItems() => Item.Forest;
 
-        protected override void CreateChildModel(Query childItem) { } // => new Model_6A5_Graph(this, childItem);
+        protected override void CreateChildModel(Query childItem) => new Model_6E8_Root(this, childItem);
     }
 }

@@ -698,6 +698,7 @@ namespace ModelGraph.Core
 
         #region ModelHelpers  =================================================
         internal Relation GetRelation(QueryX qx) => _relation_Relation_QueryX.TryGetParent(qx, out Relation r) ? r : null;
+        internal Store GetStore(QueryX qx) => _relation_Store_QueryX.TryGetParent(qx, out Store s) ? s : null;
 
         internal int QueryQueryChildCount(QueryX qx) => _relation_QueryX_QueryX.ChildCount(qx);
         internal IList<QueryX> QueryQueryChildList(QueryX qx) => _relation_QueryX_QueryX.TryGetChildren(qx, out IList<QueryX> list) ? list : new QueryX[0];
@@ -733,7 +734,6 @@ namespace ModelGraph.Core
             ItemCreated.Record(Owner, qx2);
             ItemLinked.Record(Owner, _relation_QueryX_QueryX, qx1, qx2);
             ItemLinked.Record(Owner, _relation_Relation_QueryX, rx, qx2);
-
         }
         #endregion
 
@@ -832,7 +832,7 @@ namespace ModelGraph.Core
                                         {
                                             var p = qc.Parent;
                                             while (p.Parent != null) { p = p.Parent; }
-                                            var qp = p.QueryX;
+                                            var qp = p.Owner;
                                             if (qp.HasValidSelect)
                                                 selectors.Add(p);
                                             selectors.Add(qc);

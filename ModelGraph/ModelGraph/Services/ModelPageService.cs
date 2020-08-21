@@ -68,7 +68,7 @@ namespace ModelGraph.Services
         }
         #endregion
 
-        #region CloseModel  ==================================================
+        #region CloseModel  ===================================================
         public void CloseModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return;
@@ -127,7 +127,7 @@ namespace ModelGraph.Services
         }
         #endregion
 
-        #region OpenModelDataFile  ============================================\
+        #region OpenModelDataFile  ============================================
         public async Task<bool> OpenModelDataFileAsync(CoreDispatcher dispatcher)
         {
             if (dispatcher is null) return false;

@@ -1,21 +1,23 @@
-﻿namespace ModelGraph.Core
+﻿using System.Collections.Generic;
+
+namespace ModelGraph.Core
 {
     public class Node : NodeEdge
     {
-        public Item Item;
-        public int OpenPathIndex = -1;
+        internal Item Item;
+        internal int OpenPathIndex = -1;
 
-        public float X;
-        public float Y;
-        public byte DX;
-        public byte DY;
-        public byte Color;
-        public byte Symbol;
-        public Labeling Labeling;
-        public Sizing Sizing;
-        public BarWidth BarWidth;
-        public FlipState FlipState;
-        public Aspect Aspect;
+        internal float X;
+        internal float Y;
+        internal byte DX;
+        internal byte DY;
+        internal byte Color;
+        internal byte Symbol;
+        internal Labeling Labeling;
+        internal Sizing Sizing;
+        internal BarWidth BarWidth;
+        internal FlipState FlipState;
+        internal Aspect Aspect;
         internal override IdKey IdKey => IdKey.Node;
 
         #region Snapshot  =====================================================
@@ -263,12 +265,12 @@
         #endregion
 
         #region Properties/Methods  ===========================================
-        internal Graph Graph { get { return Owner as Graph; } }
-        internal GraphX GraphX { get { return (Owner == null) ? null : Owner.Owner as GraphX; } }
-
         internal bool HasOpenPaths => (OpenPathIndex >= 0);
-        internal int OpenPathCount => (Graph == null) ? 0 : Graph.OpenPathCount(OpenPathIndex);
+        internal int OpenPathCount => (Owner == null) ? 0 : Owner.OpenPathCount(OpenPathIndex);
         public override string ToString() => Item.GetFullNameId();
+        internal int EdgeCount => Owner.Node_Edges.TryGetValue(this, out List<Edge> list) ? list.Count : 0;
+        internal List<Edge> EdgeList => Owner.Node_Edges.TryGetValue(this, out List<Edge> list) ? list : null;
+
         #endregion
     }
 }
