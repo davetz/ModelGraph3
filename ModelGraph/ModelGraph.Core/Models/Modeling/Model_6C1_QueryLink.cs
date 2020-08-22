@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     public class Model_6C1_QueryLink : List2ModelOf<Query, Item>
     {
         internal Model_6C1_QueryLink(Model_6D1_QueryItem owner, Query item) : base(owner, item) { }
-        internal override IdKey IdKey => IdKey.Model_6C1_QueryLink;
+        internal override IdKey IdKey => Item.GetModelIdKey(true);
         public override string GetNameId() => Item.Owner.GetNameId();
         public override string GetKindId() => Root.GetKindId(IdKey);
 

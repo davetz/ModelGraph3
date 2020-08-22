@@ -11,6 +11,6 @@ namespace ModelGraph.Core
         protected override int GetTotalCount() => Item.Levels.Count;
         protected override IList<Level> GetChildItems() => Item.Levels;
 
-        protected override void CreateChildModel(Level childItem) { } // => new Model_6A5_Graph(this, childItem);
+        protected override void CreateChildModel(Level childItem) => new Model_6E6_Level(this, childItem);
     }
 }

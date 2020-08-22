@@ -11,5 +11,21 @@ namespace ModelGraph.Core
         protected override IList<Edge> GetChildItems() => Item.EdgeList;
 
         protected override void CreateChildModel(Edge childItem) => new Model_6EA_Edge(this, childItem);
+        public override bool CanExpandRight => true;
+        internal override bool ExpandRight(Root root)
+        {
+            if (IsExpandedRight) return false;
+            IsExpandedRight = true;
+
+            root.Get<Property_Node_CenterXY>().CreatePropertyModel(this, Item);
+            root.Get<Property_Node_SizeWH>().CreatePropertyModel(this, Item);
+            root.Get<Property_Node_Aspect>().CreatePropertyModel(this, Item);
+            root.Get<Property_Node_Labeling>().CreatePropertyModel(this, Item);
+            root.Get<Property_Node_Resizing>().CreatePropertyModel(this, Item);
+            root.Get<Property_Node_BarWidth>().CreatePropertyModel(this, Item);
+
+            return true;
+        }
+
     }
 }

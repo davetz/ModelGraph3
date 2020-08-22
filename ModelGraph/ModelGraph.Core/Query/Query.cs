@@ -97,5 +97,63 @@ namespace ModelGraph.Core
             return 0;
         }
         #endregion
+
+        #region ModelHelpers  =================================================
+        internal IdKey GetModelIdKey(bool isLink)
+        {
+            if (Owner.QueryKind == QueryType.Path)
+            {
+                if (isLink)
+                {
+                    if (IsHead)
+                        return IdKey.Model_6C2_PathHead;
+                    else
+                        return IdKey.Model_6C3_PathLink;
+                }
+                else
+                {
+                    if (IsTail)
+                        return IdKey.Model_6D3_PathTail;
+                    else
+                        return IdKey.Model_6D2_PathStep;
+                }
+            }
+            if (Owner.QueryKind == QueryType.Group)
+            {
+                if (isLink)
+                {
+                    if (IsHead)
+                        return IdKey.Model_6C4_GroupHead;
+                    else
+                        return IdKey.Model_6C5_GroupLink;
+                }
+                else
+                {
+                    if (IsTail)
+                        return IdKey.Model_6D5_GroupTail;
+                    else
+                        return IdKey.Model_6D4_GroupStep;
+                }
+            }
+            if (Owner.QueryKind == QueryType.Egress)
+            {
+                if (isLink)
+                {
+                    if (IsHead)
+                        return IdKey.Model_6C6_EgressHead;
+                    else
+                        return IdKey.Model_6C7_EgressLink;
+                }
+                else
+                {
+                    if (IsTail)
+                        return IdKey.Model_6D7_EgressTail;
+                    else
+                        return IdKey.Model_6D6_EgressStep;
+                }
+            }
+            return IdKey.Model_6C1_QueryLink;
+        }
+        #endregion
     }
 }
