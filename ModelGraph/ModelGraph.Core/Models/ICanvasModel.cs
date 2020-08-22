@@ -59,7 +59,10 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
+        IList<((float, float, float, float) XYXY, (byte A, byte R, byte G, byte B) Color)> FillRects { get; }
+        IList<((float, float, float, float) XYXY, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
+        IList<((float, float, float) XYR, (byte A, byte R, byte G, byte B) Color)> FillCircles { get; }
+        IList<((float, float, float) XYR, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
         IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
         IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText { get; }

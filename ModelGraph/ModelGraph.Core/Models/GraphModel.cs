@@ -1,4 +1,6 @@
 ﻿
+using System.Numerics;
+
 namespace ModelGraph.Core
 {
     public class GraphModel : CanvasModel, IDataModel
@@ -8,13 +10,7 @@ namespace ModelGraph.Core
         internal GraphModel(Root root, Graph graph) : base (root, ControlType.GraphDisplay)
         {
             _graph = graph;
-            CreateTestData();
-        }
-
-        void CreateTestData()
-        {
-            _drawRects.Add(((10, 10, 100, 100), (128, 255, 255, 0)));
-            _drawRects.Add(((50, 50, 200, 300), (200, 155, 205, 80)));
+            RefreshCanvasDrawData();
         }
 
         #region RequiredMethods  ==============================================
@@ -104,6 +100,19 @@ namespace ModelGraph.Core
 
         public override void RefreshCanvasDrawData()
         {
+            _drawLines.Clear();
+            foreach (var e in _graph.Edges)
+            {
+                var p1 = new Vector2(e.Node1.X, e.Node1.Y);
+                var p2 = new Vector2(e.Node2.X, e.Node2.Y);
+                var p = new Vector2[] { p1, p2 };
+                _drawLines.Add((p, false, 2, (255, 0, 255, 0)));
+            }
+            _fillCircles.Clear();
+            foreach (var n in _graph.Nodes)
+            {
+                _fillCircles.Add(((n.X, n.Y, 6), (255, 255, 205, 80)));
+            }
         }
         #endregion
     }

@@ -101,9 +101,24 @@ namespace ModelGraph.Controls
 
             var ds = args.DrawingSession;
 
-            foreach (var ((X1, Y1, X2, Y2), (A, R, G, B)) in data.DrawRects)
+            foreach (var ((X1, Y1, X2, Y2), (A, R, G, B)) in data.FillRects)
             {
                 ds.FillRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B));
+            }
+
+            foreach (var ((X1, Y1, X2, Y2), isDotted, w, (A, R, G, B)) in data.DrawRects)
+            {
+                ds.DrawRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B),  w, StrokeStyle(isDotted));
+            }
+
+            foreach (var ((X1, Y1, R1), (A, R, G, B)) in data.FillCircles)
+            {
+                ds.FillCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B));
+            }
+
+            foreach (var ((X1, Y1, R1), isDotted, w, (A, R, G, B)) in data.DrawCircles)
+            {
+                ds.DrawCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B), w, StrokeStyle(isDotted));
             }
 
             foreach ((Vector2[] points, bool isDotted, byte w, (byte A, byte R, byte G, byte B) c) in data.DrawLines)
@@ -119,9 +134,6 @@ namespace ModelGraph.Controls
 
                     using (var geo = CanvasGeometry.CreatePath(pb))
                     {
-                        //if (FillStroke == Fill_Stroke.Filled)
-                        //    ds.FillGeometry(geo, Color.FromArgb(c.A, c.R, c.G, c.B));
-                        //else
                         ds.DrawGeometry(geo, Color.FromArgb(c.A, c.R, c.G, c.B), w, StrokeStyle(isDotted));
                     }
                 }

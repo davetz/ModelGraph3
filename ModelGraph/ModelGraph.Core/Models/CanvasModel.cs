@@ -103,17 +103,26 @@ namespace ModelGraph.Core
         #endregion
 
         #region CanvasDraw  ===================================================
-        public IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> DrawRects => _drawRects;
-        protected IList<((float, float, float, float) Rect, (byte A, byte R, byte G, byte B) Color)> _drawRects = new List<((float, float, float, float), (byte, byte, byte, byte))>();
+        public IList<((float, float, float, float) XYXY, (byte A, byte R, byte G, byte B) Color)> FillRects => _fillRects;
+        protected IList<((float, float, float, float), (byte A, byte R, byte G, byte B))> _fillRects = new List<((float, float, float, float), (byte, byte, byte, byte))>();
+
+        public IList<((float, float, float, float) XYXY, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects => _drawRects;
+        protected IList<((float, float, float, float), bool, byte, (byte A, byte R, byte G, byte B))> _drawRects = new List<((float, float, float, float), bool, byte, (byte, byte, byte, byte))>();
+
+        public IList<((float, float, float) XYR, (byte A, byte R, byte G, byte B) Color)> FillCircles => _fillCircles;
+        protected IList<((float, float, float), (byte A, byte R, byte G, byte B))> _fillCircles = new List<((float, float, float), (byte, byte, byte, byte))>();
+
+        public IList<((float, float, float) XYR, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles => _drawCircles;
+        protected IList<((float, float, float), bool, byte, (byte A, byte R, byte G, byte B))> _drawCircles = new List<((float, float, float), bool, byte, (byte, byte, byte, byte))>();
 
         public IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines => _drawLines;
-        protected IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> _drawLines = new List<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)>();
+        protected IList<(Vector2[], bool, byte, (byte A, byte R, byte G, byte B))> _drawLines = new List<(Vector2[], bool, byte, (byte A, byte R, byte G, byte B))>();
 
         public IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines => _drawSplines;
-        protected IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> _drawSplines = new List<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)>();
+        protected IList<(Vector2[], bool, byte, (byte A, byte R, byte G, byte B))> _drawSplines = new List<(Vector2[], bool, byte, (byte A, byte R, byte G, byte B))>();
 
         public IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText => _drawText;
-        protected IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> _drawText = new List<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)>();
+        protected IList<(Vector2, string, (byte A, byte R, byte G, byte B))> _drawText = new List<(Vector2, string, (byte A, byte R, byte G, byte B))>();
         #endregion
     }
 }
