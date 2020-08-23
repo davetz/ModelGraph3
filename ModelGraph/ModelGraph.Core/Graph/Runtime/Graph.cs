@@ -100,10 +100,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region Helpers  ======================================================
-        private void SetExtent()
+        internal Extent ResetExtent()
         {
             Extent = new Extent();
             Extent = Extent.SetExtent(Nodes, 16);
+            return Extent;
         }
         #endregion
     }

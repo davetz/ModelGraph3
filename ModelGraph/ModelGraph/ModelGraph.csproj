@@ -137,16 +137,19 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
-    <Compile Include="Controls\IModelPageControl.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasControl.xaml.cs">
-      <DependentUpon>ModelCanvasControl.xaml</DependentUpon>
+    <Compile Include="Controls\DrawCanvas\DrawCanvasControl.xaml.cs">
+      <DependentUpon>DrawCanvasControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ModelCanvas\ModelCanvasAlignmentGrid.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasCopyGrid.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasMoveGrid.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasResizerGrid.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasSelectorGrid.cs" />
-    <Compile Include="Controls\ModelCanvas\ModelCanvasToolTipGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasAlignmentGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasCopyGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasMoveGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasResizerGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasSelectorGrid.cs" />
+    <Compile Include="Controls\DrawCanvas\DrawCanvasToolTipGrid.cs" />
+    <Compile Include="Controls\IModelPageControl.cs" />
+    <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
+      <DependentUpon>ModelGraphControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
     </Compile>
@@ -228,9 +231,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\ModelCanvas\ModelCanvasControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
+    <Page Include="Controls\DrawCanvas\DrawCanvasControl.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModelGraph\ModelGraphControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Controls\ModelTree\ModelTreeControl.xaml">
       <Generator>MSBuild:Compile</Generator>
@@ -319,6 +326,9 @@
       <Project>{E1B08DB8-FE31-481B-A09A-7C68737CE90B}</Project>
       <Name>ModelGraph.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Controls\ModelSymbol\" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>

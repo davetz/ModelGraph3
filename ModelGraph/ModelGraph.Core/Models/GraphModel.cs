@@ -1,119 +1,46 @@
-﻿
+﻿using System.Collections.Generic;
 using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class GraphModel : CanvasModel, IDataModel
+    public class GraphModel : Item, IDataModel
     {
-        internal override Item RootItem => _graph;
-        private readonly Graph _graph;
-        internal GraphModel(Root root, Graph graph) : base (root, ControlType.GraphDisplay)
-        {
-            _graph = graph;
-            RefreshCanvasDrawData();
-        }
+        internal readonly Root Owner;
+        internal override Item GetOwner() => Owner;
+        internal readonly Graph Graph;
+        internal readonly GraphCanvas GraphCanvas;
 
-        #region RequiredMethods  ==============================================
-        public override bool MoveNode()
+        #region Constructor  ==================================================
+        internal GraphModel(Root root, Graph graph)
         {
-            return false;
-        }
+            Owner = root;
+            Graph = graph;
+            GraphCanvas = new GraphCanvas(this, graph);
+            root.Add(this);
+        }        
+        #endregion
 
-        public override bool MoveRegion()
+        #region IDataModel  ===================================================
+        public string TitleName => "TestModelCanvasControl";
+        public string TitleSummary => string.Empty;
+        public ControlType ControlType => ControlType.GraphDisplay;
+        public IPageControl PageControl { get; set; }
+        public void Release()
         {
-            return false;
+            Owner.Remove(this);
+            Discard(); //discard myself and recursivly discard all my children
         }
+        public IDrawCanvas GetDrawCanvas(CanvasId id) => GraphCanvas;
 
-        public override bool CreateNode()
+        public void TriggerUIRefresh()
         {
-            return false;
-        }
-
-        public override bool TapHitTest()
-        {
-            return false;
-        }
-
-        public override bool EndHitTest()
-        {
-            return false;
-        }
-
-        public override bool SkimHitTest()
-        {
-            return false;
-        }
-
-        public override bool DragHitTest()
-        {
-            return false;
-        }
-
-        public override bool RegionNodeHitTest()
-        {
-            return false;
-        }
-
-        public override void ShowPropertyPanel()
-        {
-        }
-
-        public override void HidePropertyPanel()
-        {
-        }
-
-        public override void ResizeTop()
-        {
-        }
-
-        public override void ResizeLeft()
-        {
-        }
-
-        public override void ResizeRight()
-        {
-        }
-
-        public override void ResizeBottom()
-        {
-        }
-
-        public override void ResizeTopLeft()
-        {
-        }
-
-        public override void ResizeTopRight()
-        {
-        }
-
-        public override void ResizeBottomLeft()
-        {
-        }
-
-        public override void ResizeBottomRight()
-        {
-        }
-
-        public override void ResizePropagate()
-        {
-        }
-
-        public override void RefreshCanvasDrawData()
-        {
-            _drawLines.Clear();
-            foreach (var e in _graph.Edges)
+            if (Graph.ChildDelta != ChildDelta)
             {
-                var p1 = new Vector2(e.Node1.X, e.Node1.Y);
-                var p2 = new Vector2(e.Node2.X, e.Node2.Y);
-                var p = new Vector2[] { p1, p2 };
-                _drawLines.Add((p, false, 2, (255, 0, 255, 0)));
-            }
-            _fillCircles.Clear();
-            foreach (var n in _graph.Nodes)
-            {
-                _fillCircles.Add(((n.X, n.Y, 6), (255, 255, 205, 80)));
+                ChildDelta = Graph.ChildDelta;
+                PageControl?.Refresh();
             }
         }
         #endregion
     }
 }
+

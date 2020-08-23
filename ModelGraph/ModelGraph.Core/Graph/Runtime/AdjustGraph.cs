@@ -56,7 +56,7 @@ namespace ModelGraph.Core
                 foreach (var node in nodes) { if (node.Aspect != Aspect.Point) AdjustNode(node); }
                 foreach (var node in nodes) { if (node.Aspect == Aspect.Point) AdjustNode(node); }
             }
-            SetExtent();
+            ResetExtent();
         }
     }
 }

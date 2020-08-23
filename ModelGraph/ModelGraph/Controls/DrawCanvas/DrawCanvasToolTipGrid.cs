@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class ModelCanvasControl
+    public sealed partial class DrawCanvasControl
     {
         private bool _isToolTipVisible;
 

@@ -1,14 +1,9 @@
 ﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Numerics;
-
-using Windows.Foundation;
-using Windows.UI.Xaml;
 
 namespace ModelGraph.Core
 {
-    public interface ICanvasModel : IDataModel
+    public interface IDrawCanvas
     {
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }
@@ -52,19 +47,25 @@ namespace ModelGraph.Core
         void ResizeBottomRight();
         void ResizePropagate();
 
-        void RefreshCanvasDrawData();
+        void RefreshDrawData();
 
         bool MoveNode();
         bool MoveRegion();
 
         bool CreateNode();
 
-        IList<((float, float, float, float) XYXY, (byte A, byte R, byte G, byte B) Color)> FillRects { get; }
-        IList<((float, float, float, float) XYXY, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
-        IList<((float, float, float) XYR, (byte A, byte R, byte G, byte B) Color)> FillCircles { get; }
-        IList<((float, float, float) XYR, bool isDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles { get; }
-        IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
-        IList<(Vector2[] Points, bool IsDotted, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
+        void Pan(Vector2 adder); // update the coordinate point values so the drawing pans left/right
+        void Zoom(float changeFactor); // update the coordinate point values so the drawing chages size
+        void ZoomToExtent();     // update the coordinate point values so the drawing moves and chages its size
+        void PanZoomReset(float width, float height); // recalculate the coordinate point values so the drawing is centered and fits on the screen
+
+        float Scale { get; }    //referance scale factor used when populating the coordinate point values
+        Vector2 Offset { get; } //reference offset  used when populating the coordinate point values
+
+        IList<((float, float, float, float) XYXY, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
+        IList<((float, float, float) XYR, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles { get; }
+        IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
+        IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
         IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText { get; }
     }
 }

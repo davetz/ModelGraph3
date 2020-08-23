@@ -8,7 +8,7 @@ using Windows.UI.Xaml.Input;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class ModelCanvasControl
+    public sealed partial class DrawCanvasControl
     {
         void ShowResizerGrid()
         {

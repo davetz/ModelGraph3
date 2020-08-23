@@ -11,79 +11,38 @@ using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
+// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
+
 namespace ModelGraph.Controls
 {
-    public sealed partial class ModelCanvasControl : UserControl,  IModelPageControl, IPageControl
+    public sealed partial class DrawCanvasControl : UserControl
     {
-        private IDataModel _model;
-        private ICanvasModel _selector;
+        private IDrawCanvas _selector;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _zoomFactor = 0.5f; //scale the view extent so that it fits on the canvas
         private Vector2 _offset = new Vector2(); //offset need to center the view extent on the canvas
 
         #region Constructor/Initialize  =======================================
-        public ModelCanvasControl(IDataModel model)
+        public DrawCanvasControl()
         {
             this.InitializeComponent();
-            DataContext = _model = model;
-            _selector = model as ICanvasModel;
         }
 
-        public void Initialize(IDataModel model, ICanvasModel selector)
+        public void Initialize(IDrawCanvas selector)
         {
-            DataContext = _model = model;
             _selector = selector;
         }
-        #endregion
 
-        #region IPageControl  =================================================
-        public void Reload()
-        {
-        }
-        public void SaveAs()
-        {
-        }
-        public void Save()
-        {
-        }
-        public void Close()
-        {
-        }
-        public void NewView(IDataModel model)
-        {
-        }
-        #endregion
-
-        #region IModelPageControl  ============================================
-        public void Apply()
-        {
-        }
-
-        public void Revert()
-        {
-        }
-
-        public void Release()
-        {
-        }
-
-        public void Refresh()
-        {
-            EditorCanvas.Invalidate();
-        }
-
-        public void SetSize(double width, double height)
-        {
-        }
+        public void Refresh() => DrawCanvas.Invalidate();
         #endregion
 
 
         #region StrokeStyle  ==================================================
-        private CanvasStrokeStyle StrokeStyle(bool isDotted)
+        private CanvasStrokeStyle StrokeStyle(Stroke s)
         {
             var ss = _strokeStyle;
-            ss.DashStyle = isDotted ? CanvasDashStyle.Dot : CanvasDashStyle.Solid;
+            ss.DashStyle = s == Stroke.IsDotted ? CanvasDashStyle.Dot : CanvasDashStyle.Solid;
             ss.StartCap = CanvasCapStyle.Flat;
             ss.EndCap = CanvasCapStyle.Flat;
             ss.DashCap = CanvasCapStyle.Round;
@@ -93,35 +52,16 @@ namespace ModelGraph.Controls
         private CanvasStrokeStyle _strokeStyle = new CanvasStrokeStyle();
         #endregion
 
-        #region EditorCanvas_Draw  ============================================
-        private void EditorCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
+        #region DrawCanvas_Draw  ==============================================
+        private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             var data = _selector;
             if (data is null) return;
 
             var ds = args.DrawingSession;
 
-            foreach (var ((X1, Y1, X2, Y2), (A, R, G, B)) in data.FillRects)
-            {
-                ds.FillRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B));
-            }
 
-            foreach (var ((X1, Y1, X2, Y2), isDotted, w, (A, R, G, B)) in data.DrawRects)
-            {
-                ds.DrawRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B),  w, StrokeStyle(isDotted));
-            }
-
-            foreach (var ((X1, Y1, R1), (A, R, G, B)) in data.FillCircles)
-            {
-                ds.FillCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B));
-            }
-
-            foreach (var ((X1, Y1, R1), isDotted, w, (A, R, G, B)) in data.DrawCircles)
-            {
-                ds.DrawCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B), w, StrokeStyle(isDotted));
-            }
-
-            foreach ((Vector2[] points, bool isDotted, byte w, (byte A, byte R, byte G, byte B) c) in data.DrawLines)
+            foreach (var (points, s, w, (A, R, G, B)) in data.DrawLines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
@@ -134,12 +74,12 @@ namespace ModelGraph.Controls
 
                     using (var geo = CanvasGeometry.CreatePath(pb))
                     {
-                        ds.DrawGeometry(geo, Color.FromArgb(c.A, c.R, c.G, c.B), w, StrokeStyle(isDotted));
+                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
                     }
                 }
             }
 
-            foreach ((Vector2[] points, bool isDotted, byte w, (byte A, byte R, byte G, byte B) c) in data.DrawSplines)
+            foreach (var (points, s, w, (A, R, G, B)) in data.DrawSplines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
@@ -153,35 +93,61 @@ namespace ModelGraph.Controls
 
                     using (var geo = CanvasGeometry.CreatePath(pb))
                     {
-                        ds.DrawGeometry(geo, Color.FromArgb(c.A, c.R, c.G, c.B), w, StrokeStyle(isDotted));
+                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
                     }
                 }
             }
 
-            foreach ((Vector2 topLeft, string text, (byte A, byte R, byte G, byte B) c) in data.DrawText)
+            foreach (var ((X1, Y1, X2, Y2), s, w, (A, R, G, B)) in data.DrawRects)
             {
-                ds.DrawText(text, topLeft, Color.FromArgb(c.A, c.R, c.G, c.B));
+                if (s == Stroke.IsFilled)
+                    ds.FillRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B));
+                else
+                    ds.DrawRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+            }
+
+            foreach (var ((X1, Y1, R1), s, w, (A, R, G, B)) in data.DrawCircles)
+            {
+                if (s == Stroke.IsFilled)
+                    ds.FillCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B));
+                else
+                    ds.DrawCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+            }
+
+            foreach (var (topLeft, text, (A, R, G, B)) in data.DrawText)
+            {
+                ds.DrawText(text, topLeft, Color.FromArgb(A, R, G, B));
             }
         }
         #endregion
 
         #region Canavas_Loaded  ===============================================
-        private void EditorCanvas_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        private void DrawCanvas_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            EditorCanvas.Loaded -= EditorCanvas_Loaded;
-            EditorCanvas.Invalidate();
-            if (_isRootCanvasLoaded) SetViewIdle();
+            _isDrawCanvasLoaded = true;
+            DrawCanvas.Loaded -= DrawCanvas_Loaded;
+            if (_isRootCanvasLoaded)
+            {
+                SetViewIdle();
+                PanZoomReset();
+            }
         }
-        bool _isEditorCanvasLoaded;
+        bool _isDrawCanvasLoaded;
 
         private void RootCanvas_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             _isRootCanvasLoaded = true;
             RootCanvas.Loaded -= RootCanvas_Loaded;
             SetViewIdle();
-            if (_isEditorCanvasLoaded) EditorCanvas.Invalidate();
+            if (_isDrawCanvasLoaded) PanZoomReset();
         }
         bool _isRootCanvasLoaded;
+        private void PanZoomReset()
+        {
+            _selector.PanZoomReset((float)DrawCanvas.ActualWidth, (float)DrawCanvas.ActualHeight);
+            DrawCanvas.Invalidate();
+        }
+
         #endregion
 
 
@@ -246,12 +212,12 @@ namespace ModelGraph.Controls
         }
         private Vector2 DrawPoint(PointerRoutedEventArgs e)
         {
-            var p = e.GetCurrentPoint(EditorCanvas).Position;
+            var p = e.GetCurrentPoint(DrawCanvas).Position;
             var x = (p.X - _offset.X) / _zoomFactor;
             var y = (p.Y - _offset.Y) / _zoomFactor;
             return new Vector2((float)x, (float)y);
         }
-        private (float top, float  left, float width, float height) GetResizerParams()
+        private (float top, float left, float width, float height) GetResizerParams()
         {
             var x1 = _selector.NodePoint1.X;
             var y1 = _selector.NodePoint1.Y;
@@ -276,7 +242,8 @@ namespace ModelGraph.Controls
         #region Event/Mode/State/Action  ======================================
         enum EventType { Idle, Tap, End, Skim, Drag, TopHit, LeftHit, RightHit, BottomHit, TopLeftHit, TopRightHit, BottomLeftHit, BottomRightHit };
         private enum StateType
-        {   Unknown,
+        {
+            Unknown,
 
             ViewIdle,
             ViewOnVoidTap, ViewOnVoidDrag,   //trace a new region
@@ -486,8 +453,8 @@ namespace ModelGraph.Controls
         void ResizeEnd()
         {
             _selector.ResizePropagate();
-            _selector.RefreshCanvasDrawData();
-            EditorCanvas.Invalidate();
+            _selector.RefreshDrawData();
+            DrawCanvas.Invalidate();
             RestorePointerCursor();
             SetViewIdle();
         }
@@ -618,7 +585,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _selector.MoveNode(); });
             if (ok)
             {
-                EditorCanvas.Invalidate();
+                DrawCanvas.Invalidate();
             }
         }
         void SetMoveRegionDrag()
@@ -647,9 +614,9 @@ namespace ModelGraph.Controls
         {
             var ok = false;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _selector.CreateNode(); });
-            EditorCanvas.Invalidate();
+            DrawCanvas.Invalidate();
             ViewSelect.IsChecked = true;
-        }        
+        }
         #endregion
 
         #region Mode_Link  ====================================================
@@ -666,17 +633,18 @@ namespace ModelGraph.Controls
         private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
         #endregion
 
-        #region ModelEditCanvas_Unloaded  =====================================
+        #region ModelCanvas_Unloaded  =========================================
         private void ModelCanvas_Unloaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             this.Unloaded -= ModelCanvas_Unloaded;
 
-            if (EditorCanvas != null)
+            if (DrawCanvas != null)
             {
-                EditorCanvas.RemoveFromVisualTree();
-                EditorCanvas = null;
+                DrawCanvas.RemoveFromVisualTree();
+                DrawCanvas = null;
             }
         }
         #endregion
+
     }
 }

@@ -54,6 +54,7 @@ namespace ModelGraph.Core
             Item = null;
         }
         public void TriggerUIRefresh() => PageControl?.Refresh();
+        public IDrawCanvas GetDrawCanvas(CanvasId id) => null;
         #endregion
 
         #region FilterParms  ==================================================
