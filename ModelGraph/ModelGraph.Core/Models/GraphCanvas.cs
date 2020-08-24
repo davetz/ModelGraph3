@@ -13,10 +13,36 @@ namespace ModelGraph.Core
         {
             _model = model;
             _graph = graph;
+
+            RefreshDrawData();
         }
         #endregion
 
+        #region CreateDrawData  ===============================================
+        public void RefreshDrawData()
+        {
+            ClearDrawData();
+            foreach (var n in _graph.Nodes)
+            {
+                var c = new Vector2(n.X, n.Y);
+                var r = n.Radius;
+                _drawCircles.Add(((c, r), (Stroke.IsFilled, 1), (255, 255, 0, 255)));
+            }
+            foreach (var e in _graph.Edges)
+            {
+                var p1 = new Vector2(e.Node1.X, e.Node1.Y);
+                var p2 = new Vector2(e.Node2.X, e.Node2.Y);
+                var v = new Vector2[] { p1, p2 };
+                _drawLines.Add((v, (Stroke.IsSimple, 2), (255, 0, 255, 255)));
+            }
+        }
+        #endregion
+
+
         #region HitTest  ======================================================
+        public Extent DrawingExtent => _graph.ResetExtent();
+
+
         public bool DragHitTest()
         {
             return false;
@@ -31,19 +57,51 @@ namespace ModelGraph.Core
         }
         public bool SkimHitTest()
         {
-            return false;
+            _skimHitNode = null;
+            Hit = HitType.Node;
+            ToolTip_Text1 = string.Empty;
+            var (ok, node) = HitNodeTest();
+            if (ok)
+            {
+                _skimHitNode = node;
+                ToolTip_Text1 = node.GetNameId();
+            }
+            return ok;
         }
 
         public bool TapHitTest()
         {
-            return false;
+            _tapHitNode = null;
+            Hit = HitType.Node;
+            var (ok, node) = HitNodeTest();
+            if (ok)
+            {
+                _tapHitNode = node;
+            }
+            return ok;
         }
+
+        private (bool,Node) HitNodeTest()
+        {
+            var p = DrawPoint1;
+            foreach (var n in _graph.Nodes)
+            {
+                if (n.HitTest((p.X, p.Y))) return (true, n);
+            }
+            return (false, null);
+        }
+        private Node _tapHitNode;
+        private Node _skimHitNode;
         #endregion
 
         #region Move  =========================================================
         public bool MoveNode()
         {
-            return false;
+            if (_tapHitNode is null) return false;
+            var delta = DrawPointDelta(true);
+            _tapHitNode.X += delta.X;
+            _tapHitNode.Y += delta.Y;
+            return true;
         }
 
         public bool MoveRegion()
@@ -90,67 +148,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region PanZoom  ======================================================
-        private const float maxScale = 2;
-        private const float minZoomDiagonal = 8000;
-
-        public void Pan(Vector2 adder)
-        {
-        }
-        public void Zoom(float changeFactor)
-        {
-        }
-        public void ZoomToExtent()
-        {
-        }
-        public void PanZoomReset(float aw, float ah)
-        {
-
-            var e = _graph.ResetExtent();
-            var ew = (float)e.Width;
-            var eh = (float)e.Hieght;
-
-            if (aw < 1) aw = 1;
-            if (ah < 1) ah = 1;
-            if (ew < 1) ew = 1;
-            if (eh < 1) eh = 1;
-
-            var zw = aw / ew;
-            var zh = ah / eh;
-            var z = (zw < zh) ? zw : zh;
-
-            // zoom required to make the view extent fit the canvas
-            if (z > maxScale) z = maxScale;
-            _scale = z;
-
-            var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
-            var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
-            _offset = ac - ec; //complete offset need to center the view extent on the canvas
-
-            RefreshDrawData();
-        }
-        public void RefreshDrawData()
-        {
-            ClearDrawData();
-            foreach (var n in _graph.Nodes)
-            {
-                var c = new Vector2(n.X, n.Y);
-                var r = n.Radius * _scale;
-                Vector2 p = c * _scale + _offset;
-                _drawCircles.Add(((p.X, p.Y, r), Stroke.IsFilled, 0, (255, 255, 0, 255)));
-            }
-            foreach (var e in _graph.Edges)
-            {
-                var c1 = new Vector2(e.Node1.X, e.Node1.Y);
-                var c2 = new Vector2(e.Node2.X, e.Node2.Y);
-                var p1 = c1 * _scale + _offset;
-                var p2 = c2 * _scale + _offset;
-                var v = new Vector2[] { p1, p2 };
-                _drawLines.Add((v, Stroke.IsSimple, 2, (255, 0, 255, 255)));
-            }
-        }
-        #endregion
-
         #region CreateNode  ===================================================
         public bool CreateNode()
         {
@@ -163,7 +160,5 @@ namespace ModelGraph.Core
         {
         }
         #endregion
-
-
     }
 }

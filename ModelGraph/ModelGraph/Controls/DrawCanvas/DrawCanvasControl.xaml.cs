@@ -20,7 +20,7 @@ namespace ModelGraph.Controls
         private IDrawCanvas _selector;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-        private float _zoomFactor = 0.5f; //scale the view extent so that it fits on the canvas
+        private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
         private Vector2 _offset = new Vector2(); //offset need to center the view extent on the canvas
 
         #region Constructor/Initialize  =======================================
@@ -35,6 +35,50 @@ namespace ModelGraph.Controls
         }
 
         public void Refresh() => DrawCanvas.Invalidate();
+        #endregion
+
+
+        #region PanZoom  ======================================================
+        private const float maxScale = 4;
+        private const float minZoomDiagonal = 8000;
+
+        private void Pan(Vector2 adder)
+        {
+        }
+        private void Zoom(float changeFactor)
+        {
+        }
+        private void ZoomToExtent()
+        {
+        }
+        private void PanZoomReset()
+        {
+            var aw = (float)DrawCanvas.ActualWidth;
+            var ah = (float)DrawCanvas.ActualHeight;
+
+            var e = _selector.DrawingExtent;
+            var ew = (float)e.Width;
+            var eh = (float)e.Hieght;
+
+            if (aw < 1) aw = 1;
+            if (ah < 1) ah = 1;
+            if (ew < 1) ew = 1;
+            if (eh < 1) eh = 1;
+
+            var zw = aw / ew;
+            var zh = ah / eh;
+            var z = (zw < zh) ? zw : zh;
+
+            // zoom required to make the view extent fit the canvas
+            if (z > maxScale) z = maxScale;
+            _scale = z;
+
+            var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
+            var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
+            _offset = ac - ec; //complete offset need to center the view extent on the canvas
+
+            DrawCanvas.Invalidate();
+        }
         #endregion
 
 
@@ -61,62 +105,70 @@ namespace ModelGraph.Controls
             var ds = args.DrawingSession;
 
 
-            foreach (var (points, s, w, (A, R, G, B)) in data.DrawLines)
+            foreach (var (P, (S, W), (A, R, G, B)) in data.DrawLines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
-                    pb.BeginFigure(points[0]);
-                    for (int i = 1; i < points.Length; i++)
+                    pb.BeginFigure(P[0] * _scale + _offset);
+                    for (int i = 1; i < P.Length; i++)
                     {
-                        pb.AddLine(points[i]);
+                        pb.AddLine(P[i] * _scale + _offset);
                     }
                     pb.EndFigure(CanvasFigureLoop.Open);
 
                     using (var geo = CanvasGeometry.CreatePath(pb))
                     {
-                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
                     }
                 }
             }
 
-            foreach (var (points, s, w, (A, R, G, B)) in data.DrawSplines)
+            foreach (var (P, (S, W), (A, R, G, B)) in data.DrawSplines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
-                    pb.BeginFigure(points[0]);
-                    var N = points.Length;
+                    pb.BeginFigure(P[0] * _scale + _offset);
+                    var N = P.Length;
                     for (var i = 0; i < N - 2;)
                     {
-                        pb.AddCubicBezier(points[i], points[++i], points[++i]);
+                        pb.AddCubicBezier(P[i] * _scale + _offset, P[++i] * _scale + _offset, P[++i] * _scale + _offset);
                     }
                     pb.EndFigure(CanvasFigureLoop.Open);
 
                     using (var geo = CanvasGeometry.CreatePath(pb))
                     {
-                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
                     }
                 }
             }
 
-            foreach (var ((X1, Y1, X2, Y2), s, w, (A, R, G, B)) in data.DrawRects)
+            foreach (var ((C, D), (S, W), (A, R, G, B)) in data.DrawRects)
             {
-                if (s == Stroke.IsFilled)
-                    ds.FillRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B));
+                var d = D * _scale;
+                var c = (C * _scale + _offset) + d;
+                var r = 2 * d;
+
+                if (S == Stroke.IsFilled)
+                    ds.FillRoundedRectangle(c.X, c.Y, r.X, r.Y , 5, 5, Color.FromArgb(A, R, G, B));
                 else
-                    ds.DrawRoundedRectangle(new Rect(X1, Y1, X2, Y2), 5, 5, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+                    ds.DrawRoundedRectangle(c.X, c.Y, r.X, r.Y, 5, 5, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
             }
 
-            foreach (var ((X1, Y1, R1), s, w, (A, R, G, B)) in data.DrawCircles)
+            foreach (var((C, D), (S, W), (A, R, G, B)) in data.DrawCircles)
             {
-                if (s == Stroke.IsFilled)
-                    ds.FillCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B));
+                var r = D * _scale;
+                var c = C * _scale + _offset;
+
+                if (S == Stroke.IsFilled)
+                    ds.FillCircle(c.X,c.Y, r, Color.FromArgb(A, R, G, B));
                 else
-                    ds.DrawCircle(X1, Y1, R1, Color.FromArgb(A, R, G, B), w, StrokeStyle(s));
+                    ds.DrawCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
             }
 
-            foreach (var (topLeft, text, (A, R, G, B)) in data.DrawText)
+            foreach (var ((P,T), (A, R, G, B)) in data.DrawText)
             {
-                ds.DrawText(text, topLeft, Color.FromArgb(A, R, G, B));
+                var p = P * _scale + _offset;
+                ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
             }
         }
         #endregion
@@ -142,12 +194,6 @@ namespace ModelGraph.Controls
             if (_isDrawCanvasLoaded) PanZoomReset();
         }
         bool _isRootCanvasLoaded;
-        private void PanZoomReset()
-        {
-            _selector.PanZoomReset((float)DrawCanvas.ActualWidth, (float)DrawCanvas.ActualHeight);
-            DrawCanvas.Invalidate();
-        }
-
         #endregion
 
 
@@ -213,8 +259,8 @@ namespace ModelGraph.Controls
         private Vector2 DrawPoint(PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(DrawCanvas).Position;
-            var x = (p.X - _offset.X) / _zoomFactor;
-            var y = (p.Y - _offset.Y) / _zoomFactor;
+            var x = (p.X - _offset.X) / _scale;
+            var y = (p.Y - _offset.Y) / _scale;
             return new Vector2((float)x, (float)y);
         }
         private (float top, float left, float width, float height) GetResizerParams()
@@ -228,11 +274,11 @@ namespace ModelGraph.Controls
             var dx = x2 - x1;
             var dy = y2 - y1;
 
-            var width = dx * _zoomFactor;
-            var height = dy * _zoomFactor;
+            var width = dx * _scale;
+            var height = dy * _scale;
 
-            var top = y1 * _zoomFactor + _offset.X;
-            var left = x1 * _zoomFactor + _offset.Y;
+            var top = y1 * _scale + _offset.X;
+            var left = x1 * _scale + _offset.Y;
 
             return (top, left, width, height);
         }
@@ -585,6 +631,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _selector.MoveNode(); });
             if (ok)
             {
+                _selector.RefreshDrawData();
                 DrawCanvas.Invalidate();
             }
         }

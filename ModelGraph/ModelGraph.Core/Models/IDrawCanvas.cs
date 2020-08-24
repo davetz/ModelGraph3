@@ -46,7 +46,6 @@ namespace ModelGraph.Core
         void ResizeBottomLeft();
         void ResizeBottomRight();
         void ResizePropagate();
-
         void RefreshDrawData();
 
         bool MoveNode();
@@ -54,18 +53,12 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        void Pan(Vector2 adder); // update the coordinate point values so the drawing pans left/right
-        void Zoom(float changeFactor); // update the coordinate point values so the drawing chages size
-        void ZoomToExtent();     // update the coordinate point values so the drawing moves and chages its size
-        void PanZoomReset(float width, float height); // recalculate the coordinate point values so the drawing is centered and fits on the screen
+        Extent DrawingExtent { get; }
 
-        float Scale { get; }    //referance scale factor used when populating the coordinate point values
-        Vector2 Offset { get; } //reference offset  used when populating the coordinate point values
-
-        IList<((float, float, float, float) XYXY, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects { get; }
-        IList<((float, float, float) XYR, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles { get; }
-        IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines { get; }
-        IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines { get; }
-        IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText { get; }
+        List<((Vector2,  Vector2) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawRects { get; }
+        List<((Vector2, float) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawCircles { get; }
+        List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawLines { get; }
+        List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawSplines { get; }
+        List<((Vector2, string) topLeftText, (byte, byte, byte, byte) ARGB)> DrawText { get; }
     }
 }

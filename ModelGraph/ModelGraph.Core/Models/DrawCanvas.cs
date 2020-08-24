@@ -21,13 +21,13 @@ namespace ModelGraph.Core
         public Vector2 RegionPoint2 { get; protected set; }
         public Vector2 GridPointDelta(bool reset = false)
         {
-            var delta = GridPoint2 - GridPoint2;
+            var delta = GridPoint2 - GridPoint1;
             if (reset) GridPoint1 = GridPoint2;
             return delta;
         }
         public Vector2 DrawPointDelta(bool reset = false)
         {
-            var delta = DrawPoint2 - DrawPoint2;
+            var delta = DrawPoint2 - DrawPoint1;
             if (reset) DrawPoint1 = DrawPoint2;
             return delta;
         }
@@ -51,20 +51,21 @@ namespace ModelGraph.Core
             _drawCircles.Clear();
             _drawSplines.Clear();
         }
-        public IList<((float, float, float, float) XYXY, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawRects => _drawRects;
-        protected IList<((float, float, float, float), Stroke, byte, (byte, byte, byte, byte))> _drawRects = new List<((float, float, float, float), Stroke, byte, (byte, byte, byte, byte))>();
 
-        public IList<((float, float, float) XYR, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawCircles => _drawCircles;
-        protected IList<((float, float, float), Stroke, byte, (byte, byte, byte, byte))> _drawCircles = new List<((float, float, float), Stroke, byte, (byte, byte, byte, byte))>();
+        public List<((Vector2, Vector2) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawRects => _drawRects;
+        protected List<((Vector2, Vector2), (Stroke, byte), (byte, byte, byte, byte))> _drawRects = new List<((Vector2, Vector2), (Stroke, byte), (byte, byte, byte, byte))>();
 
-        public IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawLines => _drawLines;
-        protected IList<(Vector2[], Stroke, byte, (byte, byte, byte, byte))> _drawLines = new List<(Vector2[], Stroke, byte, (byte, byte, byte, byte))>();
+        public List<((Vector2, float) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawCircles => _drawCircles;
+        protected List<((Vector2, float), (Stroke, byte), (byte, byte, byte, byte))> _drawCircles = new List<((Vector2, float), (Stroke, byte), (byte, byte, byte, byte))>();
 
-        public IList<(Vector2[] Points, Stroke style, byte Width, (byte A, byte R, byte G, byte B) Color)> DrawSplines => _drawSplines;
-        protected IList<(Vector2[], Stroke, byte, (byte, byte, byte, byte))> _drawSplines = new List<(Vector2[], Stroke, byte, (byte, byte, byte, byte))>();
+        public List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawLines => _drawLines;
+        protected List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))> _drawLines = new List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))>();
 
-        public IList<(Vector2 TopLeft, string Text, (byte A, byte R, byte G, byte B) Color)> DrawText => _drawText;
-        protected IList<(Vector2, string, (byte A, byte R, byte G, byte B))> _drawText = new List<(Vector2, string, (byte A, byte R, byte G, byte B))>();
+        public List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawSplines => _drawSplines;
+        protected List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))> _drawSplines = new List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))>();
+
+        public List<((Vector2, string) topLeftText, (byte, byte, byte, byte) ARGB)> DrawText => _drawText;
+        protected List<((Vector2, string), (byte, byte, byte, byte))> _drawText = new List<((Vector2, string), (byte, byte, byte, byte))>();
     }
 }
 
