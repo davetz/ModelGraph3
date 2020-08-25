@@ -8,16 +8,16 @@ namespace ModelGraph.Controls
 
         private void ShowTooltip()
         {
-            var name = (_selector.ToolTip_Text1 is null) ? string.Empty : _selector.ToolTip_Text1;
-            var text = (_selector.ToolTip_Text2 is null) ? string.Empty : _selector.ToolTip_Text2;
+            var name = (_model.ToolTip_Text1 is null) ? string.Empty : _model.ToolTip_Text1;
+            var text = (_model.ToolTip_Text2 is null) ? string.Empty : _model.ToolTip_Text2;
             if (string.IsNullOrWhiteSpace(name)) HideTootlip();
 
             ItemName.Text = name;
             ItemToolTip.Text = text;
 
             var ds = ItemToolTip.Text.Length * 4;
-            var x = _selector.GridPoint2.X - ds;
-            var y = _selector.GridPoint2.Y - 60;
+            var x = _model.GridPoint2.X - ds;
+            var y = _model.GridPoint2.Y - 60;
 
             Canvas.SetTop(ToolTipBorder, y);
             Canvas.SetLeft(ToolTipBorder, x);

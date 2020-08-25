@@ -16,14 +16,17 @@ namespace ModelGraph.Controls
 
         void SelectorSelectorGrid()
         {
-            var min = Vector2.Min(_selector.GridPoint1, _selector.GridPoint2);
-            var size = Vector2.Abs(_selector.GridPoint1 - _selector.GridPoint2);
+            var min = Vector2.Min(_model.GridPoint1, _model.GridPoint2);
+            var size = Vector2.Abs(_model.GridPoint1 - _model.GridPoint2);
 
             AlignmentGrid.Width = size.X + (float)SelectorBorder.Margin.Right;
             AlignmentGrid.Height = size.Y;
 
             Canvas.SetTop(AlignmentGrid, min.Y);
             Canvas.SetLeft(AlignmentGrid, min.X);
+
+            _model.RegionPoint1 = Vector2.Min(_model.DrawPoint1, _model.DrawPoint2);
+            _model.RegionPoint2 = Vector2.Max(_model.DrawPoint1, _model.DrawPoint2);
         }
     }
 }

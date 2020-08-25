@@ -39,14 +39,14 @@ namespace ModelGraph.Views
                 GetModelControl(m1);
                 NavigationService.ActiveModelPage = this;
             }
-            else if (parm is ViewLifetimeControl viewControl && viewControl.DataModel is IDataModel m2)
+            else if (parm is ViewLifetimeControl viewControl && viewControl.DataModel is IPageModel m2)
             {
                 GetModelControl(m2);
             }
             ControlGrid.Children.Add(PageControl as UIElement);
 
 
-            void GetModelControl(IDataModel m)
+            void GetModelControl(IPageModel m)
             {
                 if (m.PageControl is null)
                 {

@@ -34,7 +34,7 @@ namespace ModelGraph.Services
         public string Title { get; set; }
 
         #region ModelPageService  =============================================
-        public IDataModel DataModel { get; set; }
+        public IPageModel DataModel { get; set; }
         public void CloseModel()
         {
             if (DataModel is null) return;

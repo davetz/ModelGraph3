@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class GraphModel : Item, IDataModel
+    public class GraphModel : Item, IPageModel
     {
         internal readonly Root Owner;
         internal override Item GetOwner() => Owner;
@@ -30,7 +30,7 @@ namespace ModelGraph.Core
             Owner.Remove(this);
             Discard(); //discard myself and recursivly discard all my children
         }
-        public IDrawCanvas GetDrawCanvas(CanvasId id) => GraphCanvas;
+        public ICanvasModel GetDrawCanvas(CanvasId id) => GraphCanvas;
 
         public void TriggerUIRefresh()
         {

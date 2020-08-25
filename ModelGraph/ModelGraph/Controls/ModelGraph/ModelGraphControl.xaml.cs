@@ -5,13 +5,13 @@ namespace ModelGraph.Controls
 {
     public sealed partial class ModelGraphControl : Page, IPageControl, IModelPageControl
     {
-        IDataModel Model;
+        IPageModel Model;
 
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
-        public IDataModel DataModel => throw new System.NotImplementedException();
+        public IPageModel PageModel => throw new System.NotImplementedException();
 
-        public ModelGraphControl(IDataModel model)
+        public ModelGraphControl(IPageModel model)
         {
             Model = model;
             this.InitializeComponent();
@@ -31,7 +31,7 @@ namespace ModelGraph.Controls
         public void Close()
         {
         }
-        public void NewView(IDataModel model)
+        public void NewView(IPageModel model)
         {
         }
         #endregion

@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public interface IDrawCanvas
+    public interface ICanvasModel
     {
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }
@@ -14,22 +14,22 @@ namespace ModelGraph.Core
         Vector2 NodePoint1 { get; }
         Vector2 NodePoint2 { get; }
 
-        Vector2 RegionPoint1 { get; }
-        Vector2 RegionPoint2 { get; }
+        Vector2 RegionPoint1 { get; set; }
+        Vector2 RegionPoint2 { get; set; }
 
         Vector2 GridPointDelta(bool reset);
 
         bool IsAnyHit { get; }
         bool IsHitPin { get; }
         bool IsHitNode { get; }
+        bool IsHitEdge { get; }
         bool IsHitRegion { get; }
+        bool IsValidRegion();
 
         bool TapHitTest();
         bool EndHitTest();
         bool SkimHitTest();
         bool DragHitTest();
-
-        bool RegionNodeHitTest();
 
         void ShowPropertyPanel();
         void HidePropertyPanel();

@@ -92,7 +92,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        public ModelTreeControl(IDataModel dataModel)
+        public ModelTreeControl(IPageModel dataModel)
         {
             if (dataModel is TreeModel treeModel)
             {
@@ -241,7 +241,7 @@ namespace ModelGraph.Controls
             var pageService = ModelPageService.Current;
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _ = pageService.ReloadModel(this); });
         }
-        public void NewView(IDataModel model)
+        public void NewView(IPageModel model)
         {
             if (model is null) return;
             _ = ModelPageService.Current.CreateNewPageAsync(model);
@@ -251,7 +251,7 @@ namespace ModelGraph.Controls
             if (TreeModel is null || TreeModel.IsClosed) return;
             _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { RefreshAll(); });
         }
-        public IDataModel DataModel => TreeModel;
+        public IPageModel PageModel => TreeModel;
         #endregion
 
         #region IModelControl  ================================================

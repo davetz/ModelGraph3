@@ -9,6 +9,6 @@ namespace ModelGraph.Core
         void Save();
         void Close();
         
-        void NewView(IDataModel model);
+        void NewView(IPageModel model);
     }
 }

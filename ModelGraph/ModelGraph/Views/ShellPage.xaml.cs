@@ -51,7 +51,7 @@ namespace ModelGraph.Views
         #region ModelPageService  =============================================
         //
         #region InsertModelPage  ==============================================
-        public void InsertModelPage(IDataModel model)
+        public void InsertModelPage(IPageModel model)
         {
             if (model is null) return;
 
@@ -92,7 +92,7 @@ namespace ModelGraph.Views
         #endregion
         //
         #region RemoveModelPage  ==============================================
-        public void RemoveModelPage(IDataModel model)
+        public void RemoveModelPage(IPageModel model)
         {
             var item = navigationView.MenuItems
                             .OfType<WinUI.NavigationViewItem>()
@@ -189,7 +189,7 @@ namespace ModelGraph.Views
                             .First(menuItem => (string)menuItem.Content == (string)args.InvokedItem);
 
 
-            if (item.Tag is IDataModel model)
+            if (item.Tag is IPageModel model)
             {
                 NavigationService.Navigate(typeof(ModelPage), model);
             }

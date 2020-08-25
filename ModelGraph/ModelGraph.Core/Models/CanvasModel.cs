@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public abstract class DrawCanvas
+    public abstract class CanvasModel
     {
         public string ToolTip_Text1 { get; set; }
         public string ToolTip_Text2 { get; set; }
@@ -17,8 +17,8 @@ namespace ModelGraph.Core
         public Vector2 NodePoint1 { get; protected set; }
         public Vector2 NodePoint2 { get; protected set; }
 
-        public Vector2 RegionPoint1 { get; protected set; }
-        public Vector2 RegionPoint2 { get; protected set; }
+        public Vector2 RegionPoint1 { get; set; }
+        public Vector2 RegionPoint2 { get; set; }
         public Vector2 GridPointDelta(bool reset = false)
         {
             var delta = GridPoint2 - GridPoint1;
@@ -34,6 +34,7 @@ namespace ModelGraph.Core
         public bool IsAnyHit => Hit != 0;
         public bool IsHitPin => (Hit & HitType.Pin) != 0;
         public bool IsHitNode => (Hit & HitType.Node) != 0;
+        public bool IsHitEdge => (Hit & HitType.Edge) != 0;
         public bool IsHitRegion => (Hit & HitType.Region) != 0;
         internal HitType Hit;
 

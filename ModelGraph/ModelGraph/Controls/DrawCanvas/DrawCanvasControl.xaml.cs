@@ -17,7 +17,7 @@ namespace ModelGraph.Controls
 {
     public sealed partial class DrawCanvasControl : UserControl
     {
-        private IDrawCanvas _selector;
+        private ICanvasModel _model;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
@@ -29,9 +29,9 @@ namespace ModelGraph.Controls
             this.InitializeComponent();
         }
 
-        public void Initialize(IDrawCanvas selector)
+        public void Initialize(ICanvasModel model)
         {
-            _selector = selector;
+            _model = model;
         }
 
         public void Refresh() => DrawCanvas.Invalidate();
@@ -56,7 +56,7 @@ namespace ModelGraph.Controls
             var aw = (float)DrawCanvas.ActualWidth;
             var ah = (float)DrawCanvas.ActualHeight;
 
-            var e = _selector.DrawingExtent;
+            var e = _model.DrawingExtent;
             var ew = (float)e.Width;
             var eh = (float)e.Hieght;
 
@@ -99,7 +99,7 @@ namespace ModelGraph.Controls
         #region DrawCanvas_Draw  ==============================================
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var data = _selector;
+            var data = _model;
             if (data is null) return;
 
             var ds = args.DrawingSession;
@@ -208,9 +208,9 @@ namespace ModelGraph.Controls
                 e.Handled = true;
 
                 if (_pointerIsPressed)
-                    Post(EventType.Drag);
+                    PostEvent(EventType.Drag);
                 else
-                    Post(EventType.Skim);
+                    PostEvent(EventType.Skim);
             }
         }
         private bool _pointerIsPressed;
@@ -226,7 +226,7 @@ namespace ModelGraph.Controls
                 SetDrawPoint1(e);
                 e.Handled = true;
 
-                Post(EventType.Tap);
+                PostEvent(EventType.Tap);
             }
         }
         #endregion
@@ -241,16 +241,16 @@ namespace ModelGraph.Controls
                 SetDrawPoint2(e);
                 e.Handled = true;
 
-                Post(EventType.End);
+                PostEvent(EventType.End);
             }
         }
         #endregion
 
         #region HelperMethods  ================================================
-        private void SetGridPoint1(PointerRoutedEventArgs e) => _selector.GridPoint1 = GridPoint(e);
-        private void SetGridPoint2(PointerRoutedEventArgs e) => _selector.GridPoint2 = GridPoint(e);
-        private void SetDrawPoint1(PointerRoutedEventArgs e) => _selector.DrawPoint1 = DrawPoint(e);
-        private void SetDrawPoint2(PointerRoutedEventArgs e) => _selector.DrawPoint2 = DrawPoint(e);
+        private void SetGridPoint1(PointerRoutedEventArgs e) => _model.GridPoint1 = GridPoint(e);
+        private void SetGridPoint2(PointerRoutedEventArgs e) => _model.GridPoint2 = GridPoint(e);
+        private void SetDrawPoint1(PointerRoutedEventArgs e) => _model.DrawPoint1 = DrawPoint(e);
+        private void SetDrawPoint2(PointerRoutedEventArgs e) => _model.DrawPoint2 = DrawPoint(e);
         private Vector2 GridPoint(PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(RootGrid).Position;
@@ -265,10 +265,10 @@ namespace ModelGraph.Controls
         }
         private (float top, float left, float width, float height) GetResizerParams()
         {
-            var x1 = _selector.NodePoint1.X;
-            var y1 = _selector.NodePoint1.Y;
-            var x2 = _selector.NodePoint2.X;
-            var y2 = _selector.NodePoint2.Y;
+            var x1 = _model.NodePoint1.X;
+            var y1 = _model.NodePoint1.Y;
+            var x2 = _model.NodePoint2.X;
+            var y2 = _model.NodePoint2.Y;
 
 
             var dx = x2 - x1;
@@ -318,28 +318,29 @@ namespace ModelGraph.Controls
             CreateIdle, CreateTap, CreateOnNode,
         };
 
-        StateType _state = StateType.Unknown;
-        Dictionary<EventType, Action> Event_Action = new Dictionary<EventType, Action>();
+        void PostEvent(EventType evt) { if (Event_Action.TryGetValue(evt, out Action action)) action(); }
 
-        public (int Width, int Height) PreferredSize => throw new NotImplementedException();
-
-        public IDataModel DataModel => throw new NotImplementedException();
-
-        void Post(EventType evt) { if (Event_Action.TryGetValue(evt, out Action action)) action(); }
-
-        bool SetState(StateType state)
+        bool TrySetState(StateType state)
         {
-            if (_state == state) return false;
+            if (_state == state) return false; // we have not changed the state, so there is nothing to do
             _state = state;
             Debug.WriteLine($"State: {_state}");
 
             Event_Action.Clear();
-            return true;
+            HideTootlip();
+            HideResizerGrid();
+            HideSelectorGrid();
+            RestorePointerCursor();
+
+            return true;    // let the caller know that we have changed state and have cleared the Event_Action dictionary
         }
+        private StateType _state = StateType.Unknown;
+
         void SetEventAction(EventType evt, Action act)
         {
             Event_Action[evt] = act;
         }
+        private readonly Dictionary<EventType, Action> Event_Action = new Dictionary<EventType, Action>();
         #endregion
 
 
@@ -350,10 +351,8 @@ namespace ModelGraph.Controls
         {
             if (_isRootCanvasLoaded)
             {
-                if (SetState(StateType.ViewIdle))
+                if (TrySetState(StateType.ViewIdle))
                 {
-                    HideSelectorGrid();
-                    RestorePointerCursor();
                     SetEventAction(EventType.Tap, ViewIdle_TapHitTest);
                     SetEventAction(EventType.Skim, ViewIdle_SkimHitTest);
                     SetEventAction(EventType.TopHit, SetResizeTopHit);
@@ -370,10 +369,10 @@ namespace ModelGraph.Controls
         async void ViewIdle_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _selector.SkimHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_selector.IsHitNode)
+                if (_model.IsHitNode)
                     ShowTooltip();
             }
             else
@@ -384,12 +383,12 @@ namespace ModelGraph.Controls
         async void ViewIdle_TapHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _selector.TapHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
             if (anyHit)
             {
-                if (_selector.IsHitNode)
+                if (_model.IsHitNode)
                 {
-                    //_selector.ShowPropertyPanel();
+                    //_model.ShowPropertyPanel();
                     ShowResizerGrid();
                 }
             }
@@ -399,13 +398,13 @@ namespace ModelGraph.Controls
                 HideAlignmentGrid();
                 HideTootlip();
                 SetViewOnVoidTap();
-                //_selector.HidePropertyPanel();
+                //_model.HidePropertyPanel();
             }
         }
 
         void SetViewOnVoidTap()
         {
-            if (SetState(StateType.ViewOnVoidTap))
+            if (TrySetState(StateType.ViewOnVoidTap))
             {
                 SetEventAction(EventType.End, SetViewIdle);
                 SetEventAction(EventType.Drag, SetViewOnVoidDrag);
@@ -413,7 +412,7 @@ namespace ModelGraph.Controls
         }
         void SetViewOnVoidDrag()
         {
-            if (SetState(StateType.ViewOnVoidDrag))
+            if (TrySetState(StateType.ViewOnVoidDrag))
             {
                 ShowSelectorGrid();
                 SetEventAction(EventType.End, RegionTraceEnd);
@@ -423,6 +422,8 @@ namespace ModelGraph.Controls
         void RegionTraceEnd()
         {
             ShowAlignmentGrid();
+            if (!_model.IsValidRegion())
+                HideAlignmentGrid();
             SetViewIdle();
         }
         void TracingRegion()
@@ -434,7 +435,7 @@ namespace ModelGraph.Controls
         #region SetResize  ====================================================
         void SetResizeTopHit()
         {
-            if (SetState(StateType.ResizeTop))
+            if (TrySetState(StateType.ResizeTop))
             {
                 SetEventAction(EventType.Drag, ResizeTopDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -442,7 +443,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeLeftHit()
         {
-            if (SetState(StateType.ResizeLeft))
+            if (TrySetState(StateType.ResizeLeft))
             {
                 SetEventAction(EventType.Drag, ResizeLeftDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -450,7 +451,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeRightHit()
         {
-            if (SetState(StateType.ResizeRight))
+            if (TrySetState(StateType.ResizeRight))
             {
                 SetEventAction(EventType.Drag, ResizeRightDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -458,7 +459,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeBottomHit()
         {
-            if (SetState(StateType.ResizeBottom))
+            if (TrySetState(StateType.ResizeBottom))
             {
                 SetEventAction(EventType.Drag, ResizeBottomDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -466,7 +467,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeTopLeftHit()
         {
-            if (SetState(StateType.ResizeTopLeft))
+            if (TrySetState(StateType.ResizeTopLeft))
             {
                 SetEventAction(EventType.Drag, ResizeTopLeftDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -474,7 +475,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeTopRightHit()
         {
-            if (SetState(StateType.ResizeTopRight))
+            if (TrySetState(StateType.ResizeTopRight))
             {
                 SetEventAction(EventType.Drag, ResizeTopRightDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -482,7 +483,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeBottomLeftHit()
         {
-            if (SetState(StateType.ResizeBottomLeft))
+            if (TrySetState(StateType.ResizeBottomLeft))
             {
                 SetEventAction(EventType.Drag, ResizeBottomLeftDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -490,7 +491,7 @@ namespace ModelGraph.Controls
         }
         void SetResizeBottomRightHit()
         {
-            if (SetState(StateType.ResizeBottomRight))
+            if (TrySetState(StateType.ResizeBottomRight))
             {
                 SetEventAction(EventType.Drag, ResizeBottomRightDrag);
                 SetEventAction(EventType.End, ResizeEnd);
@@ -498,50 +499,50 @@ namespace ModelGraph.Controls
         }
         void ResizeEnd()
         {
-            _selector.ResizePropagate();
-            _selector.RefreshDrawData();
+            _model.ResizePropagate();
+            _model.RefreshDrawData();
             DrawCanvas.Invalidate();
             RestorePointerCursor();
             SetViewIdle();
         }
         void ResizeTopDrag()
         {
-            _selector.ResizeTop();
+            _model.ResizeTop();
             UpdateResizerGrid();
         }
         void ResizeLeftDrag()
         {
-            _selector.ResizeLeft();
+            _model.ResizeLeft();
             UpdateResizerGrid();
         }
         void ResizeRightDrag()
         {
-            _selector.ResizeRight();
+            _model.ResizeRight();
             UpdateResizerGrid();
         }
         void ResizeBottomDrag()
         {
-            _selector.ResizeBottom();
+            _model.ResizeBottom();
             UpdateResizerGrid();
         }
         void ResizeTopLeftDrag()
         {
-            _selector.ResizeTopLeft();
+            _model.ResizeTopLeft();
             UpdateResizerGrid();
         }
         void ResizeTopRightDrag()
         {
-            _selector.ResizeTopRight();
+            _model.ResizeTopRight();
             UpdateResizerGrid();
         }
         void ResizeBottomLeftDrag()
         {
-            _selector.ResizeBottomLeft();
+            _model.ResizeBottomLeft();
             UpdateResizerGrid();
         }
         void ResizeBottomRightDrag()
         {
-            _selector.ResizeBottomRight();
+            _model.ResizeBottomRight();
             UpdateResizerGrid();
         }
         #endregion
@@ -549,7 +550,7 @@ namespace ModelGraph.Controls
         #region SetViewOnNodeSkim  ============================================
         void SetView_OnNode_Skim()
         {
-            if (SetState(StateType.ViewOnNodeSkim))
+            if (TrySetState(StateType.ViewOnNodeSkim))
             {
                 SetEventAction(EventType.Skim, View_OnNode_SkimHitTest);
             }
@@ -557,8 +558,8 @@ namespace ModelGraph.Controls
         async void View_OnNode_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _selector.SkimHitTest(); });
-            if (anyHit && _selector.IsHitNode)
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
+            if (anyHit && _model.IsHitNode)
             {
 
             }
@@ -570,12 +571,8 @@ namespace ModelGraph.Controls
         #region Mode_Move  ====================================================
         void SetMoveIdle()
         {
-            if (SetState(StateType.MoveIdle))
+            if (TrySetState(StateType.MoveIdle))
             {
-                RestorePointerCursor();
-                HideResizerGrid();
-                HideTootlip();
-                HideSelectorGrid();
                 SetEventAction(EventType.Skim, MoveIdle_SkimHitTest);
                 SetEventAction(EventType.Tap, MoveIdle_TapHitTest);
                 SetEventAction(EventType.End, SetMoveIdle);
@@ -584,10 +581,10 @@ namespace ModelGraph.Controls
         async void MoveIdle_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _selector.SkimHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_selector.IsHitRegion || _selector.IsHitNode)
+                if (_model.IsHitRegion || _model.IsHitNode)
                 {
                     TrySetNewCursor(CoreCursorType.Hand);
                 }
@@ -600,15 +597,15 @@ namespace ModelGraph.Controls
         async void MoveIdle_TapHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _selector.TapHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
             if (anyHit)
             {
-                if (_selector.IsHitRegion || _selector.IsHitNode)
+                if (_model.IsHitRegion || _model.IsHitNode)
                 {
                     TrySetNewCursor(CoreCursorType.SizeAll);
-                    if (_selector.IsHitRegion)
+                    if (_model.IsHitRegion)
                         SetMoveRegionDrag();
-                    else if (_selector.IsHitNode)
+                    else if (_model.IsHitNode)
                         SetMoveNodeDrag();
                 }
                 else
@@ -619,7 +616,7 @@ namespace ModelGraph.Controls
         }
         void SetMoveNodeDrag()
         {
-            if (SetState(StateType.MoveOnRegionDrag))
+            if (TrySetState(StateType.MoveOnRegionDrag))
             {
                 SetEventAction(EventType.Drag, MovingNode);
                 SetEventAction(EventType.End, SetMoveIdle);
@@ -628,22 +625,22 @@ namespace ModelGraph.Controls
         async void MovingNode()
         {
             var ok = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _selector.MoveNode(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.MoveNode(); });
             if (ok)
             {
-                _selector.RefreshDrawData();
+                _model.RefreshDrawData();
                 DrawCanvas.Invalidate();
             }
         }
         void SetMoveRegionDrag()
         {
-            if (SetState(StateType.MoveOnRegionDrag))
+            if (TrySetState(StateType.MoveOnRegionDrag))
             {
                 SetEventAction(EventType.Drag, MovingRegion);
                 SetEventAction(EventType.End, SetMoveIdle);
             }
         }
-        async void MovingRegion()
+        void MovingRegion()
         {
 
         }
@@ -652,7 +649,7 @@ namespace ModelGraph.Controls
         #region Mode_Create  ==================================================
         void SetCreateIdle()
         {
-            if (SetState(StateType.CreateIdle))
+            if (TrySetState(StateType.CreateIdle))
             {
                 SetEventAction(EventType.Tap, CreateNewNode);
             }
@@ -660,7 +657,7 @@ namespace ModelGraph.Controls
         async void CreateNewNode()
         {
             var ok = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _selector.CreateNode(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.CreateNode(); });
             DrawCanvas.Invalidate();
             ViewSelect.IsChecked = true;
         }

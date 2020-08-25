@@ -1,9 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class GraphCanvas : DrawCanvas, IDrawCanvas
+    internal class GraphCanvas : CanvasModel, ICanvasModel
     {
         private readonly GraphModel _model;
         private readonly Graph _graph;
@@ -51,56 +53,98 @@ namespace ModelGraph.Core
         {
             return false;
         }
-        public bool RegionNodeHitTest()
-        {
-            return false;
-        }
         public bool SkimHitTest()
         {
-            _skimHitNode = null;
-            Hit = HitType.Node;
-            ToolTip_Text1 = string.Empty;
-            var (ok, node) = HitNodeTest();
+            ClearPreviousHitTestResults();
+
+            if (RegionHitTest(DrawPoint2))
+            {
+                Hit |= HitType.Region;
+            }
+
+            var (ok, node) = HitNodeTest(DrawPoint2);
             if (ok)
             {
-                _skimHitNode = node;
+                _hitNode = node;
+                Hit |= HitType.Node;
                 ToolTip_Text1 = node.GetNameId();
+                ToolTip_Text2 = node.GetSummaryId();
             }
             return ok;
         }
 
         public bool TapHitTest()
         {
-            _tapHitNode = null;
-            Hit = HitType.Node;
-            var (ok, node) = HitNodeTest();
+            ClearPreviousHitTestResults();
+
+            if (RegionHitTest(DrawPoint1))
+            {
+                Hit |= HitType.Region;
+            }
+
+            var (ok, node) = HitNodeTest(DrawPoint1);
             if (ok)
             {
-                _tapHitNode = node;
+                _hitNode = node;
+                Hit |= HitType.Node;
             }
             return ok;
         }
 
-        private (bool,Node) HitNodeTest()
+        public bool IsValidRegion()
         {
-            var p = DrawPoint1;
+            var r1 = RegionPoint1;
+            var r2 = RegionPoint2;
+            _regionNodes.Clear();
+            foreach (var n in _graph.Nodes)
+            {
+                if (n.X < r1.X) continue;
+                if (n.Y < r1.Y) continue;
+                if (n.X > r2.X) continue;
+                if (n.Y > r2.Y) continue;
+                _regionNodes.Add(n);
+            }
+            return _regionNodes.Count > 0;
+        }
+        private bool RegionHitTest(Vector2 p)
+        {
+            var r1 = RegionPoint1;
+            var r2 = RegionPoint2;
+            if (p.X < r1.X) return false;
+            if (p.Y < r1.Y) return false;
+            if (p.X > r2.X) return false;
+            if (p.Y > r2.Y) return false;
+            return true;
+        }
+        private void ClearPreviousHitTestResults()
+        {
+            Hit = HitType.Zip;
+            _hitNode = null;
+            _hitEdge = null;
+            _regionNodes.Clear();
+            ToolTip_Text1 = ToolTip_Text2 = string.Empty;
+        }
+
+        private (bool,Node) HitNodeTest(Vector2 p)
+        {
             foreach (var n in _graph.Nodes)
             {
                 if (n.HitTest((p.X, p.Y))) return (true, n);
             }
             return (false, null);
         }
-        private Node _tapHitNode;
-        private Node _skimHitNode;
+        private Node _hitNode;
+        private Edge _hitEdge;
+        private List<Node> _regionNodes = new List<Node>();
         #endregion
 
         #region Move  =========================================================
         public bool MoveNode()
         {
-            if (_tapHitNode is null) return false;
+            if (_hitNode is null) return false;
             var delta = DrawPointDelta(true);
-            _tapHitNode.X += delta.X;
-            _tapHitNode.Y += delta.Y;
+            _hitNode.X += delta.X;
+            _hitNode.Y += delta.Y;
             return true;
         }
 

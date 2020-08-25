@@ -29,7 +29,7 @@ namespace ModelGraph.Services
         #endregion
 
         #region Dispatch  =====================================================
-        internal async Task CreateNewPageAsync(IDataModel model)
+        internal async Task CreateNewPageAsync(IPageModel model)
         {
             var viewLifetimeControl = await WindowManagerService.Current.TryShowAsStandaloneAsync(model.TitleName, typeof(ModelPage), model);
             viewLifetimeControl.Released += ViewLifetimeControl_Released;
@@ -50,7 +50,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.DataModel.GetRoot();
+            var root = ctrl.PageModel.GetRoot();
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsync(root);
             return false;
@@ -61,7 +61,7 @@ namespace ModelGraph.Services
         public async Task<bool> SaveModelAs(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var root = ctrl.DataModel.GetRoot();
+            var root = ctrl.PageModel.GetRoot();
             if (root.Repository is StorageFileRepo repo)
                 _ = await repo.SaveAsAsync(root);
             return false;
@@ -72,7 +72,7 @@ namespace ModelGraph.Services
         public void CloseModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return;
-            var model = ctrl.DataModel;
+            var model = ctrl.PageModel;
             if (model.GetRoot().Repository is StorageFileRepo repo)
             {
                 RemoveModelPage(model);
@@ -87,7 +87,7 @@ namespace ModelGraph.Services
         public async Task<bool> ReloadModel(IModelPageControl ctrl)
         {
             if (ctrl is null) return false;
-            var oldModel = ctrl.DataModel;
+            var oldModel = ctrl.PageModel;
             if (oldModel.GetRoot().Repository is StorageFileRepo repo)
             {
                 RemoveModelPage(oldModel);
@@ -146,7 +146,7 @@ namespace ModelGraph.Services
         }
         #endregion
 
-        public Action<IDataModel> InsertModelPage { get; set; } //coordination with ShellPage NavigationView
-        public Action<IDataModel> RemoveModelPage { get; set; } //coordination with ShellPage NavigationView
+        public Action<IPageModel> InsertModelPage { get; set; } //coordination with ShellPage NavigationView
+        public Action<IPageModel> RemoveModelPage { get; set; } //coordination with ShellPage NavigationView
     }
 }

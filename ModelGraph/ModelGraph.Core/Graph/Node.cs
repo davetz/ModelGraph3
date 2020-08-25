@@ -18,7 +18,12 @@ namespace ModelGraph.Core
         internal BarWidth BarWidth;
         internal FlipState FlipState;
         internal Aspect Aspect;
+
+        #region Ìdentity  =====================================================
         internal override IdKey IdKey => IdKey.Node;
+        public override string GetNameId() => Item.GetNameId();
+        public override string GetSummaryId() => Item.GetSummaryId();
+        #endregion
 
         #region Snapshot  =====================================================
         internal (float X, float Y, byte DX, byte DY, byte Color, byte Symbol, Labeling Labeling, Sizing Resizing, BarWidth BarWidth, FlipState FlipRotate, Aspect Orientation)

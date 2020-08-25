@@ -99,7 +99,7 @@ namespace ModelGraph.Core
             //<=== control immediatley returns to the ui thread
             //(some time later the worker task completes and signals the ui thread)
             //===> the ui thread returns here and continues executing the following code            
-            foreach (var item in Items) { if (item is IDataModel dm) dm.TriggerUIRefresh(); }
+            foreach (var item in Items) { if (item is IPageModel dm) dm.TriggerUIRefresh(); }
         }
         private void ExecuteRequest(Action action)
         {

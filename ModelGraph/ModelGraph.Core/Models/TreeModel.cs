@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public class TreeModel : ItemModelOf<Root>, IDataModel
+    public class TreeModel : ItemModelOf<Root>, IPageModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
         private LineModel _childModel; // there will only be one child model
@@ -54,7 +54,7 @@ namespace ModelGraph.Core
             Item = null;
         }
         public void TriggerUIRefresh() => PageControl?.Refresh();
-        public IDrawCanvas GetDrawCanvas(CanvasId id) => null;
+        public ICanvasModel GetDrawCanvas(CanvasId id) => null;
         #endregion
 
         #region FilterParms  ==================================================
