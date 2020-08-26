@@ -31,18 +31,22 @@ namespace ModelGraph.Core
             if (reset) DrawPoint1 = DrawPoint2;
             return delta;
         }
-        public bool IsAnyHit => Hit != 0;
-        public bool IsHitPin => (Hit & HitType.Pin) != 0;
-        public bool IsHitNode => (Hit & HitType.Node) != 0;
-        public bool IsHitEdge => (Hit & HitType.Edge) != 0;
-        public bool IsHitRegion => (Hit & HitType.Region) != 0;
-        internal HitType Hit;
+        public bool AnyHit => _hit != 0;
+        public bool PinHit => (_hit & Hit.Pin) != 0;
+        public bool NodeHit => (_hit & Hit.Node) != 0;
+        public bool EdgeHit => (_hit & Hit.Edge) != 0;
+        public bool RegionHit => (_hit & Hit.Region) != 0;
 
-        public float Scale => _scale;
-        protected float _scale;
-
-        public Vector2 Offset => _offset;
-        protected Vector2 _offset;
+        protected void ClearHit()
+        {
+            ToolTip_Text1 = ToolTip_Text2 = string.Empty;
+            _hit = Hit.ZZZ;
+        }
+        protected void SetHitPin() => _hit |= Hit.Pin;
+        protected void SetHitNode() => _hit |= Hit.Node;
+        protected void SetHitEdge() => _hit |= Hit.Edge;
+        protected void SetHitRegion() => _hit |= Hit.Region;
+        private Hit _hit;
 
         protected void ClearDrawData()
         {

@@ -55,42 +55,44 @@ namespace ModelGraph.Core
         }
         public bool SkimHitTest()
         {
-            ClearPreviousHitTestResults();
+            ClearHit();
 
             if (RegionHitTest(DrawPoint2))
             {
-                Hit |= HitType.Region;
+                SetHitRegion();
             }
 
+            _hitNode = null;
             var (ok, node) = HitNodeTest(DrawPoint2);
             if (ok)
             {
                 _hitNode = node;
-                Hit |= HitType.Node;
+                SetHitNode();
                 ToolTip_Text1 = node.GetNameId();
                 ToolTip_Text2 = node.GetSummaryId();
             }
-            return ok;
+            return NodeHit || RegionHit;
         }
 
         public bool TapHitTest()
         {
-            ClearPreviousHitTestResults();
+            ClearHit();
 
             if (RegionHitTest(DrawPoint1))
             {
-                Hit |= HitType.Region;
+                SetHitRegion();
             }
 
             var (ok, node) = HitNodeTest(DrawPoint1);
             if (ok)
             {
                 _hitNode = node;
-                Hit |= HitType.Node;
+                SetHitNode();
             }
             return ok;
         }
 
+        public void ClearRegion() => _regionNodes.Clear();
         public bool IsValidRegion()
         {
             var r1 = RegionPoint1;
@@ -115,14 +117,6 @@ namespace ModelGraph.Core
             if (p.X > r2.X) return false;
             if (p.Y > r2.Y) return false;
             return true;
-        }
-        private void ClearPreviousHitTestResults()
-        {
-            Hit = HitType.Zip;
-            _hitNode = null;
-            _hitEdge = null;
-            _regionNodes.Clear();
-            ToolTip_Text1 = ToolTip_Text2 = string.Empty;
         }
 
         private (bool,Node) HitNodeTest(Vector2 p)
@@ -150,7 +144,13 @@ namespace ModelGraph.Core
 
         public bool MoveRegion()
         {
-            return false;
+            var delta = DrawPointDelta(true);
+            foreach (var n  in _regionNodes)
+            {
+                n.X += delta.X;
+                n.Y += delta.Y;
+            }
+            return true;
         }
         #endregion
 

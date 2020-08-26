@@ -8,13 +8,17 @@ namespace ModelGraph.Controls
     {
         void ShowAlignmentGrid()
         {
-            SelectorSelectorGrid();
+            PositionAlignmentGrid();
             AlignmentGrid.Visibility = Visibility.Visible;
         }
 
-        void HideAlignmentGrid() => AlignmentGrid.Visibility = Visibility.Collapsed;
+        void HideAlignmentGrid()
+        {
+            _model.ClearRegion();
+            AlignmentGrid.Visibility = Visibility.Collapsed;
+        }
 
-        void SelectorSelectorGrid()
+        void PositionAlignmentGrid()
         {
             var min = Vector2.Min(_model.GridPoint1, _model.GridPoint2);
             var size = Vector2.Abs(_model.GridPoint1 - _model.GridPoint2);

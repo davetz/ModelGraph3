@@ -1,4 +1,5 @@
-﻿using Windows.UI.Xaml.Controls;
+﻿using Windows.UI.Xaml;
+using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
@@ -8,21 +9,29 @@ namespace ModelGraph.Controls
 
         private void ShowTooltip()
         {
-            var name = (_model.ToolTip_Text1 is null) ? string.Empty : _model.ToolTip_Text1;
-            var text = (_model.ToolTip_Text2 is null) ? string.Empty : _model.ToolTip_Text2;
-            if (string.IsNullOrWhiteSpace(name)) HideTootlip();
+            if (string.IsNullOrWhiteSpace(_model.ToolTip_Text1)) HideTootlip();
+            ItemName.Text = _model.ToolTip_Text1;
 
-            ItemName.Text = name;
-            ItemToolTip.Text = text;
+            var offset = 60;
+            if (string.IsNullOrWhiteSpace(_model.ToolTip_Text2))
+            {
+                offset /= 2;
+                ItemToolTip.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ItemToolTip.Visibility = Visibility.Collapsed;
+                ItemToolTip.Text = _model.ToolTip_Text2;
+            }
 
             var ds = ItemToolTip.Text.Length * 4;
             var x = _model.GridPoint2.X - ds;
-            var y = _model.GridPoint2.Y - 60;
+            var y = _model.GridPoint2.Y - offset;
 
             Canvas.SetTop(ToolTipBorder, y);
             Canvas.SetLeft(ToolTipBorder, x);
 
-            ToolTipBorder.Visibility = Windows.UI.Xaml.Visibility.Visible;
+            ToolTipBorder.Visibility = Visibility.Visible;
             _isToolTipVisible = true;
         }
 
@@ -31,7 +40,7 @@ namespace ModelGraph.Controls
             if (_isToolTipVisible)
             {
                 _isToolTipVisible = false;
-                ToolTipBorder.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
+                ToolTipBorder.Visibility = Visibility.Collapsed;
             }
         }
     }

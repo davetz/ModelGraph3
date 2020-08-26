@@ -372,7 +372,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_model.IsHitNode)
+                if (_model.NodeHit)
                     ShowTooltip();
             }
             else
@@ -386,7 +386,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
             if (anyHit)
             {
-                if (_model.IsHitNode)
+                if (_model.NodeHit)
                 {
                     //_model.ShowPropertyPanel();
                     ShowResizerGrid();
@@ -559,7 +559,7 @@ namespace ModelGraph.Controls
         {
             var anyHit = false;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
-            if (anyHit && _model.IsHitNode)
+            if (anyHit && _model.NodeHit)
             {
 
             }
@@ -575,8 +575,12 @@ namespace ModelGraph.Controls
             {
                 SetEventAction(EventType.Skim, MoveIdle_SkimHitTest);
                 SetEventAction(EventType.Tap, MoveIdle_TapHitTest);
-                SetEventAction(EventType.End, SetMoveIdle);
+                SetEventAction(EventType.End, MoveIdle_End);
             }
+        }
+        void MoveIdle_End()
+        {
+            RestorePointerCursor();
         }
         async void MoveIdle_SkimHitTest()
         {
@@ -584,7 +588,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_model.IsHitRegion || _model.IsHitNode)
+                if (_model.RegionHit || _model.NodeHit)
                 {
                     TrySetNewCursor(CoreCursorType.Hand);
                 }
@@ -600,12 +604,12 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
             if (anyHit)
             {
-                if (_model.IsHitRegion || _model.IsHitNode)
+                if (_model.RegionHit || _model.NodeHit)
                 {
                     TrySetNewCursor(CoreCursorType.SizeAll);
-                    if (_model.IsHitRegion)
+                    if (_model.RegionHit)
                         SetMoveRegionDrag();
-                    else if (_model.IsHitNode)
+                    else if (_model.NodeHit)
                         SetMoveNodeDrag();
                 }
                 else
@@ -640,9 +644,15 @@ namespace ModelGraph.Controls
                 SetEventAction(EventType.End, SetMoveIdle);
             }
         }
-        void MovingRegion()
+        async void MovingRegion()
         {
-
+            var ok = false;
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.MoveRegion(); });
+            if (ok)
+            {
+                _model.RefreshDrawData();
+                DrawCanvas.Invalidate();
+            }
         }
         #endregion
 

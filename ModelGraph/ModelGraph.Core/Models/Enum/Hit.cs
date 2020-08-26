@@ -3,9 +3,9 @@
 namespace ModelGraph.Core
 {
     [Flags]
-    internal enum HitType
+    internal enum Hit
     {
-        Zip = 0,
+        ZZZ = 0,
         Pin = 0x01,
         Node = 0x02,
         Edge = 0x04,

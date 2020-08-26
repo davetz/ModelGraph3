@@ -19,12 +19,13 @@ namespace ModelGraph.Core
 
         Vector2 GridPointDelta(bool reset);
 
-        bool IsAnyHit { get; }
-        bool IsHitPin { get; }
-        bool IsHitNode { get; }
-        bool IsHitEdge { get; }
-        bool IsHitRegion { get; }
+        bool AnyHit { get; }
+        bool PinHit { get; }
+        bool NodeHit { get; }
+        bool EdgeHit { get; }
+        bool RegionHit { get; }
         bool IsValidRegion();
+        void ClearRegion();
 
         bool TapHitTest();
         bool EndHitTest();
