@@ -61,9 +61,38 @@
 
             <Canvas x:Name="RootCanvas" Background="Transparent"
                     Loaded="RootCanvas_Loaded"
+                    DoubleTapped="RootCanvas_DoubleTapped"
+                    ContextRequested="RootCanasContextRuested"
                     PointerMoved="RootCanvas_PointerMoved"
                     PointerPressed="RootCanvas_PointerPressed"
                     PointerReleased="RootCanvas_PointerReleased">
+
+                    <Canvas.ContextFlyout>
+                        <MenuFlyout Placement="Right">
+                            <MenuFlyoutItem Text="Undo"/>
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Flip Vertically" />
+                            <MenuFlyoutItem Text="Flip Horizontally" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Rotate Left 90" />
+                            <MenuFlyoutItem Text="Rotate Right 90" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Align Vertical Left" />
+                            <MenuFlyoutItem Text="Align Vertical Right" />
+                            <MenuFlyoutItem Text="Align Vertical Center" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Align Horizontal Top" />
+                            <MenuFlyoutItem Text="Align Horizontal Bottom" />
+                            <MenuFlyoutItem Text="Align Horizontal Center" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Compress Vertically" />
+                            <MenuFlyoutItem Text="Compress Horizontally" />
+                            <MenuFlyoutSeparator />
+                            <MenuFlyoutItem Text="Disperse Verticall" />
+                            <MenuFlyoutItem Text="Disperse Horizontally" />
+                        </MenuFlyout>
+                    </Canvas.ContextFlyout>
+                
 
 
                 <Grid x:Name="SelectorGrid" Background="Transparent" Visibility="Collapsed">

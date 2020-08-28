@@ -32,6 +32,7 @@ namespace ModelGraph.Controls
         public void Initialize(ICanvasModel model)
         {
             _model = model;
+            DrawCanvas.DataContext = _model.EditorData;
         }
 
         public void Refresh() => DrawCanvas.Invalidate();
@@ -56,7 +57,7 @@ namespace ModelGraph.Controls
             var aw = (float)DrawCanvas.ActualWidth;
             var ah = (float)DrawCanvas.ActualHeight;
 
-            var e = _model.DrawingExtent;
+            var e = _model.EditorExtent;
             var ew = (float)e.Width;
             var eh = (float)e.Hieght;
 
@@ -99,13 +100,13 @@ namespace ModelGraph.Controls
         #region DrawCanvas_Draw  ==============================================
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var data = _model;
+            var data = sender.DataContext as IDrawData;
             if (data is null) return;
 
             var ds = args.DrawingSession;
 
 
-            foreach (var (P, (S, W), (A, R, G, B)) in data.DrawLines)
+            foreach (var (P, (S, W), (A, R, G, B)) in data.Lines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
@@ -123,7 +124,7 @@ namespace ModelGraph.Controls
                 }
             }
 
-            foreach (var (P, (S, W), (A, R, G, B)) in data.DrawSplines)
+            foreach (var (P, (S, W), (A, R, G, B)) in data.Splines)
             {
                 using (var pb = new CanvasPathBuilder(ds))
                 {
@@ -142,7 +143,7 @@ namespace ModelGraph.Controls
                 }
             }
 
-            foreach (var ((C, D), (S, W), (A, R, G, B)) in data.DrawRects)
+            foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Rects)
             {
                 var d = D * _scale;
                 var c = (C * _scale + _offset) + d;
@@ -154,7 +155,7 @@ namespace ModelGraph.Controls
                     ds.DrawRoundedRectangle(c.X, c.Y, r.X, r.Y, 5, 5, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
             }
 
-            foreach (var((C, D), (S, W), (A, R, G, B)) in data.DrawCircles)
+            foreach (var((C, D), (S, W), (A, R, G, B)) in data.Circles)
             {
                 var r = D * _scale;
                 var c = C * _scale + _offset;
@@ -165,7 +166,7 @@ namespace ModelGraph.Controls
                     ds.DrawCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
             }
 
-            foreach (var ((P,T), (A, R, G, B)) in data.DrawText)
+            foreach (var ((P,T), (A, R, G, B)) in data.Text)
             {
                 var p = P * _scale + _offset;
                 ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
@@ -196,6 +197,24 @@ namespace ModelGraph.Controls
         bool _isRootCanvasLoaded;
         #endregion
 
+
+        private void RootCanasContextRuested(Windows.UI.Xaml.UIElement sender, ContextRequestedEventArgs args)
+        {
+            if (args.TryGetPosition(RootCanvas, out Point p))
+            {
+                args.Handled = true;
+
+                sender.ContextFlyout.ShowAt(RootCanvas);
+            }
+        }
+
+        #region RootCanvas_DoubleTapped  ======================================
+        private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
+        {
+            e.Handled = true;
+            PostEvent(EventType.DoubleTap);
+        }
+        #endregion
 
         #region RootCanvas_PointerMoved  ======================================
         private void RootCanvas_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
@@ -241,7 +260,7 @@ namespace ModelGraph.Controls
                 SetDrawPoint2(e);
                 e.Handled = true;
 
-                PostEvent(EventType.End);
+                PostEvent(EventType.TapEnd);
             }
         }
         #endregion
@@ -286,8 +305,8 @@ namespace ModelGraph.Controls
 
 
         #region Event/Mode/State/Action  ======================================
-        enum EventType { Idle, Tap, End, Skim, Drag, TopHit, LeftHit, RightHit, BottomHit, TopLeftHit, TopRightHit, BottomLeftHit, BottomRightHit };
-        private enum StateType
+        internal enum EventType { Idle, Tap, DoubleTap, TapEnd, ContextMenu, Skim, Drag, TopHit, LeftHit, RightHit, BottomHit, TopLeftHit, TopRightHit, BottomLeftHit, BottomRightHit };
+        internal enum StateType
         {
             Unknown,
 
@@ -318,9 +337,9 @@ namespace ModelGraph.Controls
             CreateIdle, CreateTap, CreateOnNode,
         };
 
-        void PostEvent(EventType evt) { if (Event_Action.TryGetValue(evt, out Action action)) action(); }
+        internal void PostEvent(EventType evt) { if (Event_Action.TryGetValue(evt, out Action action)) action(); }
 
-        bool TrySetState(StateType state)
+        internal bool TrySetState(StateType state)
         {
             if (_state == state) return false; // we have not changed the state, so there is nothing to do
             _state = state;
@@ -336,7 +355,7 @@ namespace ModelGraph.Controls
         }
         private StateType _state = StateType.Unknown;
 
-        void SetEventAction(EventType evt, Action act)
+        internal void SetEventAction(EventType evt, Action act)
         {
             Event_Action[evt] = act;
         }
@@ -366,6 +385,7 @@ namespace ModelGraph.Controls
                 }
             }
         }
+       
         async void ViewIdle_SkimHitTest()
         {
             var anyHit = false;
@@ -406,7 +426,7 @@ namespace ModelGraph.Controls
         {
             if (TrySetState(StateType.ViewOnVoidTap))
             {
-                SetEventAction(EventType.End, SetViewIdle);
+                SetEventAction(EventType.TapEnd, SetViewIdle);
                 SetEventAction(EventType.Drag, SetViewOnVoidDrag);
             }
         }
@@ -415,7 +435,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ViewOnVoidDrag))
             {
                 ShowSelectorGrid();
-                SetEventAction(EventType.End, RegionTraceEnd);
+                SetEventAction(EventType.TapEnd, RegionTraceEnd);
                 SetEventAction(EventType.Drag, TracingRegion);
             }
         }
@@ -438,7 +458,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeTop))
             {
                 SetEventAction(EventType.Drag, ResizeTopDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeLeftHit()
@@ -446,7 +466,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeLeft))
             {
                 SetEventAction(EventType.Drag, ResizeLeftDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeRightHit()
@@ -454,7 +474,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeRight))
             {
                 SetEventAction(EventType.Drag, ResizeRightDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeBottomHit()
@@ -462,7 +482,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeBottom))
             {
                 SetEventAction(EventType.Drag, ResizeBottomDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeTopLeftHit()
@@ -470,7 +490,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeTopLeft))
             {
                 SetEventAction(EventType.Drag, ResizeTopLeftDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeTopRightHit()
@@ -478,7 +498,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeTopRight))
             {
                 SetEventAction(EventType.Drag, ResizeTopRightDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeBottomLeftHit()
@@ -486,7 +506,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeBottomLeft))
             {
                 SetEventAction(EventType.Drag, ResizeBottomLeftDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void SetResizeBottomRightHit()
@@ -494,7 +514,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.ResizeBottomRight))
             {
                 SetEventAction(EventType.Drag, ResizeBottomRightDrag);
-                SetEventAction(EventType.End, ResizeEnd);
+                SetEventAction(EventType.TapEnd, ResizeEnd);
             }
         }
         void ResizeEnd()
@@ -568,14 +588,14 @@ namespace ModelGraph.Controls
 
         #endregion
 
-        #region Mode_Move  ====================================================
+        #region Move_Mode  ====================================================
         void SetMoveIdle()
         {
             if (TrySetState(StateType.MoveIdle))
             {
                 SetEventAction(EventType.Skim, MoveIdle_SkimHitTest);
                 SetEventAction(EventType.Tap, MoveIdle_TapHitTest);
-                SetEventAction(EventType.End, MoveIdle_End);
+                SetEventAction(EventType.TapEnd, MoveIdle_End);
             }
         }
         void MoveIdle_End()
@@ -623,7 +643,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.MoveOnRegionDrag))
             {
                 SetEventAction(EventType.Drag, MovingNode);
-                SetEventAction(EventType.End, SetMoveIdle);
+                SetEventAction(EventType.TapEnd, SetMoveIdle);
             }
         }
         async void MovingNode()
@@ -641,7 +661,7 @@ namespace ModelGraph.Controls
             if (TrySetState(StateType.MoveOnRegionDrag))
             {
                 SetEventAction(EventType.Drag, MovingRegion);
-                SetEventAction(EventType.End, SetMoveIdle);
+                SetEventAction(EventType.TapEnd, SetMoveIdle);
             }
         }
         async void MovingRegion()
@@ -656,7 +676,11 @@ namespace ModelGraph.Controls
         }
         #endregion
 
-        #region Mode_Create  ==================================================
+        #region Link_Mode  ====================================================
+
+        #endregion
+
+        #region Create_Mode  ==================================================
         void SetCreateIdle()
         {
             if (TrySetState(StateType.CreateIdle))
@@ -671,10 +695,6 @@ namespace ModelGraph.Controls
             DrawCanvas.Invalidate();
             ViewSelect.IsChecked = true;
         }
-        #endregion
-
-        #region Mode_Link  ====================================================
-
         #endregion
 
 
@@ -699,6 +719,5 @@ namespace ModelGraph.Controls
             }
         }
         #endregion
-
     }
 }

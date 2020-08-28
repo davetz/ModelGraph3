@@ -23,27 +23,40 @@ namespace ModelGraph.Core
         #region CreateDrawData  ===============================================
         public void RefreshDrawData()
         {
-            ClearDrawData();
+            Editor.Clear();
             foreach (var n in _graph.Nodes)
             {
                 var c = new Vector2(n.X, n.Y);
                 var r = n.Radius;
-                _drawCircles.Add(((c, r), (Stroke.IsFilled, 1), (255, 255, 0, 255)));
+                Editor.AddCircle(((c, r), (Stroke.IsFilled, 1), (255, 255, 0, 255)));
             }
             foreach (var e in _graph.Edges)
             {
                 var p1 = new Vector2(e.Node1.X, e.Node1.Y);
                 var p2 = new Vector2(e.Node2.X, e.Node2.Y);
                 var v = new Vector2[] { p1, p2 };
-                _drawLines.Add((v, (Stroke.IsSimple, 2), (255, 0, 255, 255)));
+                Editor.AddLine((v, (Stroke.IsSimple, 2), (255, 0, 255, 255)));
             }
+        }
+        #endregion
+
+        #region PickerEvents  =================================================
+        public void Picker1Select()
+        {
+        }
+        public void Picker2Select()
+        {
+        }
+        public void Picker2Create()
+        {
         }
         #endregion
 
 
         #region HitTest  ======================================================
-        public Extent DrawingExtent => _graph.ResetExtent();
-
+        public Extent EditorExtent => _graph.ResetExtent();
+        public float Picker1Width => 0;
+        public float Picker2Width => 0;
 
         public bool DragHitTest()
         {

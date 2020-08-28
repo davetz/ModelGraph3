@@ -5,6 +5,15 @@ namespace ModelGraph.Core
 {
     public interface ICanvasModel
     {
+        Extent EditorExtent { get; }
+        float Picker1Width { get; }
+        float Picker2Width { get; }
+        int Picker1Index { get; set; }
+        int Picker2Index { get; set; }
+        void Picker1Select();
+        void Picker2Select();
+        void Picker2Create();
+
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }
 
@@ -54,12 +63,8 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        Extent DrawingExtent { get; }
-
-        List<((Vector2,  Vector2) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawRects { get; }
-        List<((Vector2, float) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawCircles { get; }
-        List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawLines { get; }
-        List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawSplines { get; }
-        List<((Vector2, string) topLeftText, (byte, byte, byte, byte) ARGB)> DrawText { get; }
+        IDrawData EditorData { get; }
+        IDrawData Picker1Data { get; }
+        IDrawData Picker2Data { get; }
     }
 }

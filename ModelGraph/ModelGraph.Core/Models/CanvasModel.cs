@@ -37,6 +37,10 @@ namespace ModelGraph.Core
         public bool EdgeHit => (_hit & Hit.Edge) != 0;
         public bool RegionHit => (_hit & Hit.Region) != 0;
 
+        public int Picker1Index { get; set; }
+        public int Picker2Index { get; set; }
+
+
         protected void ClearHit()
         {
             ToolTip_Text1 = ToolTip_Text2 = string.Empty;
@@ -48,29 +52,13 @@ namespace ModelGraph.Core
         protected void SetHitRegion() => _hit |= Hit.Region;
         private Hit _hit;
 
-        protected void ClearDrawData()
-        {
-            _drawText.Clear();
-            _drawLines.Clear();
-            _drawRects.Clear();
-            _drawCircles.Clear();
-            _drawSplines.Clear();
-        }
+        public IDrawData EditorData => Editor;
+        public IDrawData Picker1Data => Picker1;
+        public IDrawData Picker2Data => Picker2;
 
-        public List<((Vector2, Vector2) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawRects => _drawRects;
-        protected List<((Vector2, Vector2), (Stroke, byte), (byte, byte, byte, byte))> _drawRects = new List<((Vector2, Vector2), (Stroke, byte), (byte, byte, byte, byte))>();
-
-        public List<((Vector2, float) centerRadius, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawCircles => _drawCircles;
-        protected List<((Vector2, float), (Stroke, byte), (byte, byte, byte, byte))> _drawCircles = new List<((Vector2, float), (Stroke, byte), (byte, byte, byte, byte))>();
-
-        public List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawLines => _drawLines;
-        protected List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))> _drawLines = new List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))>();
-
-        public List<(Vector2[] Points, (Stroke, byte) strokeWidth, (byte, byte, byte, byte) ARGB)> DrawSplines => _drawSplines;
-        protected List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))> _drawSplines = new List<(Vector2[], (Stroke, byte), (byte, byte, byte, byte))>();
-
-        public List<((Vector2, string) topLeftText, (byte, byte, byte, byte) ARGB)> DrawText => _drawText;
-        protected List<((Vector2, string), (byte, byte, byte, byte))> _drawText = new List<((Vector2, string), (byte, byte, byte, byte))>();
+        internal DrawData Editor = new DrawData();
+        internal DrawData Picker1 = null;
+        internal DrawData Picker2 = new DrawData();
     }
 }
 
