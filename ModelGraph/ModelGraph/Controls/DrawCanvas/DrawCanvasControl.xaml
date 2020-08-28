@@ -53,13 +53,24 @@
             <RadioButton x:Name="OperateSelect" Content="Operate" Style="{StaticResource RadioButtonStyle}" Checked="OperateSelect_Checked" />
         </StackPanel>
 
-        <Grid x:Name="RootGrid" Background="DarkSlateGray" Grid.Row="1" >
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto" x:Name="Picker1GridColumn"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto" x:Name="Picker2GridColumn"/>
+            </Grid.ColumnDefinitions>
 
-            <canvas:CanvasControl x:Name="DrawCanvas"
+            <Grid Grid.Column="0" x:Name="Picker1Grid" Background="DarkSlateGray" Margin="0,0,4,0">
+                <canvas:CanvasControl x:Name="Pick1Canvas" Draw="DrawCanvas_Draw"/>
+            </Grid>
+            
+            <Grid Grid.Column="1" x:Name="RootGrid" Background="DarkSlateGray">
+
+                <canvas:CanvasControl x:Name="EditCanvas"
                                   Loaded="DrawCanvas_Loaded"
                                   Draw="DrawCanvas_Draw"/>
 
-            <Canvas x:Name="RootCanvas" Background="Transparent"
+                <Canvas x:Name="RootCanvas" Background="Transparent"
                     Loaded="RootCanvas_Loaded"
                     DoubleTapped="RootCanvas_DoubleTapped"
                     ContextRequested="RootCanasContextRuested"
@@ -92,70 +103,76 @@
                             <MenuFlyoutItem Text="Disperse Horizontally" />
                         </MenuFlyout>
                     </Canvas.ContextFlyout>
-                
 
 
-                <Grid x:Name="SelectorGrid" Background="Transparent" Visibility="Collapsed">
-                    <Border  BorderThickness="1" BorderBrush="White" Margin="0" />
-                    <Border  BorderThickness="1" BorderBrush="CornflowerBlue" Margin="1"/>
-                    <Border  BorderThickness="1" BorderBrush="White" Margin="2" />
-                </Grid>
 
-                <Border x:Name="ToolTipBorder" Style="{StaticResource ToolTipBorderStyle}" IsTapEnabled="False">
-                    <StackPanel Orientation="Vertical">
-                        <TextBlock x:Name="ItemName" Style="{StaticResource ToolTipTextStyle}" IsTapEnabled="False"/>
-                        <TextBlock x:Name="ItemToolTip" Style="{StaticResource ToolTipTextStyle}" IsTapEnabled="False"/>
-                    </StackPanel>
-                </Border>
+                    <Grid x:Name="SelectorGrid" Background="Transparent" Visibility="Collapsed">
+                        <Border  BorderThickness="1" BorderBrush="White" Margin="0" />
+                        <Border  BorderThickness="1" BorderBrush="CornflowerBlue" Margin="1"/>
+                        <Border  BorderThickness="1" BorderBrush="White" Margin="2" />
+                    </Grid>
 
-                <Grid x:Name="AlignmentGrid" Background="Transparent" Width="100" Height="40" Visibility="Collapsed">
+                    <Border x:Name="ToolTipBorder" Style="{StaticResource ToolTipBorderStyle}" IsTapEnabled="False">
+                        <StackPanel Orientation="Vertical">
+                            <TextBlock x:Name="ItemName" Style="{StaticResource ToolTipTextStyle}" IsTapEnabled="False"/>
+                            <TextBlock x:Name="ItemToolTip" Style="{StaticResource ToolTipTextStyle}" IsTapEnabled="False"/>
+                        </StackPanel>
+                    </Border>
 
-                    <Button HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0" Margin="-2,0,0,0" Width="12" Height="16" Background="White" ToolTipService.ToolTip="Show Menu" BorderThickness="0,2,2,2" BorderBrush="Blue">
-                        <FontIcon Glyph="&#xE937;" Margin="2,0,0,0" FontSize="10" FontWeight="ExtraBlack" FontFamily="Segoe MDL2 Assets" Foreground="Black"/>
-                        <Button.Flyout>
-                            <MenuFlyout Placement="Right">
-                                <MenuFlyoutItem Text="Undo"/>
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Flip Vertically" />
-                                <MenuFlyoutItem Text="Flip Horizontally" />
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Rotate Left 90" />
-                                <MenuFlyoutItem Text="Rotate Right 90" />
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Align Vertical Left" />
-                                <MenuFlyoutItem Text="Align Vertical Right" />
-                                <MenuFlyoutItem Text="Align Vertical Center" />
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Align Horizontal Top" />
-                                <MenuFlyoutItem Text="Align Horizontal Bottom" />
-                                <MenuFlyoutItem Text="Align Horizontal Center" />
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Compress Vertically" />
-                                <MenuFlyoutItem Text="Compress Horizontally" />
-                                <MenuFlyoutSeparator />
-                                <MenuFlyoutItem Text="Disperse Verticall" />
-                                <MenuFlyoutItem Text="Disperse Horizontally" />
-                            </MenuFlyout>
-                        </Button.Flyout>
-                    </Button>
+                    <Grid x:Name="AlignmentGrid" Background="Transparent" Width="100" Height="40" Visibility="Collapsed">
 
-                    <Border x:Name="SelectorBorder" BorderThickness="3" Background="#60606060" BorderBrush="Blue" Margin="0,0,12,0" />
-                </Grid>
+                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0" Margin="-2,0,0,0" Width="12" Height="16" Background="White" ToolTipService.ToolTip="Show Menu" BorderThickness="0,2,2,2" BorderBrush="Blue">
+                            <FontIcon Glyph="&#xE937;" Margin="2,0,0,0" FontSize="10" FontWeight="ExtraBlack" FontFamily="Segoe MDL2 Assets" Foreground="Black"/>
+                            <Button.Flyout>
+                                <MenuFlyout Placement="Right">
+                                    <MenuFlyoutItem Text="Undo"/>
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Flip Vertically" />
+                                    <MenuFlyoutItem Text="Flip Horizontally" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Rotate Left 90" />
+                                    <MenuFlyoutItem Text="Rotate Right 90" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Align Vertical Left" />
+                                    <MenuFlyoutItem Text="Align Vertical Right" />
+                                    <MenuFlyoutItem Text="Align Vertical Center" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Align Horizontal Top" />
+                                    <MenuFlyoutItem Text="Align Horizontal Bottom" />
+                                    <MenuFlyoutItem Text="Align Horizontal Center" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Compress Vertically" />
+                                    <MenuFlyoutItem Text="Compress Horizontally" />
+                                    <MenuFlyoutSeparator />
+                                    <MenuFlyoutItem Text="Disperse Verticall" />
+                                    <MenuFlyoutItem Text="Disperse Horizontally" />
+                                </MenuFlyout>
+                            </Button.Flyout>
+                        </Button>
 
-                <Grid x:Name="ResizerGrid" Margin="0" Padding="0" Background="Transparent" Width="100" Height="100" Canvas.Left="400" Canvas.Top="100" Visibility="Collapsed">
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Center" PointerEntered="SizerTop_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTop_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" PointerEntered="SizerLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerLeft_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Right" PointerEntered="SizerRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerRight_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Center" PointerEntered="SizerBottom_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottom_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" PointerEntered="SizerTopLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopLeft_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Right" PointerEntered="SizerTopRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopRight_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" PointerEntered="SizerBottomLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomLeft_PointerPressed" />
-                    <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Right" PointerEntered="SizerBottomRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomRight_PointerPressed" />
-                    <Border x:Name="ResizerBorder" BorderThickness="2" Background="Transparent" BorderBrush="White" Margin="8,8,8,8" />
-                </Grid>
+                        <Border x:Name="SelectorBorder" BorderThickness="3" Background="#60606060" BorderBrush="Blue" Margin="0,0,12,0" />
+                    </Grid>
 
-            </Canvas>
+                    <Grid x:Name="ResizerGrid" Margin="0" Padding="0" Background="Transparent" Width="100" Height="100" Canvas.Left="400" Canvas.Top="100" Visibility="Collapsed">
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Center" PointerEntered="SizerTop_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTop_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" PointerEntered="SizerLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerLeft_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Right" PointerEntered="SizerRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerRight_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Center" PointerEntered="SizerBottom_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottom_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" PointerEntered="SizerTopLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopLeft_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Right" PointerEntered="SizerTopRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopRight_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" PointerEntered="SizerBottomLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomLeft_PointerPressed" />
+                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Right" PointerEntered="SizerBottomRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomRight_PointerPressed" />
+                        <Border x:Name="ResizerBorder" BorderThickness="2" Background="Transparent" BorderBrush="White" Margin="8,8,8,8" />
+                    </Grid>
+
+                </Canvas>
+            </Grid>
+
+            <Grid Grid.Column="2" x:Name="Picker2Grid" Background="DarkSlateGray" Margin="4,0,4,0" >
+                <canvas:CanvasControl x:Name="Pick2Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick2Canvas_PointerPressed"/>
+            </Grid>
         </Grid>
+
 
     </Grid>
 </UserControl>

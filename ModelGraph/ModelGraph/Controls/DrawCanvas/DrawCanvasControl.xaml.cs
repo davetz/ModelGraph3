@@ -8,6 +8,7 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
@@ -32,10 +33,14 @@ namespace ModelGraph.Controls
         public void Initialize(ICanvasModel model)
         {
             _model = model;
-            DrawCanvas.DataContext = _model.EditorData;
+            EditCanvas.DataContext = _model.EditorData;
+            Pick1Canvas.DataContext = _model.Picker1Data;
+            Pick2Canvas.DataContext = _model.Picker2Data;
+            ShowPicker1();
+            ShowPicker2();
         }
 
-        public void Refresh() => DrawCanvas.Invalidate();
+        public void Refresh() => EditCanvas.Invalidate();
         #endregion
 
 
@@ -54,8 +59,8 @@ namespace ModelGraph.Controls
         }
         private void PanZoomReset()
         {
-            var aw = (float)DrawCanvas.ActualWidth;
-            var ah = (float)DrawCanvas.ActualHeight;
+            var aw = (float)EditCanvas.ActualWidth;
+            var ah = (float)EditCanvas.ActualHeight;
 
             var e = _model.EditorExtent;
             var ew = (float)e.Width;
@@ -78,7 +83,48 @@ namespace ModelGraph.Controls
             var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
             _offset = ac - ec; //complete offset need to center the view extent on the canvas
 
-            DrawCanvas.Invalidate();
+            EditCanvas.Invalidate();
+        }
+        #endregion
+
+        #region Picker_PointerPressed  ========================================
+        private async void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(Pick2Canvas).Position;
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _model.Picker2Select((int)p.Y); });
+            Pick2Canvas.Invalidate();
+        }
+        private void ShowPicker1()
+        {
+            Pick2Canvas.Width = _model.Picker2Width;
+            if (_model.Picker1Width < 4)
+                HidePicker1();
+            else
+            {
+                Picker1Grid.Visibility = Visibility.Visible;
+                Picker1GridColumn.Width = new GridLength(_model.Picker2Width + 4);
+            }
+        }
+        private void HidePicker1()
+        {
+                Picker1Grid.Visibility = Visibility.Collapsed;
+                Picker1GridColumn.Width = new GridLength(0);
+        }
+        private void ShowPicker2()
+        {
+            Pick2Canvas.Width = _model.Picker2Width;
+            if (_model.Picker2Width < 4)
+                HidePicker2();
+            else
+            {
+                Picker2Grid.Visibility = Visibility.Visible;
+                Picker2GridColumn.Width = new GridLength(_model.Picker2Width + 8);
+            }
+        }
+        private void HidePicker2()
+        {
+            Picker2Grid.Visibility = Visibility.Collapsed;
+            Picker2GridColumn.Width = new GridLength(0);
         }
         #endregion
 
@@ -101,76 +147,89 @@ namespace ModelGraph.Controls
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
             var data = sender.DataContext as IDrawData;
-            if (data is null) return;
-
-            var ds = args.DrawingSession;
-
-
-            foreach (var (P, (S, W), (A, R, G, B)) in data.Lines)
+            if (data != null)
             {
-                using (var pb = new CanvasPathBuilder(ds))
+                var scale = 1.0f;
+                var offset = new Vector2();
+                if (sender == EditCanvas)
                 {
-                    pb.BeginFigure(P[0] * _scale + _offset);
-                    for (int i = 1; i < P.Length; i++)
-                    {
-                        pb.AddLine(P[i] * _scale + _offset);
-                    }
-                    pb.EndFigure(CanvasFigureLoop.Open);
+                    scale = _scale;
+                    offset = _offset;
+                }
+                var ds = args.DrawingSession;
 
-                    using (var geo = CanvasGeometry.CreatePath(pb))
+                foreach (var (P, (S, W), (A, R, G, B)) in data.Lines)
+                {
+                    using (var pb = new CanvasPathBuilder(ds))
                     {
-                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                        pb.BeginFigure(P[0] * scale + offset);
+                        for (int i = 1; i < P.Length; i++)
+                        {
+                            pb.AddLine(P[i] * scale + offset);
+                        }
+                        pb.EndFigure(CanvasFigureLoop.Open);
+
+                        using (var geo = CanvasGeometry.CreatePath(pb))
+                        {
+                            ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                        }
                     }
+                }
+
+                foreach (var (P, (S, W), (A, R, G, B)) in data.Splines)
+                {
+                    using (var pb = new CanvasPathBuilder(ds))
+                    {
+                        pb.BeginFigure(P[0] * scale + offset);
+                        var N = P.Length;
+                        for (var i = 0; i < N - 2;)
+                        {
+                            pb.AddCubicBezier(P[i] * scale + offset, P[++i] * scale + offset, P[++i] * scale + offset);
+                        }
+                        pb.EndFigure(CanvasFigureLoop.Open);
+
+                        using (var geo = CanvasGeometry.CreatePath(pb))
+                        {
+                            ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                        }
+                    }
+                }
+
+                foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Rects)
+                {
+                    var d = D * scale;
+                    var c = (C * scale + offset) - d;
+                    var r = 2 * d;
+
+                    if (S == Stroke.IsFilled)
+                        ds.FillRoundedRectangle(c.X, c.Y, r.X, r.Y, 6, 6, Color.FromArgb(A, R, G, B));
+                    else
+                        ds.DrawRoundedRectangle(c.X, c.Y, r.X, r.Y, 6, 6, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                }
+
+                foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Circles)
+                {
+                    var r = D * scale;
+                    var c = C * scale + offset;
+
+                    if (S == Stroke.IsFilled)
+                        ds.FillCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B));
+                    else
+                        ds.DrawCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                }
+
+                foreach (var ((P, T), (A, R, G, B)) in data.Text)
+                {
+                    var p = P * scale + offset;
+                    ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
                 }
             }
 
-            foreach (var (P, (S, W), (A, R, G, B)) in data.Splines)
-            {
-                using (var pb = new CanvasPathBuilder(ds))
-                {
-                    pb.BeginFigure(P[0] * _scale + _offset);
-                    var N = P.Length;
-                    for (var i = 0; i < N - 2;)
-                    {
-                        pb.AddCubicBezier(P[i] * _scale + _offset, P[++i] * _scale + _offset, P[++i] * _scale + _offset);
-                    }
-                    pb.EndFigure(CanvasFigureLoop.Open);
-
-                    using (var geo = CanvasGeometry.CreatePath(pb))
-                    {
-                        ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
-                    }
-                }
-            }
-
-            foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Rects)
-            {
-                var d = D * _scale;
-                var c = (C * _scale + _offset) + d;
-                var r = 2 * d;
-
-                if (S == Stroke.IsFilled)
-                    ds.FillRoundedRectangle(c.X, c.Y, r.X, r.Y , 5, 5, Color.FromArgb(A, R, G, B));
-                else
-                    ds.DrawRoundedRectangle(c.X, c.Y, r.X, r.Y, 5, 5, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
-            }
-
-            foreach (var((C, D), (S, W), (A, R, G, B)) in data.Circles)
-            {
-                var r = D * _scale;
-                var c = C * _scale + _offset;
-
-                if (S == Stroke.IsFilled)
-                    ds.FillCircle(c.X,c.Y, r, Color.FromArgb(A, R, G, B));
-                else
-                    ds.DrawCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
-            }
-
-            foreach (var ((P,T), (A, R, G, B)) in data.Text)
-            {
-                var p = P * _scale + _offset;
-                ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
-            }
+            // refresh both picker1 & picker2 canvases
+            if (sender == EditCanvas)
+                Pick1Canvas.Invalidate();
+            else if (sender == Pick1Canvas)
+                Pick2Canvas.Invalidate();
         }
         #endregion
 
@@ -178,7 +237,7 @@ namespace ModelGraph.Controls
         private void DrawCanvas_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             _isDrawCanvasLoaded = true;
-            DrawCanvas.Loaded -= DrawCanvas_Loaded;
+            EditCanvas.Loaded -= DrawCanvas_Loaded;
             if (_isRootCanvasLoaded)
             {
                 SetViewIdle();
@@ -277,7 +336,7 @@ namespace ModelGraph.Controls
         }
         private Vector2 DrawPoint(PointerRoutedEventArgs e)
         {
-            var p = e.GetCurrentPoint(DrawCanvas).Position;
+            var p = e.GetCurrentPoint(EditCanvas).Position;
             var x = (p.X - _offset.X) / _scale;
             var y = (p.Y - _offset.Y) / _scale;
             return new Vector2((float)x, (float)y);
@@ -344,6 +403,11 @@ namespace ModelGraph.Controls
             if (_state == state) return false; // we have not changed the state, so there is nothing to do
             _state = state;
             Debug.WriteLine($"State: {_state}");
+
+            if (state == StateType.CreateIdle)
+                ShowPicker2();
+            else
+                HidePicker2();
 
             Event_Action.Clear();
             HideTootlip();
@@ -521,7 +585,7 @@ namespace ModelGraph.Controls
         {
             _model.ResizePropagate();
             _model.RefreshDrawData();
-            DrawCanvas.Invalidate();
+            EditCanvas.Invalidate();
             RestorePointerCursor();
             SetViewIdle();
         }
@@ -653,7 +717,7 @@ namespace ModelGraph.Controls
             if (ok)
             {
                 _model.RefreshDrawData();
-                DrawCanvas.Invalidate();
+                EditCanvas.Invalidate();
             }
         }
         void SetMoveRegionDrag()
@@ -671,7 +735,7 @@ namespace ModelGraph.Controls
             if (ok)
             {
                 _model.RefreshDrawData();
-                DrawCanvas.Invalidate();
+                EditCanvas.Invalidate();
             }
         }
         #endregion
@@ -685,6 +749,7 @@ namespace ModelGraph.Controls
         {
             if (TrySetState(StateType.CreateIdle))
             {
+                Picker2GridColumn.Width = new GridLength(_model.Picker2Width);
                 SetEventAction(EventType.Tap, CreateNewNode);
             }
         }
@@ -692,7 +757,7 @@ namespace ModelGraph.Controls
         {
             var ok = false;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.CreateNode(); });
-            DrawCanvas.Invalidate();
+            EditCanvas.Invalidate();
             ViewSelect.IsChecked = true;
         }
         #endregion
@@ -712,10 +777,10 @@ namespace ModelGraph.Controls
         {
             this.Unloaded -= ModelCanvas_Unloaded;
 
-            if (DrawCanvas != null)
+            if (EditCanvas != null)
             {
-                DrawCanvas.RemoveFromVisualTree();
-                DrawCanvas = null;
+                EditCanvas.RemoveFromVisualTree();
+                EditCanvas = null;
             }
         }
         #endregion

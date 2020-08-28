@@ -6,13 +6,11 @@ namespace ModelGraph.Core
     public interface ICanvasModel
     {
         Extent EditorExtent { get; }
-        float Picker1Width { get; }
-        float Picker2Width { get; }
-        int Picker1Index { get; set; }
-        int Picker2Index { get; set; }
-        void Picker1Select();
-        void Picker2Select();
-        void Picker2Create();
+        int Picker1Width { get; }
+        int Picker2Width { get; }
+        void Picker1Select(int YCord);
+        void Picker2Select(int YCord);
+        void Picker2Paste();
 
         Vector2 GridPoint1 { get; set; }
         Vector2 GridPoint2 { get; set; }

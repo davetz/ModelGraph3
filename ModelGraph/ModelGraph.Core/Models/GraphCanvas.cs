@@ -41,13 +41,21 @@ namespace ModelGraph.Core
         #endregion
 
         #region PickerEvents  =================================================
-        public void Picker1Select()
+        public int Picker1Width => 0;
+        public int Picker2Width => 80;
+
+        public void Picker1Select(int y)
         {
         }
-        public void Picker2Select()
+        public void Picker2Select(int y)
         {
+            var w = Picker2Width;
+            var x = w / 2;
+            var z = (y / w) * w + x;
+            Picker2.Clear();
+            Picker2.AddRect(((new Vector2(x, z), new Vector2(x, x)), (Stroke.IsFilled, 0), (63, 255, 255, 255)));
         }
-        public void Picker2Create()
+        public void Picker2Paste()
         {
         }
         #endregion
@@ -55,8 +63,6 @@ namespace ModelGraph.Core
 
         #region HitTest  ======================================================
         public Extent EditorExtent => _graph.ResetExtent();
-        public float Picker1Width => 0;
-        public float Picker2Width => 0;
 
         public bool DragHitTest()
         {
