@@ -20,14 +20,14 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private PolySpike(Shape shape)
+        private PolySpike(MShape shape)
         {
             CopyData(shape);
         }
-        private PolySpike(Shape shape, Vector2 center)
+        private PolySpike(MShape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(new MShape[] { this }, center);
         }
         #endregion
 
@@ -64,8 +64,8 @@ namespace ModelGraph.Controls
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new PolySpike(this);
-        internal override Shape Clone(Vector2 center) => new PolySpike(this, center);
+        internal override MShape Clone() =>new PolySpike(this);
+        internal override MShape Clone(Vector2 center) => new PolySpike(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 20);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
         protected override byte TypeCode => (byte)ShapeType.PolySpike;

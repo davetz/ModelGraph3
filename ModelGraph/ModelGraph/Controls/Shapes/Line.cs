@@ -17,20 +17,20 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private Line(Shape shape)
+        private Line(MShape shape)
         {
             CopyData(shape);
         }
-        private Line(Shape shape, Vector2 center)
+        private Line(MShape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter( new Shape[] { this }, center);
+            SetCenter( new MShape[] { this }, center);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() => new Line(this);
-        internal override Shape Clone(Vector2 center) => new Line(this, center);
+        internal override MShape Clone() => new Line(this);
+        internal override MShape Clone(Vector2 center) => new Line(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
         protected override byte TypeCode => (byte)ShapeType.Line;
         #endregion

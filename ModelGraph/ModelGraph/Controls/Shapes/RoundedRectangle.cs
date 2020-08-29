@@ -19,12 +19,12 @@ namespace ModelGraph.Controls
         internal float Corner => 0.1f;
 
         #region PrivateConstructor  ===========================================
-        internal RoundedRectangle(Shape shape)
+        internal RoundedRectangle(MShape shape)
         {
             CopyData(shape);
         }
 
-        internal RoundedRectangle(Shape shape, Vector2 center)
+        internal RoundedRectangle(MShape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -32,8 +32,8 @@ namespace ModelGraph.Controls
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new RoundedRectangle(this);
-        internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
+        internal override MShape Clone() =>new RoundedRectangle(this);
+        internal override MShape Clone(Vector2 center) => new RoundedRectangle(this, center);
 
         internal override void Draw(CanvasControl cc, CanvasDrawingSession ds, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {

@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Controls
 {
-    internal abstract class Central : Shape
+    internal abstract class Central : MShape
     {
         internal Central() { }
 

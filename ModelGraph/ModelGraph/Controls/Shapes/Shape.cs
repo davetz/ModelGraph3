@@ -10,9 +10,9 @@ using Windows.UI;
 
 namespace ModelGraph.Controls
 {
-    internal abstract partial class Shape
+    internal abstract partial class MShape
     {
-        internal Shape() { }
+        internal MShape() { }
 
         #region Abstract/Virtual  =============================================
         [Flags]
@@ -27,8 +27,8 @@ namespace ModelGraph.Controls
             Minor = 0x40,
         }
         internal abstract HasSlider Sliders { get; }
-        internal abstract Shape Clone();
-        internal abstract Shape Clone(Vector2 Center);
+        internal abstract MShape Clone();
+        internal abstract MShape Clone(Vector2 Center);
 
         internal abstract void Draw(CanvasControl ctl, CanvasDrawingSession ds, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal);
         internal abstract void Draw(CanvasControl ctl, CanvasDrawingSession ds, float scale, Vector2 center, FlipState flip);
@@ -42,26 +42,26 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Flip/Rotate  ==================================================
-        static internal void RotateLeft(IEnumerable<Shape> shapes, bool useAlternate = false)
+        static internal void RotateLeft(IEnumerable<MShape> shapes, bool useAlternate = false)
         {
             foreach (var shape in shapes) { shape.RotateLeft(useAlternate); }
         }
-        static internal void RotateRight(IEnumerable<Shape> shapes, bool useAlternate = false)
+        static internal void RotateRight(IEnumerable<MShape> shapes, bool useAlternate = false)
         {
             foreach (var shape in shapes) { shape.RotateRight(useAlternate); }
         }
-        static internal void VerticalFlip(IEnumerable<Shape> shapes)
+        static internal void VerticalFlip(IEnumerable<MShape> shapes)
         {
             foreach (var shape in shapes) { shape.VerticalFlip(); }
         }
-        static internal void HorizontalFlip(IEnumerable<Shape> shapes)
+        static internal void HorizontalFlip(IEnumerable<MShape> shapes)
         {
             foreach (var shape in shapes) { shape.HorizontalFlip(); }
         }
         #endregion
 
         #region SetCenter  ====================================================
-        static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 cp)
+        static internal void SetCenter(IEnumerable<MShape> shapes, Vector2 cp)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
 
@@ -76,14 +76,14 @@ namespace ModelGraph.Controls
         #endregion
 
         #region MoveCenter  ===================================================
-        static internal void MoveCenter(IEnumerable<Shape> shapes, Vector2 ds)
+        static internal void MoveCenter(IEnumerable<MShape> shapes, Vector2 ds)
         {
             foreach (var shape in shapes) { shape.MoveCenter(ds.X, ds.Y); }
         }
         #endregion
 
         #region Resize  =======================================================
-        internal static void ResizeCentral(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeCentral(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
 
@@ -100,7 +100,7 @@ namespace ModelGraph.Controls
                 }
             }
         }
-        internal static void ResizeVertical(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeVertical(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
 
@@ -118,7 +118,7 @@ namespace ModelGraph.Controls
                 }
             }
         }
-        internal static void ResizeHorizontal(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeHorizontal(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
 
@@ -135,7 +135,7 @@ namespace ModelGraph.Controls
                 }
             }
         }
-        internal static void ResizeMajorAxis(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeMajorAxis(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
@@ -147,7 +147,7 @@ namespace ModelGraph.Controls
             }
             SetCenter(shapes, new Vector2(cdx, cdy));
         }
-        internal static void ResizeMinorAxis(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeMinorAxis(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
@@ -158,7 +158,7 @@ namespace ModelGraph.Controls
             }
             SetCenter(shapes, new Vector2(cdx, cdy));
         }
-        internal static void ResizeTernaryAxis(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeTernaryAxis(IEnumerable<MShape> shapes, float slider)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
@@ -169,7 +169,7 @@ namespace ModelGraph.Controls
             }
             SetCenter(shapes, new Vector2(cdx, cdy));
         }
-        internal static void SetDimension(IEnumerable<Shape> shapes, float pd)
+        internal static void SetDimension(IEnumerable<MShape> shapes, float pd)
         {
             var (min, max, dim) = GetDimension(shapes);
             if (pd < min) pd = min;
@@ -189,7 +189,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region GetSliders  ===================================================
-        internal static (bool locked, float min, float max, float dim, float aux, float major, float minor, float cent, float vert, float horz) GetSliders(IEnumerable<Shape> shapes)
+        internal static (bool locked, float min, float max, float dim, float aux, float major, float minor, float cent, float vert, float horz) GetSliders(IEnumerable<MShape> shapes)
         {
             if (shapes.Count() > 0)
             {
@@ -225,7 +225,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region LockSliders  ==================================================
-        internal static void LockSliders(IEnumerable<Shape> shapes, bool isLocked)
+        internal static void LockSliders(IEnumerable<MShape> shapes, bool isLocked)
         {
             foreach (var shape in shapes)
             {
@@ -235,7 +235,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region DrawTargets  ==================================================
-        static internal  void DrawTargets(IEnumerable<Shape> shapes, List<Vector2> targets, CanvasDrawingSession ds, float scale, Vector2 center)
+        static internal  void DrawTargets(IEnumerable<MShape> shapes, List<Vector2> targets, CanvasDrawingSession ds, float scale, Vector2 center)
         {
             var (dx1, dy1, dx2, dy2, cdx, cdy, dw, dh) = GetExtent(shapes);
             if (dw + dh > 0)

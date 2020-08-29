@@ -158,64 +158,60 @@ namespace ModelGraph.Controls
                 }
                 var ds = args.DrawingSession;
 
-                foreach (var (P, (S, W), (A, R, G, B)) in data.Lines)
+                foreach (var (P, (S, K, W), (A, R, G, B)) in data.Lines)
                 {
-                    using (var pb = new CanvasPathBuilder(ds))
+                    if ((K & Shape.IsMultipleInstance) != 0)
                     {
-                        pb.BeginFigure(P[0] * scale + offset);
-                        for (int i = 1; i < P.Length; i++)
-                        {
-                            pb.AddLine(P[i] * scale + offset);
-                        }
-                        pb.EndFigure(CanvasFigureLoop.Open);
+                        var k = K & Shape.MultipleInstanceMask;
+                        var color = Color.FromArgb(A, R, G, B);
+                        var stroke = StrokeStyle(S);
 
-                        using (var geo = CanvasGeometry.CreatePath(pb))
+                        var N = P.Length / 2;
+                        for (int i = 0; i < N; i += 2)
                         {
-                            ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                            var c = P[i] * scale + offset;
+                            var d = P[i + 1] * scale;
+                            DrawShape(c, d, color, stroke, k, (S == Stroke.IsFilled), W);
                         }
                     }
-                }
-
-                foreach (var (P, (S, W), (A, R, G, B)) in data.Splines)
-                {
-                    using (var pb = new CanvasPathBuilder(ds))
+                    else
                     {
-                        pb.BeginFigure(P[0] * scale + offset);
-                        var N = P.Length;
-                        for (var i = 0; i < N - 2;)
+                        using (var pb = new CanvasPathBuilder(ds))
                         {
-                            pb.AddCubicBezier(P[i] * scale + offset, P[++i] * scale + offset, P[++i] * scale + offset);
-                        }
-                        pb.EndFigure(CanvasFigureLoop.Open);
+                            pb.BeginFigure(P[0] * scale + offset);
+                            if (K == Shape.JointedLines)
+                            {
+                                for (int i = 1; i < P.Length; i++)
+                                {
+                                    pb.AddLine(P[i] * scale + offset);
+                                }
+                            }
+                            else
+                            {
+                                var N = P.Length;
+                                for (var i = 0; i < N - 2;)
+                                {
+                                    pb.AddCubicBezier(P[i] * scale + offset, P[++i] * scale + offset, P[++i] * scale + offset);
+                                }
+                            }
+                            pb.EndFigure(CanvasFigureLoop.Open);
 
-                        using (var geo = CanvasGeometry.CreatePath(pb))
-                        {
-                            ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                            using (var geo = CanvasGeometry.CreatePath(pb))
+                            {
+                                ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                            }
                         }
                     }
+
+
                 }
 
-                foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Rects)
+                foreach (var ((C, D), (S, K, W), (A, R, G, B)) in data.Shapes)
                 {
                     var d = D * scale;
-                    var c = (C * scale + offset) - d;
-                    var r = 2 * d;
-
-                    if (S == Stroke.IsFilled)
-                        ds.FillRoundedRectangle(c.X, c.Y, r.X, r.Y, 6, 6, Color.FromArgb(A, R, G, B));
-                    else
-                        ds.DrawRoundedRectangle(c.X, c.Y, r.X, r.Y, 6, 6, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
-                }
-
-                foreach (var ((C, D), (S, W), (A, R, G, B)) in data.Circles)
-                {
-                    var r = D * scale;
                     var c = C * scale + offset;
 
-                    if (S == Stroke.IsFilled)
-                        ds.FillCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B));
-                    else
-                        ds.DrawCircle(c.X, c.Y, r, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                    DrawShape(c, d, Color.FromArgb(A, R, G, B), StrokeStyle(S), K, (S == Stroke.IsFilled), W);
                 }
 
                 foreach (var ((P, T), (A, R, G, B)) in data.Text)
@@ -223,7 +219,46 @@ namespace ModelGraph.Controls
                     var p = P * scale + offset;
                     ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
                 }
+
+                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, Shape shape, bool isFilled, byte w)
+                {
+                    switch (shape)
+                    {
+                        case Shape.Line:
+                            ds.DrawLine(a, b + _offset, color, w, stroke);
+                            break;
+                        case Shape.Circle:
+                            if (isFilled)
+                                ds.FillCircle(a, b.X, color);
+                            else
+                                ds.DrawCircle(a, b.X, color, w, stroke);
+                            break;
+                        case Shape.Ellipse:
+                            if (isFilled)
+                                ds.FillEllipse(a, b.X, b.Y, color);
+                            else
+                                ds.DrawEllipse(a, b.X, b.Y, color, w, stroke);
+                            break;
+                        case Shape.Rectangle:
+                            var e = a - b;
+                            var f = 2 * b;
+                            if (isFilled)
+                                ds.FillRectangle(e.X, e.Y, f.X, f.Y, color);
+                            else
+                                ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, w, stroke);
+                            break;
+                        case Shape.RoundedRectangle:
+                            e = a - b;
+                            f = 2 * b;
+                            if (isFilled)
+                                ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color);
+                            else
+                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color, w, stroke);
+                            break;
+                    }
+                }
             }
+
 
             // refresh both picker1 & picker2 canvases
             if (sender == EditCanvas)

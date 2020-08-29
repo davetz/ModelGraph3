@@ -7,7 +7,7 @@ using Windows.UI;
 
 namespace ModelGraph.Controls
 {
-    internal abstract partial class Shape
+    internal abstract partial class MShape
     {
         private const int PointCountIndex = 19;
         private byte A = 0xFF; // of color(A, R, G, B)
@@ -166,9 +166,9 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Serialize  ====================================================
-        public static byte[] Serialize(IEnumerable<Shape> shapes)
+        public static byte[] Serialize(IEnumerable<MShape> shapes)
         {
-            var(dx1, dy1, dx2, dy2, cdx, cdy, fw, fh) = Shape.GetExtent(shapes);
+            var(dx1, dy1, dx2, dy2, cdx, cdy, fw, fh) = MShape.GetExtent(shapes);
             var data = new List<byte>(shapes.Count() * 30);
 
             data.Add(ToByte(fw)); // overal width
@@ -234,7 +234,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Deserialize  ==================================================
-        static public void Deserialize(byte[] data, List<Shape> shapes)
+        static public void Deserialize(byte[] data, List<MShape> shapes)
         {
             shapes.Clear();
             if (data is null || data.Length < 2) return;
@@ -310,7 +310,7 @@ namespace ModelGraph.Controls
                 }
                 return false;
             }
-            void ReadData(Shape shape)
+            void ReadData(MShape shape)
             {
                 shapes.Add(shape);
 
@@ -348,7 +348,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region CopyData  =====================================================
-        protected void CopyData(Shape s)
+        protected void CopyData(MShape s)
         {
             A = s.A;
             R = s.R;

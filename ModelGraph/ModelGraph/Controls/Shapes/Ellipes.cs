@@ -18,11 +18,11 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private Ellipes(Shape shape)
+        private Ellipes(MShape shape)
         {
             CopyData(shape);
         }
-        private Ellipes(Shape shape, Vector2 center)
+        private Ellipes(MShape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -30,8 +30,8 @@ namespace ModelGraph.Controls
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new Ellipes(this);
-        internal override Shape Clone(Vector2 center) => new Ellipes(this, center);
+        internal override MShape Clone() =>new Ellipes(this);
+        internal override MShape Clone(Vector2 center) => new Ellipes(this, center);
 
         internal override void Draw(CanvasControl cc, CanvasDrawingSession ds, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {

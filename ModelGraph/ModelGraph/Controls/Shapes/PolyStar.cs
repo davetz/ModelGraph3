@@ -36,20 +36,20 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyStar(Shape shape)
+        private PolyStar(MShape shape)
         {
             CopyData(shape);
         }
-        private PolyStar(Shape shape, Vector2 center)
+        private PolyStar(MShape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(new MShape[] { this }, center);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new PolyStar(this);
-        internal override Shape Clone(Vector2 center) => new PolyStar(this, center);
+        internal override MShape Clone() =>new PolyStar(this);
+        internal override MShape Clone(Vector2 center) => new PolyStar(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
         protected override byte TypeCode => (byte)ShapeType.PolyStar;
         #endregion

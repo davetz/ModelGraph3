@@ -33,12 +33,12 @@ namespace ModelGraph.Controls
         private IPageModel _rootModel;
         private SymbolX _symbol;
 
-        private List<Shape> SymbolShapes = new List<Shape>();
-        private List<Shape> PickerShapes = new List<Shape> { new Circle(), new Ellipes(), new RoundedRectangle(), new Rectangle(), new PolySide(), new PolyStar(), new PolyGear(), new Line(), new PolySpike(), new PolyPulse(), new PolyWave(), new PolySpring() };
-        private HashSet<Shape> SelectedShapes = new HashSet<Shape>();
-        private static HashSet<Shape> CutCopyShapes = new HashSet<Shape>(); //cut/copy/clone shapes between two SymbolEditControls
+        private List<MShape> SymbolShapes = new List<MShape>();
+        private List<MShape> PickerShapes = new List<MShape> { new Circle(), new Ellipes(), new RoundedRectangle(), new Rectangle(), new PolySide(), new PolyStar(), new PolyGear(), new Line(), new PolySpike(), new PolyPulse(), new PolyWave(), new PolySpring() };
+        private HashSet<MShape> SelectedShapes = new HashSet<MShape>();
+        private static HashSet<MShape> CutCopyShapes = new HashSet<MShape>(); //cut/copy/clone shapes between two SymbolEditControls
 
-        private Shape PickerShape; //current selected picker shape
+        private MShape PickerShape; //current selected picker shape
 
         private float EditScale => EditSize / 2;
         private const float EditSize = 512;  //width, height of shape in the editor
@@ -91,7 +91,7 @@ namespace ModelGraph.Controls
             }
             else
             {
-                Shape.Deserialize(_symbol.Data, SymbolShapes);
+                MShape.Deserialize(_symbol.Data, SymbolShapes);
                 InitAutoFlipCheckBoxes(_symbol.AutoFlip);
             }
         }
@@ -211,7 +211,7 @@ namespace ModelGraph.Controls
 
             EditorCanvas.Invalidate();
         }
-        void SetProperty(Shape shape, ProertyId pid)
+        void SetProperty(MShape shape, ProertyId pid)
         {
             if ((pid & ProertyId.EndCap) != 0) shape.EndCap = ShapeEndCap;
             if ((pid & ProertyId.DashCap) != 0) shape.DashCap = ShapeDashCap;
@@ -223,7 +223,7 @@ namespace ModelGraph.Controls
             if ((pid & ProertyId.StrokeWidth) != 0) shape.StrokeWidth = (float)ShapeStrokeWidth;
         }
 
-        void GrtProperty(Shape shape)
+        void GrtProperty(MShape shape)
         {
             _changesEnabled = false;
 
@@ -249,7 +249,7 @@ namespace ModelGraph.Controls
         {
             if (SelectedShapes.Count > 0)
             {
-                Shape.RotateLeft(SelectedShapes, _use30degreeDelta);
+                MShape.RotateLeft(SelectedShapes, _use30degreeDelta);
                 EditorCanvas.Invalidate();
             }
         }
@@ -257,7 +257,7 @@ namespace ModelGraph.Controls
         {
             if (SelectedShapes.Count > 0)
             {
-                Shape.RotateRight(SelectedShapes, _use30degreeDelta);
+                MShape.RotateRight(SelectedShapes, _use30degreeDelta);
                 EditorCanvas.Invalidate();
             }
         }
@@ -265,7 +265,7 @@ namespace ModelGraph.Controls
         {
             if (SelectedShapes.Count > 0)
             {
-                Shape.VerticalFlip(SelectedShapes);
+                MShape.VerticalFlip(SelectedShapes);
                 EditorCanvas.Invalidate();
             }
         }
@@ -273,7 +273,7 @@ namespace ModelGraph.Controls
         {
             if (SelectedShapes.Count > 0)
             {
-                Shape.HorizontalFlip(SelectedShapes);
+                MShape.HorizontalFlip(SelectedShapes);
                 EditorCanvas.Invalidate();
             }
         }

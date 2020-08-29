@@ -170,7 +170,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region SetPickerShape  ===============================================
-        private void SetPicker(Shape pickerShape)
+        private void SetPicker(MShape pickerShape)
         {
             PickerShape = pickerShape;
             SetNewShapePlacement();
@@ -225,7 +225,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region SetDragNewShape  ==============================================
-        Shape[] DragShapes = new Shape[1];
+        MShape[] DragShapes = new MShape[1];
         private void SetDragNewShape()
         {
             if (SetEditorState(EditorState.DragNewShape))
@@ -238,7 +238,7 @@ namespace ModelGraph.Controls
         }
         private void DragNewShape()
         {
-            Shape.MoveCenter(DragShapes, ShapeDelta);
+            MShape.MoveCenter(DragShapes, ShapeDelta);
             RawPoint1 = RawPoint2;
             ShapePoint1 = ShapePoint(RawPoint2);
 
@@ -290,7 +290,7 @@ namespace ModelGraph.Controls
         {
             var ds = new Vector2(0, -KD);
             if (_hoverPointIndex == 0)
-                Shape.MoveCenter(SelectedShapes, ds);
+                MShape.MoveCenter(SelectedShapes, ds);
             else
                 _polylineTarget.MovePoint(_hoverPointIndex - 1, ds);
         }
@@ -298,7 +298,7 @@ namespace ModelGraph.Controls
         {
             var ds = new Vector2(0, KD);
             if (_hoverPointIndex == 0)
-                Shape.MoveCenter(SelectedShapes, ds);
+                MShape.MoveCenter(SelectedShapes, ds);
             else
                 _polylineTarget.MovePoint(_hoverPointIndex - 1, ds);
         }
@@ -306,7 +306,7 @@ namespace ModelGraph.Controls
         {
             var ds = new Vector2(-KD, 0);
             if (_hoverPointIndex == 0)
-                Shape.MoveCenter(SelectedShapes, ds);
+                MShape.MoveCenter(SelectedShapes, ds);
             else
                 _polylineTarget.MovePoint(_hoverPointIndex - 1, ds);
         }
@@ -314,7 +314,7 @@ namespace ModelGraph.Controls
         {
             var ds = new Vector2(KD, 0);
             if (_hoverPointIndex == 0)
-                Shape.MoveCenter(SelectedShapes, ds);
+                MShape.MoveCenter(SelectedShapes, ds);
             else
                 _polylineTarget.MovePoint(_hoverPointIndex - 1, ds);
         }
@@ -410,8 +410,8 @@ namespace ModelGraph.Controls
 
         private void DragCenterPoint()
         {
-            Shape.MoveCenter(SelectedShapes, ShapeDelta);
-            Shape.LockSliders(SelectedShapes, true);
+            MShape.MoveCenter(SelectedShapes, ShapeDelta);
+            MShape.LockSliders(SelectedShapes, true);
             SetSizeSliders();
 
             EditorCanvas.Invalidate();
@@ -419,7 +419,7 @@ namespace ModelGraph.Controls
         private void DragLinePoint()
         {
             _polylineTarget.MovePoint(_linePointIndex, ShapeDelta);
-            Shape.LockSliders(SelectedShapes, true);
+            MShape.LockSliders(SelectedShapes, true);
             SetSizeSliders();
 
             if (IsKillZone())
@@ -605,7 +605,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.NWC, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.NWC);
-                Target_Contacts[Target.NWC] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.NWC] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -614,7 +614,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.NW, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.NW);
-                Target_Contacts[Target.NW] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.NW] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -623,7 +623,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.N, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.N);
-                Target_Contacts[Target.N] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.N] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -632,7 +632,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.NE, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.NE);
-                Target_Contacts[Target.NE] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.NE] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -645,7 +645,7 @@ namespace ModelGraph.Controls
                 if (d > -0.1f) d = -0.1f;
                 var p = new Vector2(-d, d);
 
-                Target_Contacts[Target.NEC] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.NEC] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -657,7 +657,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.EN, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.EN);
-                Target_Contacts[Target.EN] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.EN] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -666,7 +666,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.E, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.E);
-                Target_Contacts[Target.E] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.E] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -675,7 +675,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.ES, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.ES);
-                Target_Contacts[Target.ES] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.ES] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -687,7 +687,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.WN, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.WN);
-                Target_Contacts[Target.WN] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.WN] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -696,7 +696,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.W, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.W);
-                Target_Contacts[Target.W] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.W] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -705,7 +705,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.WS, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.WS);
-                Target_Contacts[Target.WS] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.WS] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -717,7 +717,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.SWC, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.SWC);
-                Target_Contacts[Target.SWC] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.SWC] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -726,7 +726,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.SW, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.SW);
-                Target_Contacts[Target.SW] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.SW] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -735,7 +735,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.S, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.S);
-                Target_Contacts[Target.S] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.S] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -744,7 +744,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.SE, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.SE);
-                Target_Contacts[Target.SE] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.SE] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }
@@ -753,7 +753,7 @@ namespace ModelGraph.Controls
             if (Target_Contacts.TryGetValue(Target.SEC, out (Contact con, (sbyte dx, sbyte dy) pnt, byte siz) val))
             {
                 var p = ClampPoint(ShapePoint2, TargetIndex.SEC);
-                Target_Contacts[Target.SEC] = (val.con, Shape.ToSByte(p), val.siz);
+                Target_Contacts[Target.SEC] = (val.con, MShape.ToSByte(p), val.siz);
             }
             EditorCanvas.Invalidate();
         }

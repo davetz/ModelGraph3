@@ -17,11 +17,11 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private Rectangle(Shape shape)
+        private Rectangle(MShape shape)
         {
             CopyData(shape);
         }
-        private Rectangle(Shape shape, Vector2 center)
+        private Rectangle(MShape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -29,8 +29,8 @@ namespace ModelGraph.Controls
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new Rectangle(this);
-        internal override Shape Clone(Vector2 center) => new Rectangle(this, center);
+        internal override MShape Clone() =>new Rectangle(this);
+        internal override MShape Clone(Vector2 center) => new Rectangle(this, center);
 
         internal override void Draw(CanvasControl cc, CanvasDrawingSession ds, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {

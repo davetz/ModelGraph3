@@ -206,7 +206,7 @@ namespace ModelGraph.Controls
                 var d = (float)(value / 100);
                 if (Target_Contacts.TryGetValue(targ, out (Contact c, (sbyte x, sbyte y) p, byte s) v))
                 {
-                    Target_Contacts[targ] = (v.c, v.p, Shape.ToByte(d));
+                    Target_Contacts[targ] = (v.c, v.p, MShape.ToByte(d));
                     EditorCanvas.Invalidate();
                 }
             }
@@ -358,7 +358,7 @@ namespace ModelGraph.Controls
             var value = (float)CentralSizeSlider.Value;
             if (Changed(value, _centralSize))
             {
-                Shape.ResizeCentral(SelectedShapes, value);
+                MShape.ResizeCentral(SelectedShapes, value);
                 LockPolyline();
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
@@ -378,7 +378,7 @@ namespace ModelGraph.Controls
             var value = (float)VerticalSizeSlider.Value;
             if (Changed(value, _verticalSize))
             {
-                Shape.ResizeVertical(SelectedShapes, value);
+                MShape.ResizeVertical(SelectedShapes, value);
                 LockPolyline();
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
@@ -398,7 +398,7 @@ namespace ModelGraph.Controls
             var value = (float)HorizontalSizeSlider.Value;
             if (Changed(value, _horizontalSize))
             {
-                Shape.ResizeHorizontal(SelectedShapes, value);
+                MShape.ResizeHorizontal(SelectedShapes, value);
                 LockPolyline();
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
@@ -418,7 +418,7 @@ namespace ModelGraph.Controls
             var value = (float)MajorSizeSlider.Value;
             if (Changed(value, _majorSize))
             {
-                Shape.ResizeMajorAxis(SelectedShapes, value);
+                MShape.ResizeMajorAxis(SelectedShapes, value);
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
             }
@@ -437,7 +437,7 @@ namespace ModelGraph.Controls
             var value = (float)MinorSizeSlider.Value;
             if (Changed(value, _minorSize))
             {
-                Shape.ResizeMinorAxis(SelectedShapes, value);
+                MShape.ResizeMinorAxis(SelectedShapes, value);
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
             }
@@ -456,7 +456,7 @@ namespace ModelGraph.Controls
             var value = (float)DimensionSlider.Value;
             if (Changed(value, _polyDimension))
             {
-                Shape.SetDimension(SelectedShapes, value);
+                MShape.SetDimension(SelectedShapes, value);
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
             }
@@ -477,7 +477,7 @@ namespace ModelGraph.Controls
             var value = (float)TernarySizeSlider.Value;
             if (Changed(value, _ternarySize))
             {
-                Shape.ResizeTernaryAxis(SelectedShapes, value);
+                MShape.ResizeTernaryAxis(SelectedShapes, value);
                 SetSizeSliders();
                 EditorCanvas.Invalidate();
             }
@@ -495,7 +495,7 @@ namespace ModelGraph.Controls
         {
             _changesEnabled = false;
 
-            var (locked, min, max, dim, aux, major, minor, cent, vert, horz) = Shape.GetSliders(SelectedShapes);
+            var (locked, min, max, dim, aux, major, minor, cent, vert, horz) = MShape.GetSliders(SelectedShapes);
 
             if (cent < 0)
                 CentralSizeSlider.Visibility = Windows.UI.Xaml.Visibility.Collapsed;
@@ -574,7 +574,7 @@ namespace ModelGraph.Controls
         }
         private void UnlockPolyline()
         {
-            Shape.LockSliders(SelectedShapes, false);
+            MShape.LockSliders(SelectedShapes, false);
             LockButton.Content = "\uE785";
             LockButton.Background = (Brush)Resources["BackgroundNormal"];
             ToolTipService.SetToolTip(LockButton, "_02B".GetLocalized());
@@ -586,7 +586,7 @@ namespace ModelGraph.Controls
         }
         private void LockPolyline()
         {
-            Shape.LockSliders(SelectedShapes, true);
+            MShape.LockSliders(SelectedShapes, true);
             LockButton.Content = "\uE72E";
             LockButton.Background = (Brush)Resources["BackgroundPink"];
             ToolTipService.SetToolTip(LockButton, "_02A".GetLocalized());
@@ -669,7 +669,7 @@ namespace ModelGraph.Controls
         {
             if (SelectedShapes.Count > 0)
             {
-                Shape.SetCenter(SelectedShapes, Vector2.Zero);
+                MShape.SetCenter(SelectedShapes, Vector2.Zero);
                 EditorCanvas.Invalidate();
             }
         }
@@ -700,7 +700,7 @@ namespace ModelGraph.Controls
 
         private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            _symbol.Data = Shape.Serialize(SymbolShapes);
+            _symbol.Data = MShape.Serialize(SymbolShapes);
             _symbol.SetTargetContacts(Target_Contacts);
             _symbol.Version += 1;
 
@@ -717,7 +717,7 @@ namespace ModelGraph.Controls
 
         private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
-            Shape.Deserialize(_symbol.Data, SymbolShapes);
+            MShape.Deserialize(_symbol.Data, SymbolShapes);
             EditorCanvas.Invalidate();
         }
         #endregion

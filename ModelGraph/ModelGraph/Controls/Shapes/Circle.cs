@@ -17,11 +17,11 @@ namespace ModelGraph.Controls
         }
 
         #region PrivateConstructor  ===========================================
-        private Circle(Shape shape)
+        private Circle(MShape shape)
         {
             CopyData(shape);
         }
-        private Circle(Shape shape, Vector2 center)
+        private Circle(MShape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -29,8 +29,8 @@ namespace ModelGraph.Controls
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new Circle(this);
-        internal override Shape Clone(Vector2 center) => new Circle(this, center);
+        internal override MShape Clone() =>new Circle(this);
+        internal override MShape Clone(Vector2 center) => new Circle(this, center);
 
         internal override void Draw(CanvasControl cc, CanvasDrawingSession ds, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {

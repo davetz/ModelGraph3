@@ -7,7 +7,7 @@ using System.Numerics;
 
 namespace ModelGraph.Controls
 {
-    internal abstract class Polyline : Shape
+    internal abstract class Polyline : MShape
     {
 
         #region Polyline Methods  =============================================
