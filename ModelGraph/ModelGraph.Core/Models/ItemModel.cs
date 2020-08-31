@@ -4,15 +4,15 @@ using Windows.ApplicationModel.DataTransfer.DragDrop.Core;
 
 namespace ModelGraph.Core
 {
-    public abstract class LineModel : ChildOf<LineModel>
+    public abstract class ItemModel : ChildOf<ItemModel>
     {
-        static readonly List<LineModel> _noItems = new List<LineModel>(0);
-        virtual internal List<LineModel> Items => _noItems;
+        static readonly List<ItemModel> _noItems = new List<ItemModel>(0);
+        virtual internal List<ItemModel> Items => _noItems;
 
         private ModelFlags _modelFlags;
         public byte Depth;      // depth of tree hierarchy
 
-        public LineModel ParentModel => Owner;
+        public ItemModel ParentModel => Owner;
         internal override Item GetOwner() => Owner;
 
         #region ModelState  ===================================================
@@ -106,8 +106,8 @@ namespace ModelGraph.Core
 
         #region CommonMethods   ===============================================
         internal Store ItemStore => GetItem() as Store;
-        internal bool IsValidModel(LineModel m) => !IsInvalidModel(m);
-        internal bool IsInvalidModel(LineModel m) => IsInvalid(m) || IsInvalid(m.GetItem());
+        internal bool IsValidModel(ItemModel m) => !IsInvalidModel(m);
+        internal bool IsInvalidModel(ItemModel m) => IsInvalid(m) || IsInvalid(m.GetItem());
         internal bool ToggleLeft(Root root) => IsExpandedLeft ? CollapseLeft() : ExpandLeft(root);
         internal bool ToggleRight(Root root) => IsExpandedRight ? CollapseRight() : ExpandRight(root);
 
@@ -306,18 +306,18 @@ namespace ModelGraph.Core
 
         public virtual string GetModelInfo(Root root) => default;
 
-        public virtual void GetMenuCommands(Root root, List<LineCommand> list) { list.Clear(); }
-        public virtual void GetButtonCommands(Root root, List<LineCommand> list) { list.Clear(); }
+        public virtual void GetMenuCommands(Root root, List<ItemCommand> list) { list.Clear(); }
+        public virtual void GetButtonCommands(Root root, List<ItemCommand> list) { list.Clear(); }
 
-        internal  virtual DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop ) => DropAction.None;
-        public virtual bool ReorderItems(Root root, LineModel dropModel) => false;
+        internal  virtual DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop ) => DropAction.None;
+        public virtual bool ReorderItems(Root root, ItemModel dropModel) => false;
 
         public virtual Error TryGetError(Root root) => default;
 
         public virtual string GetModelIdentity() =>  $"{IdKey}";
 
         /// <summary>Validate model against the model's item, return true if any child list changed</summary>
-        internal virtual bool Validate(Root root, Dictionary<Item, LineModel> prev)
+        internal virtual bool Validate(Root root, Dictionary<Item, ItemModel> prev)
         {
             var viewListChange = false;
             foreach (var child in Items)
@@ -327,9 +327,9 @@ namespace ModelGraph.Core
             return viewListChange;
         }
 
-        internal virtual int Count => 0;
-        internal virtual void Add(LineModel child) { }
-        internal virtual void Remove(LineModel child) { }
+        public virtual int Count => 0;
+        internal virtual void Add(ItemModel child) { }
+        internal virtual void Remove(ItemModel child) { }
         internal virtual void RemoveAt(int index) { }
         internal virtual void Clear() { }
         internal virtual void AddPropertyModel(PropertyModel child) { }

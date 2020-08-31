@@ -11,14 +11,14 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
 
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
 
         public override bool CanReorderItems => true;
-        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_6A8_ParentRelation o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
+        public override bool ReorderItems(Root root, ItemModel dropModel) => (Owner is Model_6A8_ParentRelation o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
 
 
         public override bool CanExpandLeft => true;

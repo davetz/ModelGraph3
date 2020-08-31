@@ -16,10 +16,10 @@ namespace ModelGraph.Controls
         #region Properties  ===================================================
         Root DataRoot;
         TreeModel TreeModel;
-        LineModel Selected;
-        private List<LineModel> ViewList = new List<LineModel>(0);
-        readonly List<LineCommand> MenuCommands = new List<LineCommand>();
-        readonly List<LineCommand> ButtonCommands = new List<LineCommand>();
+        ItemModel Selected;
+        private List<ItemModel> ModelList = new List<ItemModel>(0);
+        readonly List<ItemCommand> MenuCommands = new List<ItemCommand>();
+        readonly List<ItemCommand> ButtonCommands = new List<ItemCommand>();
 
         internal ToolTip ItemIdentityTip { get; private set; }
         internal ToolTip ModelIdentityTip { get; private set; }
@@ -53,7 +53,7 @@ namespace ModelGraph.Controls
         MenuFlyoutItem[] MenuItems;
         int MenuItemsCount;
 
-        int Count => (ViewList == null) ? 0 : ViewList.Count;
+        int Count => (ModelList == null) ? 0 : ModelList.Count;
 
         // segoe ui symbol font glyphs  =====================
         internal string LeftCanExtend => "\u25b7";
@@ -115,13 +115,13 @@ namespace ModelGraph.Controls
         #endregion
 
         #region ModelUICache  =================================================
-        readonly Stack<ModelUICache> FreeCacheStack = new Stack<ModelUICache>(37);
-        readonly Dictionary<LineModel, ModelUICache> Model_Cache = new Dictionary<LineModel, ModelUICache>(31);
-        readonly HashSet<LineModel> DefunctModels = new HashSet<LineModel>();
+        readonly Stack<ItemModelUIOld> FreeCacheStack = new Stack<ItemModelUIOld>(37);
+        readonly Dictionary<ItemModel, ItemModelUIOld> Model_Cache = new Dictionary<ItemModel, ItemModelUIOld>(31);
+        readonly HashSet<ItemModel> DefunctModels = new HashSet<ItemModel>();
 
         private void InitializeCache()
         {
-            ModelUICache.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
+            ItemModelUIOld.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
         }
         private void DiscardCache()
         {
@@ -136,9 +136,9 @@ namespace ModelGraph.Controls
             }
             Model_Cache.Clear();
         }
-        private void RefreshCache(List<LineModel> newModels)
+        private void RefreshCache(List<ItemModel> newModels)
         {
-            ViewList = newModels; // save this for future reference
+            ModelList = newModels; // save this for future reference
 
             DefunctModels.Clear();
             foreach (var m in Model_Cache.Keys) { DefunctModels.Add(m); }
@@ -146,14 +146,14 @@ namespace ModelGraph.Controls
             for (int i = 0; i < newModels.Count; i++)
             {
                 var m = newModels[i];
-                if (Model_Cache.TryGetValue(m, out ModelUICache mc))
+                if (Model_Cache.TryGetValue(m, out ItemModelUIOld mc))
                 {
                     mc.Validate(i);
                     DefunctModels.Remove(m);
                 }
                 else
                 {
-                    if (FreeCacheStack.Count == 0) ModelUICache.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
+                    if (FreeCacheStack.Count == 0) ItemModelUIOld.Allocate(this, TreeCanvas, TreeModel, DataRoot, 31, FreeCacheStack);
                     var c = FreeCacheStack.Pop();
                     c.Initialize(m, i);
                     Model_Cache.Add(m, c);
@@ -167,9 +167,9 @@ namespace ModelGraph.Controls
                 Model_Cache.Remove(m);
             }
         }
-        private ModelUICache GetModelUICache(LineModel m)
+        private ItemModelUIOld GetModelUICache(ItemModel m)
         {
-            if (!Model_Cache.TryGetValue(m, out ModelUICache mc))
+            if (!Model_Cache.TryGetValue(m, out ItemModelUIOld mc))
                 throw new Exception("ExceptionCorruptLineModelCache".GetLocalized());
             return mc;
         }
@@ -182,24 +182,24 @@ namespace ModelGraph.Controls
             //ResetCacheDelta(_selected);
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.RefreshViewList(ViewSize, leading, selected, change); });
         }
-        private async System.Threading.Tasks.Task SetUsageAsync(LineModel model, Usage usage)
+        private async System.Threading.Tasks.Task SetUsageAsync(ItemModel model, Usage usage)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetUsage(model, usage); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
-        private async System.Threading.Tasks.Task SetSortingAsync(LineModel model, Sorting sorting)
+        private async System.Threading.Tasks.Task SetSortingAsync(ItemModel model, Sorting sorting)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetSorting(model, sorting); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
-        private async System.Threading.Tasks.Task SetFilterAsync(LineModel model, string text)
+        private async System.Threading.Tasks.Task SetFilterAsync(ItemModel model, string text)
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeModel.SetFilter(model, text); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
-        private (LineModel, LineModel) GetLeadingSelected()
+        private (ItemModel, ItemModel) GetLeadingSelected()
         {
-            var leading = (ViewList is null || ViewList.Count == 0) ? null : ViewList[0];
+            var leading = (ModelList is null || ModelList.Count == 0) ? null : ModelList[0];
             var selected = (Selected is null) ? leading : Selected;
             return (leading, selected);
         }
@@ -219,6 +219,11 @@ namespace ModelGraph.Controls
         }
         int ViewSize => (int)(Height / ElementHieght);
         #endregion
+
+        #region GetFilterParams  ==============================================
+        internal (int, Sorting, Usage, string) GetFilterParms(ItemModel m) => TreeModel.GetFilterParms(m);
+        #endregion
+
 
         #region IPageControl  =================================================
         public async void Close()
@@ -273,8 +278,8 @@ namespace ModelGraph.Controls
             ModelIdentityTip = new ToolTip();
             ModelIdentityTip.Opened += ModelIdentityTip_Opened;
 
-            LevelIndent = (int)(Resources["LevelIndent"] as Double?).Value;
-            ElementHieght = (int)(Resources["ElementHieght"] as Double?).Value;
+            LevelIndent = (int)(Resources["LevelIndent"] as double?).Value;
+            ElementHieght = (int)(Application.Current.Resources["ElementHieght"] as double?).Value;
 
             ExpanderStyle = Resources["ExpanderStyle"] as Style;
             ItemKindStyle = Resources["ItemKindStyle"] as Style;
@@ -288,12 +293,12 @@ namespace ModelGraph.Controls
             FilterTextStyle = Resources["FilterTextStyle"] as Style;
             FilterCountStyle = Resources["FilterCountStyle"] as Style;
             ItemHasErrorStyle = Resources["ItemHasErrorStyle"] as Style;
-            PropertyNameStyle = Resources["PropertyNameStyle"] as Style;
-            TextPropertyStyle = Resources["TextPropertyStyle"] as Style;
-            CheckPropertyStyle = Resources["CheckPropertyStyle"] as Style;
-            ComboPropertyStyle = Resources["ComboPropertyStyle"] as Style;
+            PropertyNameStyle = Application.Current.Resources["PropertyNameStyle"] as Style;
+            TextPropertyStyle = Application.Current.Resources["TextPropertyStyle"] as Style;
+            CheckPropertyStyle = Application.Current.Resources["CheckPropertyStyle"] as Style;
+            ComboPropertyStyle = Application.Current.Resources["ComboPropertyStyle"] as Style;
             ModelIdentityStyle = Resources["ModelIdentityStyle"] as Style;
-            PropertyBorderStyle = Resources["PropertyBorderStyle"] as Style;
+            PropertyBorderStyle = Application.Current.Resources["PropertyBorderStyle"] as Style;
 
             SortModeTip = "ModelTree_SortModeTip".GetLocalized();
             UsageModeTip = "ModelTree_UsageModeTip".GetLocalized();
@@ -351,7 +356,7 @@ namespace ModelGraph.Controls
             ModelIdentityTip.Opened -= ModelIdentityTip_Opened;
 
             Selected = null;
-            ViewList.Clear();
+            ModelList.Clear();
             MenuCommands.Clear();
             ButtonCommands.Clear();
             ItemIdentityTip = null;
@@ -450,7 +455,7 @@ namespace ModelGraph.Controls
             if (Selected != null && Selected.Depth > 0 && Selected.Depth < 100)
             {
                 var parent = Selected.ParentModel;
-                if (!ViewList.Contains(parent)) ViewList[0] = parent;
+                if (!ModelList.Contains(parent)) ModelList[0] = parent;
                 Selected = parent;
                 _ = RefreshViewListAsync(ChangeType.ToggleLeft);
             }
@@ -465,16 +470,16 @@ namespace ModelGraph.Controls
             SetDefaultFocus();
             if (Selected is null)
             {
-                if (ViewList is null || ViewList.Count == 0) return;
-                Selected = ViewList[0];
+                if (ModelList is null || ModelList.Count == 0) return;
+                Selected = ModelList[0];
                 RefreshSelector();
             }
             else
             {
-                var i = ViewList.IndexOf(Selected) - 1;
-                if (i >= 0 && i < ViewList.Count)
+                var i = ModelList.IndexOf(Selected) - 1;
+                if (i >= 0 && i < ModelList.Count)
                 {
-                    Selected = ViewList[i];
+                    Selected = ModelList[i];
                     RefreshSelector();
                 }
                 else if (!AtStart)
@@ -489,16 +494,16 @@ namespace ModelGraph.Controls
             SetDefaultFocus();
             if (Selected is null)
             {
-                if (ViewList is null || ViewList.Count == 0) return;
-                Selected = ViewList[0];
+                if (ModelList is null || ModelList.Count == 0) return;
+                Selected = ModelList[0];
                 RefreshSelector();
             }
             else
             {
-                var i = ViewList.IndexOf(Selected) + 1;
-                if (i > 0 && i < ViewList.Count)
+                var i = ModelList.IndexOf(Selected) + 1;
+                if (i > 0 && i < ModelList.Count)
                 {
-                    Selected = ViewList[i];
+                    Selected = ModelList[i];
                     RefreshSelector();
                 }
                 else if (!AtEnd)
@@ -514,7 +519,7 @@ namespace ModelGraph.Controls
         private void AppButton_Click(object sender, RoutedEventArgs e)
         {
             var btn = sender as Button;
-            var cmd = btn.Tag as LineCommand;
+            var cmd = btn.Tag as ItemCommand;
             cmd.Execute();
         }
         #endregion
@@ -523,13 +528,13 @@ namespace ModelGraph.Controls
         void ItemButton_Click(object sender, RoutedEventArgs e)
         {
             var obj = sender as Button;
-            var cmd = obj.DataContext as LineCommand;
+            var cmd = obj.DataContext as ItemCommand;
             cmd.Execute();
         }
         void MenuItem_Click(object sender, RoutedEventArgs e)
         {
             var obj = sender as MenuFlyoutItem;
-            var cmd = obj.DataContext as LineCommand;
+            var cmd = obj.DataContext as ItemCommand;
             cmd.Execute();
         }
         #endregion
@@ -554,7 +559,7 @@ namespace ModelGraph.Controls
         void ItemIdentityTip_Opened(object sender, RoutedEventArgs e)
         {
             var tip = sender as ToolTip;
-            if (tip.DataContext is ModelUICache mc)
+            if (tip.DataContext is ItemModelUIOld mc)
             {
                 var mdl = mc.Model;
                 var content = mdl?.GetSummaryId();
@@ -566,7 +571,7 @@ namespace ModelGraph.Controls
         void ModelIdentityTip_Opened(object sender, RoutedEventArgs e)
         {
             var tip = sender as ToolTip;
-            if (tip.DataContext is ModelUICache mc)
+            if (tip.DataContext is ItemModelUIOld mc)
             {
                 var mdl = mc.Model;
                 var content = mdl.GetModelIdentity();
@@ -598,11 +603,11 @@ namespace ModelGraph.Controls
             RefreshSelector();
             e.Handled = true;
         }
-        LineModel PointerModel(Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        ItemModel PointerModel(Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(TreeCanvas);
             var i = (int)(p.Position.Y / ElementHieght);
-            return (Count == 0) ? null : (i < 0) ? ViewList[0] : (i < Count) ? ViewList[i] : ViewList[Count - 1];
+            return (Count == 0) ? null : (i < 0) ? ModelList[0] : (i < Count) ? ModelList[i] : ModelList[Count - 1];
         }
         #endregion
 
@@ -643,7 +648,7 @@ namespace ModelGraph.Controls
         #region RefreshRoot  ==================================================
         private void RefreshRoot()
         {
-            var buttonCommands = new List<LineCommand>();
+            var buttonCommands = new List<ItemCommand>();
            TreeModel.GetButtonCommands(DataRoot, buttonCommands);
 
             var N = buttonCommands.Count;
@@ -814,7 +819,7 @@ namespace ModelGraph.Controls
         #region SetSelectorGridPlacement  =====================================
         void SetSelectorGridPlacement()
         {
-            var i = ViewList.IndexOf(Selected);
+            var i = ModelList.IndexOf(Selected);
             if (i < 0) i = 0;
             SelectorGrid.Width = ActualWidth;
             Canvas.SetTop(SelectorGrid, (i * ElementHieght));
@@ -826,7 +831,7 @@ namespace ModelGraph.Controls
         // given the focusModel try to determine what is the most
         // logical text box to enter, then set the keyboard focus to it,
         // otherwise set focus to our reliable dummy FocusButton
-        private void TrySetControlFocus(LineModel focusModel = null)
+        private void TrySetControlFocus(ItemModel focusModel = null)
         {
             if (focusModel != null) Selected = focusModel;
 
@@ -904,10 +909,10 @@ namespace ModelGraph.Controls
         }
         private void Accelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (_acceleratorKeyCommands.TryGetValue(sender, out LineCommand cmd)) cmd.Execute();
+            if (_acceleratorKeyCommands.TryGetValue(sender, out ItemCommand cmd)) cmd.Execute();
             args.Handled = true;
         }
-        private readonly Dictionary<KeyboardAccelerator, LineCommand> _acceleratorKeyCommands = new Dictionary<KeyboardAccelerator, LineCommand>();
+        private readonly Dictionary<KeyboardAccelerator, ItemCommand> _acceleratorKeyCommands = new Dictionary<KeyboardAccelerator, ItemCommand>();
 
 
         static readonly Dictionary<string, Windows.System.VirtualKey> _virtualKeys = new Dictionary<string, VirtualKey>
@@ -1002,7 +1007,7 @@ namespace ModelGraph.Controls
         {
             //args.DragUI.SetContentFromDataPackage();
             var obj = sender as TextBlock;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 if (mdl.CanDrag)
                 {
@@ -1018,7 +1023,7 @@ namespace ModelGraph.Controls
         {
             e.DragUIOverride.IsContentVisible = false;
             var obj = sender as TextBlock;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 var type = mdl.DragEnter(DataRoot);
                 switch (type)
@@ -1044,7 +1049,7 @@ namespace ModelGraph.Controls
         internal void ItemName_Drop(object sender, DragEventArgs e)
         {
             var obj = sender as TextBlock;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 mdl.DragDrop(DataRoot);
             }
@@ -1063,7 +1068,7 @@ namespace ModelGraph.Controls
             obj.Opacity = 0.5;
         }
 
-        internal void RefreshExpandTree(LineModel model, TextBlock obj)
+        internal void RefreshExpandTree(ItemModel model, TextBlock obj)
         {
             if (model.CanExpandLeft)
             {
@@ -1079,7 +1084,7 @@ namespace ModelGraph.Controls
             if (Selected == PointerModel(e))
             {
                 var obj = sender as TextBlock;
-                if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+                if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
                 {
                     Selected = mdl;
                     _ = RefreshViewListAsync(ChangeType.ToggleLeft);
@@ -1094,7 +1099,7 @@ namespace ModelGraph.Controls
             if (Selected == PointerModel(e))
             {
                 var obj = sender as TextBlock;
-                if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+                if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
                 {
                     Selected = mdl;
                     _ = RefreshViewListAsync(ChangeType.ToggleRight);
@@ -1124,7 +1129,7 @@ namespace ModelGraph.Controls
         }
         void ExecuteSort(TextBlock obj)
         {
-            if (obj != null && obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj != null && obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 if (mdl.IsSortAscending)
                 {
@@ -1162,7 +1167,7 @@ namespace ModelGraph.Controls
         }
         void ExecuteUsage(TextBlock obj)
         {
-            if (obj != null && obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj != null && obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 Usage usage;
                 if (obj.Text == UsageIsUsed)
@@ -1207,7 +1212,7 @@ namespace ModelGraph.Controls
         internal void FilterText_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             var obj = sender as TextBox;
-            if (obj != null && obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj != null && obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Tab)
                 {
@@ -1245,7 +1250,7 @@ namespace ModelGraph.Controls
         {
             var obj = sender as TextBox;
             _focusControl = obj;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 Selected = mdl;
                 RefreshSelector(false);
@@ -1254,7 +1259,7 @@ namespace ModelGraph.Controls
         internal void TextProperty_LostFocus(object sender, RoutedEventArgs e)
         {
             var obj = sender as TextBox;
-            if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl)
             {
                 if ((string)obj.Tag != obj.Text)
                 {
@@ -1268,7 +1273,7 @@ namespace ModelGraph.Controls
             {
                 e.Handled = true;
                 var obj = sender as TextBox;
-                if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl)
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
@@ -1284,7 +1289,7 @@ namespace ModelGraph.Controls
             {
                 e.Handled = true;
                 var obj = sender as TextBox;
-                if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl)
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
@@ -1301,7 +1306,7 @@ namespace ModelGraph.Controls
         {
             var obj = sender as CheckBox;
             _focusControl = obj;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 Selected = mdl;
                 RefreshSelector(false);
@@ -1310,7 +1315,7 @@ namespace ModelGraph.Controls
         internal void Check_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             var obj = sender as CheckBox;
-            if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl)
             {
                 var val = obj.IsChecked ?? false;
 
@@ -1342,7 +1347,7 @@ namespace ModelGraph.Controls
             else
             {
                 var obj = sender as CheckBox;
-                if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl)
                 {
                     var val = obj.IsChecked ?? false;
                     mdl.PostSetBoolValue(DataRoot, val);
@@ -1356,7 +1361,7 @@ namespace ModelGraph.Controls
         {
             var obj = sender as ComboBox;
             _focusControl = obj;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 Selected = mdl;
                 RefreshSelector(false);
@@ -1365,7 +1370,7 @@ namespace ModelGraph.Controls
         internal void ComboProperty_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var obj = sender as ComboBox;
-            if (obj.DataContext is ModelUICache mc && mc.PropModel is PropertyModel mdl && obj.SelectedIndex >= 0)
+            if (obj.DataContext is ItemModelUIOld mc && mc.PropModel is PropertyModel mdl && obj.SelectedIndex >= 0)
             {
                 mdl.PostSetIndexValue(DataRoot, obj.SelectedIndex);
             }
@@ -1373,7 +1378,7 @@ namespace ModelGraph.Controls
         internal void ComboProperty_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             var obj = sender as ComboBox;
-            if (obj.DataContext is ModelUICache mc && mc.Model is LineModel mdl)
+            if (obj.DataContext is ItemModelUIOld mc && mc.Model is ItemModel mdl)
             {
                 if (e.Key == VirtualKey.Escape)
                 {
@@ -1390,10 +1395,10 @@ namespace ModelGraph.Controls
         #endregion
 
         #region ToggleParentExpandRight  ======================================
-        private void ToggleParentExpandRight(LineModel child)
+        private void ToggleParentExpandRight(ItemModel child)
         {
             var parent = child.ParentModel;
-            if (ViewList.Contains(parent))
+            if (ModelList.Contains(parent))
             {
                 Selected = parent;
                 _ = RefreshViewListAsync(ChangeType.ToggleRight);
@@ -1410,12 +1415,12 @@ namespace ModelGraph.Controls
         #endregion
 
         #region FindNextItemModel  ============================================
-        void FindNextItemModel(LineModel m)
+        void FindNextItemModel(ItemModel m)
         {
-            var k = ViewList.IndexOf(m) + 1;
-            for (int i = k; i < ViewList.Count; i++)
+            var k = ModelList.IndexOf(m) + 1;
+            for (int i = k; i < ModelList.Count; i++)
             {
-                var mdl = ViewList[i];
+                var mdl = ModelList[i];
                 if (!(mdl is PropertyModel)) continue;
                 TrySetControlFocus(mdl);
                 return;

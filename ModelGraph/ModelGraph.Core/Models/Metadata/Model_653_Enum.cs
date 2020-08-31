@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         public override bool CanExpandLeft => true;
         public override bool CanExpandRight => true;
 
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));

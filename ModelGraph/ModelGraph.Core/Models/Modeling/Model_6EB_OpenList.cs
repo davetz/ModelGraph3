@@ -10,7 +10,7 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Item.OpenQuerys.Count;
         protected override IList<(Query, Query)> GetChildItems() => Item.OpenQuerys;
-        protected override (Query, Query) GetItemPair(LineModel child) => (child as Model_ItemPair).ItemPair;
+        protected override (Query, Query) GetItemPair(ItemModel child) => (child as Model_ItemPair).ItemPair;
         protected override void CreateChildModel((Query, Query) pair) => new Model_ItemPair(this, Item, pair);
     }
 }

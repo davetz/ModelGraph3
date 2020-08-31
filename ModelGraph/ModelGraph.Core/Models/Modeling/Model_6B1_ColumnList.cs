@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         private readonly Relation_Store_ColumnX _relation_Store_ColumnX;
 
-        internal Model_6B1_ColumnList(LineModel owner, RowX item) : base(owner, item) 
+        internal Model_6B1_ColumnList(ItemModel owner, RowX item) : base(owner, item) 
         {
             _relation_Store_ColumnX = item.GetRoot().Get<Relation_Store_ColumnX>();
         }

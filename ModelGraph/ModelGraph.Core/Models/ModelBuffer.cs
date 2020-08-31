@@ -5,10 +5,10 @@ namespace ModelGraph.Core
     /// <summary>Continous circular buffer</summary>
     internal class ModelBuffer
     {
-        private LineModel[] _buffer;        // continous circular buffer
-        private LineModel _target;          // target model
-        private LineModel _ending;          // ending model
-        private LineModel _starting;        // starting model
+        private ItemModel[] _buffer;        // continous circular buffer
+        private ItemModel _target;          // target model
+        private ItemModel _ending;          // ending model
+        private ItemModel _starting;        // starting model
 
         private int _size;                  // actual size of buffer
         private int _uiSize;                // max posible number of visible UI rows 
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Refresh  ======================================================
-        internal void Refresh(LineModel root, int uiSize, LineModel target)
+        internal void Refresh(ItemModel root, int uiSize, ItemModel target)
         {
             _count = 0;
             _target = target;
@@ -39,7 +39,7 @@ namespace ModelGraph.Core
             if (!root.BufferTraverse(this))
                 _ending = (_count > 0) ? _buffer[(_count - 1) % _size] : default;
         }
-        internal void Refresh(LineModel root, int uiSize, int offset)
+        internal void Refresh(ItemModel root, int uiSize, int offset)
         {
             var (list, indexT, end) = GetNormalized();
             var index = indexT + offset;
@@ -59,13 +59,13 @@ namespace ModelGraph.Core
             if (minSize > _size)
             {
                 _size = minSize;
-                _buffer = new LineModel[minSize];
+                _buffer = new ItemModel[minSize];
             }
         }
         #endregion
 
         #region GetNormalized  ================================================
-        private (List<LineModel>, int, int) GetNormalized()
+        private (List<ItemModel>, int, int) GetNormalized()
         {
             int start, count, indexT = 0;
             _noralized.Clear();
@@ -91,12 +91,12 @@ namespace ModelGraph.Core
 
             return (_noralized, indexT, end);
         }
-        private readonly List<LineModel> _noralized = new List<LineModel>(60);
+        private readonly List<ItemModel> _noralized = new List<ItemModel>(60);
         #endregion
 
         #region AddItem  ======================================================
         /// <summary>Add item to  buffer, return true: if hit target</summary>
-        internal bool AddItem(LineModel item)
+        internal bool AddItem(ItemModel item)
         {
             var index = _count++ % _size;
             _buffer[index] = item;
@@ -122,7 +122,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetList  ======================================================
-        internal (List<LineModel>, bool, bool) GetList()
+        internal (List<ItemModel>, bool, bool) GetList()
         {
             var (list, uiStart, end) = GetNormalized();
 

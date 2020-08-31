@@ -706,7 +706,7 @@ namespace ModelGraph.Controls
 
             ApplyAutoFlip();
 
-            List<LineCommand> buttonCommands = new List<LineCommand>(2);
+            List<ItemCommand> buttonCommands = new List<ItemCommand>(2);
             //_rootModel.PageButtonComands(buttonCommands);
             //foreach (var cmd in buttonCommands)
             //{

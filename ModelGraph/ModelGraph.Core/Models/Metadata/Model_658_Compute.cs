@@ -10,19 +10,19 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
         public override bool CanExpandAll => true;
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new ValidateCommand(this, () => Item.Owner.ValidateComputeX(Item)));
         }
 
         public override bool CanReorderItems => true;
-        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, root.Get<Relation_Store_ComputeX>(), o.Item, Item, dropModel.GetItem());
+        public override bool ReorderItems(Root root, ItemModel dropModel) => (Owner is Model_666_ComputeList o) && ReorderChildItems(root, root.Get<Relation_Store_ComputeX>(), o.Item, Item, dropModel.GetItem());
 
         protected override int GetTotalCount() => Item.Owner.GetQueryXCount(Item);
         protected override IList<QueryX> GetChildItems() => Item.Owner.GetQueryXList(Item);
@@ -52,7 +52,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region ModelDrop  ====================================================
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop) => 
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => 
             (dropModel.GetItem() is Relation rx && Item.Owner.ComputeXRelationDrop(Item, rx, doDrop)) ? DropAction.Link : DropAction.None;
         #endregion
 

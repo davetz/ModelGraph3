@@ -1,10 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
+﻿using System.Numerics;
+using System.Collections.ObjectModel;
 
 namespace ModelGraph.Core
 {
     public abstract class CanvasModel
     {
+
         public string ToolTip_Text1 { get; set; }
         public string ToolTip_Text2 { get; set; }
 
@@ -59,6 +60,7 @@ namespace ModelGraph.Core
         internal DrawData Editor = new DrawData();
         internal DrawData Picker1 = null;
         internal DrawData Picker2 = new DrawData();
+
     }
 }
 

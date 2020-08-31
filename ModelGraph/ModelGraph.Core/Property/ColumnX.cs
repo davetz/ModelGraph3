@@ -109,7 +109,7 @@ namespace ModelGraph.Core
         internal override int GetIndexValue(Item item) => Owner.GetEnumXlIndexValue(this, item);
         internal override void SetIndexValue(Item item, int index) => Owner.SetEnumXIndexValue(this, item, index);
 
-        internal override void CreatePropertyModel(LineModel owner, Item item)
+        internal override void CreatePropertyModel(ItemModel owner, Item item)
         {
             if (Value.ValType == ValType.Bool)
                 new Model_618_CheckProperty(owner, item, this);

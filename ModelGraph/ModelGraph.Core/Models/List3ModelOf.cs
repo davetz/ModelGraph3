@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 {
     public abstract class List3ModelOf<T1, T2> : List1ModelOf<T1> where T1 : Item where T2 : Item
     {
-        internal List3ModelOf(LineModel owner, T1 item) : base(owner, item) { }
+        internal List3ModelOf(ItemModel owner, T1 item) : base(owner, item) { }
 
         public override bool CanExpandLeft => TotalCount > 0;
         public override bool CanFilter => TotalCount > 1;
@@ -17,7 +17,7 @@ namespace ModelGraph.Core
         #region RequiredMethodes  =============================================
         protected abstract int GetTotalCount();
         protected abstract IList<(T2,T2)> GetChildItems();
-        protected abstract (T2, T2) GetItemPair(LineModel child);
+        protected abstract (T2, T2) GetItemPair(ItemModel child);
         protected abstract void CreateChildModel((T2,T2) childItem);
         #endregion
 
@@ -37,9 +37,9 @@ namespace ModelGraph.Core
             }
             return true;
         }
-        internal override bool Validate(Root root, Dictionary<Item, LineModel> prev)
+        internal override bool Validate(Root root, Dictionary<Item, ItemModel> prev)
         {
-            var prev2 = new Dictionary<(T2, T2), LineModel>(Count);
+            var prev2 = new Dictionary<(T2, T2), ItemModel>(Count);
 
             var viewListChanged = false;
             if (IsExpandedLeft || AutoExpandLeft)
@@ -61,7 +61,7 @@ namespace ModelGraph.Core
                     SetCapacity(GetTotalCount());
                     foreach (var itm in GetChildItems())
                     {
-                        if (prev2.TryGetValue(itm, out LineModel m))
+                        if (prev2.TryGetValue(itm, out ItemModel m))
                         {
                             Add(m);
                             prev2.Remove(GetItemPair(m));

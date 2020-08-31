@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     public class Model_621_ErrorRoot : List2ModelOf<ErrorManager, Error>
     {
-        internal Model_621_ErrorRoot(LineModel owner, ErrorManager item) : base(owner, item) { }
+        internal Model_621_ErrorRoot(ItemModel owner, ErrorManager item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_621_ErrorRoot;
 
         protected override int GetTotalCount() => Item.Count;
@@ -14,7 +14,7 @@ namespace ModelGraph.Core
         {
             new Model_626_ErrorType(this, childItem);
         }
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             var treeModel = GetTreeModel();
             list.Clear();

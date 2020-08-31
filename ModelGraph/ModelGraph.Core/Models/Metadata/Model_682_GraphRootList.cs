@@ -16,6 +16,6 @@ namespace ModelGraph.Core
         protected override IList<Store> GetChildItems() => Item.Owner.TryGetChildItems(this, out _store_QueryX) ? _store_QueryX.Keys.ToArray() : new Store[0];
         private Dictionary<Store, QueryX> _store_QueryX;
         protected override void CreateChildModel(Store st) => new Model_691_GraphRoot(this, st, Item, _store_QueryX[st]);
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop) => Item.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => Item.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
     }
 }

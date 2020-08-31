@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public abstract class PropertyModel : LineModel
+    public abstract class PropertyModel : ItemModel
     {
         internal Property Property;
         internal Item Item;
@@ -10,7 +10,7 @@ namespace ModelGraph.Core
 
         internal override bool IsItemUsed => !(Property is ColumnX cx) || (cx.Value.IsSpecific(Item));
 
-        internal PropertyModel(LineModel owner, Item item, Property prop)
+        internal PropertyModel(ItemModel owner, Item item, Property prop)
         {
             Item = item;
             Owner = owner;

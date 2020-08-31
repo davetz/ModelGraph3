@@ -15,7 +15,7 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Item.GetChildLinkPairCount();
         protected override IList<(Item, Item)> GetChildItems() => Item.GetChildLinkPairList();
-        protected override (Item, Item) GetItemPair(LineModel child) => (child as Model_7FF_RelatedItems).ItemPair;
+        protected override (Item, Item) GetItemPair(ItemModel child) => (child as Model_7FF_RelatedItems).ItemPair;
         protected override void CreateChildModel((Item, Item) pair) => new Model_7FF_RelatedItems(this, Item, pair);
     }
 }

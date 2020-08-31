@@ -4,7 +4,7 @@ namespace ModelGraph.Core
     public class Model_ItemPair : ItemModelOf<Graph>
     {
         internal readonly (Query, Query) ItemPair;
-        internal Model_ItemPair(LineModel owner, Graph item, (Query, Query) itemPair) : base(owner, item) { ItemPair = itemPair; }
+        internal Model_ItemPair(ItemModel owner, Graph item, (Query, Query) itemPair) : base(owner, item) { ItemPair = itemPair; }
 
         public override string GetNameId()
         {

@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     /// <summary>Provides filter and sort methods for line models</summary>
     internal class FilterSort
     {
-        private static Dictionary<LineModel, FilterSort> _model_filter = new Dictionary<LineModel, FilterSort>();
+        private static Dictionary<ItemModel, FilterSort> _model_filter = new Dictionary<ItemModel, FilterSort>();
         private string Filter => _filterText is null ? string.Empty : _filterText;
         private int Count;
         private Usage Usage = Usage.None;
@@ -23,14 +23,14 @@ namespace ModelGraph.Core
 
         #region Parms  ========================================================
         //private static readonly List<(int I, bool IN, string TX)> EmptySelector = new List<(int I, bool IN, string TX)>(0);
-        internal static (int, Sorting, Usage, string) GetParms(LineModel m) => _model_filter.TryGetValue(m, out FilterSort f) ? (f.Count, f.Sorting, f.Usage, f.Filter) : (m.Count, Sorting.Unsorted, Usage.None, string.Empty);
-        internal static bool TryGetSelector(LineModel m, out List<(int I, bool IN, string TX)> selector)
+        internal static (int, Sorting, Usage, string) GetParms(ItemModel m) => _model_filter.TryGetValue(m, out FilterSort f) ? (f.Count, f.Sorting, f.Usage, f.Filter) : (m.Count, Sorting.Unsorted, Usage.None, string.Empty);
+        internal static bool TryGetSelector(ItemModel m, out List<(int I, bool IN, string TX)> selector)
         {
             selector = _model_filter.TryGetValue(m, out FilterSort f) ? f.Selector : null;
             return selector != null;
         }
 
-        internal static bool SetUsage(LineModel model, Usage usage)
+        internal static bool SetUsage(ItemModel model, Usage usage)
         {
             if (_model_filter.TryGetValue(model, out FilterSort f))
             {
@@ -52,7 +52,7 @@ namespace ModelGraph.Core
             return true;
         }
 
-        internal static bool SetSorting(LineModel model, Sorting sorting)
+        internal static bool SetSorting(ItemModel model, Sorting sorting)
         {
             if (_model_filter.TryGetValue(model, out FilterSort f))
             {
@@ -74,7 +74,7 @@ namespace ModelGraph.Core
             return true;
         }
 
-        internal static bool SetText(LineModel model, string text)
+        internal static bool SetText(ItemModel model, string text)
         {
             if (_model_filter.TryGetValue(model, out FilterSort f))
             {
@@ -134,14 +134,14 @@ namespace ModelGraph.Core
             bool N(string v) => string.IsNullOrWhiteSpace(v); //is NULL or blank
             bool E(string p, string q) => (string.Compare(p, q) == 0); //are EQUAL
         }
-        private static FilterSort AllocateFilter(LineModel model)
+        private static FilterSort AllocateFilter(ItemModel model)
         {
             model.HasFilterSortAllocation = true;
             var f = new FilterSort();
             _model_filter.Add(model, f);
             return f;
         }
-        internal static void ReleaseFilter(LineModel model)
+        internal static void ReleaseFilter(ItemModel model)
         {
             model.HasFilterSortAllocation = false;
             _model_filter.Remove(model);
@@ -150,7 +150,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Refresh  ======================================================
-        internal void Refresh(LineModel model)
+        internal void Refresh(ItemModel model)
         {
             if (_delta != model.ChildDelta || Selector is null || Selector.Count != model.Count)
             {

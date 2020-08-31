@@ -6,13 +6,11 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
-    internal class ModelUICache
+    internal class ItemModelUI
     {
         #region Properties  ===================================================
-        private readonly ModelTreeControl TC;
-        internal TreeModel TreeRoot { get; private set; }
-        internal Canvas TreeCanvas { get; private set; }
-        public LineModel Model { get; private set; }
+        private readonly TreeCanvasControl TC;
+        public ItemModel Model { get; private set; }
         public PropertyModel PropModel {get; private set;}
         internal Root DataRoot { get; private set; }
         internal short ModelDelta { get; private set; }
@@ -40,27 +38,24 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        private ModelUICache(ModelTreeControl tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot)
+        private ItemModelUI(TreeCanvasControl tc)
         {
             TC = tc;
-            DataRoot = dataRoot;
-            TreeRoot = treeRoot;
-            TreeCanvas = treeCanvas;
         }
         #endregion
 
         #region Allocate  =====================================================
-        internal static void Allocate(ModelTreeControl tc, Canvas treeCanvas, TreeModel treeRoot, Root dataRoot, int count, Stack<ModelUICache> stack)
+        internal static void Allocate(TreeCanvasControl tc, int count, Stack<ItemModelUI> stack)
         {
             for (int i = 0; i < count; i++)
             {
-                stack.Push(new ModelUICache(tc, treeCanvas, treeRoot, dataRoot));
+                stack.Push(new ItemModelUI(tc));
             }
         }
         #endregion
 
         #region Initialize/Validate/Clear  ====================================
-        internal void Initialize(LineModel model, int index)
+        internal void Initialize(ItemModel model, int index)
         {
             Model = model;
             PropModel = model as PropertyModel;
@@ -791,7 +786,7 @@ namespace ModelGraph.Controls
                 sp.Orientation = Orientation.Horizontal;
                 sp.DataContext = this;
 
-                TreeCanvas.Children.Add(sp);
+                TC.Canvas.Children.Add(sp);
             }
             Canvas.SetTop(sp, index * TC.ElementHieght);
 
@@ -831,7 +826,7 @@ namespace ModelGraph.Controls
             else
             {
                 var kind = Model.GetKindId();
-                var (filterCount, sorting, usage, filterText) = TreeRoot.GetFilterParms(Model);
+                var (filterCount, sorting, usage, filterText) = TC.GetFilterParms(Model);
                 AddItemKind(kind);
                 AddItemName(name);
                 if (Model.CanExpandRight) AddExpandRight();

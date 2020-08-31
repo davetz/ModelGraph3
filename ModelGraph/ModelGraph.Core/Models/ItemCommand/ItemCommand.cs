@@ -3,11 +3,11 @@
 namespace ModelGraph.Core
 {
 
-    public abstract class LineCommand : ChildOf<LineModel>
+    public abstract class ItemCommand : ChildOf<ItemModel>
     {
         internal Action Action { get; }
 
-        internal LineCommand(LineModel model, Action action)
+        internal ItemCommand(ItemModel model, Action action)
         {
             Owner = model;
             Action = action;

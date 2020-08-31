@@ -19,7 +19,7 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Item.Count;
 
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
 //            list.Add(new InsertCommand(this, () => ItemCreated.Record(root, new GraphX(Item, true))));

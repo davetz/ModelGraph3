@@ -20,7 +20,7 @@ namespace ModelGraph.Core
 
             return IdKey.Model_692_GraphLink;
         }
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
 
         public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)

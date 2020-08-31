@@ -9,7 +9,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => _idKey;
         private IdKey _idKey = IdKey.Model_692_GraphLink;
 
-        internal Model_692_GraphLink(LineModel owner, QueryX item, GraphX aux1, IdKey idKey) : base(owner, item) { Aux1 = aux1; _idKey = idKey; }
+        internal Model_692_GraphLink(ItemModel owner, QueryX item, GraphX aux1, IdKey idKey) : base(owner, item) { Aux1 = aux1; _idKey = idKey; }
         public override string GetKindId() => Root.GetKindId(IdKey);
 
         protected override int GetTotalCount() => Aux1.Owner.GetTotalCount(this);
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
             return IdKey.Model_692_GraphLink;
         }
 
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
@@ -93,7 +93,7 @@ namespace ModelGraph.Core
             Owner.ChildDelta -= 3;
         }
 
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
 
         public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)

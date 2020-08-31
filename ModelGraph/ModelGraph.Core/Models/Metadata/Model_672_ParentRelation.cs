@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         public override bool CanDrag => true;
 
         public override bool CanReorderItems => true;
-        public override bool ReorderItems(Root root, LineModel dropModel) => (Owner is Model_663_ParentRelatationList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
+        public override bool ReorderItems(Root root, ItemModel dropModel) => (Owner is Model_663_ParentRelatationList o) && ReorderChildItems(root, o.GetRelation(), o.Item, Item, dropModel.GetItem());
 
         internal override bool ExpandRight(Root root)
         {
@@ -24,7 +24,7 @@ namespace ModelGraph.Core
 
             return true;
         }
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop)
         {
             if (dropModel.GetItem() is TableX tx)
             {

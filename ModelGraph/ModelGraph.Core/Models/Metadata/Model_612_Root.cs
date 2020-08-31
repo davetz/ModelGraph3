@@ -7,7 +7,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_612_Root;
         public override bool CanExpandLeft => true;
 
-        internal Model_612_Root(LineModel owner, Root root) : base(owner, root) 
+        internal Model_612_Root(ItemModel owner, Root root) : base(owner, root) 
         {
             new Model_620_RootParm(this, Item);
             new Model_621_ErrorRoot(this, root.Get<ErrorManager>());
@@ -18,7 +18,7 @@ namespace ModelGraph.Core
             IsExpandedLeft = true;
         }
 
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             var treeModel = Owner as TreeModel;
             list.Clear();

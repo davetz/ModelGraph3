@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class Model_6E7_Path : List2ModelOf<Path, Path>
     {
-        internal Model_6E7_Path(LineModel owner, Path item) : base(owner, item) { }
+        internal Model_6E7_Path(ItemModel owner, Path item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6E7_Path;
         public override string GetNameId() => $"{Item.Head.GetFullNameId()} --> {Item.Tail.GetFullNameId()}";
         public override string GetKindId() => $"{Item.GetNameId()}{GetKind}";

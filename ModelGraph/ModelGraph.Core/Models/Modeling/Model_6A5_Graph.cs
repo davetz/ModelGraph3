@@ -10,12 +10,12 @@ namespace ModelGraph.Core
 
         public override bool CanDrag => true;
 
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
         }
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             var treeModel = GetTreeModel();
             list.Clear();

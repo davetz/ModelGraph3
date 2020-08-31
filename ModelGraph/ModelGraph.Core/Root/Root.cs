@@ -18,7 +18,7 @@ namespace ModelGraph.Core
         private readonly List<IManager> PrimeRootManagers = new List<IManager>();
 
         public IRepository Repository { get; set; }
-        public static LineModel DragDropSource; // source model at time of DragStart
+        public static ItemModel DragDropSource; // source model at time of DragStart
         internal override IdKey IdKey => IdKey.DataRoot;
         internal string TitleName => Repository.Name;
         internal string TitleSummary => Repository.FullName;

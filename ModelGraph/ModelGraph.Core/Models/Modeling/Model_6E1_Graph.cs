@@ -4,10 +4,10 @@ namespace ModelGraph.Core
 {
     public class Model_6E1_Graph : List2ModelOf<GraphX, Graph>
     {
-        internal Model_6E1_Graph(LineModel owner, GraphX item) : base(owner, item) { }
+        internal Model_6E1_Graph(ItemModel owner, GraphX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6E1_Graph;
 
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             var treeModel = GetTreeModel();
             list.Clear();

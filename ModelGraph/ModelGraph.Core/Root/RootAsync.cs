@@ -69,7 +69,7 @@ namespace ModelGraph.Core
             PostModelRequest(DoNothing);
             void DoNothing() { }
         }
-        internal void PostCommand(LineCommand command)
+        internal void PostCommand(ItemCommand command)
         {
             PostModelRequest(command.Action);
         }

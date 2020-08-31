@@ -18,6 +18,7 @@ namespace ModelGraph.Controls
 {
     public sealed partial class DrawCanvasControl : UserControl
     {
+        public ICanvasModel Model { get => _model; }
         private ICanvasModel _model;
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
@@ -38,6 +39,8 @@ namespace ModelGraph.Controls
             Pick2Canvas.DataContext = _model.Picker2Data;
             ShowPicker1();
             ShowPicker2();
+
+            var eh = (double)Application.Current.Resources["ElementHieght"];
         }
 
         public void Refresh() => EditCanvas.Invalidate();
@@ -507,8 +510,9 @@ namespace ModelGraph.Controls
             {
                 if (_model.NodeHit)
                 {
-                    //_model.ShowPropertyPanel();
+                    _model.ShowPropertyPanel();
                     ShowResizerGrid();
+                    PropertyGrid.Visibility = Visibility.Visible;
                 }
             }
             else
@@ -517,7 +521,7 @@ namespace ModelGraph.Controls
                 HideAlignmentGrid();
                 HideTootlip();
                 SetViewOnVoidTap();
-                //_model.HidePropertyPanel();
+                PropertyGrid.Visibility = Visibility.Collapsed;
             }
         }
 

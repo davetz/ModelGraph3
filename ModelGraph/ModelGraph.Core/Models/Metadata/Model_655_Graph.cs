@@ -2,7 +2,7 @@
 {
     public class Model_655_Graph : List1ModelOf<GraphX>
     {
-        internal Model_655_Graph(LineModel owner, GraphX item) : base(owner, item) { }
+        internal Model_655_Graph(ItemModel owner, GraphX item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_655_Graph;
 
         public override bool CanExpandLeft => true;

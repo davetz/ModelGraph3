@@ -22,7 +22,7 @@ namespace ModelGraph.Core
             new Model_676_SummaryProperty(this, np);
         }
 
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop)
         {
             if (dropModel.GetItem() is Property np)
             {

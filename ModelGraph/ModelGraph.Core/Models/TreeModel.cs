@@ -7,8 +7,8 @@ namespace ModelGraph.Core
     public class TreeModel : ItemModelOf<Root>, IPageModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
-        private LineModel _childModel; // there will only be one child model
-        internal override void Add(LineModel child) => _childModel = child;
+        private ItemModel _childModel; // there will only be one child model
+        internal override void Add(ItemModel child) => _childModel = child;
 
         public IPageControl PageControl { get; set; } // reference the UI PageControl       
         public ControlType ControlType { get; private set; }
@@ -58,15 +58,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region FilterParms  ==================================================
-        public void SetUsage(LineModel model, Usage usage) => FilterSort.SetUsage(model, usage);
-        public void SetSorting(LineModel model, Sorting sorting) => FilterSort.SetSorting(model, sorting);
-        public void SetFilter(LineModel model, string text) => FilterSort.SetText(model, text);
-        public (int, Sorting, Usage, string) GetFilterParms(LineModel model) => FilterSort.GetParms(model);
+        public void SetUsage(ItemModel model, Usage usage) => FilterSort.SetUsage(model, usage);
+        public void SetSorting(ItemModel model, Sorting sorting) => FilterSort.SetSorting(model, sorting);
+        public void SetFilter(ItemModel model, string text) => FilterSort.SetText(model, text);
+        public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => FilterSort.GetParms(model);
         #endregion
 
         #region GetCurrentView  ===============================================
         /// <summary>We are scrolling back and forth in the flattened model hierarchy</summary>
-        public (List<LineModel>, LineModel, bool, bool) GetCurrentView(int viewSize, LineModel leading, LineModel selected)
+        public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
         {
             if (_buffer.IsEmpty) _buffer.Refresh(_childModel, viewSize, leading);
 
@@ -81,7 +81,7 @@ namespace ModelGraph.Core
 
         #region RefreshViewList  ==============================================
         // Runs on a background thread invoked by the ModelTreeControl 
-        public void RefreshViewList(int viewSize, LineModel leading, LineModel selected, ChangeType change = ChangeType.None)
+        public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None)
         {
             _viewSize = viewSize;
             _leading = leading;
@@ -146,15 +146,15 @@ namespace ModelGraph.Core
             PageControl?.Refresh();
         }
         int _viewSize;
-        LineModel _leading;
-        LineModel _selected;
+        ItemModel _leading;
+        ItemModel _selected;
         #endregion
 
         #region Validate  =====================================================
         /// <summary>Validate model against the model's item, return true if any child list changed</summary>
         internal void Validate()
         {
-            var prev = new Dictionary<Item, LineModel>();
+            var prev = new Dictionary<Item, ItemModel>();
             if (_childModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
                 RefreshViewList(ChangeType.ViewListChanged);
         }
@@ -162,7 +162,7 @@ namespace ModelGraph.Core
 
         #region OverrideMethods  ==============================================
         public override string GetNameId() => BlankName;
-        public override void GetButtonCommands(Root root, List<LineCommand> list) => _childModel.GetButtonCommands(root, list);
+        public override void GetButtonCommands(Root root, List<ItemCommand> list) => _childModel.GetButtonCommands(root, list);
         #endregion
 
         #region Save/SaveAs/Reload  ===========================================

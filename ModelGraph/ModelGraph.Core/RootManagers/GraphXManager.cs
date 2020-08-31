@@ -1251,7 +1251,7 @@ namespace ModelGraph.Core
             dict = null;
             return false;
         }
-        internal bool ModelDrop(Model_682_GraphRootList m, LineModel dropModel, bool doDrop)
+        internal bool ModelDrop(Model_682_GraphRootList m, ItemModel dropModel, bool doDrop)
         {
             if (dropModel.GetItem() is Store st)
             {
@@ -1279,7 +1279,7 @@ namespace ModelGraph.Core
         #region Model_691_GraphRoot  ==========================================
         internal int GetTotalCount(Model_691_GraphRoot m) => _relation_QueryX_QueryX.ChildCount(m.Aux2);
         internal IList<QueryX> GetChildItems(Model_691_GraphRoot m) => _relation_QueryX_QueryX.TryGetChildren(m.Aux2, out IList<QueryX> list) ? list : new QueryX[0];
-        internal bool ModelDrop(Model_691_GraphRoot m, LineModel dropModel, bool doDrop)
+        internal bool ModelDrop(Model_691_GraphRoot m, ItemModel dropModel, bool doDrop)
         {
             if (dropModel.GetItem() is Relation r)
             {
@@ -1307,7 +1307,7 @@ namespace ModelGraph.Core
         #region Model_692_GraphLink  ==========================================
         internal int GetTotalCount(Model_692_GraphLink m) => _relation_QueryX_QueryX.ChildCount(m.Item);
         internal IList<QueryX> GetChildItems(Model_692_GraphLink m) => _relation_QueryX_QueryX.TryGetChildren(m.Item, out IList<QueryX> list) ? list : new QueryX[0];
-        internal bool ModelDrop(Model_692_GraphLink m, LineModel dropModel, bool doDrop)
+        internal bool ModelDrop(Model_692_GraphLink m, ItemModel dropModel, bool doDrop)
         {
             if (dropModel.GetItem() is Relation r2)
             {

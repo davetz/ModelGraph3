@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     public class Model_624_ModelingRoot : List1ModelOf<Root>
     {
-        internal Model_624_ModelingRoot(LineModel owner, Root item) : base(owner, item) { }
+        internal Model_624_ModelingRoot(ItemModel owner, Root item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_624_ModelingRoot;
         public override string GetNameId() => Root.GetNameId(IdKey);
         public override bool CanExpandLeft => true;
@@ -21,7 +21,7 @@ namespace ModelGraph.Core
 
             return true;
         }
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             var treeModel = GetTreeModel();
             list.Clear();

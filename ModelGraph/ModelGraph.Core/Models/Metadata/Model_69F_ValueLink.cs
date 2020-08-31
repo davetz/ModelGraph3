@@ -6,10 +6,10 @@ namespace ModelGraph.Core
     public class Model_69F_ValueLink : List2ModelOf<QueryX, QueryX>
     {
         internal override IdKey IdKey => IdKey.Model_69F_ValueLink;
-        internal Model_69F_ValueLink(LineModel owner, QueryX item) : base(owner, item) { }
+        internal Model_69F_ValueLink(ItemModel owner, QueryX item) : base(owner, item) { }
 
         public override bool CanDrag => true;
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
@@ -63,7 +63,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region ModelDrop  ====================================================
-        internal override DropAction ModelDrop(Root root, LineModel dropModel, bool doDrop)
+        internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop)
         {
             return (dropModel.GetItem() is Relation rx && Item.Owner.QueryRelationDrop(Item, rx, doDrop)) ? DropAction.Link : DropAction.None;
         }

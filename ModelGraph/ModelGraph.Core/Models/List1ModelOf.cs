@@ -4,12 +4,12 @@ namespace ModelGraph.Core
 {
     public abstract class List1ModelOf<T> : ItemModelOf<T> where T : Item
     {
-        #region List<LineModel> and Methods  ==================================
-        private readonly List<LineModel> _items = new List<LineModel>(5);
-        internal override List<LineModel> Items => _items;
-        internal override int Count => _items.Count;
-        internal override void Add(LineModel child) => _items.Add(child);
-        internal override void Remove(LineModel child) => _items.Remove(child);
+        #region List<ItemModel> and Methods  ==================================
+        private readonly List<ItemModel> _items = new List<ItemModel>(5);
+        internal override List<ItemModel> Items => _items;
+        public override int Count => _items.Count;
+        internal override void Add(ItemModel child) => _items.Add(child);
+        internal override void Remove(ItemModel child) => _items.Remove(child);
         internal override void RemoveAt(int index) => _items.RemoveAt(index);
         internal override void Clear() => _items.Clear();
         internal void SetCapacity(int count) { if (count > _items.Capacity) _items.Capacity = count; }
@@ -25,6 +25,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        internal List1ModelOf(LineModel owner, T item) : base(owner, item) { }
+        internal List1ModelOf(ItemModel owner, T item) : base(owner, item) { }
     }
 }

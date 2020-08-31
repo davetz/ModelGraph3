@@ -16,7 +16,7 @@ namespace ModelGraph.Core
             new Model_653_Enum(this, childItem);
         }
 
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new InsertCommand(this, () => ItemCreated.Record(root, new EnumX(Item, true))));

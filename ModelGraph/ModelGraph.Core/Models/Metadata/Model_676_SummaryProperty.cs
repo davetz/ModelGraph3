@@ -7,7 +7,7 @@ namespace ModelGraph.Core
         internal Model_676_SummaryProperty(Model_674_SummaryPropertyRelation owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_676_SummaryProperty;
 
-        public override void GetMenuCommands(Root root, List<LineCommand> list)
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new RemoveCommand(this, () => RemoveSummaryProperty(root)));

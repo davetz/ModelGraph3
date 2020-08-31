@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         protected override IList<ComputeX> GetChildItems() => Item.Owner.GetChildItems(this);
         protected override void CreateChildModel(ComputeX cx) => new Model_658_Compute(this, cx);
 
-        public override void GetButtonCommands(Root root, List<LineCommand> list)
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
             list.Clear();
             list.Add(new InsertCommand(this, () => Item.Owner.AddNewComputeX(this)));
