@@ -76,7 +76,7 @@
                 <Canvas x:Name="RootCanvas" Background="Transparent"
                     Loaded="RootCanvas_Loaded"
                     DoubleTapped="RootCanvas_DoubleTapped"
-                    ContextRequested="RootCanasContextRuested"
+                    ContextRequested="RootCanas_ContextRuested"
                     PointerMoved="RootCanvas_PointerMoved"
                     PointerPressed="RootCanvas_PointerPressed"
                     PointerReleased="RootCanvas_PointerReleased">

@@ -26,7 +26,7 @@ namespace ModelGraph.Controls
             var width = 340;
             return (width, hieght);
         }
-        
+
         internal void SetSize(double width, double height)
         {
             if (_treeCanvasLoaded && height > 0)
@@ -53,7 +53,7 @@ namespace ModelGraph.Controls
         readonly Dictionary<ItemModel, ItemModelUI> Model_Cache = new Dictionary<ItemModel, ItemModelUI>(31);
         readonly HashSet<ItemModel> DefunctModels = new HashSet<ItemModel>();
 
-        private void InitializeCache() =>  ItemModelUI.Allocate(this, 31, FreeCacheStack);
+        private void InitializeCache() => ItemModelUI.Allocate(this, 31, FreeCacheStack);
 
         private void DiscardCache()
         {
@@ -146,7 +146,7 @@ namespace ModelGraph.Controls
 
 
         #region Properties  ===================================================
-        private ITreeCanvasModel TCM;
+        internal ITreeCanvasModel TCM { get; private set;}
 
         ItemModel Selected;
 
@@ -1185,7 +1185,7 @@ namespace ModelGraph.Controls
         internal void TextProperty_LostFocus(object sender, RoutedEventArgs e)
         {
             var obj = sender as TextBox;
-            if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
+            if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
             {
                 if ((string)obj.Tag != obj.Text)
                 {
@@ -1199,7 +1199,7 @@ namespace ModelGraph.Controls
             {
                 e.Handled = true;
                 var obj = sender as TextBox;
-                if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
@@ -1215,7 +1215,7 @@ namespace ModelGraph.Controls
             {
                 e.Handled = true;
                 var obj = sender as TextBox;
-                if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
@@ -1241,7 +1241,7 @@ namespace ModelGraph.Controls
         internal void Check_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
         {
             var obj = sender as CheckBox;
-            if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
+            if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
             {
                 var val = obj.IsChecked ?? false;
 
@@ -1273,7 +1273,7 @@ namespace ModelGraph.Controls
             else
             {
                 var obj = sender as CheckBox;
-                if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     var val = obj.IsChecked ?? false;
                     TCM.PostSetBoolValue(mdl, val);
@@ -1296,7 +1296,7 @@ namespace ModelGraph.Controls
         internal void ComboProperty_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var obj = sender as ComboBox;
-            if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl && obj.SelectedIndex >= 0)
+            if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl && obj.SelectedIndex >= 0)
             {
                 TCM.PostSetIndexValue(mdl, obj.SelectedIndex);
             }

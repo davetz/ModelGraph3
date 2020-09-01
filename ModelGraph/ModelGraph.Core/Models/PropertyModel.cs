@@ -33,15 +33,14 @@ namespace ModelGraph.Core
         public virtual bool IsCheckModel => false;
         public virtual bool IsComboModel => false;
 
-
         public virtual int GetIndexValue(Root root) => default;
         public virtual bool GetBoolValue(Root root) => default;
         public virtual string GetTextValue(Root root) => default;
         public virtual string[] GetListValue(Root root) => default;
 
-        public void PostSetIndexValue(Root root, int val) { if (val != GetIndexValue(root)) root.PostSetIndexValue(GetItem(), Property, val); }
-        public void PostSetBoolValue(Root root, bool val) { if (val != GetBoolValue(root)) root.PostSetBoolValue(GetItem(), Property, val); }
-        public void PostSetTextValue(Root root, string val) { if (val != GetTextValue(root)) root.PostSetTextValue(GetItem(), Property, val); }
+        internal void PostSetIndexValue(Root root, int val) { if (val != GetIndexValue(root)) root.PostSetIndexValue(GetItem(), Property, val); }
+        internal void PostSetBoolValue(Root root, bool val) { if (val != GetBoolValue(root)) root.PostSetBoolValue(GetItem(), Property, val); }
+        internal void PostSetTextValue(Root root, string val) { if (val != GetTextValue(root)) root.PostSetTextValue(GetItem(), Property, val); }
 
         public override string GetNameId()
         {

@@ -294,7 +294,8 @@ namespace ModelGraph.Controls
         #endregion
 
 
-        private void RootCanasContextRuested(Windows.UI.Xaml.UIElement sender, ContextRequestedEventArgs args)
+        #region RootCanas_ContextRuested  =====================================
+        private void RootCanas_ContextRuested(Windows.UI.Xaml.UIElement sender, ContextRequestedEventArgs args)
         {
             if (args.TryGetPosition(RootCanvas, out Point p))
             {
@@ -303,12 +304,14 @@ namespace ModelGraph.Controls
                 sender.ContextFlyout.ShowAt(RootCanvas);
             }
         }
+        #endregion
 
         #region RootCanvas_DoubleTapped  ======================================
         private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            PostEvent(EventType.DoubleTap);
+            if (!Model.AnyHit)
+                PanZoomReset();
         }
         #endregion
 
@@ -460,6 +463,10 @@ namespace ModelGraph.Controls
         {
             Event_Action[evt] = act;
         }
+        internal void RemoveEventAction(EventType evt)
+        {
+            Event_Action.Remove(evt);
+        }
         private readonly Dictionary<EventType, Action> Event_Action = new Dictionary<EventType, Action>();
         #endregion
 
@@ -494,7 +501,9 @@ namespace ModelGraph.Controls
             if (anyHit)
             {
                 if (Model.NodeHit)
+                {
                     ShowTooltip();
+                }
             }
             else
             {

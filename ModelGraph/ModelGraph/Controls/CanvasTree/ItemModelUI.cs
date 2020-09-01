@@ -11,7 +11,6 @@ namespace ModelGraph.Controls
         #region Properties  ===================================================
         private readonly CanvasTreeControl TC;
         public ItemModel Model { get; private set; }
-        public PropertyModel PropModel {get; private set;}
         internal Root DataRoot { get; private set; }
         internal short ModelDelta { get; private set; }
         internal TextBlock ItemKind { get; private set; }
@@ -58,7 +57,6 @@ namespace ModelGraph.Controls
         internal void Initialize(ItemModel model, int index)
         {
             Model = model;
-            PropModel = model as PropertyModel;
             ValidateStackPanel(index);
         }
         internal void Validate(int index)
@@ -69,7 +67,6 @@ namespace ModelGraph.Controls
         internal void Clear(bool discard = false)
         {
             Model = null;
-            PropModel = null;
 
             ClearItemKind(discard);
             ClearItemName(discard);
@@ -595,10 +592,10 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            var txt = PropModel.GetTextValue(DataRoot);
+            var txt = TC.TCM.GetTextValue(Model);
             obj.Text = txt ?? string.Empty;
             obj.Tag = obj.Text;
-            obj.IsReadOnly = PropModel.IsReadOnly;
+            obj.IsReadOnly = (Model is PropertyModel pm) && pm.IsReadOnly;
 
             StackPanel.Children.Add(obj);
         }
@@ -638,7 +635,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.IsChecked = PropModel.GetBoolValue(DataRoot);
+            obj.IsChecked = TC.TCM.GetBoolValue(Model);
 
             StackPanel.Children.Add(obj);
         }
@@ -676,8 +673,8 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.ItemsSource = PropModel.GetListValue(DataRoot);
-            obj.SelectedIndex = PropModel.GetIndexValue(DataRoot);
+            obj.ItemsSource = TC.TCM.GetListValue(Model);
+            obj.SelectedIndex = TC.TCM.GetIndexValue(Model);
 
             StackPanel.Children.Add(obj);
         }
@@ -799,23 +796,23 @@ namespace ModelGraph.Controls
             AddTreeIndent();
             AddExpandLeft();
 
-            if (PropModel != null)
+            if (Model is PropertyModel pm)
             {
-                if (PropModel.IsTextModel)
+                if (pm.IsTextModel)
                 {
                     AddPropertyName(name);
                     AddTextProperty();
                     CheckItemHasError();
                     return;
                 }
-                else if (PropModel.IsCheckModel)
+                else if (pm.IsCheckModel)
                 {
                     AddPropertyName(name);
                     AddCheckProperty();
                     CheckItemHasError();
                     return;
                 }
-                else if (PropModel.IsComboModel)
+                else if (pm.IsComboModel)
                 {
                     AddPropertyName(name);
                     AddComboProperty();
