@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public class TreeModel : ItemModelOf<Root>, IPageModel
+    public class TreeModel : ItemModelOf<Root>, IPageModel, ITreeCanvasModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
         private ItemModel _childModel; // there will only be one child model
@@ -167,6 +167,9 @@ namespace ModelGraph.Core
 
         #region Save/SaveAs/Reload  ===========================================
         public bool IsClosed { get; private set; }
+
+        public string HeaderTitle => Item.TitleName;
+
         internal void Close()
         {
             IsClosed = true;
@@ -205,5 +208,24 @@ namespace ModelGraph.Core
             }
         }
         #endregion
+
+
+        public void DragDrop(ItemModel model) => model.DragDrop(Item);
+        public void DragStart(ItemModel model) => model.DragStart(Item);
+        public DropAction DragEnter(ItemModel model) => model.DragEnter(Item);
+
+        public int GetIndexValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetIndexValue(Item) : 0;
+        public bool GetBoolValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetBoolValue(Item) : false;
+        public string GetTextValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetTextValue(Item) : string.Empty;
+        public string[] GetListValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetListValue(Item) : new string[0];
+
+        public void PostSetIndexValue(ItemModel model, int val) { if (model is PropertyModel pm) pm.PostSetIndexValue(Item, val); }
+        public void PostSetBoolValue(ItemModel model, bool val) { if (model is PropertyModel pm) pm.PostSetBoolValue(Item, val); }
+        public void PostSetTextValue(ItemModel model, string val) { if (model is PropertyModel pm) pm.PostSetTextValue(Item, val); }
+
+        public void GetButtonCommands(List<ItemCommand> buttonCommands) => _childModel.GetButtonCommands(Item, buttonCommands);
+        public void GetMenuCommands(ItemModel model, List<ItemCommand> menuCommands) => model.GetMenuCommands(Item, menuCommands);
+        public void GetButtonCommands(ItemModel model, List<ItemCommand> buttonCommands) => model.GetButtonCommands(Item, buttonCommands);
+
     }
 }

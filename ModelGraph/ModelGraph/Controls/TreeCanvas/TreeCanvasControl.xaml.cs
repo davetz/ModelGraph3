@@ -138,13 +138,11 @@ namespace ModelGraph.Controls
         #endregion
 
 
-
         #region ItemModelUI  =================================================
         internal (int, Sorting, Usage, string) GetFilterParms(ItemModel m) => TCM.GetFilterParms(m);
         internal Canvas Canvas => TreeCanvas;
 
         #endregion
-
 
 
         #region Properties  ===================================================

@@ -150,7 +150,6 @@
     <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
       <DependentUpon>ModelGraphControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\ModelTree\ItemModelUIOld.cs" />
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
     </Compile>
