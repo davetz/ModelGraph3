@@ -10,6 +10,6 @@
     d:DesignWidth="400">
 
     <Grid>
-        <controls:DrawCanvasControl x:Name="GraphCanvas" />
+        <controls:CanvasDrawControl x:Name="GraphCanvas" />
     </Grid>
 </Page>

@@ -12,20 +12,18 @@ using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-// The User Control item template is documented at https://go.microsoft.com/fwlink/?LinkId=234236
-
 namespace ModelGraph.Controls
 {
-    public sealed partial class DrawCanvasControl : UserControl
+    public sealed partial class CanvasDrawControl : UserControl
     {
         public IDrawCanvasModel Model { get; private set; }
-        private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+        private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
         private Vector2 _offset = new Vector2(); //offset need to center the view extent on the canvas
 
         #region Constructor/Initialize  =======================================
-        public DrawCanvasControl()
+        public CanvasDrawControl()
         {
             this.InitializeComponent();
         }

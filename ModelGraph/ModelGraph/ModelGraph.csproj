@@ -137,15 +137,15 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasControl.xaml.cs">
-      <DependentUpon>DrawCanvasControl.xaml</DependentUpon>
+    <Compile Include="Controls\CanvasDraw\CanvasDrawControl.xaml.cs">
+      <DependentUpon>CanvasDrawControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\DrawCanvas\DrawCanvasAlignmentGrid.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasCopyGrid.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasMoveGrid.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasResizerGrid.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasSelectorGrid.cs" />
-    <Compile Include="Controls\DrawCanvas\DrawCanvasToolTipGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawAlignmentGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawCopyGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawMoveGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawResizerGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawSelectorGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawToolTipGrid.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
     <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
       <DependentUpon>ModelGraphControl.xaml</DependentUpon>
@@ -153,9 +153,9 @@
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\TreeCanvas\ItemModelUI.cs" />
-    <Compile Include="Controls\TreeCanvas\TreeCanvasControl.xaml.cs">
-      <DependentUpon>TreeCanvasControl.xaml</DependentUpon>
+    <Compile Include="Controls\CanvasTree\ItemModelUI.cs" />
+    <Compile Include="Controls\CanvasTree\CanvasTreeControl.xaml.cs">
+      <DependentUpon>CanvasTreeControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\Shapes\Central.cs" />
     <Compile Include="Controls\Shapes\Circle.cs" />
@@ -234,7 +234,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\DrawCanvas\DrawCanvasControl.xaml">
+    <Page Include="Controls\CanvasDraw\CanvasDrawControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -246,7 +246,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\TreeCanvas\TreeCanvasControl.xaml">
+    <Page Include="Controls\CanvasTree\CanvasTreeControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
