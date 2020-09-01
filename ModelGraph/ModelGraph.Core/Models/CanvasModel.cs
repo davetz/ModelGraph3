@@ -3,7 +3,7 @@ using System.Collections.ObjectModel;
 
 namespace ModelGraph.Core
 {
-    public abstract class CanvasModel
+    public abstract class CanvasModel : ChildOf<Root>
     {
 
         public string ToolTip_Text1 { get; set; }
