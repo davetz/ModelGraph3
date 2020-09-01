@@ -168,13 +168,8 @@
                         <Border x:Name="ResizerBorder" BorderThickness="2" Background="Transparent" BorderBrush="White" Margin="8,8,8,8" />
                     </Grid>
 
-                    <Grid x:Name="PropertyGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}" MinWidth="100" MinHeight="100" Canvas.Left="40" Canvas.Top="100" Visibility="Visible">
-                        <StackPanel>
-                            <TextBlock  x:Name="PropertyOwner" Height="{StaticResource ElementHieght}" Text="Owner"/>
-                            <StackPanel x:Name="PropertyStackPanel" Orientation="Vertical" Margin="4,0,0,0">
-                                <TextBlock  Height="{StaticResource ElementHieght}" Text="Value"/>
-                            </StackPanel>
-                        </StackPanel>
+                    <Grid x:Name="PropertyGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
+                        <l:TreeCanvasControl x:Name="TreeCanvas"/>
                     </Grid>
 
                 </Canvas>

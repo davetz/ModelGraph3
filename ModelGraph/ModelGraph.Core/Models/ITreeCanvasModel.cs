@@ -17,7 +17,7 @@ namespace ModelGraph.Core
         int GetIndexValue(ItemModel model);
         bool GetBoolValue(ItemModel model);
         string GetTextValue(ItemModel model);
-        string[] GetlListValue(ItemModel model);
+        string[] GetListValue(ItemModel model);
 
         void PostSetIndexValue(ItemModel model, int val);
         void PostSetBoolValue(ItemModel model, bool val);

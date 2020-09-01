@@ -13,16 +13,20 @@ namespace ModelGraph.Controls
     public sealed partial class TreeCanvasControl : UserControl
     {
         #region Constructor  ==================================================
-        public TreeCanvasControl(ITreeCanvasModel tcm)
+        public TreeCanvasControl()
         {
-            _tcm = tcm;
-            this.InitializeComponent();
-            Initialize();
+            InitializeComponent();
         }
-        private readonly ITreeCanvasModel _tcm;
         #endregion
 
         #region SetSize/TreeCanvas_Loaded  ====================================
+        internal (double, double) GetSize()
+        {
+            var hieght = 32 + Count * ElementHieght;
+            var width = 340;
+            return (width, hieght);
+        }
+        
         internal void SetSize(double width, double height)
         {
             if (_treeCanvasLoaded && height > 0)
@@ -89,13 +93,13 @@ namespace ModelGraph.Controls
             }
             foreach (var m in DefunctModels)  // reclaim and save the uiCach from the defunct models
             {
-                var oc = GetModelUICache(m);
+                var oc = GetModelUI(m);
                 oc.Clear();
                 FreeCacheStack.Push(oc);
                 Model_Cache.Remove(m);
             }
         }
-        private ItemModelUI GetModelUICache(ItemModel m)
+        private ItemModelUI GetModelUI(ItemModel m)
         {
             if (!Model_Cache.TryGetValue(m, out ItemModelUI mc))
                 throw new Exception("ExceptionCorruptLineModelCache".GetLocalized());
@@ -108,21 +112,21 @@ namespace ModelGraph.Controls
         {
             var (leading, selected) = GetLeadingSelected();
             //ResetCacheDelta(_selected);
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _tcm.RefreshViewList(ViewSize, leading, selected, change); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TCM.RefreshViewList(ViewSize, leading, selected, change); });
         }
         private async System.Threading.Tasks.Task SetUsageAsync(ItemModel model, Usage usage)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _tcm.SetUsage(model, usage); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TCM.SetUsage(model, usage); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private async System.Threading.Tasks.Task SetSortingAsync(ItemModel model, Sorting sorting)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _tcm.SetSorting(model, sorting); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TCM.SetSorting(model, sorting); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private async System.Threading.Tasks.Task SetFilterAsync(ItemModel model, string text)
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _tcm.SetFilter(model, text); });
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TCM.SetFilter(model, text); });
             _ = RefreshViewListAsync(ChangeType.FilterSortChanged);
         }
         private (ItemModel, ItemModel) GetLeadingSelected()
@@ -136,7 +140,7 @@ namespace ModelGraph.Controls
 
 
         #region ItemModelUI  =================================================
-        internal (int, Sorting, Usage, string) GetFilterParms(ItemModel m) => _tcm.GetFilterParms(m);
+        internal (int, Sorting, Usage, string) GetFilterParms(ItemModel m) => TCM.GetFilterParms(m);
         internal Canvas Canvas => TreeCanvas;
 
         #endregion
@@ -144,6 +148,8 @@ namespace ModelGraph.Controls
 
 
         #region Properties  ===================================================
+        private ITreeCanvasModel TCM;
+
         ItemModel Selected;
 
         int Count => (ModelList is null) ? 0 : ModelList.Count;
@@ -221,8 +227,10 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Initialize  ===================================================
-        void Initialize()
+        internal void Initialize(ITreeCanvasModel tcm)
         {
+            TCM = tcm;
+
             LevelIndent = (int)(Resources["LevelIndent"] as double?).Value;
             ElementHieght = (int)(Resources["ElementHieght"] as double?).Value;
 
@@ -244,6 +252,45 @@ namespace ModelGraph.Controls
             ComboPropertyStyle = Resources["ComboPropertyStyle"] as Style;
             ModelIdentityStyle = Resources["ModelIdentityStyle"] as Style;
             PropertyBorderStyle = Resources["PropertyBorderStyle"] as Style;
+
+            ItemButtons = new Button[]
+{
+                ItemButton1,
+                ItemButton2,
+                ItemButton3
+};
+            MenuItems = new MenuFlyoutItem[]
+            {
+                MenuItem1,
+                MenuItem2,
+                MenuItem3,
+                MenuItem4,
+                MenuItem5,
+                MenuItem6,
+            };
+
+            ItemIdentityTip = new ToolTip();
+            ItemIdentityTip.Opened += ItemIdentityTip_Opened;
+
+            ModelIdentityTip = new ToolTip();
+            ModelIdentityTip.Opened += ModelIdentityTip_Opened;
+
+            ItemButtonTips = new ToolTip[ItemButtons.Length];
+            for (int i = 0; i < ItemButtons.Length; i++)
+            {
+                var tip = new ToolTip();
+                ItemButtonTips[i] = tip;
+                ToolTipService.SetToolTip(ItemButtons[i], tip);
+            }
+
+            MenuItemTips = new ToolTip[MenuItems.Length];
+            for (int i = 0; i < MenuItems.Length; i++)
+            {
+                var tip = new ToolTip();
+                MenuItemTips[i] = tip;
+                ToolTipService.SetToolTip(MenuItems[i], tip);
+            }
+
         }
         #endregion
 
@@ -493,15 +540,15 @@ namespace ModelGraph.Controls
         #endregion
 
 
-        #region RefreshAll  ===================================================
-        private void RefreshAll()
+        #region Refresh  ======================================================
+        internal void Refresh()
         {
-            if (_tcm is null) return;
+            if (TCM is null) return;
 
             _pointWheelEnabled = false;
 
             var (oldLeading, oldSelected) = GetLeadingSelected();
-            var (newModels, newSelected, atStart, atEnd) = _tcm.GetCurrentView(ViewSize, oldLeading, oldSelected);
+            var (newModels, newSelected, atStart, atEnd) = TCM.GetCurrentView(ViewSize, oldLeading, oldSelected);
 
             AtEnd = atEnd;
             AtStart = atStart;
@@ -530,7 +577,7 @@ namespace ModelGraph.Controls
         private void RefreshRoot()
         {
             var buttonCommands = new List<ItemCommand>();
-            _tcm.GetButtonCommands(buttonCommands);
+            TCM.GetButtonCommands(buttonCommands);
 
             var N = buttonCommands.Count;
             var M = ControlPanel.Children.Count;
@@ -552,7 +599,7 @@ namespace ModelGraph.Controls
                     }
                 }
             }
-            HeaderTitle.Text = _tcm.HeaderTitle;
+            HeaderTitle.Text = TCM.HeaderTitle;
             //_root.IsChanged = false;
         }
 
@@ -576,7 +623,7 @@ namespace ModelGraph.Controls
             SetSelectorGridPlacement();
 
 
-            var mc = GetModelUICache(Selected);
+            var mc = GetModelUI(Selected);
 
             if (mc.SortMode != null && !string.IsNullOrEmpty(mc.SortMode.Text))
             {
@@ -601,7 +648,7 @@ namespace ModelGraph.Controls
                 TreeCanvas.KeyboardAccelerators.Add(acc);
             }
 
-            if (_tcm.DragEnter(Selected) != DropAction.None)
+            if (TCM.DragEnter(Selected) != DropAction.None)
             {
                 var acc = new KeyboardAccelerator { Key = VirtualKey.V, Modifiers = VirtualKeyModifiers.Control };
                 acc.Invoked += Accelerator_ModelPaste_Invoked;
@@ -624,8 +671,8 @@ namespace ModelGraph.Controls
                 HelpButton.Visibility = Visibility.Collapsed;
             }
 
-            _tcm.GetMenuCommands(Selected, MenuCommands);
-            _tcm.GetButtonCommands(Selected, ButtonCommands);
+            TCM.GetMenuCommands(Selected, MenuCommands);
+            TCM.GetButtonCommands(Selected, ButtonCommands);
 
             var cmds = ButtonCommands;
             var len1 = cmds.Count;
@@ -716,7 +763,7 @@ namespace ModelGraph.Controls
         {
             if (focusModel != null) Selected = focusModel;
 
-            var lc = GetModelUICache(Selected);
+            var lc = GetModelUI(Selected);
 
             if (Selected.CanFilter)
             {
@@ -769,13 +816,13 @@ namespace ModelGraph.Controls
         private void Accelerator_ModelCopy_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (Selected.CanDrag)
-                _tcm.DragStart(Selected);
+                TCM.DragStart(Selected);
             args.Handled = true;
         }
         private void Accelerator_ModelPaste_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (_tcm.DragEnter(Selected) != DropAction.None)
-                _tcm.DragDrop(Selected);
+            if (TCM.DragEnter(Selected) != DropAction.None)
+                TCM.DragDrop(Selected);
             args.Handled = true;
         }
         private void Accelerator_SortMode_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -892,7 +939,7 @@ namespace ModelGraph.Controls
             {
                 if (mdl.CanDrag)
                 {
-                    _tcm.DragStart(mdl);
+                    TCM.DragStart(mdl);
                 }
                 else
                 {
@@ -906,7 +953,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                var type = _tcm.DragEnter(mdl);
+                var type = TCM.DragEnter(mdl);
                 switch (type)
                 {
                     case DropAction.None:
@@ -932,7 +979,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                _tcm.DragDrop(mdl);
+                TCM.DragDrop(mdl);
             }
         }
         #endregion
@@ -1144,7 +1191,7 @@ namespace ModelGraph.Controls
             {
                 if ((string)obj.Tag != obj.Text)
                 {
-                    _tcm.PostSetTextValue(mdl, obj.Text);
+                    TCM.PostSetTextValue(mdl, obj.Text);
                 }
             }
         }
@@ -1158,7 +1205,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        _tcm.PostSetTextValue(mdl, obj.Text);
+                        TCM.PostSetTextValue(mdl, obj.Text);
                     }
                     if (e.Key == Windows.System.VirtualKey.Enter)
                         FocusButton.Focus(FocusState.Keyboard);
@@ -1174,7 +1221,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        obj.Text = _tcm.GetTextValue(mdl) ?? string.Empty;
+                        obj.Text = TCM.GetTextValue(mdl) ?? string.Empty;
                     }
                     ToggleParentExpandRight(mdl);
                 }
@@ -1209,7 +1256,7 @@ namespace ModelGraph.Controls
                 {
                     e.Handled = true;
                     _ignoreNextCheckBoxEvent = true;
-                    _tcm.PostSetBoolValue(mdl, !val);
+                    TCM.PostSetBoolValue(mdl, !val);
                 }
                 else if (e.Key == Windows.System.VirtualKey.Tab)
                 {
@@ -1231,7 +1278,7 @@ namespace ModelGraph.Controls
                 if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl)
                 {
                     var val = obj.IsChecked ?? false;
-                    _tcm.PostSetBoolValue(mdl, val);
+                    TCM.PostSetBoolValue(mdl, val);
                 }
             }
         }
@@ -1253,7 +1300,7 @@ namespace ModelGraph.Controls
             var obj = sender as ComboBox;
             if (obj.DataContext is ItemModelUI mc && mc.PropModel is PropertyModel mdl && obj.SelectedIndex >= 0)
             {
-                _tcm.PostSetIndexValue(mdl, obj.SelectedIndex);
+                TCM.PostSetIndexValue(mdl, obj.SelectedIndex);
             }
         }
         internal void ComboProperty_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)

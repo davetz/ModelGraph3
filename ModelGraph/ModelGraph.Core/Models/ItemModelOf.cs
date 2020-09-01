@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         {
             Item = item;
             Owner = owner;
-            Depth = (byte)(owner.Depth + 1);
+            Depth = (byte)(owner is null ? 255 : (owner.Depth + 1));
 
             if (item.AutoExpandRight)
             {
@@ -24,7 +24,7 @@ namespace ModelGraph.Core
                 ExpandRight(item.GetRoot());
             }
 
-            owner.Add(this);
+            owner?.Add(this);
         }
     }
 }

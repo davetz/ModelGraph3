@@ -17,8 +17,8 @@ namespace ModelGraph.Controls
 
         void UpdateSelectorGrid()
         {
-            var min = Vector2.Min(_model.GridPoint1, _model.GridPoint2);
-            var size = Vector2.Abs(_model.GridPoint1 - _model.GridPoint2);
+            var min = Vector2.Min(Model.GridPoint1, Model.GridPoint2);
+            var size = Vector2.Abs(Model.GridPoint1 - Model.GridPoint2);
 
             SelectorGrid.Width = size.X;
             SelectorGrid.Height = size.Y;

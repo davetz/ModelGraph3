@@ -1,20 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class GraphCanvas : CanvasModel, ICanvasModel
+    internal class GraphCanvas : CanvasModel, IDrawCanvasModel
     {
         private readonly GraphModel _model;
         private readonly Graph _graph;
+        private readonly Root _root;
 
         #region Constructor  ==================================================
         internal GraphCanvas(GraphModel model, Graph graph)
         {
             _model = model;
             _graph = graph;
+            _root = graph.GetRoot();
 
             RefreshDrawData();
         }
@@ -215,12 +218,54 @@ namespace ModelGraph.Core
         {
             return false;
         }
-        public void HidePropertyPanel()
+        #endregion
+
+        #region ITreeCanvasModel  =============================================
+
+        public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
+        public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
         {
+            if (_hitNode is null) return (new List<ItemModel>(0), null, false, false);
+            if (_itemModel != null)
+            {
+                if (_itemModel.GetItem() != _hitNode)
+                {
+                    _itemModel.Discard();
+                    _itemModel = new Model_6DA_HitNode(_hitNode);
+                }
+            }
+            else
+                _itemModel = new Model_6DA_HitNode(_hitNode);
+
+            _itemModel.ExpandRight(_root);
+
+            if (selected is null || !_itemModel.Items.Contains(selected))
+                selected = _itemModel.Count == 0 ? null :_itemModel.Items[0];
+
+            return (_itemModel.Items, selected, true, true);
         }
-        public void ShowPropertyPanel()
-        {
-        }
+        private ItemModel _itemModel;
+        public string HeaderTitle => _itemModel.GetItem().GetNameId();
+
+        public void SetUsage(ItemModel model, Usage usage) { }
+        public void SetFilter(ItemModel model, string text) { }
+        public void SetSorting(ItemModel model, Sorting sorting) { }
+        public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => (_itemModel.Items.Count, Sorting.Unsorted, Usage.None, string.Empty);
+
+        public int GetIndexValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetIndexValue(_root) : 0;
+        public bool GetBoolValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetBoolValue(_root) : false;
+        public string GetTextValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetTextValue(_root) : string.Empty;
+        public string[] GetListValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetListValue(_root) : new string[0];
+
+        public void PostSetIndexValue(ItemModel model, int val) { if (model is PropertyModel pm) pm.PostSetIndexValue(_root, val); }
+        public void PostSetBoolValue(ItemModel model, bool val) { if (model is PropertyModel pm) pm.PostSetBoolValue(_root, val); }
+        public void PostSetTextValue(ItemModel model, string val) { if (model is PropertyModel pm) pm.PostSetTextValue(_root, val); }
+        public void DragDrop(ItemModel model) { }
+        public void DragStart(ItemModel model) { }
+        public DropAction DragEnter(ItemModel model) => DropAction.None;
+        public void GetButtonCommands(List<ItemCommand> buttonCommands) { }
+        public void GetMenuCommands(ItemModel model, List<ItemCommand> menuCommands) { }
+        public void GetButtonCommands(ItemModel model, List<ItemCommand> buttonCommands) { }
         #endregion
     }
 }

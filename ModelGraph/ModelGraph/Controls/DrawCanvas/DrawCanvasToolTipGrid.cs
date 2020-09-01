@@ -9,11 +9,11 @@ namespace ModelGraph.Controls
 
         private void ShowTooltip()
         {
-            if (string.IsNullOrWhiteSpace(_model.ToolTip_Text1)) HideTootlip();
-            ItemName.Text = _model.ToolTip_Text1;
+            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text1)) HideTootlip();
+            ItemName.Text = Model.ToolTip_Text1;
 
             var offset = 60;
-            if (string.IsNullOrWhiteSpace(_model.ToolTip_Text2))
+            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text2))
             {
                 offset /= 2;
                 ItemToolTip.Visibility = Visibility.Collapsed;
@@ -21,12 +21,12 @@ namespace ModelGraph.Controls
             else
             {
                 ItemToolTip.Visibility = Visibility.Collapsed;
-                ItemToolTip.Text = _model.ToolTip_Text2;
+                ItemToolTip.Text = Model.ToolTip_Text2;
             }
 
             var ds = ItemToolTip.Text.Length * 4;
-            var x = _model.GridPoint2.X - ds;
-            var y = _model.GridPoint2.Y - offset;
+            var x = Model.GridPoint2.X - ds;
+            var y = Model.GridPoint2.Y - offset;
 
             Canvas.SetTop(ToolTipBorder, y);
             Canvas.SetLeft(ToolTipBorder, x);

@@ -37,7 +37,7 @@ namespace ModelGraph.Core
         public virtual int GetIndexValue(Root root) => default;
         public virtual bool GetBoolValue(Root root) => default;
         public virtual string GetTextValue(Root root) => default;
-        public virtual string[] GetlListValue(Root root) => default;
+        public virtual string[] GetListValue(Root root) => default;
 
         public void PostSetIndexValue(Root root, int val) { if (val != GetIndexValue(root)) root.PostSetIndexValue(GetItem(), Property, val); }
         public void PostSetBoolValue(Root root, bool val) { if (val != GetBoolValue(root)) root.PostSetBoolValue(GetItem(), Property, val); }

@@ -7,6 +7,6 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_619_ComboProperty;
         public override bool IsComboModel => true;
         public override int GetIndexValue(Root root) => Property.GetIndexValue(Item);
-        public override string[] GetlListValue(Root root) => Property.GetlListValue(root);
+        public override string[] GetListValue(Root root) => Property.GetlListValue(root);
     }
 }

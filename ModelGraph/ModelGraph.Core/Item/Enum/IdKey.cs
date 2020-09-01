@@ -450,6 +450,10 @@ namespace ModelGraph.Core
         Model_6D6_EgressStep = 0x6D6,
         Model_6D7_EgressTail = 0x6D7,
         //=====================================================================
+
+        Model_6DA_HitNode = 0x6DA,
+
+        //=====================================================================
         Model_6E1_Graph = 0x6E1,
         Model_6E2_NodeList = 0x6E2,
         Model_6E3_EdgeList = 0x6E3,

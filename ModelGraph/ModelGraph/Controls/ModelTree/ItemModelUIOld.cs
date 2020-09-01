@@ -681,7 +681,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.ItemsSource = PropModel.GetlListValue(DataRoot);
+            obj.ItemsSource = PropModel.GetListValue(DataRoot);
             obj.SelectedIndex = PropModel.GetIndexValue(DataRoot);
 
             StackPanel.Children.Add(obj);

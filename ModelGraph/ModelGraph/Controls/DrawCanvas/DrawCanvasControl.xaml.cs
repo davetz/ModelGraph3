@@ -18,8 +18,7 @@ namespace ModelGraph.Controls
 {
     public sealed partial class DrawCanvasControl : UserControl
     {
-        public ICanvasModel Model { get => _model; }
-        private ICanvasModel _model;
+        public IDrawCanvasModel Model { get; private set; }
         private CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
@@ -31,12 +30,14 @@ namespace ModelGraph.Controls
             this.InitializeComponent();
         }
 
-        public void Initialize(ICanvasModel model)
+        public void Initialize(IDrawCanvasModel model)
         {
-            _model = model;
-            EditCanvas.DataContext = _model.EditorData;
-            Pick1Canvas.DataContext = _model.Picker1Data;
-            Pick2Canvas.DataContext = _model.Picker2Data;
+            Model = model;
+            TreeCanvas.Initialize(model);
+
+            EditCanvas.DataContext = Model.EditorData;
+            Pick1Canvas.DataContext = Model.Picker1Data;
+            Pick2Canvas.DataContext = Model.Picker2Data;
             ShowPicker1();
             ShowPicker2();
 
@@ -65,7 +66,7 @@ namespace ModelGraph.Controls
             var aw = (float)EditCanvas.ActualWidth;
             var ah = (float)EditCanvas.ActualHeight;
 
-            var e = _model.EditorExtent;
+            var e = Model.EditorExtent;
             var ew = (float)e.Width;
             var eh = (float)e.Hieght;
 
@@ -94,18 +95,18 @@ namespace ModelGraph.Controls
         private async void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(Pick2Canvas).Position;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { _model.Picker2Select((int)p.Y); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker2Select((int)p.Y); });
             Pick2Canvas.Invalidate();
         }
         private void ShowPicker1()
         {
-            Pick2Canvas.Width = _model.Picker2Width;
-            if (_model.Picker1Width < 4)
+            Pick2Canvas.Width = Model.Picker2Width;
+            if (Model.Picker1Width < 4)
                 HidePicker1();
             else
             {
                 Picker1Grid.Visibility = Visibility.Visible;
-                Picker1GridColumn.Width = new GridLength(_model.Picker2Width + 4);
+                Picker1GridColumn.Width = new GridLength(Model.Picker2Width + 4);
             }
         }
         private void HidePicker1()
@@ -115,13 +116,13 @@ namespace ModelGraph.Controls
         }
         private void ShowPicker2()
         {
-            Pick2Canvas.Width = _model.Picker2Width;
-            if (_model.Picker2Width < 4)
+            Pick2Canvas.Width = Model.Picker2Width;
+            if (Model.Picker2Width < 4)
                 HidePicker2();
             else
             {
                 Picker2Grid.Visibility = Visibility.Visible;
-                Picker2GridColumn.Width = new GridLength(_model.Picker2Width + 8);
+                Picker2GridColumn.Width = new GridLength(Model.Picker2Width + 8);
             }
         }
         private void HidePicker2()
@@ -363,10 +364,10 @@ namespace ModelGraph.Controls
         #endregion
 
         #region HelperMethods  ================================================
-        private void SetGridPoint1(PointerRoutedEventArgs e) => _model.GridPoint1 = GridPoint(e);
-        private void SetGridPoint2(PointerRoutedEventArgs e) => _model.GridPoint2 = GridPoint(e);
-        private void SetDrawPoint1(PointerRoutedEventArgs e) => _model.DrawPoint1 = DrawPoint(e);
-        private void SetDrawPoint2(PointerRoutedEventArgs e) => _model.DrawPoint2 = DrawPoint(e);
+        private void SetGridPoint1(PointerRoutedEventArgs e) => Model.GridPoint1 = GridPoint(e);
+        private void SetGridPoint2(PointerRoutedEventArgs e) => Model.GridPoint2 = GridPoint(e);
+        private void SetDrawPoint1(PointerRoutedEventArgs e) => Model.DrawPoint1 = DrawPoint(e);
+        private void SetDrawPoint2(PointerRoutedEventArgs e) => Model.DrawPoint2 = DrawPoint(e);
         private Vector2 GridPoint(PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(RootGrid).Position;
@@ -381,10 +382,10 @@ namespace ModelGraph.Controls
         }
         private (float top, float left, float width, float height) GetResizerParams()
         {
-            var x1 = _model.NodePoint1.X;
-            var y1 = _model.NodePoint1.Y;
-            var x2 = _model.NodePoint2.X;
-            var y2 = _model.NodePoint2.Y;
+            var x1 = Model.NodePoint1.X;
+            var y1 = Model.NodePoint1.Y;
+            var x2 = Model.NodePoint2.X;
+            var y2 = Model.NodePoint2.Y;
 
 
             var dx = x2 - x1;
@@ -491,10 +492,10 @@ namespace ModelGraph.Controls
         async void ViewIdle_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = Model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_model.NodeHit)
+                if (Model.NodeHit)
                     ShowTooltip();
             }
             else
@@ -505,13 +506,19 @@ namespace ModelGraph.Controls
         async void ViewIdle_TapHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = Model.TapHitTest(); });
             if (anyHit)
             {
-                if (_model.NodeHit)
+                if (Model.NodeHit)
                 {
-                    _model.ShowPropertyPanel();
                     ShowResizerGrid();
+                    TreeCanvas.Refresh();
+                    var (w, h) = TreeCanvas.GetSize();
+                    TreeCanvas.SetSize(w, h);
+                    PropertyGrid.Width = w;
+                    PropertyGrid.Height = h;
+                    Canvas.SetLeft(PropertyGrid, Model.GridPoint1.X + 20);
+                    Canvas.SetTop(PropertyGrid, Model.GridPoint1.Y - 8);
                     PropertyGrid.Visibility = Visibility.Visible;
                 }
             }
@@ -545,7 +552,7 @@ namespace ModelGraph.Controls
         void RegionTraceEnd()
         {
             ShowAlignmentGrid();
-            if (!_model.IsValidRegion())
+            if (!Model.IsValidRegion())
                 HideAlignmentGrid();
             SetViewIdle();
         }
@@ -622,50 +629,50 @@ namespace ModelGraph.Controls
         }
         void ResizeEnd()
         {
-            _model.ResizePropagate();
-            _model.RefreshDrawData();
+            Model.ResizePropagate();
+            Model.RefreshDrawData();
             EditCanvas.Invalidate();
             RestorePointerCursor();
             SetViewIdle();
         }
         void ResizeTopDrag()
         {
-            _model.ResizeTop();
+            Model.ResizeTop();
             UpdateResizerGrid();
         }
         void ResizeLeftDrag()
         {
-            _model.ResizeLeft();
+            Model.ResizeLeft();
             UpdateResizerGrid();
         }
         void ResizeRightDrag()
         {
-            _model.ResizeRight();
+            Model.ResizeRight();
             UpdateResizerGrid();
         }
         void ResizeBottomDrag()
         {
-            _model.ResizeBottom();
+            Model.ResizeBottom();
             UpdateResizerGrid();
         }
         void ResizeTopLeftDrag()
         {
-            _model.ResizeTopLeft();
+            Model.ResizeTopLeft();
             UpdateResizerGrid();
         }
         void ResizeTopRightDrag()
         {
-            _model.ResizeTopRight();
+            Model.ResizeTopRight();
             UpdateResizerGrid();
         }
         void ResizeBottomLeftDrag()
         {
-            _model.ResizeBottomLeft();
+            Model.ResizeBottomLeft();
             UpdateResizerGrid();
         }
         void ResizeBottomRightDrag()
         {
-            _model.ResizeBottomRight();
+            Model.ResizeBottomRight();
             UpdateResizerGrid();
         }
         #endregion
@@ -681,8 +688,8 @@ namespace ModelGraph.Controls
         async void View_OnNode_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
-            if (anyHit && _model.NodeHit)
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = Model.SkimHitTest(); });
+            if (anyHit && Model.NodeHit)
             {
 
             }
@@ -708,10 +715,10 @@ namespace ModelGraph.Controls
         async void MoveIdle_SkimHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.SkimHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = Model.SkimHitTest(); });
             if (anyHit)
             {
-                if (_model.RegionHit || _model.NodeHit)
+                if (Model.RegionHit || Model.NodeHit)
                 {
                     TrySetNewCursor(CoreCursorType.Hand);
                 }
@@ -724,15 +731,15 @@ namespace ModelGraph.Controls
         async void MoveIdle_TapHitTest()
         {
             var anyHit = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = _model.TapHitTest(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { anyHit = Model.TapHitTest(); });
             if (anyHit)
             {
-                if (_model.RegionHit || _model.NodeHit)
+                if (Model.RegionHit || Model.NodeHit)
                 {
                     TrySetNewCursor(CoreCursorType.SizeAll);
-                    if (_model.RegionHit)
+                    if (Model.RegionHit)
                         SetMoveRegionDrag();
-                    else if (_model.NodeHit)
+                    else if (Model.NodeHit)
                         SetMoveNodeDrag();
                 }
                 else
@@ -752,10 +759,10 @@ namespace ModelGraph.Controls
         async void MovingNode()
         {
             var ok = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.MoveNode(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.MoveNode(); });
             if (ok)
             {
-                _model.RefreshDrawData();
+                Model.RefreshDrawData();
                 EditCanvas.Invalidate();
             }
         }
@@ -770,10 +777,10 @@ namespace ModelGraph.Controls
         async void MovingRegion()
         {
             var ok = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.MoveRegion(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.MoveRegion(); });
             if (ok)
             {
-                _model.RefreshDrawData();
+                Model.RefreshDrawData();
                 EditCanvas.Invalidate();
             }
         }
@@ -788,14 +795,14 @@ namespace ModelGraph.Controls
         {
             if (TrySetState(StateType.CreateIdle))
             {
-                Picker2GridColumn.Width = new GridLength(_model.Picker2Width);
+                Picker2GridColumn.Width = new GridLength(Model.Picker2Width);
                 SetEventAction(EventType.Tap, CreateNewNode);
             }
         }
         async void CreateNewNode()
         {
             var ok = false;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = _model.CreateNode(); });
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.CreateNode(); });
             EditCanvas.Invalidate();
             ViewSelect.IsChecked = true;
         }

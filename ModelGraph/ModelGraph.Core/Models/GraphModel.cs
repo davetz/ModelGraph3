@@ -30,7 +30,7 @@ namespace ModelGraph.Core
             Owner.Remove(this);
             Discard(); //discard myself and recursivly discard all my children
         }
-        public ICanvasModel GetDrawCanvas(CanvasId id) => GraphCanvas;
+        public IDrawCanvasModel GetDrawCanvas(CanvasId id) => GraphCanvas;
 
         public void TriggerUIRefresh()
         {

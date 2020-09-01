@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public interface ICanvasModel
+    public interface IDrawCanvasModel : ITreeCanvasModel
     {
         Extent EditorExtent { get; }
         int Picker1Width { get; }
@@ -39,9 +39,6 @@ namespace ModelGraph.Core
         bool EndHitTest();
         bool SkimHitTest();
         bool DragHitTest();
-
-        void ShowPropertyPanel();
-        void HidePropertyPanel();
 
         string ToolTip_Text1 { get; }
         string ToolTip_Text2 { get; }
