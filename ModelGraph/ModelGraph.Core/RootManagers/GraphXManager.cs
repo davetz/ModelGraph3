@@ -137,6 +137,7 @@ namespace ModelGraph.Core
         #region DomainMethods  ================================================
         //========================================== frequently used references
         private QueryXManager _queryXManager;
+        private SymbolXManager _sybolXManager;
         private DummyItem _dummyItem;
         private DummyQueryX _dummyQueryX;
 
@@ -154,6 +155,7 @@ namespace ModelGraph.Core
         private void InitializeLocalReferences(Root root)
         {
             _queryXManager = root.Get<QueryXManager>();
+            _sybolXManager = root.Get<SymbolXManager>();
             _dummyItem = root.Get<DummyItem>();
             _dummyQueryX = root.Get<DummyQueryX>();
 
@@ -1356,6 +1358,18 @@ namespace ModelGraph.Core
                 list[i].IsHead = (i == 0);
                 list[i].IsTail = (i == M);
             }
+        }
+        #endregion
+
+        #region Model_645_GraphSymbolList  ====================================
+        internal int GetTotalCount(Model_645_GraphSymbolList m) => _relation_GraphX_SymbolX.ChildCount(m.Item);
+        internal IList<SymbolX> GetChildItems(Model_645_GraphSymbolList m) => _relation_GraphX_SymbolX.TryGetChildren(m.Item, out IList<SymbolX> list) ? list : new SymbolX[0];
+
+        internal void CreateNewSymbol(Model_645_GraphSymbolList m)
+        {
+            var sx = new SymbolX(_sybolXManager, true);
+            ItemCreated.Record(Owner, sx);
+            ItemLinked.Record(Owner, _relation_GraphX_SymbolX, m.Item, sx);
         }
         #endregion
 

@@ -147,6 +147,9 @@
     <Compile Include="Controls\CanvasDraw\CanvasDrawSelectorGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawToolTipGrid.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
+    <Compile Include="Controls\ModelSymbol\ModelSymbolControl.xaml.cs">
+      <DependentUpon>ModelSymbolControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
       <DependentUpon>ModelGraphControl.xaml</DependentUpon>
     </Compile>
@@ -237,6 +240,10 @@
     <Page Include="Controls\CanvasDraw\CanvasDrawControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModelSymbol\ModelSymbolControl.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
     <Page Include="Controls\ModelGraph\ModelGraphControl.xaml">
       <SubType>Designer</SubType>
@@ -338,9 +345,7 @@
       <Name>ModelGraph.Core</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controls\ModelSymbol\" />
-  </ItemGroup>
+  <ItemGroup />
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
     <VisualStudioVersion>14.0</VisualStudioVersion>
   </PropertyGroup>

@@ -188,6 +188,10 @@ namespace ModelGraph.Core
         {
             PageControl?.Reload();
         }
+        internal void NewView(SymbolModel model)
+        {
+            PageControl?.NewView(model);
+        }
         internal void NewView(GraphModel model)
         {
             PageControl?.NewView(model);

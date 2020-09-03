@@ -11,10 +11,14 @@ namespace ModelGraph.Core
         public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetSummaryId() => Root.GetSummaryId(IdKey);
 
-        protected override int GetTotalCount() => 0;
-        protected override IList<SymbolX> GetChildItems() => new SymbolX[0];
-        protected override void CreateChildModel(SymbolX childItem)
+        protected override int GetTotalCount() => Item.Owner.GetTotalCount(this);
+        protected override IList<SymbolX> GetChildItems() => Item.Owner.GetChildItems(this);
+        protected override void CreateChildModel(SymbolX childItem) => new Model_656_Symbol(this, childItem);
+
+        public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
+            list.Clear();
+            list.Add(new InsertCommand(this, () => Item.Owner.CreateNewSymbol(this)));
         }
     }
 }

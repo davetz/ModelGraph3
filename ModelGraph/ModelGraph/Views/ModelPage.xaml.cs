@@ -61,7 +61,7 @@ namespace ModelGraph.Views
                             m.PageControl = treeControl;
                             break;
 
-                        case ControlType.SymbolEditor: m.PageControl = new SymbolEditControl(m); break;
+                        case ControlType.SymbolEditor: m.PageControl = new ModelSymbolControl(m); break;
 
                         case ControlType.GraphDisplay: m.PageControl = new ModelGraphControl(m); break;
 

@@ -8,11 +8,9 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.Model_647_TableList;
         public override string GetNameId() => Root.GetNameId(IdKey);
 
-        private TableXManager TXR => Item as TableXManager;
-
         #region RequiredMethods  ==============================================
-        protected override int GetTotalCount() => TXR.Count;
-        protected override IList<TableX> GetChildItems() => TXR.Items;
+        protected override int GetTotalCount() => Item.Count;
+        protected override IList<TableX> GetChildItems() => Item.Items;
         protected override void CreateChildModel(TableX childItem)
         {
             new Model_6A4_Table(this, childItem);
