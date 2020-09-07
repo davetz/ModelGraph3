@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         {
             var treeModel = GetTreeModel();
             list.Clear();
-            list.Add(new NewViewCommand(this, () => { treeModel.NewView(new SymbolModel(Item.Owner.Owner, Item)); }));
+            list.Add(new EditCommand(this, () => { treeModel.NewView(new SymbolModel(Item.Owner.Owner, Item)); }));
         }
 
     }

@@ -162,9 +162,9 @@ namespace ModelGraph.Controls
 
                 foreach (var (P, (S, K, W), (A, R, G, B)) in data.Lines)
                 {
-                    if ((K & Shape.IsMultipleInstance) != 0)
+                    if ((K & ShapeT.IsMultipleInstance) != 0)
                     {
-                        var k = K & Shape.MultipleInstanceMask;
+                        var k = K & ShapeT.MultipleInstanceMask;
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
 
@@ -181,7 +181,7 @@ namespace ModelGraph.Controls
                         using (var pb = new CanvasPathBuilder(ds))
                         {
                             pb.BeginFigure(P[0] * scale + offset);
-                            if (K == Shape.JointedLines)
+                            if (K == ShapeT.JointedLines)
                             {
                                 for (int i = 1; i < P.Length; i++)
                                 {
@@ -222,26 +222,26 @@ namespace ModelGraph.Controls
                     ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
                 }
 
-                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, Shape shape, bool isFilled, byte w)
+                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeT shape, bool isFilled, byte w)
                 {
                     switch (shape)
                     {
-                        case Shape.Line:
+                        case ShapeT.Line:
                             ds.DrawLine(a, b + _offset, color, w, stroke);
                             break;
-                        case Shape.Circle:
+                        case ShapeT.Circle:
                             if (isFilled)
                                 ds.FillCircle(a, b.X, color);
                             else
                                 ds.DrawCircle(a, b.X, color, w, stroke);
                             break;
-                        case Shape.Ellipse:
+                        case ShapeT.Ellipse:
                             if (isFilled)
                                 ds.FillEllipse(a, b.X, b.Y, color);
                             else
                                 ds.DrawEllipse(a, b.X, b.Y, color, w, stroke);
                             break;
-                        case Shape.Rectangle:
+                        case ShapeT.Rectangle:
                             var e = a - b;
                             var f = 2 * b;
                             if (isFilled)
@@ -249,7 +249,7 @@ namespace ModelGraph.Controls
                             else
                                 ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, w, stroke);
                             break;
-                        case Shape.RoundedRectangle:
+                        case ShapeT.RoundedRectangle:
                             e = a - b;
                             f = 2 * b;
                             if (isFilled)

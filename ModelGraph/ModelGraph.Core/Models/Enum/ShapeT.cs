@@ -1,6 +1,6 @@
 ﻿namespace ModelGraph.Core
 {
-    public enum Shape : byte
+    public enum ShapeT : byte
     {
         //simple shapes 
         Line = 0,
