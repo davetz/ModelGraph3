@@ -14,11 +14,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Rectangle(Shape shape)
+        private Rectangle(ShapeBase shape)
         {
             CopyData(shape);
         }
-        private Rectangle(Shape shape, Vector2 center)
+        private Rectangle(ShapeBase shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -26,10 +26,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new Rectangle(this);
-        internal override Shape Clone(Vector2 center) => new Rectangle(this, center);
+        internal override ShapeBase Clone() =>new Rectangle(this);
+        internal override ShapeBase Clone(Vector2 center) => new Rectangle(this, center);
 
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;
@@ -40,7 +40,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, strokeWidth, StrokeStyle());
         }
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -54,7 +54,7 @@ namespace ModelGraph.Core
             //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)ShapeType.Rectangle;
+        protected override byte TypeCode => (byte)Shape.Rectangle;
 
         #endregion
     }

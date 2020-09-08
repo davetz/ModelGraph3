@@ -7,7 +7,7 @@ namespace ModelGraph.Core
         internal Item SeedItem;    // seed of query forest 
         internal Query[] Forest;   // roots of the query forest
         internal SymbolX[] Symbols; // referenced by [Node.Symbol][Node.FlipRotate]
-        internal Dictionary<SymbolX, List<Shape>> SymbolShapes; // expanded form of SymbolX.Data
+        internal Dictionary<SymbolX, List<ShapeBase>> SymbolShapes; // expanded form of SymbolX.Data
 
         internal List<Node> Nodes = new List<Node>();
         internal List<Edge> Edges = new List<Edge>();

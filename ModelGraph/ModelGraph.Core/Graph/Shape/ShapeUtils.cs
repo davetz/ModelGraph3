@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract partial class Shape
+    internal abstract partial class ShapeBase
     {
         static private float LIM(float v) => (v < -1) ? -1 : (v > 1) ? 1 : v;
         static protected (float dx, float dy) Limit(float x, float y) => (LIM(x), LIM(y));
@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         static protected Vector2 ToVector((float x, float y) p) => new Vector2(p.x, p.y);
 
         #region GetMaxRadius  =================================================
-        static private (float r1, float r2, float f1) GetMaxRadius(IEnumerable<Shape> shapes)
+        static private (float r1, float r2, float f1) GetMaxRadius(IEnumerable<ShapeBase> shapes)
         {
             float r1 = 0, r2 = 0, f1 = 0;
 
@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetHasSlider  =================================================
-        static private (bool, HasSlider) GetHasSlider(IEnumerable<Shape> shapes)
+        static private (bool, HasSlider) GetHasSlider(IEnumerable<ShapeBase> shapes)
         {
             var locked = false;
             var slider = HasSlider.None;
@@ -40,7 +40,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetMinMaxDimension  ===========================================
-        static private (int min, int max, int dim) GetDimension(IEnumerable<Shape> shapes)
+        static private (int min, int max, int dim) GetDimension(IEnumerable<ShapeBase> shapes)
         {
             int min = 1, max = 100, dim = 0;
 
@@ -57,7 +57,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetExtent  ====================================================
-        static private (float dx1, float dy1, float dx2, float dy2, float cdx, float cdy, float dx, float dy) GetExtent(IEnumerable<Shape> shapes)
+        static private (float dx1, float dy1, float dx2, float dy2, float cdx, float cdy, float dx, float dy) GetExtent(IEnumerable<ShapeBase> shapes)
         {
             var x1 = 1f;
             var y1 = 1f;

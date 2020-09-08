@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     internal abstract class Polygon : Polyline
     {
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var points = GetDrawingPoints(center, scale);

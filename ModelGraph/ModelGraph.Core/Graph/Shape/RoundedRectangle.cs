@@ -16,12 +16,12 @@ namespace ModelGraph.Core
         internal float Corner => 0.1f;
 
         #region PrivateConstructor  ===========================================
-        internal RoundedRectangle(Shape shape)
+        internal RoundedRectangle(ShapeBase shape)
         {
             CopyData(shape);
         }
 
-        internal RoundedRectangle(Shape shape, Vector2 center)
+        internal RoundedRectangle(ShapeBase shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -29,10 +29,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new RoundedRectangle(this);
-        internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
+        internal override ShapeBase Clone() =>new RoundedRectangle(this);
+        internal override ShapeBase Clone(Vector2 center) => new RoundedRectangle(this, center);
 
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;
@@ -43,7 +43,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, strokeWidth, StrokeStyle());
         }
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -58,7 +58,7 @@ namespace ModelGraph.Core
             //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)ShapeType.RoundedRectangle;
+        protected override byte TypeCode => (byte)Shape.RoundedRectangle;
         #endregion
     }
 }

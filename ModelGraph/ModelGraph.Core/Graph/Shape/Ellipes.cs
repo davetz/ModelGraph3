@@ -15,11 +15,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Ellipes(Shape shape)
+        private Ellipes(ShapeBase shape)
         {
             CopyData(shape);
         }
-        private Ellipes(Shape shape, Vector2 center)
+        private Ellipes(ShapeBase shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -27,10 +27,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new Ellipes(this);
-        internal override Shape Clone(Vector2 center) => new Ellipes(this, center);
+        internal override ShapeBase Clone() =>new Ellipes(this);
+        internal override ShapeBase Clone(Vector2 center) => new Ellipes(this, center);
 
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -40,7 +40,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawEllipse(cp, r1, r2, color, strokeWidth, StrokeStyle());
         }
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
@@ -51,7 +51,7 @@ namespace ModelGraph.Core
             //    ds.DrawEllipse(cp, r1, r2, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Vert | HasSlider.Horz;
-        protected override byte TypeCode => (byte)ShapeType.Ellipse;
+        protected override byte TypeCode => (byte)Shape.Ellipse;
         #endregion
     }
 }

@@ -49,13 +49,13 @@ namespace ModelGraph.Core
             {
                 var p1 = new Vector2(e.Node1.X, e.Node1.Y);
                 var p2 = new Vector2(e.Node2.X, e.Node2.Y);
-                Editor.AddShape(((p1, p2), (Stroke.IsSimple, ShapeT.Line, 2), (255, 0, 255, 255)));
+                Editor.AddShape(((p1, p2), (Stroke.IsSimple, Shape.Line, 2), (255, 0, 255, 255)));
             }
             foreach (var n in Graph.Nodes)
             {
                 var c = new Vector2(n.X, n.Y);
                 var d = new Vector2(n.DX, n.DY);
-                Editor.AddShape(((c, d), (Stroke.IsFilled, ShapeT.Rectangle, 1), (255, 255, 0, 255)));
+                Editor.AddShape(((c, d), (Stroke.ShapeIsFilled, Shape.Rectangle, 1), (255, 255, 0, 255)));
             }
         }
         #endregion
@@ -73,7 +73,7 @@ namespace ModelGraph.Core
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
-            Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.IsFilled, ShapeT.Rectangle, 0), (63, 255, 255, 255)));
+            Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.ShapeIsFilled, Shape.Rectangle, 0), (63, 255, 255, 255)));
         }
         public void Picker2Paste()
         {

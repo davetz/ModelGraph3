@@ -14,11 +14,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Circle(Shape shape)
+        private Circle(ShapeBase shape)
         {
             CopyData(shape);
         }
-        private Circle(Shape shape, Vector2 center)
+        private Circle(ShapeBase shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -26,10 +26,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new Circle(this);
-        internal override Shape Clone(Vector2 center) => new Circle(this, center);
+        internal override ShapeBase Clone() =>new Circle(this);
+        internal override ShapeBase Clone(Vector2 center) => new Circle(this, center);
 
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -39,7 +39,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawCircle(cp, r1, color, strokeWidth, StrokeStyle());
         }
-        internal override void Draw(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -57,7 +57,7 @@ namespace ModelGraph.Core
                 Radius1 = Radius2 = (Radius1 * scale.X);
         }
         internal override HasSlider Sliders => HasSlider.None;
-        protected override byte TypeCode => (byte)ShapeType.Circle;
+        protected override byte TypeCode => (byte)Shape.Circle;
         #endregion
     }
 }

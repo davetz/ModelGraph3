@@ -58,7 +58,7 @@ namespace ModelGraph.Core
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker1.Clear();
-            Picker1.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.IsFilled, ShapeT.Rectangle, 0), (63, 255, 255, 255)));
+            Picker1.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.ShapeIsFilled, Shape.Rectangle, 0), (63, 255, 255, 255)));
         }
         public void Picker2Select(int y)
         {
@@ -66,7 +66,7 @@ namespace ModelGraph.Core
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
-            Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.IsFilled, ShapeT.Rectangle, 0), (63, 255, 255, 255)));
+            Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (Stroke.ShapeIsFilled, Shape.Rectangle, 0), (63, 255, 255, 255)));
         }
         public void Picker2Paste()
         {

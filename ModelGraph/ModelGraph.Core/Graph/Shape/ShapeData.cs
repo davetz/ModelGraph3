@@ -5,20 +5,15 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract partial class Shape
+    internal abstract partial class ShapeBase
     {
-        private const int PointCountIndex = 19;
+        private const int PointStartOffset = 13;
         private byte A = 0xFF; // of color(A, R, G, B)
         private byte R = 0xFF; // of color(A, R, G, B)
         private byte G = 0xFF; // of color(A, R, G, B)
         private byte B = 0xF0; // of color(A, R, G, B)
         private byte SW = 1;  // stroke width
-        private byte SC = 2;  // startCap
-        private byte EC = 2;  // endCap
-        private byte DC = 2;  // dashCap
-        private byte LJ = 3;  // line join
-        private byte DS;      // dash style
-        private byte FS;      // fill stroke
+        private byte SS = 2;  // stroke style
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
         private byte F1;      // auxiliary factor (for PolyGear and PolyPulse) (0 to 100 %)
@@ -164,9 +159,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Serialize  ====================================================
-        public static byte[] Serialize(IEnumerable<Shape> shapes)
+        public static byte[] Serialize(IEnumerable<ShapeBase> shapes)
         {
-            var(dx1, dy1, dx2, dy2, cdx, cdy, fw, fh) = Shape.GetExtent(shapes);
+            var(dx1, dy1, dx2, dy2, cdx, cdy, fw, fh) = ShapeBase.GetExtent(shapes);
             var data = new List<byte>(shapes.Count() * 30);
 
             data.Add(ToByte(fw)); // overal width
@@ -181,19 +176,14 @@ namespace ModelGraph.Core
                 data.Add(shape.G);          // 3
                 data.Add(shape.B);          // 4
                 data.Add(shape.SW);         // 5
-                data.Add(shape.SC);         // 6
-                data.Add(shape.EC);         // 7
-                data.Add(shape.DC);         // 8
-                data.Add(shape.LJ);         // 9
-                data.Add(shape.DS);         //10
-                data.Add(shape.FS);         //11
-                data.Add(shape.R1);         //12
-                data.Add(shape.R2);         //13
-                data.Add(shape.F1);         //14
-                data.Add(shape.PD);         //15
-                data.Add(shape.PL);         //16
-                data.Add(shape.A0);         //17
-                data.Add(shape.A1);         //18
+                data.Add(shape.SS);         // 6
+                data.Add(shape.R1);         // 7
+                data.Add(shape.R2);         // 8
+                data.Add(shape.F1);         // 9
+                data.Add(shape.PD);         //10
+                data.Add(shape.PL);         //11
+                data.Add(shape.A0);         //12
+                data.Add(shape.A1);         //13
 
                 var points = shape.DXY;
                 var count = points.Count;
@@ -213,26 +203,8 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region ShapeType  ====================================================
-        internal enum ShapeType : byte
-        {
-            Line = 1,
-            Circle = 2,
-            Ellipse = 3,
-            PolySide = 4,
-            PolyStar = 5,
-            PolyGear = 6,
-            PolyWave = 7,
-            Rectangle = 8,
-            PolySpike = 9,
-            PolyPulse = 10,
-            PolySpring = 11,
-            RoundedRectangle = 12,
-        }
-        #endregion
-
         #region Deserialize  ==================================================
-        static public void Deserialize(byte[] data, List<Shape> shapes)
+        static public void Deserialize(byte[] data, List<ShapeBase> shapes)
         {
             shapes.Clear();
             if (data is null || data.Length < 2) return;
@@ -242,55 +214,55 @@ namespace ModelGraph.Core
 
             while (IsMoreDataAvailable())
             {
-                var st = (ShapeType)data[I++];
+                var st = (Shape)data[I++];
 
                 switch (st)
                 {
-                    case ShapeType.Line:
+                    case Shape.Line:
                         ReadData(new Line(true));
                         break;
 
-                    case ShapeType.Circle:
+                    case Shape.Circle:
                         ReadData(new Circle(true));
                         break;
 
-                    case ShapeType.Ellipse:
+                    case Shape.Ellipse:
                         ReadData(new Ellipes(true));
                         break;
 
-                    case ShapeType.PolySide:
+                    case Shape.PolySide:
                         ReadData(new PolySide(true));
                         break;
 
-                    case ShapeType.PolyStar:
+                    case Shape.PolyStar:
                         ReadData(new PolyStar(true));
                         break;
 
-                    case ShapeType.PolyGear:
+                    case Shape.PolyGear:
                         ReadData(new PolyGear(true));
                         break;
 
-                    case ShapeType.PolyWave:
+                    case Shape.PolyWave:
                         ReadData(new PolyWave(true));
                         break;
 
-                    case ShapeType.Rectangle:
+                    case Shape.Rectangle:
                         ReadData(new Rectangle(true));
                         break;
 
-                    case ShapeType.PolySpike:
+                    case Shape.PolySpike:
                         ReadData(new PolySpike(true));
                         break;
 
-                    case ShapeType.PolyPulse:
+                    case Shape.PolyPulse:
                         ReadData(new PolyPulse(true));
                         break;
 
-                    case ShapeType.PolySpring:
+                    case Shape.PolySpring:
                         ReadData(new PolySpring(true));
                         break;
 
-                    case ShapeType.RoundedRectangle:
+                    case Shape.RoundedRectangle:
                         ReadData(new RoundedRectangle(true));
                         break;
                     default:
@@ -300,7 +272,7 @@ namespace ModelGraph.Core
 
             bool IsMoreDataAvailable()
             {
-                var J = I + PointCountIndex;
+                var J = I + PointStartOffset;
                 if (M > J)
                 {
                     var K = data[J];
@@ -308,7 +280,7 @@ namespace ModelGraph.Core
                 }
                 return false;
             }
-            void ReadData(Shape shape)
+            void ReadData(ShapeBase shape)
             {
                 shapes.Add(shape);
 
@@ -317,12 +289,7 @@ namespace ModelGraph.Core
                 shape.G = data[I++];
                 shape.B = data[I++];
                 shape.SW = data[I++];
-                shape.SC = data[I++];
-                shape.EC = data[I++];
-                shape.DC = data[I++];
-                shape.LJ = data[I++];
-                shape.DS = data[I++];
-                shape.FS = data[I++];
+                shape.SS = data[I++];
                 shape.R1 = data[I++];
                 shape.R2 = data[I++];
                 shape.F1 = data[I++];
@@ -346,7 +313,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region CopyData  =====================================================
-        protected void CopyData(Shape s)
+        protected void CopyData(ShapeBase s)
         {
             A = s.A;
             R = s.R;

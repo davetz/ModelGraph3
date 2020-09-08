@@ -17,14 +17,14 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyPulse(Shape shape)
+        private PolyPulse(ShapeBase shape)
         {
             CopyData(shape);
         }
-        private PolyPulse(Shape shape, Vector2 center)
+        private PolyPulse(ShapeBase shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(new ShapeBase[] { this }, center);
         }
         #endregion
 
@@ -66,11 +66,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new PolyPulse(this);
-        internal override Shape Clone(Vector2 center) => new PolyPulse(this, center);
+        internal override ShapeBase Clone() =>new PolyPulse(this);
+        internal override ShapeBase Clone(Vector2 center) => new PolyPulse(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 19);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolyPulse;
+        protected override byte TypeCode => (byte)Shape.PolyPulse;
         #endregion
     }
 }
