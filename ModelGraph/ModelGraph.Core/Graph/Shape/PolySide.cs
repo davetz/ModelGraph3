@@ -6,6 +6,7 @@ namespace ModelGraph.Core
 {
     internal class PolySide : Polygon
     {
+        protected override ShapeType ShapeType => ShapeType.PolySide;
         internal PolySide(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -46,7 +47,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolySide(this);
         internal override ShapeBase Clone(Vector2 center) => new PolySide(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolySide;
+        protected override byte TypeCode => (byte)ShapeType.PolySide;
 
         #endregion
     }

@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 {
     internal abstract partial class ShapeBase
     {
-        private const int PointStartOffset = 13;
+        private const int PointsOffset = 13;
         private byte A = 0xFF; // of color(A, R, G, B)
         private byte R = 0xFF; // of color(A, R, G, B)
         private byte G = 0xFF; // of color(A, R, G, B)
@@ -24,6 +24,9 @@ namespace ModelGraph.Core
         protected List<(float dx, float dy)> DXY;  // one or more defined points
 
         #region Properties  ===================================================
+
+        protected (ShapeType, StrokeType, byte) ShapeStrokeWidth => (ShapeType, (StrokeType)SS, SW);
+        protected (byte, byte, byte, byte) ColorARBG => (A, R, B, G);
 
         #region Color  ========================================================
         internal enum Coloring { Gray, Light, Normal };
@@ -63,30 +66,6 @@ namespace ModelGraph.Core
         static readonly (byte, byte, byte, byte) _invalidColor = (0x88, 0x87, 0x86, 0x85);
         static readonly string _hexValues = "0123456789abcdef";
         const int _argbLength = 9;
-        #endregion
-
-        #region StrokeStyle  ==================================================
-        //public CanvasStrokeStyle StrokeStyle()
-        //{
-        //    var ss = _strokeStyle;
-        //    ss.DashStyle = DashStyle;
-        //    ss.StartCap = StartCap;
-        //    ss.EndCap = EndCap;
-        //    ss.DashCap = DashCap;
-        //    ss.LineJoin = LineJoin; ;
-        //    return ss;
-        //}
-        //private CanvasStrokeStyle _strokeStyle = new CanvasStrokeStyle();
-
-        //internal CanvasDashStyle DashStyle { get { return (CanvasDashStyle)DS; } set { DS = (byte)value; } }
-        //internal CanvasCapStyle StartCap { get { return (CanvasCapStyle)SC; } set { SC = (byte)value; } }
-        //internal CanvasCapStyle EndCap { get { return (CanvasCapStyle)EC; } set { EC = (byte)value; } }
-        //internal CanvasLineJoin LineJoin { get { return (CanvasLineJoin)LJ; } set { LJ = (byte)value; } }
-        //internal CanvasCapStyle DashCap { get { return (CanvasCapStyle)DC; } set { DC = (byte)value; } }
-
-        //internal Fill_Stroke FillStroke { get { return (Fill_Stroke)FS; } set { FS = (byte)value; } }
-
-        //internal float StrokeWidth { get { return SW; } set { SW = (byte)((value < 1) ? 1 : (value > 20) ? 20 : value); } }
         #endregion
 
         #region Radius  =======================================================
@@ -158,14 +137,15 @@ namespace ModelGraph.Core
 
         #endregion
 
-        #region Serialize  ====================================================
-        public static byte[] Serialize(IEnumerable<ShapeBase> shapes)
+        #region SaveShapes  ===================================================
+        public static byte[] SaveShaptes(IEnumerable<ShapeBase> shapes)
         {
-            var(dx1, dy1, dx2, dy2, cdx, cdy, fw, fh) = ShapeBase.GetExtent(shapes);
-            var data = new List<byte>(shapes.Count() * 30);
-
-            data.Add(ToByte(fw)); // overal width
-            data.Add(ToByte(fh)); // overal height
+            var (_, _, _, _, _, _, fw, fh) = GetExtent(shapes);
+            var data = new List<byte>(shapes.Count() * 30)
+            {
+                ToByte(fw), // overal width
+                ToByte(fh) // overal height
+            };
 
             foreach (var shape in shapes)
             {
@@ -203,8 +183,9 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Deserialize  ==================================================
-        static public void Deserialize(byte[] data, List<ShapeBase> shapes)
+        #region LoadShapes  ===================================================
+        /// <summary>Load Shapes from Symbol data</summary>
+        static public void LoadShapes(byte[] data, List<ShapeBase> shapes)
         {
             shapes.Clear();
             if (data is null || data.Length < 2) return;
@@ -214,55 +195,55 @@ namespace ModelGraph.Core
 
             while (IsMoreDataAvailable())
             {
-                var st = (Shape)data[I++];
+                var st = (ShapeType)data[I++];
 
                 switch (st)
                 {
-                    case Shape.Line:
+                    case ShapeType.Line:
                         ReadData(new Line(true));
                         break;
 
-                    case Shape.Circle:
+                    case ShapeType.Circle:
                         ReadData(new Circle(true));
                         break;
 
-                    case Shape.Ellipse:
+                    case ShapeType.Ellipse:
                         ReadData(new Ellipes(true));
                         break;
 
-                    case Shape.PolySide:
+                    case ShapeType.PolySide:
                         ReadData(new PolySide(true));
                         break;
 
-                    case Shape.PolyStar:
+                    case ShapeType.PolyStar:
                         ReadData(new PolyStar(true));
                         break;
 
-                    case Shape.PolyGear:
+                    case ShapeType.PolyGear:
                         ReadData(new PolyGear(true));
                         break;
 
-                    case Shape.PolyWave:
+                    case ShapeType.PolyWave:
                         ReadData(new PolyWave(true));
                         break;
 
-                    case Shape.Rectangle:
+                    case ShapeType.Rectangle:
                         ReadData(new Rectangle(true));
                         break;
 
-                    case Shape.PolySpike:
+                    case ShapeType.PolySpike:
                         ReadData(new PolySpike(true));
                         break;
 
-                    case Shape.PolyPulse:
+                    case ShapeType.PolyPulse:
                         ReadData(new PolyPulse(true));
                         break;
 
-                    case Shape.PolySpring:
+                    case ShapeType.PolySpring:
                         ReadData(new PolySpring(true));
                         break;
 
-                    case Shape.RoundedRectangle:
+                    case ShapeType.RoundedRectangle:
                         ReadData(new RoundedRectangle(true));
                         break;
                     default:
@@ -272,7 +253,7 @@ namespace ModelGraph.Core
 
             bool IsMoreDataAvailable()
             {
-                var J = I + PointStartOffset;
+                var J = I + PointsOffset;
                 if (M > J)
                 {
                     var K = data[J];
@@ -283,7 +264,6 @@ namespace ModelGraph.Core
             void ReadData(ShapeBase shape)
             {
                 shapes.Add(shape);
-
                 shape.A = data[I++];
                 shape.R = data[I++];
                 shape.G = data[I++];
@@ -320,12 +300,7 @@ namespace ModelGraph.Core
             G = s.G;
             B = s.B;
             SW = s.SW;
-            SC = s.SC;
-            EC = s.EC;
-            DC = s.DC;
-            LJ = s.LJ;
-            DS = s.DS;
-            FS = s.FS;
+            SS = s.SS;
             R1 = s.R1;
             R2 = s.R2;
             F1 = s.F1;

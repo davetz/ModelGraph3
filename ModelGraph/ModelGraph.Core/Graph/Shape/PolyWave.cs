@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class PolyWave : PolySpline
     {
+        protected override ShapeType ShapeType => ShapeType.PolyWave;
         internal PolyWave(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -72,7 +73,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone(Vector2 center) => new PolyWave(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 22);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolyWave;
+        protected override byte TypeCode => (byte)ShapeType.PolyWave;
         #endregion
     }
 }

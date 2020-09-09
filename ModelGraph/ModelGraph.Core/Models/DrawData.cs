@@ -12,11 +12,11 @@ namespace ModelGraph.Core
             Shapes.Clear();
         }
         internal void AddText(((Vector2, string), (byte, byte, byte, byte)) data) => Text.Add(data);
-        internal void AddLine((Vector2[], (Stroke, Shape, byte), (byte, byte, byte, byte)) data) => Lines.Add(data);
-        internal void AddShape(((Vector2, Vector2), (Stroke, Shape, byte), (byte, byte, byte, byte)) data) => Shapes.Add(data);
+        internal void AddLine((Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte)) data) => Lines.Add(data);
+        internal void AddShape(((Vector2, Vector2), (ShapeType, StrokeType, byte), (byte, byte, byte, byte)) data) => Shapes.Add(data);
 
         public List<((Vector2, string), (byte, byte, byte, byte))> Text { get; } = new List<((Vector2, string), (byte, byte, byte, byte))>();
-        public List<(Vector2[], (Stroke, Shape, byte), (byte, byte, byte, byte))> Lines { get; } = new List<(Vector2[], (Stroke, Shape, byte), (byte, byte, byte, byte))>();
-        public List<((Vector2, Vector2), (Stroke, Shape, byte), (byte, byte, byte, byte))> Shapes { get; } = new List<((Vector2, Vector2), (Stroke, Shape, byte), (byte, byte, byte, byte))>();
+        public List<(Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte))> Lines { get; } = new List<(Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte))>();
+        public List<((Vector2, Vector2), (ShapeType, StrokeType, byte), (byte, byte, byte, byte))> Shapes { get; } = new List<((Vector2, Vector2), (ShapeType, StrokeType, byte), (byte, byte, byte, byte))>();
     }
 }

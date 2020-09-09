@@ -72,7 +72,7 @@ namespace ModelGraph.Core
             return (x1 == 1) ? (0, 0, 0, 0) : (x1, y1, x2, y2);
         }
         protected override void Scale(Vector2 scale) => TransformPoints(Matrix3x2.CreateScale(scale)); 
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var points = GetDrawingPoints(center, scale);
@@ -102,7 +102,7 @@ namespace ModelGraph.Core
             //    }
             //}
         }
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var points = GetDrawingPoints(flip, scale, center);

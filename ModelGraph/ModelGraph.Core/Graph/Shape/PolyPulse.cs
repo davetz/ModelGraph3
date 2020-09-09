@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class PolyPulse : Polyline
     {
+        protected override ShapeType ShapeType => ShapeType.PolyPulse;
         internal PolyPulse(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -70,7 +71,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone(Vector2 center) => new PolyPulse(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 19);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolyPulse;
+        protected override byte TypeCode => (byte)ShapeType.PolyPulse;
         #endregion
     }
 }

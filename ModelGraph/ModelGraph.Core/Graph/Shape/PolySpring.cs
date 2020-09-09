@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class PolySpring : PolySpline
     {
+        protected override ShapeType ShapeType => ShapeType.PolySpring;
         internal PolySpring(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -117,7 +118,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone(Vector2 center) => new PolySpring(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 18);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolySpring;
+        protected override byte TypeCode => (byte)ShapeType.PolySpring;
 
         #endregion
     }

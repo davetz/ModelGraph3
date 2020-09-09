@@ -6,6 +6,7 @@ namespace ModelGraph.Core
 {
     internal class PolyStar : Polygon
     {
+        protected override ShapeType ShapeType => ShapeType.PolyStar;
         internal PolyStar(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -49,7 +50,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolyStar(this);
         internal override ShapeBase Clone(Vector2 center) => new PolyStar(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolyStar;
+        protected override byte TypeCode => (byte)ShapeType.PolyStar;
         #endregion
     }
 }

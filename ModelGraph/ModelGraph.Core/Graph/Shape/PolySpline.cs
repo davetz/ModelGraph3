@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     internal abstract class PolySpline : Polyline
     {
         #region OverideAbstract  ==============================================
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var points = GetDrawingPoints(center, scale);
@@ -29,7 +29,7 @@ namespace ModelGraph.Core
             //    }
             //}
         }
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var points = GetDrawingPoints(flip, scale, center);

@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class Rectangle : Central
     {
+        protected override ShapeType ShapeType => ShapeType.Rectangle;
         internal Rectangle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -29,7 +30,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new Rectangle(this);
         internal override ShapeBase Clone(Vector2 center) => new Rectangle(this, center);
 
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;
@@ -40,7 +41,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, strokeWidth, StrokeStyle());
         }
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -54,7 +55,7 @@ namespace ModelGraph.Core
             //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)Shape.Rectangle;
+        protected override byte TypeCode => (byte)ShapeType.Rectangle;
 
         #endregion
     }

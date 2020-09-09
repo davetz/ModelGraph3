@@ -132,20 +132,20 @@ namespace ModelGraph.Controls
 
 
         #region StrokeStyle  ==================================================
-        private CanvasStrokeStyle StrokeStyle(Stroke s)
+        private CanvasStrokeStyle StrokeStyle(StrokeType s)
         {
             var ss = _strokeStyle;
-            if (s != Stroke.ShapeIsFilled)
+            if (s != Core.StrokeType.Filled)
             {
-                var sc = s & Stroke.SC_Triangle;
-                var dc = s & Stroke.DC_Triangle;
-                var ec = s & Stroke.EC_Triangle;
-                var ds = s & Stroke.DashStyleMask;
+                var sc = s & Core.StrokeType.SC_Triangle;
+                var dc = s & Core.StrokeType.DC_Triangle;
+                var ec = s & Core.StrokeType.EC_Triangle;
+                var ds = s & Core.StrokeType.DashMask;
 
-                ss.EndCap = ec == Stroke.EC_Round ? CanvasCapStyle.Round : ec == Stroke.EC_Square ? CanvasCapStyle.Square : ec == Stroke.EC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
-                ss.DashCap = dc == Stroke.DC_Round ? CanvasCapStyle.Round : dc == Stroke.DC_Square ? CanvasCapStyle.Square : dc == Stroke.DC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
-                ss.StartCap = sc == Stroke.SC_Round ? CanvasCapStyle.Round : sc == Stroke.SC_Square ? CanvasCapStyle.Square : sc == Stroke.SC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
-                ss.DashStyle = ds == Stroke.DottedOutline ? CanvasDashStyle.Dot : ds == Stroke.DashedOutline ? CanvasDashStyle.Dash : CanvasDashStyle.Solid;
+                ss.EndCap = ec == Core.StrokeType.EC_Round ? CanvasCapStyle.Round : ec == Core.StrokeType.EC_Square ? CanvasCapStyle.Square : ec == Core.StrokeType.EC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
+                ss.DashCap = dc == Core.StrokeType.DC_Round ? CanvasCapStyle.Round : dc == Core.StrokeType.DC_Square ? CanvasCapStyle.Square : dc == Core.StrokeType.DC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
+                ss.StartCap = sc == Core.StrokeType.SC_Round ? CanvasCapStyle.Round : sc == Core.StrokeType.SC_Square ? CanvasCapStyle.Square : sc == Core.StrokeType.SC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
+                ss.DashStyle = ds == Core.StrokeType.Dotted ? CanvasDashStyle.Dot : ds == Core.StrokeType.Dashed ? CanvasDashStyle.Dash : CanvasDashStyle.Solid;
                 ss.LineJoin = CanvasLineJoin.Round;
             }
             return ss;
@@ -168,11 +168,11 @@ namespace ModelGraph.Controls
                 }
                 var ds = args.DrawingSession;
 
-                foreach (var (P, (S, K, W), (A, R, G, B)) in data.Lines)
+                foreach (var (P, (K, S, W), (A, R, G, B)) in data.Lines)
                 {
-                    if (K < Shape.MultipleSimpleShapesLimit)
+                    if (K < ShapeType.MultipleSimpleShapesLimit)
                     {
-                        var k = K & Shape.SimpleShapeMask;
+                        var k = K & ShapeType.SimpleShapeMask;
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
 
@@ -181,7 +181,7 @@ namespace ModelGraph.Controls
                         {
                             var c = P[i] * scale + offset;
                             var d = P[i + 1] * scale;
-                            DrawShape(c, d, color, stroke, k, (S == Stroke.ShapeIsFilled), W);
+                            DrawShape(c, d, color, stroke, k, (S == StrokeType.Filled), W);
                         }
                     }
                     else
@@ -189,7 +189,7 @@ namespace ModelGraph.Controls
                         using (var pb = new CanvasPathBuilder(ds))
                         {
                             pb.BeginFigure(P[0] * scale + offset);
-                            if (K == Shape.JointedLines)
+                            if (K == ShapeType.JointedLines)
                             {
                                 for (int i = 1; i < P.Length; i++)
                                 {
@@ -216,12 +216,12 @@ namespace ModelGraph.Controls
 
                 }
 
-                foreach (var ((C, D), (S, K, W), (A, R, G, B)) in data.Shapes)
+                foreach (var ((C, D), (K, S, W), (A, R, G, B)) in data.Shapes)
                 {
                     var d = D * scale;
                     var c = C * scale + offset;
 
-                    DrawShape(c, d, Color.FromArgb(A, R, G, B), StrokeStyle(S), K, (S == Stroke.ShapeIsFilled), W);
+                    DrawShape(c, d, Color.FromArgb(A, R, G, B), StrokeStyle(S), K, (S == StrokeType.Filled), W);
                 }
 
                 foreach (var ((P, T), (A, R, G, B)) in data.Text)
@@ -230,26 +230,26 @@ namespace ModelGraph.Controls
                     ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
                 }
 
-                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, Shape shape, bool isFilled, byte w)
+                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeType shape, bool isFilled, byte w)
                 {
                     switch (shape)
                     {
-                        case Shape.Line:
+                        case ShapeType.Line:
                             ds.DrawLine(a, b + _offset, color, w, stroke);
                             break;
-                        case Shape.Circle:
+                        case ShapeType.Circle:
                             if (isFilled)
                                 ds.FillCircle(a, b.X, color);
                             else
                                 ds.DrawCircle(a, b.X, color, w, stroke);
                             break;
-                        case Shape.Ellipse:
+                        case ShapeType.Ellipse:
                             if (isFilled)
                                 ds.FillEllipse(a, b.X, b.Y, color);
                             else
                                 ds.DrawEllipse(a, b.X, b.Y, color, w, stroke);
                             break;
-                        case Shape.Rectangle:
+                        case ShapeType.Rectangle:
                             var e = a - b;
                             var f = 2 * b;
                             if (isFilled)
@@ -257,7 +257,7 @@ namespace ModelGraph.Controls
                             else
                                 ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, w, stroke);
                             break;
-                        case Shape.RoundedRectangle:
+                        case ShapeType.RoundedRectangle:
                             e = a - b;
                             f = 2 * b;
                             if (isFilled)

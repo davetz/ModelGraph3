@@ -6,6 +6,7 @@ namespace ModelGraph.Core
 {
     internal class PolyGear : Polygon
     {
+        protected override ShapeType ShapeType => ShapeType.PolyGear;
         internal PolyGear(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -54,7 +55,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolyGear(this);
         internal override ShapeBase Clone(Vector2 center) => new PolyGear(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert |HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
-        protected override byte TypeCode => (byte)Shape.PolyGear;
+        protected override byte TypeCode => (byte)ShapeType.PolyGear;
         #endregion
     }
 }

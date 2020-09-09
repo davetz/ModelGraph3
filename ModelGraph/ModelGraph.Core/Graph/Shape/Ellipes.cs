@@ -5,6 +5,8 @@ namespace ModelGraph.Core
 {
     internal class Ellipes : Central
     {
+        protected override ShapeType ShapeType => ShapeType.Ellipse;
+
         internal Ellipes(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -30,20 +32,21 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new Ellipes(this);
         internal override ShapeBase Clone(Vector2 center) => new Ellipes(this, center);
 
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
-            //var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var (cp, r1, r2) = GetCenterRadius(center, scale);
+
 
             //if (FillStroke == Fill_Stroke.Filled)
             //    ds.FillEllipse(cp, r1, r2, color);
             //else
             //    ds.DrawEllipse(cp, r1, r2, color, strokeWidth, StrokeStyle());
         }
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
-            //var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
+            var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
 
             //if (FillStroke == Fill_Stroke.Filled)
             //    ds.FillEllipse(cp, r1, r2, color);
@@ -51,7 +54,7 @@ namespace ModelGraph.Core
             //    ds.DrawEllipse(cp, r1, r2, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Vert | HasSlider.Horz;
-        protected override byte TypeCode => (byte)Shape.Ellipse;
+        protected override byte TypeCode => (byte)ShapeType.Ellipse;
         #endregion
     }
 }

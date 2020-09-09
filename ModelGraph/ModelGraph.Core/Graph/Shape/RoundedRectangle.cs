@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class RoundedRectangle : Central
     {
+        protected override ShapeType ShapeType => ShapeType.RoundedRectangle;
         internal RoundedRectangle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -32,7 +33,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new RoundedRectangle(this);
         internal override ShapeBase Clone(Vector2 center) => new RoundedRectangle(this, center);
 
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;
@@ -43,7 +44,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, strokeWidth, StrokeStyle());
         }
-        internal override void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             //var color = GetColor(Coloring.Normal);
             //var (cp, r1, r2) = GetCenterRadius(center, scale);
@@ -58,7 +59,7 @@ namespace ModelGraph.Core
             //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)Shape.RoundedRectangle;
+        protected override byte TypeCode => (byte)ShapeType.RoundedRectangle;
         #endregion
     }
 }

@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     internal class Line : Polyline
     {
+        protected override ShapeType ShapeType => ShapeType.Line;
         internal Line(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
@@ -28,7 +29,7 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() => new Line(this);
         internal override ShapeBase Clone(Vector2 center) => new Line(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)Shape.Line;
+        protected override byte TypeCode => (byte)ShapeType.Line;
         #endregion
     }
 }

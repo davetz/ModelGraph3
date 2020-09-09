@@ -8,6 +8,7 @@ namespace ModelGraph.Core
 {
     internal abstract partial class ShapeBase
     {
+        protected abstract ShapeType ShapeType { get; }
         internal ShapeBase() { }
 
         #region Abstract/Virtual  =============================================
@@ -26,8 +27,8 @@ namespace ModelGraph.Core
         internal abstract ShapeBase Clone();
         internal abstract ShapeBase Clone(Vector2 Center);
 
-        internal abstract void AddDrawData(IDrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal);
-        internal abstract void AddDrawData(IDrawData drawData, float scale, Vector2 center, FlipState flip);
+        internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal);
+        internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip);
 
         protected abstract (float dx1, float dy1, float dx2, float dy2) GetExtent();
         protected abstract void Scale(Vector2 scale);
@@ -230,14 +231,14 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region DrawTargets  ==================================================
-        static internal  void DrawTargets(IEnumerable<ShapeBase> shapes, List<Vector2> targets, IDrawData drawData, float scale, Vector2 center)
+        #region AddDrawTargets  ===============================================
+        static internal  void AddDrawTargets(IEnumerable<ShapeBase> shapes, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dw, dh) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, dw, dh) = GetExtent(shapes);
             if (dw + dh > 0)
             {
                 DrawTarget(new Vector2(cdx, cdy) * scale + center, true);
-
+                
                 if (shapes.Count() == 1  && shapes.First() is Polyline polyline)
                 {
                     var points = polyline.GetDrawingPoints( center, scale);
@@ -249,23 +250,23 @@ namespace ModelGraph.Core
 
                 void DrawTarget(Vector2 c, bool highlight = false)
                 {
-                    //targets.Add(c);
+                    targets.Add(c);
 
-                    //ds.DrawCircle(c, 7, Colors.White, 3);
-                    //if  (highlight)
-                    //    ds.DrawCircle(c, 9, Colors.Red, 3);
+                    drawData.AddShape(((c, new Vector2(7, 7)), (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
+                    if  (highlight)
+                        drawData.AddShape(((c, new Vector2(9, 9)), (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 0, 0)));
                 }
             }
         }
         #endregion
 
-        #region HighLight  ====================================================
-        internal static void HighLight(IDrawData drawData, float width, int index)
+        #region AddDrawHighLight  =============================================
+        internal static void AddDrawHighLight(DrawData drawData, float width, int index)
         {
             var hw = width / 2;
             var y1 = index * width;
             var y2 = y1 + width;
-            //ds.DrawLine(hw, y1, hw, y2, Colors.SlateBlue, width);
+            drawData.AddShape(((new Vector2(hw, y1), new Vector2(hw, y2)), (ShapeType.Line, StrokeType.Simple, (byte)width),( 255, 80, 80, 80)));
         }
         #endregion
     }
