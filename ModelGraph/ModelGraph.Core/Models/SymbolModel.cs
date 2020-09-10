@@ -3,18 +3,14 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class SymbolModel : CanvasModel, IDrawCanvasModel, IPageModel
+    public class SymbolModel : CanvasModel, ICanvasModel, IPageModel
     {
-        internal override Item GetOwner() => Owner;
         internal readonly SymbolX Symbol;
 
         #region Constructor  ==================================================
-        internal SymbolModel(Root root, SymbolX symbol)
+        internal SymbolModel(Root root, SymbolX symbol) : base(root)
         {
-            Owner = root;
             Symbol = symbol;
-            root.Add(this);
-
             RefreshDrawData();
         }
         #endregion
@@ -22,7 +18,7 @@ namespace ModelGraph.Core
         #region IPageModel  ===================================================
         public string TitleName => "TestModelCanvasControl";
         public string TitleSummary => string.Empty;
-        public ControlType ControlType => ControlType.GraphDisplay;
+        public ControlType ControlType => ControlType.SymbolEditor;
         public IPageControl PageControl { get; set; }
         public void Release()
         {

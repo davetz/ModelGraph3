@@ -15,7 +15,7 @@ namespace ModelGraph.Controls
         {
             Model = model;
             this.InitializeComponent();
-            GraphCanvas.Initialize(model as IDrawCanvasModel);
+            GraphCanvas.Initialize(model as ICanvasModel);
         }
 
         #region IPageControl  =================================================

@@ -3,18 +3,14 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class GraphModel : CanvasModel, IDrawCanvasModel, IPageModel
+    public class GraphModel : CanvasModel, IPageModel
     {
-        internal override Item GetOwner() => Owner;
         internal readonly Graph Graph;
 
         #region Constructor  ==================================================
-        internal GraphModel(Root root, Graph graph)
+        internal GraphModel(Root root, Graph graph) : base(root)
         {
-            Owner = root;
             Graph = graph;
-            root.Add(this);
-
             RefreshDrawData();
         }
         #endregion
@@ -42,7 +38,7 @@ namespace ModelGraph.Core
 
 
         #region CreateDrawData  ===============================================
-        public void RefreshDrawData()
+        override public void RefreshDrawData()
         {
             Editor.Clear();
             foreach (var e in Graph.Edges)
@@ -61,13 +57,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region PickerEvents  =================================================
-        public int Picker1Width => 0;
-        public int Picker2Width => 80;
+        override public int Picker2Width => 80;
 
-        public void Picker1Select(int y)
-        {
-        }
-        public void Picker2Select(int y)
+        override public void Picker2Select(int y)
         {
             var w = Picker2Width;
             var x = w / 2;
@@ -75,24 +67,13 @@ namespace ModelGraph.Core
             Picker2.Clear();
             Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
         }
-        public void Picker2Paste()
-        {
-        }
         #endregion
 
 
         #region HitTest  ======================================================
-        public Extent EditorExtent => Graph.ResetExtent();
+        override public Extent EditorExtent => Graph.ResetExtent();
 
-        public bool DragHitTest()
-        {
-            return false;
-        }
-        public bool EndHitTest()
-        {
-            return false;
-        }
-        public bool SkimHitTest()
+        override public bool SkimHitTest()
         {
             ClearHit();
 
@@ -113,7 +94,7 @@ namespace ModelGraph.Core
             return NodeHit || RegionHit;
         }
 
-        public bool TapHitTest()
+        override public bool TapHitTest()
         {
             ClearHit();
 
@@ -131,8 +112,8 @@ namespace ModelGraph.Core
             return ok;
         }
 
-        public void ClearRegion() => _regionNodes.Clear();
-        public bool IsValidRegion()
+        override public void ClearRegion() => _regionNodes.Clear();
+        override public bool IsValidRegion()
         {
             var r1 = RegionPoint1;
             var r2 = RegionPoint2;
@@ -172,7 +153,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-        public bool MoveNode()
+        override public bool MoveNode()
         {
             if (_hitNode is null) return false;
             var delta = DrawPointDelta(true);
@@ -181,7 +162,7 @@ namespace ModelGraph.Core
             return true;
         }
 
-        public bool MoveRegion()
+        override public bool MoveRegion()
         {
             var delta = DrawPointDelta(true);
             foreach (var n in _regionNodes)
@@ -193,55 +174,10 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Resize  =======================================================
-        public void ResizeBottom()
-        {
-        }
-
-        public void ResizeBottomLeft()
-        {
-        }
-
-        public void ResizeBottomRight()
-        {
-        }
-
-        public void ResizeLeft()
-        {
-        }
-
-        public void ResizePropagate()
-        {
-        }
-
-        public void ResizeRight()
-        {
-        }
-
-        public void ResizeTop()
-        {
-        }
-
-        public void ResizeTopLeft()
-        {
-        }
-
-        public void ResizeTopRight()
-        {
-        }
-        #endregion
-
-        #region CreateNode  ===================================================
-        public bool CreateNode()
-        {
-            return false;
-        }
-        #endregion
-
         #region ITreeCanvasModel  =============================================
 
-        public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
-        public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
+        override public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
+        override public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
         {
             if (_hitNode is null) return (new List<ItemModel>(0), null, false, false);
             if (_itemModel != null)
@@ -263,27 +199,9 @@ namespace ModelGraph.Core
             return (_itemModel.Items, selected, true, true);
         }
         private ItemModel _itemModel;
-        public string HeaderTitle => _itemModel.GetItem().GetNameId();
+        override public string HeaderTitle => _itemModel.GetItem().GetNameId();
 
-        public void SetUsage(ItemModel model, Usage usage) { }
-        public void SetFilter(ItemModel model, string text) { }
-        public void SetSorting(ItemModel model, Sorting sorting) { }
-        public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => (_itemModel.Items.Count, Sorting.Unsorted, Usage.None, string.Empty);
-
-        public int GetIndexValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetIndexValue(Owner) : 0;
-        public bool GetBoolValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetBoolValue(Owner) : false;
-        public string GetTextValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetTextValue(Owner) : string.Empty;
-        public string[] GetListValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetListValue(Owner) : new string[0];
-
-        public void PostSetIndexValue(ItemModel model, int val) { if (model is PropertyModel pm) pm.PostSetIndexValue(Owner, val); }
-        public void PostSetBoolValue(ItemModel model, bool val) { if (model is PropertyModel pm) pm.PostSetBoolValue(Owner, val); }
-        public void PostSetTextValue(ItemModel model, string val) { if (model is PropertyModel pm) pm.PostSetTextValue(Owner, val); }
-        public void DragDrop(ItemModel model) { }
-        public void DragStart(ItemModel model) { }
-        public DropAction DragEnter(ItemModel model) => DropAction.None;
-        public void GetButtonCommands(List<ItemCommand> buttonCommands) { }
-        public void GetMenuCommands(ItemModel model, List<ItemCommand> menuCommands) { }
-        public void GetButtonCommands(ItemModel model, List<ItemCommand> buttonCommands) { }
+        override public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => (_itemModel.Items.Count, Sorting.Unsorted, Usage.None, string.Empty);
         #endregion
 
     }

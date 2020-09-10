@@ -217,7 +217,7 @@
             <Setter Property="Margin" Value="0,0,4,0" />
             <Setter Property="TextAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="MinWidth" Value="180"/>
+            <Setter Property="MinWidth" Value="40"/>
         </Style>
 
         <Style x:Key="TextPropertyStyle" TargetType="TextBox">

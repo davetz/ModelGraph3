@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Numerics;
+﻿using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public interface IDrawCanvasModel : ITreeCanvasModel
+    public interface ICanvasModel : ITreeCanvasModel
     {
         Extent EditorExtent { get; }
         int Picker1Width { get; }

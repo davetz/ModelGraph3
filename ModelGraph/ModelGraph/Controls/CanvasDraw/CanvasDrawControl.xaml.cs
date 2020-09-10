@@ -16,7 +16,7 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl : UserControl
     {
-        public IDrawCanvasModel Model { get; private set; }
+        public ICanvasModel Model { get; private set; }
         private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
@@ -28,7 +28,7 @@ namespace ModelGraph.Controls
             this.InitializeComponent();
         }
 
-        public void Initialize(IDrawCanvasModel model)
+        public void Initialize(ICanvasModel model)
         {
             Model = model;
             TreeCanvas.Initialize(model);

@@ -98,6 +98,35 @@ namespace ModelGraph.Controls
                 FreeCacheStack.Push(oc);
                 Model_Cache.Remove(m);
             }
+
+            var dic = new Dictionary<int, int>(ModelList.Count);
+            foreach (var m in ModelList)
+            {
+                if (m is PropertyModel pm)
+                {
+                    if (Model_Cache.TryGetValue(pm, out ItemModelUI mc))
+                    {
+                        var key = pm.Depth;
+                        var val = mc.MeasurePropertyName();
+                        if (!dic.TryGetValue(key, out int eval ))
+                            dic.Add(key, val);
+                        else
+                            if (val > eval) dic[key] = val;
+                    }
+                }
+            }
+            foreach (var m in ModelList)
+            {
+                if (m is PropertyModel pm)
+                {
+                    if (Model_Cache.TryGetValue(pm, out ItemModelUI mc))
+                    {
+                        var key = pm.Depth;
+                        if (dic.TryGetValue(key, out int val))
+                            mc.AdjustPropertyName(val);
+                    }
+                }
+            }
         }
         private ItemModelUI GetModelUI(ItemModel m)
         {

@@ -1,7 +1,7 @@
 ﻿
 using ModelGraph.Core;
 using System.Collections.Generic;
-using System.Threading;
+using Windows.Foundation;
 using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
@@ -574,6 +574,18 @@ namespace ModelGraph.Controls
                     PropertyBorder = null;
                 }
             }
+        }
+        #endregion
+
+        #region <Measure,Adjust>PropertyName  =================================
+        internal int MeasurePropertyName()
+        {
+            PropertyName.Measure(new Size(double.PositiveInfinity, double.PositiveInfinity));
+            return (int)PropertyName.DesiredSize.Width;
+        }
+        internal void AdjustPropertyName(int width)
+        {
+           PropertyName.Width = width - 4; // avoid the bizare creeping widht behavior
         }
         #endregion
 
