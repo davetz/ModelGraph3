@@ -382,7 +382,7 @@ namespace ModelGraph.Controls
         }
         #endregion
 
-        #region AddUsageMode  ==================================================
+        #region AddUsageMode  =================================================
         private void AddUsageMode(Usage usage)
         {
             var obj = UsageMode;
@@ -585,7 +585,7 @@ namespace ModelGraph.Controls
         }
         internal void AdjustPropertyName(int width)
         {
-           PropertyName.Width = width - 4; // avoid the bizare creeping widht behavior
+          PropertyName.Width = width - PropertyName.Margin.Left; // avoid the bizare creeping width behavior
         }
         #endregion
 
