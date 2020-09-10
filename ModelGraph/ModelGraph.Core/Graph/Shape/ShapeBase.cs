@@ -35,7 +35,6 @@ namespace ModelGraph.Core
 
         protected virtual void CreatePoints() { }
         protected virtual (int min, int max) MinMaxDimension => (1, 100);
-        protected abstract byte TypeCode { get; }
         #endregion
 
         #region Flip/Rotate  ==================================================
@@ -60,7 +59,7 @@ namespace ModelGraph.Core
         #region SetCenter  ====================================================
         static internal void SetCenter(IEnumerable<ShapeBase> shapes, Vector2 cp)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, dx, dy) = GetExtent(shapes);
 
             if (dx + dy > 0)
             {
@@ -82,7 +81,7 @@ namespace ModelGraph.Core
         #region Resize  =======================================================
         internal static void ResizeCentral(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, dx, dy) = GetExtent(shapes);
 
             if (dx + dy > 0)
             {
@@ -99,7 +98,7 @@ namespace ModelGraph.Core
         }
         internal static void ResizeVertical(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, dy1, _, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
 
             if (dx + dy > 0)
             {
@@ -117,7 +116,7 @@ namespace ModelGraph.Core
         }
         internal static void ResizeHorizontal(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (dx1, _, dx2, _, cdx, cdy, dx, dy) = GetExtent(shapes);
 
             if (dx + dy > 0)
             {
@@ -134,7 +133,7 @@ namespace ModelGraph.Core
         }
         internal static void ResizeMajorAxis(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, _, _) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
 
             foreach (var shape in shapes)
@@ -146,7 +145,7 @@ namespace ModelGraph.Core
         }
         internal static void ResizeMinorAxis(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, _, _) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
             foreach (var shape in shapes)
             {
@@ -157,7 +156,7 @@ namespace ModelGraph.Core
         }
         internal static void ResizeTernaryAxis(IEnumerable<ShapeBase> shapes, float slider)
         {
-            var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (_, _, _, _, cdx, cdy, _, _) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
             foreach (var shape in shapes)
             {
@@ -168,7 +167,7 @@ namespace ModelGraph.Core
         }
         internal static void SetDimension(IEnumerable<ShapeBase> shapes, float pd)
         {
-            var (min, max, dim) = GetDimension(shapes);
+            var (min, max, _) = GetDimension(shapes);
             if (pd < min) pd = min;
             if (pd > max) pd = max;
             foreach (var shape in shapes)
@@ -190,7 +189,7 @@ namespace ModelGraph.Core
         {
             if (shapes.Count() > 0)
             {
-                var (dx1, dy1, dx2, dy2, cdx, cdy, dx, dy) = GetExtent(shapes);
+                var (dx1, dy1, dx2, dy2, _, _, _, _) = GetExtent(shapes);
                 var (r1, r2, f1) = GetMaxRadius(shapes);
                 var (min, max, dim) = GetDimension(shapes);
                 var (locked, slider) = GetHasSlider(shapes);

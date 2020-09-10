@@ -66,7 +66,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone(Vector2 center) => new PolySpike(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 20);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolySpike;
         #endregion
     }
 }

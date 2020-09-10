@@ -160,31 +160,6 @@
     <Compile Include="Controls\CanvasTree\CanvasTreeControl.xaml.cs">
       <DependentUpon>CanvasTreeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\Shapes\Central.cs" />
-    <Compile Include="Controls\Shapes\Circle.cs" />
-    <Compile Include="Controls\Shapes\Ellipes.cs" />
-    <Compile Include="Controls\Shapes\Line.cs" />
-    <Compile Include="Controls\Shapes\PolyGear.cs" />
-    <Compile Include="Controls\Shapes\Polygon.cs" />
-    <Compile Include="Controls\Shapes\Polyline.cs" />
-    <Compile Include="Controls\Shapes\PolyPulse.cs" />
-    <Compile Include="Controls\Shapes\PolySide.cs" />
-    <Compile Include="Controls\Shapes\PolySpike.cs" />
-    <Compile Include="Controls\Shapes\PolySpline.cs" />
-    <Compile Include="Controls\Shapes\PolySpring.cs" />
-    <Compile Include="Controls\Shapes\PolyStar.cs" />
-    <Compile Include="Controls\Shapes\PolyWave.cs" />
-    <Compile Include="Controls\Shapes\Rectangle.cs" />
-    <Compile Include="Controls\Shapes\RoundedRectangle.cs" />
-    <Compile Include="Controls\Shapes\Shape.cs" />
-    <Compile Include="Controls\Shapes\ShapeData.cs" />
-    <Compile Include="Controls\Shapes\ShapeUtils.cs" />
-    <Compile Include="Controls\SymbolEdit\SymbolEditControl.xaml.cs">
-      <DependentUpon>SymbolEditControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\SymbolEdit\SymbolEditControlActions.cs" />
-    <Compile Include="Controls\SymbolEdit\SymbolEditControlDrawing.cs" />
-    <Compile Include="Controls\SymbolEdit\SymbolEditControlEvents.cs" />
     <Compile Include="Helpers\DataRequestExtensions.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
     <Compile Include="Helpers\NavHelper.cs" />
@@ -260,10 +235,6 @@
     <Page Include="Styles\PropertyStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\SymbolEdit\SymbolEditControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
     </Page>
     <Page Include="Styles\Page.xaml">
       <Generator>MSBuild:Compile</Generator>

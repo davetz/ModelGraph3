@@ -55,8 +55,6 @@ namespace ModelGraph.Core
             //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, StrokeWidth, StrokeStyle());
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)ShapeType.Rectangle;
-
         #endregion
     }
 }

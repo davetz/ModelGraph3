@@ -67,7 +67,7 @@ namespace ModelGraph.Core
         {
             var type = step.Evaluate.GetType();
             var group = step.Input[0].Evaluate.ValGroup;
-            var composite = step.ScanInputsAndReturnCompositeValueGroup();
+            _ = step.ScanInputsAndReturnCompositeValueGroup();
 
             switch (group)
             {
@@ -118,7 +118,7 @@ namespace ModelGraph.Core
         {
             var type = step.Evaluate.GetType();
             var group = step.Input[0].Evaluate.ValGroup;
-            var composite = step.ScanInputsAndReturnCompositeValueGroup();
+            _ = step.ScanInputsAndReturnCompositeValueGroup();
 
             switch (group)
             {
@@ -144,7 +144,7 @@ namespace ModelGraph.Core
         {
             var type = step.Evaluate.GetType();
             var group = step.Input[0].Evaluate.ValGroup;
-            var composite = step.ScanInputsAndReturnCompositeValueGroup();
+            _ = step.ScanInputsAndReturnCompositeValueGroup();
 
             switch (group)
             {
@@ -528,7 +528,7 @@ namespace ModelGraph.Core
         static void ResolveOr2(ComputeStep step)
         {
             var type = step.Evaluate.GetType();
-            var group = step.Input[0].Evaluate.ValGroup;
+            _ = step.Input[0].Evaluate.ValGroup;
             var composite = step.ScanInputsAndReturnCompositeValueGroup();
 
             if (composite == ValGroup.Bool)
@@ -546,7 +546,7 @@ namespace ModelGraph.Core
         static void ResolveAnd2(ComputeStep step)
         {
             var type = step.Evaluate.GetType();
-            var group = step.Input[0].Evaluate.ValGroup;
+            _ = step.Input[0].Evaluate.ValGroup;
             var composite = step.ScanInputsAndReturnCompositeValueGroup();
 
             if (composite == ValGroup.Bool)

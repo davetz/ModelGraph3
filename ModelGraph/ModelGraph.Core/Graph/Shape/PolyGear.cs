@@ -55,7 +55,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolyGear(this);
         internal override ShapeBase Clone(Vector2 center) => new PolyGear(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert |HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolyGear;
         #endregion
     }
 }

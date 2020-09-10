@@ -57,9 +57,8 @@ namespace ModelGraph.Core
 
             bool isVert = dx == 0;
             bool isHorz = dy == 0;
-
-            (float, int) slope_slice = (0, 0);
-
+            _ = (0, 0);
+            (float, int) slope_slice;
             if (isVert)
             {
                 if (isHorz)

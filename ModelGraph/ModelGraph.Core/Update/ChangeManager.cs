@@ -134,7 +134,7 @@ namespace ModelGraph.Core
             var stoPRels = root.Get<Relation_Store_ParentRelation>();//==== souce2 of relational integrity
             var stoXCRels = root.Get<Relation_StoreX_ChildRelation>();//==== souce1 of relational integrity
             var stoXPRels = root.Get<Relation_StoreX_ParentRelation>();//==== souce2 of relational integrity
-            var stoCols = root.Get<Relation_Store_ColumnX>(); //======= reference to user created columns
+            _ = root.Get<Relation_Store_ColumnX>(); //======= reference to user created columns
             var history = new Dictionary<Relation, Dictionary<Item, List<Item>>>(); //history of unlinked relationships
 
             FindDependents(target, hitList, stoCRels, stoXCRels);

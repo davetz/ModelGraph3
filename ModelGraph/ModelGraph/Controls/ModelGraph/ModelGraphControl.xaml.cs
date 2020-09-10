@@ -59,5 +59,16 @@ namespace ModelGraph.Controls
         }
         #endregion
 
+        #region RadioButton_Events  ===========================================
+        private void ViewSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        #endregion
+
+
+
     }
 }

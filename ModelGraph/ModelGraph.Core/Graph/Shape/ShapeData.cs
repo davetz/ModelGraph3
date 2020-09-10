@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         #region Properties  ===================================================
 
         protected (ShapeType, StrokeType, byte) ShapeStrokeWidth => (ShapeType, (StrokeType)SS, SW);
-        protected (byte, byte, byte, byte) ColorARBG => (A, R, B, G);
+        protected (byte, byte, byte, byte) ShapeColor => (A, R, B, G);
 
         #region Color  ========================================================
         internal enum Coloring { Gray, Light, Normal };
@@ -149,7 +149,7 @@ namespace ModelGraph.Core
 
             foreach (var shape in shapes)
             {
-                data.Add(shape.TypeCode);   // 0
+                data.Add((byte)shape.ShapeType);   // 0
 
                 data.Add(shape.A);          // 1
                 data.Add(shape.R);          // 2

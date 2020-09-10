@@ -255,7 +255,7 @@ namespace ModelGraph.Core
             bool TryGetRelated()
             {
                 var selectors = new List<Query>();
-                if (!_queryXManager.TryGetForest(cx, key, selectors, out Query[] forest) || selectors.Count == 0) return false;
+                if (!_queryXManager.TryGetForest(cx, key, selectors, out _) || selectors.Count == 0) return false;
 
                 return cx.Value.LoadCache(cx, key, selectors);
             }

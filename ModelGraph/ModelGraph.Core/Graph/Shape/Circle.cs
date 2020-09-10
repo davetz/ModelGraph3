@@ -33,7 +33,7 @@ namespace ModelGraph.Core
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
-            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var (cp, r1, _) = GetCenterRadius(center, scale);
 
             drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, (255, 255, 255, 255)));
 
@@ -60,7 +60,6 @@ namespace ModelGraph.Core
                 Radius1 = Radius2 = (Radius1 * scale.X);
         }
         internal override HasSlider Sliders => HasSlider.None;
-        protected override byte TypeCode => (byte)ShapeType.Circle;
         #endregion
     }
 }

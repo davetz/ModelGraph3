@@ -268,7 +268,7 @@ namespace ModelGraph.Core
         public void GetTargetContacts(Dictionary<Target, (Contact contact, (sbyte dx, sbyte dy) point, byte size)> dict)
         {
             dict.Clear();
-            foreach (var (trg, tix, con, pnt, siz) in TargetContacts)
+            foreach (var (trg, _, con, pnt, siz) in TargetContacts)
             {
                 dict[trg] = (con, pnt, siz);
             }

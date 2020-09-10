@@ -33,7 +33,7 @@ namespace ModelGraph.Core
         protected override void CreatePoints()
         {
             var D = Dimension;
-            var (r1, r2, f1) = GetRadius();
+            var (r1, r2, _) = GetRadius();
 
             var n = 0;
             var N = 1 + D * 2; // number of points per spline
@@ -118,8 +118,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone(Vector2 center) => new PolySpring(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 18);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolySpring;
-
         #endregion
     }
 }

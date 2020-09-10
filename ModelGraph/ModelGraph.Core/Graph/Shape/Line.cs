@@ -29,7 +29,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() => new Line(this);
         internal override ShapeBase Clone(Vector2 center) => new Line(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
-        protected override byte TypeCode => (byte)ShapeType.Line;
         #endregion
     }
 }

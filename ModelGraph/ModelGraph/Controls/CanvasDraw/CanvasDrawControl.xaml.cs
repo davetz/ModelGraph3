@@ -819,18 +819,8 @@ namespace ModelGraph.Controls
             var ok = false;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.CreateNode(); });
             EditCanvas.Invalidate();
-            ViewSelect.IsChecked = true;
+            SetViewIdle();
         }
-        #endregion
-
-
-        #region RadioButton_Events  ===========================================
-        private void ViewSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SetViewIdle();
-        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SetMoveIdle();
-        private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SetCreateIdle();
-        private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
         #endregion
 
         #region ModelCanvas_Unloaded  =========================================

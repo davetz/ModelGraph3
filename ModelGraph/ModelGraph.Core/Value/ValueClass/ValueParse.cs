@@ -13,42 +13,42 @@ namespace ModelGraph.Core
 
         static protected (bool ok, byte val) ByteParse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < byte.MinValue || v > byte.MaxValue) ? (false, (byte)0) : (true, (byte)v);
         }
         static protected (bool ok, sbyte val) SByteParse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < sbyte.MinValue || v > sbyte.MaxValue) ? (false, (sbyte)0) : (true, (sbyte)v);
         }
         static protected (bool ok, short val) Int16Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < short.MinValue || v > short.MaxValue) ? (false, (short)0) : (true, (short)v);
         }
         static protected (bool ok, ushort val) UInt16Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < ushort.MinValue || v > ushort.MaxValue) ? (false, (ushort)0) : (true, (ushort)v);
         }
         static protected (bool ok, int val) Int32Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < int.MinValue || v > int.MaxValue) ? (false, 0) : (true, (int)v);
         }
         static protected (bool ok, uint val) UInt32Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok || v < uint.MinValue || v > uint.MaxValue) ? (false, 0) : (true, (uint)v);
         }
         static protected (bool ok, long val) Int64Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok) ? (false, 0) : (true, v);
         }
         static protected (bool ok, ulong val) UInt64Parse(string str)
         {
-            (bool ok, bool isD, long v, double d) = ParseNumber(str);
+            (bool ok, _, long v, _) = ParseNumber(str);
             return (!ok) ? (false, 0) : (true, (ulong)v);
         }
         static protected (bool ok, float val) SingleParse(string str) => float.TryParse(str, _numberStyle, null, out float v) ? (true, v) : (false, 0);

@@ -375,9 +375,8 @@
             Tm2 = (short)tp2;
 
             Points = P;
-
-            (float cx1, float cy1, float w1, float h1) = Node1.Values();
-            (float cx2, float cy2, float w2, float h2) = Node2.Values();
+            (float cx1, float cy1, _, _) = Node1.Values();
+            (float cx2, float cy2, _, _) = Node2.Values();
 
             P[sp1] = (cx1 + SP1.dx, cy1 + SP1.dy); // surface point 1
             P[fp1] = (cx1 + FP1.dx, cy1 + FP1.dy); // facet point 1

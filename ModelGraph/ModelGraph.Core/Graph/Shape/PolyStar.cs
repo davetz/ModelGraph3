@@ -22,7 +22,7 @@ namespace ModelGraph.Core
             var D = Dimension;
             var N = 2 * D;
             DXY = new List<(float dx, float dy)>(N);
-            var (r1, r2, f1) = GetRadius();
+            var (r1, r2, _) = GetRadius();
             var da = FullRadians / N;
             var a = RadiansStart;
             for (int i = 0; i < D; i++)
@@ -50,7 +50,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolyStar(this);
         internal override ShapeBase Clone(Vector2 center) => new PolyStar(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolyStar;
         #endregion
     }
 }

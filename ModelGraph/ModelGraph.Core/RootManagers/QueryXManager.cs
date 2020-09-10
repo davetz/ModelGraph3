@@ -295,7 +295,7 @@ namespace ModelGraph.Core
             {
                 ValidateGraphQuery(gx, true);
             }
-            else if (_relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx))
+            else if (_relation_SymbolX_QueryX.TryGetParent(qx, out _))
             {
                 ValidateWhere(qx, qx, _property_QueryX_Where, true);
             }

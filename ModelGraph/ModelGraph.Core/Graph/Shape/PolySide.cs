@@ -22,7 +22,7 @@ namespace ModelGraph.Core
             var D = Dimension;
             DXY = new List<(float dx, float dy)>(D);
             var da = FullRadians / D;
-            var (r1, r2, f1) = GetRadius();
+            var (r1, _, _) = GetRadius();
             var a = RadiansStart;
             for (int i = 0; i < D; i++)
             {
@@ -47,8 +47,6 @@ namespace ModelGraph.Core
         internal override ShapeBase Clone() =>new PolySide(this);
         internal override ShapeBase Clone(Vector2 center) => new PolySide(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Dim;
-        protected override byte TypeCode => (byte)ShapeType.PolySide;
-
         #endregion
     }
 }
