@@ -15,11 +15,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Circle(ShapeBase shape)
+        private Circle(Shape shape)
         {
             CopyData(shape);
         }
-        private Circle(ShapeBase shape, Vector2 center)
+        private Circle(Shape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -27,30 +27,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override ShapeBase Clone() =>new Circle(this);
-        internal override ShapeBase Clone(Vector2 center) => new Circle(this, center);
+        internal override Shape Clone() =>new Circle(this);
+        internal override Shape Clone(Vector2 center) => new Circle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring colr = Coloring.Normal)
         {
-            //var color = GetColor(coloring);
             var (cp, r1, _) = GetCenterRadius(center, scale);
-
-            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, (255, 255, 255, 255)));
-
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillCircle( cp, r1, color);
-            //else
-            //    ds.DrawCircle(cp, r1, color, strokeWidth, StrokeStyle());
+            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, ShapeColor(colr)));
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
-            //var color = GetColor(Coloring.Normal);
-            //var (cp, r1, r2) = GetCenterRadius(center, scale);
-
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillCircle(cp, r1, color);
-            //else
-            //    ds.DrawCircle(cp, r1, color, StrokeWidth, StrokeStyle());
+            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, ShapeColor()));
         }
         protected override void Scale(Vector2 scale)
         {

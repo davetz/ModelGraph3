@@ -17,14 +17,14 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolySpring(ShapeBase shape)
+        private PolySpring(Shape shape)
         {
             CopyData(shape);
         }
-        private PolySpring(ShapeBase shape, Vector2 center)
+        private PolySpring(Shape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new ShapeBase[] { this }, center);
+            SetCenter(new Shape[] { this }, center);
         }
         #endregion
 
@@ -114,8 +114,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() => new PolySpring(this);
-        internal override ShapeBase Clone(Vector2 center) => new PolySpring(this, center);
+        internal override Shape Clone() => new PolySpring(this);
+        internal override Shape Clone(Vector2 center) => new PolySpring(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 18);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
         #endregion

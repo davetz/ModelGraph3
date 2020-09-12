@@ -5,7 +5,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract partial class ShapeBase
+    internal abstract partial class Shape
     {
         private const int PointsOffset = 13;
         private byte A = 0xFF; // of color(A, R, G, B)
@@ -26,7 +26,9 @@ namespace ModelGraph.Core
         #region Properties  ===================================================
 
         protected (ShapeType, StrokeType, byte) ShapeStrokeWidth => (ShapeType, (StrokeType)SS, SW);
-        protected (byte, byte, byte, byte) ShapeColor => (A, R, B, G);
+        protected (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, B, G) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
+        private const byte _g = 0x80;
+        private const byte _a = 0x60;
 
         #region Color  ========================================================
         internal enum Coloring { Gray, Light, Normal };
@@ -138,7 +140,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region SaveShapes  ===================================================
-        public static byte[] SaveShaptes(IEnumerable<ShapeBase> shapes)
+        internal static byte[] SaveShaptes(IEnumerable<Shape> shapes)
         {
             var (_, _, _, _, _, _, fw, fh) = GetExtent(shapes);
             var data = new List<byte>(shapes.Count() * 30)
@@ -185,10 +187,10 @@ namespace ModelGraph.Core
 
         #region LoadShapes  ===================================================
         /// <summary>Load Shapes from Symbol data</summary>
-        static public void LoadShapes(byte[] data, List<ShapeBase> shapes)
+        internal static List<Shape> LoadShapes(byte[] data)
         {
-            shapes.Clear();
-            if (data is null || data.Length < 2) return;
+            var shapes = new List<Shape>(10);
+            if (data is null || data.Length < 2 ) return shapes;
 
             var M = data.Length;
             var I = 2;
@@ -247,9 +249,10 @@ namespace ModelGraph.Core
                         ReadData(new RoundedRectangle(true));
                         break;
                     default:
-                        return; // stop and disregard invalid shape data
+                        return shapes; // stop and disregard invalid shape data
                 }
             }
+            return shapes;
 
             bool IsMoreDataAvailable()
             {
@@ -261,7 +264,7 @@ namespace ModelGraph.Core
                 }
                 return false;
             }
-            void ReadData(ShapeBase shape)
+            void ReadData(Shape shape)
             {
                 shapes.Add(shape);
                 shape.A = data[I++];
@@ -293,7 +296,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region CopyData  =====================================================
-        protected void CopyData(ShapeBase s)
+        protected void CopyData(Shape s)
         {
             A = s.A;
             R = s.R;

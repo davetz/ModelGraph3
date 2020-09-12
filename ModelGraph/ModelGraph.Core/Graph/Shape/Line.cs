@@ -14,20 +14,20 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Line(ShapeBase shape)
+        private Line(Shape shape)
         {
             CopyData(shape);
         }
-        private Line(ShapeBase shape, Vector2 center)
+        private Line(Shape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter( new ShapeBase[] { this }, center);
+            SetCenter( new Shape[] { this }, center);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() => new Line(this);
-        internal override ShapeBase Clone(Vector2 center) => new Line(this, center);
+        internal override Shape Clone() => new Line(this);
+        internal override Shape Clone(Vector2 center) => new Line(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
         #endregion
     }

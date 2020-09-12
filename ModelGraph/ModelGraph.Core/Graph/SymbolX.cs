@@ -13,12 +13,10 @@ namespace ModelGraph.Core
         internal override string Description { get => _description; set => _description = value; }
         private string _description;
 
-        public byte[] Data;
-        public List<(Target trg, TargetIndex tix, Contact con, (sbyte dx, sbyte dy) pnt, byte siz)> TargetContacts = new List<(Target, TargetIndex, Contact, (sbyte, sbyte), byte)>(4);
-        public Attach Attach;
-        public AutoFlip AutoFlip;
-        public byte Version;
-        
+        internal byte[] Data;
+        internal List<(Target trg, TargetIndex tix, Contact con, (sbyte dx, sbyte dy) pnt, byte siz)> TargetContacts = new List<(Target, TargetIndex, Contact, (sbyte, sbyte), byte)>(4);
+        internal Attach Attach;
+        internal AutoFlip AutoFlip;
 
         #region Constructors  =================================================
         public SymbolX(SymbolXManager owner, bool autoExpand = false)
@@ -28,7 +26,19 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal override Item GetOwner() => Owner;
+        #endregion
+
+        #region <Get,Save>Shapes  =============================================
+        internal List<Shape> GetShapes()
+        {
+            if (_shapes is null) _shapes = Shape.LoadShapes(Data);
+            return _shapes;
+        }
+        internal void SaveShapes()
+        {
+            Data = (_shapes is null || _shapes.Count == 0) ? null : Shape.SaveShaptes(_shapes);
+        }
+        private List<Shape> _shapes;
         #endregion
 
         #region Identity  =====================================================
@@ -40,9 +50,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Properties/Methods  ===========================================
-        public bool NoData { get { return (Data == null || Data.Length < 2); } }
-        public float Width { get { return NoData ? 1f : Data[0] / 255f; } } //overall width factor 0..1f
-        public float Height { get { return NoData ? 1f : Data[1] / 255f; } } //overall height factor 0..1f 
+        internal bool NoData { get { return (Data == null || Data.Length < 2); } }
+        internal float Width { get { return NoData ? 1f : Data[0] / 255f; } } //overall width factor 0..1f
+        internal float Height { get { return NoData ? 1f : Data[1] / 255f; } } //overall height factor 0..1f 
 
         #region GetFlipTarget  ================================================
         internal (float sdx, float sdy, byte tsiz, byte tix, Direction tdir) GetFlipTarget(int ti, FlipState flip, float scale)

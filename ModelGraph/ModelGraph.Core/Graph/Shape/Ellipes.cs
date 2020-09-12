@@ -17,11 +17,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Ellipes(ShapeBase shape)
+        private Ellipes(Shape shape)
         {
             CopyData(shape);
         }
-        private Ellipes(ShapeBase shape, Vector2 center)
+        private Ellipes(Shape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -29,10 +29,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() =>new Ellipes(this);
-        internal override ShapeBase Clone(Vector2 center) => new Ellipes(this, center);
+        internal override Shape Clone() =>new Ellipes(this);
+        internal override Shape Clone(Vector2 center) => new Ellipes(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             var (_, _, _) = GetCenterRadius(center, scale);

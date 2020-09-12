@@ -17,14 +17,14 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyWave(ShapeBase shape)
+        private PolyWave(Shape shape)
         {
             CopyData(shape);
         }
-        private PolyWave(ShapeBase shape, Vector2 center)
+        private PolyWave(Shape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new ShapeBase[] { this }, center);
+            SetCenter(new Shape[] { this }, center);
         }
         #endregion
 
@@ -69,8 +69,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() => new PolyWave(this);
-        internal override ShapeBase Clone(Vector2 center) => new PolyWave(this, center);
+        internal override Shape Clone() => new PolyWave(this);
+        internal override Shape Clone(Vector2 center) => new PolyWave(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 22);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Minor | HasSlider.Major | HasSlider.Dim;
         #endregion

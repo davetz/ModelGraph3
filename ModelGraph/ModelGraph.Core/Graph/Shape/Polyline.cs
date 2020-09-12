@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract class Polyline : ShapeBase
+    internal abstract class Polyline : Shape
     {
 
         #region Polyline Methods  =============================================
@@ -72,17 +72,17 @@ namespace ModelGraph.Core
             return (x1 == 1) ? (0, 0, 0, 0) : (x1, y1, x2, y2);
         }
         protected override void Scale(Vector2 scale) => TransformPoints(Matrix3x2.CreateScale(scale)); 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring c = Coloring.Normal)
         {
             var points = GetDrawingPoints(center, scale);
 
             if (points.Length == 2)
             {
-                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth, ShapeColor));
+                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth, ShapeColor(c)));
             }
             else if (points.Length > 2)
             {
-                drawData.AddLine((points, ShapeStrokeWidth, ShapeColor));
+                drawData.AddLine((points, ShapeStrokeWidth, ShapeColor()));
             }
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
@@ -91,11 +91,11 @@ namespace ModelGraph.Core
 
             if (points.Length == 2)
             {
-                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth, ShapeColor));
+                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth, ShapeColor()));
             }
             else if (points.Length > 2)
             {
-                drawData.AddLine((points, ShapeStrokeWidth, ShapeColor));
+                drawData.AddLine((points, ShapeStrokeWidth, ShapeColor()));
             }
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;

@@ -15,11 +15,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Rectangle(ShapeBase shape)
+        private Rectangle(Shape shape)
         {
             CopyData(shape);
         }
-        private Rectangle(ShapeBase shape, Vector2 center)
+        private Rectangle(Shape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -27,10 +27,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() =>new Rectangle(this);
-        internal override ShapeBase Clone(Vector2 center) => new Rectangle(this, center);
+        internal override Shape Clone() =>new Rectangle(this);
+        internal override Shape Clone(Vector2 center) => new Rectangle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;

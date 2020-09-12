@@ -19,9 +19,6 @@ namespace ModelGraph.Controls
         public ICanvasModel Model { get; private set; }
         private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
-        private float _scale = 0.5f; //scale the view extent so that it fits on the canvas
-        private Vector2 _offset = new Vector2(); //offset need to center the view extent on the canvas
-
         #region Constructor/Initialize  =======================================
         public CanvasDrawControl()
         {
@@ -34,12 +31,11 @@ namespace ModelGraph.Controls
             TreeCanvas.Initialize(model);
 
             EditCanvas.DataContext = Model.EditorData;
+            OverCanvas.DataContext = Model.EditorData;
             Pick1Canvas.DataContext = Model.Picker1Data;
             Pick2Canvas.DataContext = Model.Picker2Data;
             ShowPicker1();
             ShowPicker2();
-
-            var eh = (double)Application.Current.Resources["ElementHieght"];
         }
 
         public void Refresh() => EditCanvas.Invalidate();
@@ -47,6 +43,26 @@ namespace ModelGraph.Controls
 
 
         #region PanZoom  ======================================================
+
+
+
+        private float _editScale = 0.5f; //scale the view extent so that it fits on the canvas
+        private Vector2 _editOffset = new Vector2(); //offset need to center the view extent on the canvas
+        private float _overScale = 0.5f; //scale the view extent so that it fits on the canvas
+        private Vector2 _overOffset = new Vector2(); //offset need to center the view extent on the canvas
+        private float _pick1Scale = 0.5f; //scale the view extent so that it fits on the canvas
+        private Vector2 _pick1Offset = new Vector2(); //offset need to center the view extent on the canvas
+        private float _pick2Scale = 0.5f; //scale the view extent so that it fits on the canvas
+        private Vector2 _pick2Offset = new Vector2(); //offset need to center the view extent on the canvas
+        (float,Vector2) GetScaleOffset(CanvasControl sender)
+        {
+            if (sender == EditCanvas) return (_editScale, _editOffset);
+            if (sender == OverCanvas) return (_overScale, _overOffset);
+            if (sender == Pick1Canvas) return (_pick1Scale, _pick1Offset);
+            if (sender == Pick2Canvas) return (_pick2Scale, _pick2Offset);
+            return (1f, new Vector2(0, 0));
+        }
+
         private const float maxScale = 4;
         private const float minZoomDiagonal = 8000;
 
@@ -79,13 +95,62 @@ namespace ModelGraph.Controls
 
             // zoom required to make the view extent fit the canvas
             if (z > maxScale) z = maxScale;
-            _scale = z;
+            _editScale = z;
 
             var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
             var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
-            _offset = ac - ec; //complete offset need to center the view extent on the canvas
+            _editOffset = ac - ec; //complete offset need to center the view extent on the canvas
 
+            SetOverviewScaleOffset();
+            SetPicker1ScaleOffset();
+            SetPicker2ScaleOffset();
             EditCanvas.Invalidate();
+        }
+        private void SetOverviewScaleOffset()
+        {
+            var aw = (float)OverCanvas.ActualWidth;
+            var ah = (float)OverCanvas.ActualHeight;
+
+            var e = Model.EditorExtent;
+            var ew = (float)e.Width;
+            var eh = (float)e.Hieght;
+
+            if (aw < 1) aw = 1;
+            if (ah < 1) ah = 1;
+            if (ew < 1) ew = 1;
+            if (eh < 1) eh = 1;
+
+            var zw = aw / ew;
+            var zh = ah / eh;
+            var z = (zw < zh) ? zw : zh;
+
+            _overScale = z;
+
+            var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
+            var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
+            _overOffset = ac - ec; //complete offset need to center the view extent on the canvas
+        }
+        private void SetPicker1ScaleOffset()
+        {
+            var aw = (float)Pick1Canvas.ActualWidth;
+            var ew = (float)Model.Picker1Width;
+
+            if (aw < 1) aw = 1;
+            if (ew < 1) ew = 1;
+
+            _pick1Scale = aw / ew;
+            _pick1Offset = new Vector2(aw / 2, aw / 2); //center point of the canvas
+        }
+        private void SetPicker2ScaleOffset()
+        {
+            var aw = (float)Pick2Canvas.ActualWidth;
+            var ew = (float)Model.Picker2Width;
+
+            if (aw < 1) aw = 1;
+            if (ew < 1) ew = 1;
+
+            _pick2Scale = aw / ew;
+            _pick2Offset = new Vector2(aw / 2, aw / 2); //center point of the canvas
         }
         #endregion
 
@@ -159,13 +224,7 @@ namespace ModelGraph.Controls
             var data = sender.DataContext as IDrawData;
             if (data != null)
             {
-                var scale = 1.0f;
-                var offset = new Vector2();
-                if (sender == EditCanvas)
-                {
-                    scale = _scale;
-                    offset = _offset;
-                }
+                var (scale, offset) = GetScaleOffset(sender);
                 var ds = args.DrawingSession;
 
                 foreach (var (P, (K, S, W), (A, R, G, B)) in data.Lines)
@@ -235,7 +294,7 @@ namespace ModelGraph.Controls
                     switch (shape)
                     {
                         case ShapeType.Line:
-                            ds.DrawLine(a, b + _offset, color, w, stroke);
+                            ds.DrawLine(a, b + offset, color, w, stroke);
                             break;
                         case ShapeType.Circle:
                             if (isFilled)
@@ -272,7 +331,10 @@ namespace ModelGraph.Controls
 
             // refresh both picker1 & picker2 canvases
             if (sender == EditCanvas)
+            {
                 Pick1Canvas.Invalidate();
+                OverCanvas.Invalidate();
+            }
             else if (sender == Pick1Canvas)
                 Pick2Canvas.Invalidate();
         }
@@ -385,8 +447,8 @@ namespace ModelGraph.Controls
         private Vector2 DrawPoint(PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(EditCanvas).Position;
-            var x = (p.X - _offset.X) / _scale;
-            var y = (p.Y - _offset.Y) / _scale;
+            var x = (p.X - _editOffset.X) / _editScale;
+            var y = (p.Y - _editOffset.Y) / _editScale;
             return new Vector2((float)x, (float)y);
         }
         private (float top, float left, float width, float height) GetResizerParams()
@@ -400,11 +462,11 @@ namespace ModelGraph.Controls
             var dx = x2 - x1;
             var dy = y2 - y1;
 
-            var width = dx * _scale;
-            var height = dy * _scale;
+            var width = dx * _editScale;
+            var height = dy * _editScale;
 
-            var top = y1 * _scale + _offset.X;
-            var left = x1 * _scale + _offset.Y;
+            var top = y1 * _editScale + _editOffset.X;
+            var left = x1 * _editScale + _editOffset.Y;
 
             return (top, left, width, height);
         }

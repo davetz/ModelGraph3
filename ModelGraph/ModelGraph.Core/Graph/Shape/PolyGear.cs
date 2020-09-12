@@ -40,20 +40,20 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyGear(ShapeBase shape)
+        private PolyGear(Shape shape)
         {
             CopyData(shape);
         }
-        private PolyGear(ShapeBase shape, Vector2 center)
+        private PolyGear(Shape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new ShapeBase[] { this }, center);
+            SetCenter(new Shape[] { this }, center);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() =>new PolyGear(this);
-        internal override ShapeBase Clone(Vector2 center) => new PolyGear(this, center);
+        internal override Shape Clone() =>new PolyGear(this);
+        internal override Shape Clone(Vector2 center) => new PolyGear(this, center);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert |HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
         #endregion
     }

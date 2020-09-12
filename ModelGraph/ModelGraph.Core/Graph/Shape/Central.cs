@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    internal abstract class Central : ShapeBase
+    internal abstract class Central : Shape
     {
         internal Central() { }
 

@@ -17,12 +17,12 @@ namespace ModelGraph.Core
         internal float Corner => 0.1f;
 
         #region PrivateConstructor  ===========================================
-        internal RoundedRectangle(ShapeBase shape)
+        internal RoundedRectangle(Shape shape)
         {
             CopyData(shape);
         }
 
-        internal RoundedRectangle(ShapeBase shape, Vector2 center)
+        internal RoundedRectangle(Shape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -30,10 +30,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override ShapeBase Clone() =>new RoundedRectangle(this);
-        internal override ShapeBase Clone(Vector2 center) => new RoundedRectangle(this, center);
+        internal override Shape Clone() =>new RoundedRectangle(this);
+        internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, float strokeWidth, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;

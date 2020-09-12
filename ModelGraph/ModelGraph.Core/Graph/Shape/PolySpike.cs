@@ -18,14 +18,14 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolySpike(ShapeBase shape)
+        private PolySpike(Shape shape)
         {
             CopyData(shape);
         }
-        private PolySpike(ShapeBase shape, Vector2 center)
+        private PolySpike(Shape shape, Vector2 center)
         {
             CopyData(shape);
-            SetCenter(new ShapeBase[] { this }, center);
+            SetCenter(new Shape[] { this }, center);
         }
         #endregion
 
@@ -62,8 +62,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override ShapeBase Clone() =>new PolySpike(this);
-        internal override ShapeBase Clone(Vector2 center) => new PolySpike(this, center);
+        internal override Shape Clone() =>new PolySpike(this);
+        internal override Shape Clone(Vector2 center) => new PolySpike(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 20);
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
         #endregion
