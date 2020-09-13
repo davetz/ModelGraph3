@@ -22,30 +22,151 @@ namespace ModelGraph.Controls
         #region Constructor/Initialize  =======================================
         public CanvasDrawControl()
         {
-            this.InitializeComponent();
+            InitializeComponent();
+            HidePicker1();
+            HidePicker2();
+            HideOverview();
         }
 
         public void Initialize(ICanvasModel model)
         {
             Model = model;
             TreeCanvas.Initialize(model);
-
-            EditCanvas.DataContext = Model.EditorData;
-            OverCanvas.DataContext = Model.EditorData;
-            Pick1Canvas.DataContext = Model.Picker1Data;
-            Pick2Canvas.DataContext = Model.Picker2Data;
-            ShowPicker1();
-            ShowPicker2();
         }
 
-        public void Refresh() => EditCanvas.Invalidate();
+        internal void Refresh() => EditCanvas.Invalidate();
         #endregion
 
+        #region LayoutControl  ================================================
+
+        #region Editor  =======================================================
+        internal void SetFixedSiize(int width, int height) // set to a fixed size
+        {
+            BaseGrid.VerticalAlignment = VerticalAlignment.Top;
+            BaseGrid.HorizontalAlignment = HorizontalAlignment.Left;
+            BaseGrid.Width = width;
+            BaseGrid.Height = height;
+        }
+        #endregion
+
+        #region Overview  =====================================================
+        internal void SetOverview(int width, int height, bool canResize = false)
+        {
+            OverviewBorder.Width = width + OverviewBorder.BorderThickness.Right;
+            OverviewBorder.Height = height;
+            OverviewResize.Visibility = canResize ? Visibility.Visible : Visibility.Collapsed;
+
+            if (width < 4)
+                HideOverview();
+            else
+            {
+                _overviewIsValid = true; // enable method ShowOverview()
+                ShowOverview();
+            }
+        }
+        private bool _overviewIsValid;
+        internal void ShowOverview()
+        {
+            if (_overviewIsValid)
+            {
+                OverCanvas.IsEnabled = true;  //enable CanvasDraw
+                OverviewBorder.Visibility = Visibility.Visible;
+            }
+        }
+        internal void HideOverview()
+        {
+            OverCanvas.IsEnabled = false;  //disable CanvasDraw
+            OverviewBorder.Visibility = Visibility.Collapsed;
+        }
+        #endregion
+
+        #region Picker1  ======================================================
+        internal void ShowPicker1(int width, int topMargin) // this is only way to show Picker1
+        {
+
+            Pick1Canvas.Width = width;
+            if (width < 4)
+                HidePicker1();
+            else
+            {
+                Pick1Canvas.IsEnabled = true;  //enable CanvasDraw
+                Picker1Grid.Visibility = Visibility.Visible;
+                Picker1GridColumn.Width = new GridLength(width + Picker1Grid.Margin.Right);
+                Picker1Grid.Margin = new Thickness(0, topMargin, Picker1Grid.Margin.Right, 0);
+            }
+        }
+        internal void HidePicker1()
+        {
+            Pick1Canvas.IsEnabled = false;  //disable CanvasDraw
+            Picker1GridColumn.Width = new GridLength(0);
+            Picker1Grid.Visibility = Visibility.Collapsed;
+        }
+        #endregion
+
+        #region Picker2  ======================================================
+        internal void ShowPicker2(int width) // this is only way to show Picker2
+        {
+            Pick2Canvas.Width = width;
+            if (width < 4)
+                HidePicker2();
+            else
+            {
+                Pick2Canvas.IsEnabled = true;  //enable CanvasDraw
+                Picker2Grid.Visibility = Visibility.Visible;
+                Picker2GridColumn.Width = new GridLength(width + Picker2Grid.Margin.Left);
+            }
+        }
+        internal void HidePicker2()
+        {
+            Pick2Canvas.IsEnabled = false; //disable CanvasDraw
+            Picker2GridColumn.Width = new GridLength(0);
+            Picker2Grid.Visibility = Visibility.Collapsed;
+        }
+        #endregion
+
+        #endregion
+
+        #region OverviewResize  ===============================================
+
+        private void OverviewResize_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            TrySetNewCursor(CoreCursorType.SizeAll);
+        }
+        private void OverviewResize_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            if (_state != StateType.ResizeOverview)
+                RestorePointerCursor();
+        }
+
+        private void OverviewResize_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if (_state == StateType.ViewIdle)
+            {
+                _pointerIsPressed = true;
+                Model.GridPoint1 = new Vector2(0, 0);
+                Model.GridPoint2 = GridPoint(e);
+                if (TrySetState(StateType.ResizeOverview))
+                {
+                    TrySetNewCursor(CoreCursorType.SizeAll);
+                    SetEventAction(EventType.Drag, ResizingOverview);
+                    SetEventAction(EventType.TapEnd, SetViewIdle);
+                }
+            }
+        }
+        private void ResizingOverview()
+        {
+            var size = Vector2.Abs(Model.GridPoint1 - Model.GridPoint2);
+            if (size.X < OverviewBorder.MinWidth) return;
+            if (size.Y < OverviewBorder.MinHeight) return;
+
+            OverviewBorder.Width = size.X;
+            OverviewBorder.Height = size.Y;
+            SetOverviewScaleOffset();
+            OverCanvas.Invalidate();
+        }
+        #endregion
 
         #region PanZoom  ======================================================
-
-
-
         private float _editScale = 0.5f; //scale the view extent so that it fits on the canvas
         private Vector2 _editOffset = new Vector2(); //offset need to center the view extent on the canvas
         private float _overScale = 0.5f; //scale the view extent so that it fits on the canvas
@@ -60,10 +181,10 @@ namespace ModelGraph.Controls
             if (sender == OverCanvas) return (_overScale, _overOffset);
             if (sender == Pick1Canvas) return (_pick1Scale, _pick1Offset);
             if (sender == Pick2Canvas) return (_pick2Scale, _pick2Offset);
-            return (1f, new Vector2(0, 0));
+            return (1.0f, new Vector2(0, 0));
         }
 
-        private const float maxScale = 4;
+        private const float maxScale = 10;
         private const float minZoomDiagonal = 8000;
 
         private void Pan(Vector2 adder)
@@ -155,43 +276,15 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Picker_PointerPressed  ========================================
+        private async void Pick1Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            var p = e.GetCurrentPoint(Pick1Canvas).Position;
+            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker1Select((int)p.Y); });
+        }
         private async void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(Pick2Canvas).Position;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker2Select((int)p.Y); });
-            Pick2Canvas.Invalidate();
-        }
-        private void ShowPicker1()
-        {
-            Pick2Canvas.Width = Model.Picker2Width;
-            if (Model.Picker1Width < 4)
-                HidePicker1();
-            else
-            {
-                Picker1Grid.Visibility = Visibility.Visible;
-                Picker1GridColumn.Width = new GridLength(Model.Picker2Width + 4);
-            }
-        }
-        private void HidePicker1()
-        {
-                Picker1Grid.Visibility = Visibility.Collapsed;
-                Picker1GridColumn.Width = new GridLength(0);
-        }
-        private void ShowPicker2()
-        {
-            Pick2Canvas.Width = Model.Picker2Width;
-            if (Model.Picker2Width < 4)
-                HidePicker2();
-            else
-            {
-                Picker2Grid.Visibility = Visibility.Visible;
-                Picker2GridColumn.Width = new GridLength(Model.Picker2Width + 8);
-            }
-        }
-        private void HidePicker2()
-        {
-            Picker2Grid.Visibility = Visibility.Collapsed;
-            Picker2GridColumn.Width = new GridLength(0);
         }
         #endregion
 
@@ -221,9 +314,35 @@ namespace ModelGraph.Controls
         #region DrawCanvas_Draw  ==============================================
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            var data = sender.DataContext as IDrawData;
-            if (data != null)
+            if (sender == EditCanvas)
             {
+                DoDraw(Model.HelperData);
+                DoDraw(Model.EditorData);
+
+                if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
+                else if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
+                else if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+            }
+            else if (sender == OverCanvas)
+            {
+                DoDraw(Model.EditorData);
+                if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
+                else if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+            }
+            else if (sender == Pick1Canvas)
+            {
+                DoDraw(Model.Picker1Data);
+                if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+            }
+            else if (sender == Pick2Canvas)
+            {
+                DoDraw(Model.Picker2Data);
+            }
+
+            void DoDraw(IDrawData data)
+            {
+                if (data is null) return;
+
                 var (scale, offset) = GetScaleOffset(sender);
                 var ds = args.DrawingSession;
 
@@ -488,6 +607,8 @@ namespace ModelGraph.Controls
             ResizeTop, ResizeLeft, ResizeRight, ResizeBottom,
             ResizeTopLeft, ResizeTopRight, ResizeBottomLeft, ResizeBottomRight,
 
+            ResizeOverview,
+
             MoveIdle,
             MoveOnNodeSkim, MoveOnRegionSkim,
             MovenNodeTap, MoveOnRegionTap,
@@ -513,11 +634,6 @@ namespace ModelGraph.Controls
             if (_state == state) return false; // we have not changed the state, so there is nothing to do
             _state = state;
             Debug.WriteLine($"State: {_state}");
-
-            if (state == StateType.CreateIdle)
-                ShowPicker2();
-            else
-                HidePicker2();
 
             Event_Action.Clear();
             HideTootlip();
@@ -894,6 +1010,12 @@ namespace ModelGraph.Controls
             {
                 EditCanvas.RemoveFromVisualTree();
                 EditCanvas = null;
+                OverCanvas.RemoveFromVisualTree();
+                OverCanvas = null;
+                Pick1Canvas.RemoveFromVisualTree();
+                Pick1Canvas = null;
+                Pick2Canvas.RemoveFromVisualTree();
+                Pick2Canvas = null;
             }
         }
         #endregion

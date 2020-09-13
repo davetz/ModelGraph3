@@ -57,7 +57,8 @@ namespace ModelGraph.Core
 
         bool CreateNode();
 
-        IDrawData EditorData { get; }
+        IDrawData HelperData { get; } // layer1 - static background data - (editor canvas only)
+        IDrawData EditorData { get; } // layer2 - editor & overview data
         IDrawData Picker1Data { get; }
         IDrawData Picker2Data { get; }
     }

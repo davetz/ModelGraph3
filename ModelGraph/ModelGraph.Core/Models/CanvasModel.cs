@@ -146,8 +146,12 @@ namespace ModelGraph.Core
         virtual public string HeaderTitle => "No Title was specified";
 
 
-        public IDrawData EditorData => Editor;
+        public IDrawData HelperData => Helper;      // editor layer1  
+        protected DrawData Helper = new DrawData(); 
+
+        public IDrawData EditorData => Editor;      // editor layer2
         protected DrawData Editor = new DrawData();
+
         virtual public Extent EditorExtent => new Extent(100, 100);
 
         public IDrawData Picker1Data => Picker1;

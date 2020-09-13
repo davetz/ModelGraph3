@@ -14,8 +14,12 @@ namespace ModelGraph.Controls
         public ModelSymbolControl(IPageModel model)
         {
             Model = model;
-            this.InitializeComponent();
+            InitializeComponent();
             SymbolCanvas.Initialize(model as ICanvasModel);
+            SymbolCanvas.SetFixedSiize(520, 520);
+            SymbolCanvas.SetOverview(32, 32);
+            SymbolCanvas.ShowPicker1(32, 32);
+            SymbolCanvas.ShowPicker2(32);
         }
 
         #region IPageControl  =================================================

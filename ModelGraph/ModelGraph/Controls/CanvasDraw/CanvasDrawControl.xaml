@@ -30,11 +30,37 @@
             <Setter Property="BorderBrush" Value="Black"/>
             <Setter Property="BorderThickness" Value="2"/>
         </Style>
+        <Style x:Key="OverviewBorderStyle" TargetType="Border">
+            <Setter Property="Width" Value="120"/>
+            <Setter Property="MinWidth" Value="24"/>
+            <Setter Property="Height" Value="120"/>
+            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="Canvas.ZIndex" Value="1"/>
+            <Setter Property="BorderThickness" Value="0,0,2,2"/>
+            <Setter Property="BorderBrush" Value="{ThemeResource AppBarBackgroundThemeBrush}"/>
+            <Setter Property="Background" Value="DarkSlateGray"/>
+        </Style>
+        <Style x:Key="OverviewResizeStyle" TargetType="Rectangle">
+            <Setter Property="Width" Value="8"/>
+            <Setter Property="Height" Value="8"/>
+            <Setter Property="VerticalAlignment" Value="Bottom"/>
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="Fill" Value="{ThemeResource AppBarBackgroundThemeBrush}" />
+        </Style>
     </UserControl.Resources>
 
-    <Grid>
-        <Border x:Name="OverviewBorder" Width="120" Height="120" HorizontalAlignment="Left" VerticalAlignment="Top" Background="DarkSlateGray" Canvas.ZIndex="1" BorderThickness="0,0,2,2" BorderBrush="{ThemeResource AppBarBackgroundThemeBrush}">
-            <canvas:CanvasControl x:Name="OverCanvas" Draw="DrawCanvas_Draw"/>
+    <Grid x:Name="BaseGrid">
+        <Border x:Name="OverviewBorder" Style="{StaticResource OverviewBorderStyle}">
+            <Grid PointerMoved="RootCanvas_PointerMoved" PointerReleased="RootCanvas_PointerReleased">
+                <canvas:CanvasControl x:Name="OverCanvas" Draw="DrawCanvas_Draw"/>
+                <Rectangle x:Name="OverviewResize" Style="{StaticResource OverviewResizeStyle}"
+                           PointerEntered="OverviewResize_PointerEntered"
+                           PointerExited="OverviewResize_PointerExited"
+                           PointerPressed="OverviewResize_PointerPressed"
+                           PointerReleased="RootCanvas_PointerReleased"/>
+            </Grid>
         </Border>
         
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Canvas.ZIndex="0">
@@ -45,7 +71,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" x:Name="Picker1Grid" Margin="0,32,2,0"   Background="DarkSlateGray" >
-                <canvas:CanvasControl x:Name="Pick1Canvas" Draw="DrawCanvas_Draw"/>
+                <canvas:CanvasControl x:Name="Pick1Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick1Canvas_PointerPressed"/>
             </Grid>
 
             <Grid Grid.Column="1" x:Name="RootGrid" Background="DarkSlateGray">
