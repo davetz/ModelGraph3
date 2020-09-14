@@ -1,4 +1,8 @@
-﻿using ModelGraph.Core;
+﻿using Microsoft.Graphics.Canvas.Geometry;
+using ModelGraph.Core;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
@@ -16,7 +20,6 @@ namespace ModelGraph.Controls
             Model = model;
             InitializeComponent();
             SymbolCanvas.Initialize(model as ICanvasModel);
-            SymbolCanvas.SetFixedSiize(520, 520);
             SymbolCanvas.SetOverview(32, 32);
             SymbolCanvas.ShowPicker1(32, 32);
             SymbolCanvas.ShowPicker2(32);
@@ -63,5 +66,75 @@ namespace ModelGraph.Controls
         }
         #endregion
 
+        #region DrawingStyles  ================================================
+        public enum Fill_Stroke { Stroke = 0, Filled = 1 }
+        public enum Edit_Contact { Edit, Contacts, AutoFlip, }
+        public static List<T> GetEnumAsList<T>() { return Enum.GetValues(typeof(T)).Cast<T>().ToList(); }
+        public List<CanvasDashStyle> DashStyleList => GetEnumAsList<CanvasDashStyle>();
+        public List<CanvasCapStyle> CapStyleList => GetEnumAsList<CanvasCapStyle>();
+        public List<CanvasLineJoin> LineJoinList => GetEnumAsList<CanvasLineJoin>();
+        public List<Fill_Stroke> FillStrokeList => GetEnumAsList<Fill_Stroke>();
+        public List<Edit_Contact> EditContactList => GetEnumAsList<Edit_Contact>();
+        public List<Contact> ContactList { get { return GetEnumAsList<Contact>(); } }
+        #endregion
+
+        #region Events  =======================================================
+        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => RotateLeft();
+        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => RotateRight();
+        private void RotateAngleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+            if (_use30degreeDelta)
+            {
+                _use30degreeDelta = false;
+                RotateAngleButton.Content = "22.5";
+            }
+            else
+            {
+                _use30degreeDelta = true;
+                RotateAngleButton.Content = "30.0";
+            }
+        }
+        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => FlipVertical();
+        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => FlipHorizontal();
+
+        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        }
+
+        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        }
+
+        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        }
+
+        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
+        {
+        }
+        private void EditContactComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+        }
+
+
+        #region LeftButtonHelperMethods  ======================================
+        private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();
+        private List<(float dx, float dy)> _setList = new List<(float dx, float dy)>();
+        private bool _use30degreeDelta;
+        private void RotateLeft()
+        {
+        }
+        private void RotateRight()
+        {
+        }
+        private void FlipVertical()
+        {
+        }
+        private void FlipHorizontal()
+        {
+        }
+        #endregion
+
+        #endregion
     }
 }

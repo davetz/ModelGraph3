@@ -9,7 +9,104 @@
     d:DesignHeight="300"
     d:DesignWidth="400">
 
+    <Page.Resources>
+
+        <RotateTransform x:Key="Rotate90" Angle="90"  CenterX="8" CenterY="9"/>
+        <ScaleTransform x:Key="FlipHorizontal" ScaleX="1" ScaleY="-1" CenterX="8" CenterY="10"/>
+        <SolidColorBrush x:Key="BackgroundPink" Color="LightPink"/>
+        <SolidColorBrush x:Key="BackgroundNormal" Color="Transparent"/>
+        <Style x:Key="LockButtonStyle" TargetType="Button">
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Visibility" Value="Visible" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        </Style>
+        <Style x:Key="LeftButtonStyle" TargetType="Button">
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Padding" Value="2,2,2,2" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+            <Setter Property="Visibility" Value="Visible" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+        </Style>
+
+        <Style x:Key="RightButtonStyle" TargetType="Button">
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="Padding" Value="2,2,2,2" />
+            <Setter Property="Margin" Value="5,0,5,0" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="Foreground" Value="{ThemeResource ApplicationForegroundThemeBrush}" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+
+        <SolidColorBrush x:Key="ActiveColor" Color="#FFE4BF99" />
+
+        <Style x:Key="ButtonStyle" TargetType="Button">
+            <Setter Property="Height" Value="24" />
+            <Setter Property="Margin" Value="4,2,4,2" />
+            <Setter Property="Padding" Value="0,0,0,0"/>
+            <Setter Property="IsTabStop" Value="False" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+        </Style>
+        <Style x:Key="PropetyComboBoxStyle" TargetType="ComboBox">
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+            <Setter Property="Height" Value="28"/>
+        </Style>
+
+
+        <Style x:Key="SymbolCanvasStyle" TargetType="controls:CanvasDrawControl">
+            <Setter Property="Width" Value="620" />
+            <Setter Property="Height" Value="560" />
+            <Setter Property="VerticalAlignment" Value="Top"/>
+            <Setter Property="HorizontalAlignment" Value="Left"/>
+        </Style>
+    </Page.Resources>
+
     <Grid>
-        <controls:CanvasDrawControl x:Name="SymbolCanvas" />
+        <Grid.RowDefinitions>
+            <RowDefinition Height="32" />
+            <RowDefinition Height="600"/>
+        </Grid.RowDefinitions>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
+            <Button x:Name="CutButton" Style="{StaticResource LeftButtonStyle}" Click="CutButton_Click">
+                <FontIcon  Glyph="&#xE8C6;" />
+            </Button>
+            <Button x:Name="PasteButton" Style="{StaticResource LeftButtonStyle}" Click="PasteButton_Click" >
+                <FontIcon  Glyph="&#xE8C8;" />
+            </Button>
+            <Button x:Name="CopyButton" Style="{StaticResource LeftButtonStyle}" Click="CopyButton_Click" >
+                <FontIcon  Glyph="&#xE77F;" />
+            </Button>
+            <Button x:Name="RotateRightButton" Style="{StaticResource LeftButtonStyle}" Click="RotateRightButton_Click" >
+                <FontIcon  Glyph="&#xE7AD;" />
+            </Button>
+            <Button x:Name="RotateAngleButton" Content="22.5" Background="Transparent" Click="RotateAngleButton_Click" />
+
+            <Button x:Name="RotateLeftButton" Style="{StaticResource LeftButtonStyle}" Click="RotateLeftButton_Click" >
+                <FontIcon  Glyph="&#xE7AD;" RenderTransform="{StaticResource FlipHorizontal}"/>
+            </Button>
+            <Button x:Name="FlipHorizontalButton" Style="{StaticResource LeftButtonStyle}" Click="FlipHorizontalButton_Click" >
+                <FontIcon  Glyph="&#xE8AB;"  />
+            </Button>
+            <Button x:Name="FlipVerticalButton" Style="{StaticResource LeftButtonStyle}" Click="FlipVerticalButton_Click" >
+                <FontIcon  Glyph="&#xE8AB;" RenderTransform="{StaticResource Rotate90}" />
+            </Button>
+            <Button x:Name="RecenterButton" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
+                <FontIcon  Glyph="&#xF22C;" />
+            </Button>
+            <ComboBox x:Name="EditContactComboBox" Style="{StaticResource PropetyComboBoxStyle}"
+                                      ItemsSource="{Binding ElementName=control, Path=EditContactList}"
+                                      SelectedItem="{Binding ElementName=control, Path=EditContact, Mode=TwoWay}"
+                                      SelectionChanged ="EditContactComboBox_SelectionChanged" />
+
+        </StackPanel>
+        <controls:CanvasDrawControl Grid.Row="1" x:Name="SymbolCanvas"  Style="{StaticResource SymbolCanvasStyle}" />
     </Grid>
 </Page>

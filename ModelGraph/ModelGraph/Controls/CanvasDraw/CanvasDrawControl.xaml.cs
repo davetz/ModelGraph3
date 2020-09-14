@@ -39,16 +39,6 @@ namespace ModelGraph.Controls
 
         #region LayoutControl  ================================================
 
-        #region Editor  =======================================================
-        internal void SetFixedSiize(int width, int height) // set to a fixed size
-        {
-            BaseGrid.VerticalAlignment = VerticalAlignment.Top;
-            BaseGrid.HorizontalAlignment = HorizontalAlignment.Left;
-            BaseGrid.Width = width;
-            BaseGrid.Height = height;
-        }
-        #endregion
-
         #region Overview  =====================================================
         internal void SetOverview(int width, int height, bool canResize = false)
         {
@@ -353,13 +343,13 @@ namespace ModelGraph.Controls
                         var k = K & ShapeType.SimpleShapeMask;
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
+                        var isFilled = S == StrokeType.Filled;
 
-                        var N = P.Length / 2;
-                        for (int i = 0; i < N; i += 2)
+                        for (int i = 0; i < P.Length; i += 2)
                         {
                             var c = P[i] * scale + offset;
                             var d = P[i + 1] * scale;
-                            DrawShape(c, d, color, stroke, k, (S == StrokeType.Filled), W);
+                            DrawShape(c, d, color, stroke, k, isFilled, W);
                         }
                     }
                     else
