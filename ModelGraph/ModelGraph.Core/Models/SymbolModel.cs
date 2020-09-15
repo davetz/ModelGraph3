@@ -50,7 +50,7 @@ namespace ModelGraph.Core
         override public void RefreshDrawData()
         {
             var r = EditRadius;
-            var c = new Vector2(0,0);
+            var c = new Vector2(50,80);
 
             Editor.Clear();
             var shapes = Symbol.GetShapes();
@@ -107,56 +107,48 @@ namespace ModelGraph.Core
             }
 
             (byte, byte, byte, byte) color1 = (0xff, 0xff, 0xff, 0xff);
-            (byte, byte, byte, byte) color2 = (0xff, 0xff, 0xff, 0x80);
-            (byte, byte, byte, byte) color3 = (0x80, 0xff, 0xff, 0x00);
-            (byte, byte, byte, byte) color4 = (0x40, 0xff, 0xff, 0xff);
+            (byte, byte, byte, byte) color2 = (0x80, 0xff, 0xff, 0x00);
 
             Helper.Clear();
             Helper.AddLine((points1.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color1));
-            Helper.AddLine((points2.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color3));
-            Helper.AddShape(((new Vector2(0, 0), new Vector2(r / 2, r / 2)), (ShapeType.Circle, StrokeType.Simple, 1), color3));
+            Helper.AddLine((points2.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color2));
+            Helper.AddShape(((new Vector2(0, 0), new Vector2(r / 2, r / 2)), (ShapeType.Circle, StrokeType.Simple, 1), color2));
             Helper.AddShape(((new Vector2(0, 0), new Vector2(r, r)), (ShapeType.Circle, StrokeType.Simple, 1), color1));
 
-           
-            //var xC = - 6;
-            //var yN = -2;
-            //var yS = b - 3;
-            //var xe = b - r/4 - 10;
-            //var xw = a + r/4 - 10;
-            //var xec = b - 10;
-            //var xwc = a - 16;
 
-            Helper.AddText(((new Vector2((-r - 16), (-r - 32)), "nec"), color3));
-            Helper.AddText(((new Vector2((-r/2 - 8), (-r - 32)), "ne"), color3));
-            Helper.AddText(((new Vector2((- 8), (-r - 32)), "N"), color1));
-            Helper.AddText(((new Vector2((r/2 - 8), (-r - 32)), "nw"), color3));
-            Helper.AddText(((new Vector2((r - 16), (-r - 32)), "new"), color3));
-            //ds.DrawText(, xec, yN, color3);
-            //ds.DrawText("ne", xe, yN, color3);
-            //ds.DrawText("N", xC, yN, color1);
-            //ds.DrawText("nw", xw, yN, color3);
-            //ds.DrawText("nwc", xwc, yN, color3);
+            var yN = -r - 32;
+            var x1 = -r - 16;
+            var x2 = -r / 2 - 8;
+            var x3 = -6f;
+            var x4 = r / 2 - 8;
+            var x5 = r - 16;
+            Helper.AddText(((new Vector2(x1, yN), "nec"), color2));
+            Helper.AddText(((new Vector2(x2, yN), "ne"), color2));
+            Helper.AddText(((new Vector2(x3, yN), "N"), color1));
+            Helper.AddText(((new Vector2(x4, yN), "nw"), color2));
+            Helper.AddText(((new Vector2(x5, yN), "nwc"), color2));
 
-            //ds.DrawText("sec", xec, yS, color3);
-            //ds.DrawText("se", xe, yS, color3);
-            //ds.DrawText("S", xC, yS, color1);
-            //ds.DrawText("sw", xw, yS, color3);
-            //ds.DrawText("swc", xwc, yS, color3);
+            var yS = r + 2;
+            Helper.AddText(((new Vector2(x1, yS), "sec"), color2));
+            Helper.AddText(((new Vector2(x2, yS), "se"), color2));
+            Helper.AddText(((new Vector2(x3, yS), "S"), color1));
+            Helper.AddText(((new Vector2(x4, yS), "sw"), color2));
+            Helper.AddText(((new Vector2(x5, yS), "sew"), color2));
 
+            var y2 = -r / 2 - 18;
+            var y3 = -16f;
+            var y4 = r / 2 - 16;
+            var x6 = -r - 28;
+            var x7 = -r - 20;
+            Helper.AddText(((new Vector2(x6, y2), "en"), color2));
+            Helper.AddText(((new Vector2(x7, y3), "E"), color1));
+            Helper.AddText(((new Vector2(x6, y4), "es"), color2));
 
-            //var xE = b + 3;
-            //var xW = 8;
-            //var yC = c - 14;
-            //var yn = a + _workAxis - 14;
-            //var ys = b - _workAxis - 14;
-
-            //ds.DrawText("en", xE, yn, color3);
-            //ds.DrawText("E", xE, yC, color1);
-            //ds.DrawText("es", xE, ys, color3);
-
-            //ds.DrawText("wn", xW - 4, yn, color3);
-            //ds.DrawText("W", xW, yC, color1);
-            //ds.DrawText("ws", xW - 4, ys, color3);
+            var x8 = r + 4;
+            var x9 = r + 6;
+            Helper.AddText(((new Vector2(x8, y2), "wn"), color2));
+            Helper.AddText(((new Vector2(x9, y3), "W"), color1));
+            Helper.AddText(((new Vector2(x8, y4), "ws"), color2));
         }
 
 
