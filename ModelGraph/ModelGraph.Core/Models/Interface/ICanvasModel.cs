@@ -5,9 +5,10 @@ namespace ModelGraph.Core
     public interface ICanvasModel : ITreeCanvasModel
     {
         Extent EditorExtent { get; }
+        void RefreshEditorData();
         int Picker1Width { get; }
         int Picker2Width { get; }
-        void Picker1Select(int YCord);
+        void Picker1Select(int YCord, bool add = false);
         void Picker2Select(int YCord);
         void Picker2Paste();
 
@@ -50,7 +51,6 @@ namespace ModelGraph.Core
         void ResizeBottomLeft();
         void ResizeBottomRight();
         void ResizePropagate();
-        void RefreshDrawData();
 
         bool MoveNode();
         bool MoveRegion();

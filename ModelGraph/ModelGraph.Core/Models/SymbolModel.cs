@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Numerics;
 using Windows.Security.Cryptography.Core;
+using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Core
 {
@@ -18,8 +19,10 @@ namespace ModelGraph.Core
         internal SymbolModel(Root root, SymbolX symbol) : base(root)
         {
             Symbol = symbol;
-            RefreshDrawData();
+            RefreshEditorData();
             RefreshHelperData();
+            RefreshPicker1Data();
+            RefreshPicker2Data();
             PageControl?.Refresh();
         }
         #endregion
@@ -46,8 +49,8 @@ namespace ModelGraph.Core
         #endregion
 
 
-        #region RefreshDrawData  ==============================================
-        override public void RefreshDrawData()
+        #region RefreshEditorData  ============================================
+        override public void RefreshEditorData()
         {
             var r = EditRadius;
             var c = new Vector2(50,80);
@@ -60,6 +63,7 @@ namespace ModelGraph.Core
                 s.AddDrawData(Editor, r, c);
             }
         }
+        #endregion
 
         #region RefreshHelperData  ============================================
         private void RefreshHelperData()
@@ -69,14 +73,14 @@ namespace ModelGraph.Core
             float L = -r, R = r, T = -r, B = r;         //Left, Right, Top, Bottom
 
             var points1 = new List<Vector2>()   // init with major tick marks 
-            { 
+            {
                 new Vector2(L, 0), new Vector2(R, 0),   //X,Y axis
-                new Vector2(0, T), new Vector2(0, B), 
+                new Vector2(0, T), new Vector2(0, B),
                 new Vector2(L, T), new Vector2(R, B),   //diagonnals
-                new Vector2(L, B), new Vector2(R, T) 
+                new Vector2(L, B), new Vector2(R, T)
             };
             var points2 = new List<Vector2>()   // init with minor tick marks 
-            { 
+            {
                 new Vector2(L, -d), new Vector2(R, d),  //diagonnals
                 new Vector2(L, d), new Vector2(R, -d),
                 new Vector2(-d, T), new Vector2(d, B),
@@ -86,7 +90,7 @@ namespace ModelGraph.Core
             for (int i = 0; i < 8; i++)
             {
                 var points = (i == 0 || i == 4) ? points1 : points2;
-                AddTickMarks(r - i * r / 8f );
+                AddTickMarks(r - i * r / 8f);
 
                 void AddTickMarks(float v)
                 {
@@ -115,89 +119,149 @@ namespace ModelGraph.Core
             Helper.AddShape(((new Vector2(0, 0), new Vector2(r / 2, r / 2)), (ShapeType.Circle, StrokeType.Simple, 1), color2));
             Helper.AddShape(((new Vector2(0, 0), new Vector2(r, r)), (ShapeType.Circle, StrokeType.Simple, 1), color1));
 
-
             var yN = -r - 32;
             var x1 = -r - 16;
             var x2 = -r / 2 - 8;
             var x3 = -6f;
             var x4 = r / 2 - 8;
             var x5 = r - 16;
-            Helper.AddText(((new Vector2(x1, yN), "nec"), color2));
-            Helper.AddText(((new Vector2(x2, yN), "ne"), color2));
+            Helper.AddText(((new Vector2(x1, yN), "nwc"), color2));
+            Helper.AddText(((new Vector2(x2, yN), "nw"), color2));
             Helper.AddText(((new Vector2(x3, yN), "N"), color1));
-            Helper.AddText(((new Vector2(x4, yN), "nw"), color2));
-            Helper.AddText(((new Vector2(x5, yN), "nwc"), color2));
+            Helper.AddText(((new Vector2(x4, yN), "ne"), color2));
+            Helper.AddText(((new Vector2(x5, yN), "nec"), color2));
 
             var yS = r + 2;
-            Helper.AddText(((new Vector2(x1, yS), "sec"), color2));
-            Helper.AddText(((new Vector2(x2, yS), "se"), color2));
+            Helper.AddText(((new Vector2(x1, yS), "swc"), color2));
+            Helper.AddText(((new Vector2(x2, yS), "sw"), color2));
             Helper.AddText(((new Vector2(x3, yS), "S"), color1));
-            Helper.AddText(((new Vector2(x4, yS), "sw"), color2));
-            Helper.AddText(((new Vector2(x5, yS), "sew"), color2));
+            Helper.AddText(((new Vector2(x4, yS), "se"), color2));
+            Helper.AddText(((new Vector2(x5, yS), "sec"), color2));
 
             var y2 = -r / 2 - 18;
             var y3 = -16f;
             var y4 = r / 2 - 16;
-            var x6 = -r - 28;
-            var x7 = -r - 20;
-            Helper.AddText(((new Vector2(x6, y2), "en"), color2));
-            Helper.AddText(((new Vector2(x7, y3), "E"), color1));
-            Helper.AddText(((new Vector2(x6, y4), "es"), color2));
+            var x6 = -r - 30;
+            var x7 = -r - 24;
+            Helper.AddText(((new Vector2(x6, y2), "wn"), color2));
+            Helper.AddText(((new Vector2(x7, y3), "W"), color1));
+            Helper.AddText(((new Vector2(x6, y4), "ws"), color2));
 
             var x8 = r + 4;
             var x9 = r + 6;
-            Helper.AddText(((new Vector2(x8, y2), "wn"), color2));
-            Helper.AddText(((new Vector2(x9, y3), "W"), color1));
-            Helper.AddText(((new Vector2(x8, y4), "ws"), color2));
+            Helper.AddText(((new Vector2(x8, y2), "en"), color2));
+            Helper.AddText(((new Vector2(x9, y3), "E"), color1));
+            Helper.AddText(((new Vector2(x8, y4), "es"), color2));
         }
 
 
 
         #endregion
 
-        #endregion
+        #region RefreshPicker1Data  ===========================================
+        private void RefreshPicker1Data()
+        {
+            var r = Picker2Width / 2;
+            var c = new Vector2(0, 0);
 
-        #region PickerEvents  =================================================
-        override public int Picker1Width => 30;
-        override public int Picker2Width => 30;
-
-        override public void Picker1Select(int y)
+            Picker1.Clear();
+            foreach (var s in Symbol.GetShapes())
+            {
+                s.AddDrawData(Picker1, r, c);
+                if (_selectShapes.Contains(s))
+                    Picker1.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                c = new Vector2(0, c.Y + Picker2Width);
+            }
+        }
+        override public int Picker1Width => 32;
+        override public void Picker1Select(int y, bool add = false)
         {
             var w = Picker1Width;
-            var x = w / 2;
-            var z = (y / w) * w + x;
-            Picker1.Clear();
-            Picker1.AddShape(((new Vector2(x, z), new Vector2(x, x)), (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
+            var i = y / w;
+
+            if (!add) _selectShapes.Clear();
+            var shapes = Symbol.GetShapes();
+            if (i < shapes.Count)
+            {
+                var s = shapes[i];
+                if (add)
+                {
+                    if (_selectShapes.Contains(s))
+                        _selectShapes.Remove(s);
+                    else
+                        _selectShapes.Add(s);
+                }
+                else
+                    _selectShapes.Add(s);
+            }
+            else
+                _selectShapes.Clear();
+
+            _selectPicker2Shape = null;
+            RefreshEditorData();
+            RefreshPicker1Data();
+            RefreshPicker2Data();
         }
+        private List<Shape> _selectShapes = new List<Shape>(10);
+        #endregion
+
+        #region RefreshPicker2Data  ===========================================
+        private void RefreshPicker2Data()
+        {
+            var r = Picker2Width / 2;
+            var c = new Vector2(0, 0);
+
+            Picker2.Clear();
+            foreach (var s in _picker2Shapes)
+            {
+                s.AddDrawData(Picker2, r, c);
+                if (s == _selectPicker2Shape)
+                    Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                c = new Vector2(0, c.Y + Picker2Width);
+            }
+        }
+        Shape _selectPicker2Shape;
+        static Shape[] _picker2Shapes =
+        {
+            new Line(),
+            new Circle(),
+            //new Ellipes(),
+            //new Rectangle(),
+            //new RoundedRectangle(),
+            //new PolySide(),
+        };
+        override public int Picker2Width => 32;
+
         override public void Picker2Select(int y)
         {
             var w = Picker2Width;
-            var x = w / 2;
-            var z = (y / w) * w + x;
-            Picker2.Clear();
-            Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
+            var i = y / w;
+            _selectPicker2Shape = (i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
+
+            _selectShapes.Clear();
+            RefreshEditorData();
+            RefreshPicker1Data();
+            RefreshPicker2Data();
         }
         #endregion
 
 
         #region HitTest  ======================================================
 
-        override public bool SkimHitTest()
-        {
-            ClearHit();
-            return false;
-        }
-
         override public bool TapHitTest()
         {
             ClearHit();
+            if (_selectPicker2Shape is null)
+            {
+
+            }
+            else
+            {
+                Symbol.GetShapes().Add(_selectPicker2Shape.Clone(DrawPoint1));
+                RefreshEditorData();
+            }
             return false;
         }
-
-        override public void ClearRegion() => _regionNodes.Clear();
-
-        private Node _hitNode;
-        private List<Node> _regionNodes = new List<Node>();
         #endregion
 
         #region ITreeCanvasModel  =============================================
@@ -205,24 +269,7 @@ namespace ModelGraph.Core
         override public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
         override public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
         {
-            if (_hitNode is null) return (new List<ItemModel>(0), null, false, false);
-            if (_itemModel != null)
-            {
-                if (_itemModel.GetItem() != _hitNode)
-                {
-                    _itemModel.Discard();
-                    _itemModel = new Model_6DA_HitNode(_hitNode);
-                }
-            }
-            else
-                _itemModel = new Model_6DA_HitNode(_hitNode);
-
-            _itemModel.ExpandRight(Owner);
-
-            if (selected is null || !_itemModel.Items.Contains(selected))
-                selected = _itemModel.Count == 0 ? null : _itemModel.Items[0];
-
-            return (_itemModel.Items, selected, true, true);
+            return (new List<ItemModel>(0), null, false, false);
         }
         private ItemModel _itemModel;
         override public string HeaderTitle => _itemModel.GetItem().GetNameId();

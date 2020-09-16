@@ -270,11 +270,13 @@ namespace ModelGraph.Controls
         {
             var p = e.GetCurrentPoint(Pick1Canvas).Position;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker1Select((int)p.Y); });
+            EditCanvas.Invalidate();
         }
         private async void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(Pick2Canvas).Position;
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker2Select((int)p.Y); });
+            EditCanvas.Invalidate();
         }
         #endregion
 
@@ -354,6 +356,9 @@ namespace ModelGraph.Controls
                     }
                     else
                     {
+                        var V = scale * W;
+                        if (V < 1) V = 1;
+
                         using (var pb = new CanvasPathBuilder(ds))
                         {
                             pb.BeginFigure(P[0] * scale + offset);
@@ -376,7 +381,7 @@ namespace ModelGraph.Controls
 
                             using (var geo = CanvasGeometry.CreatePath(pb))
                             {
-                                ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), W, StrokeStyle(S));
+                                ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), V, StrokeStyle(S));
                             }
                         }
                     }
@@ -400,22 +405,24 @@ namespace ModelGraph.Controls
 
                 void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeType shape, bool isFilled, byte w)
                 {
+                    var v = scale * w;
+                    if (v < 1) v = 1;
                     switch (shape)
                     {
                         case ShapeType.Line:
-                            ds.DrawLine(a, b + offset, color, w, stroke);
+                            ds.DrawLine(a, b + offset, color, v, stroke);
                             break;
                         case ShapeType.Circle:
                             if (isFilled)
                                 ds.FillCircle(a, b.X, color);
                             else
-                                ds.DrawCircle(a, b.X, color, w, stroke);
+                                ds.DrawCircle(a, b.X, color, v, stroke);
                             break;
                         case ShapeType.Ellipse:
                             if (isFilled)
                                 ds.FillEllipse(a, b.X, b.Y, color);
                             else
-                                ds.DrawEllipse(a, b.X, b.Y, color, w, stroke);
+                                ds.DrawEllipse(a, b.X, b.Y, color, v, stroke);
                             break;
                         case ShapeType.Rectangle:
                             var e = a - b;
@@ -423,7 +430,7 @@ namespace ModelGraph.Controls
                             if (isFilled)
                                 ds.FillRectangle(e.X, e.Y, f.X, f.Y, color);
                             else
-                                ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, w, stroke);
+                                ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, v, stroke);
                             break;
                         case ShapeType.RoundedRectangle:
                             e = a - b;
@@ -431,7 +438,7 @@ namespace ModelGraph.Controls
                             if (isFilled)
                                 ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color);
                             else
-                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color, w, stroke);
+                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color, v, stroke);
                             break;
                     }
                 }
@@ -813,7 +820,7 @@ namespace ModelGraph.Controls
         void ResizeEnd()
         {
             Model.ResizePropagate();
-            Model.RefreshDrawData();
+            Model.RefreshEditorData();
             EditCanvas.Invalidate();
             RestorePointerCursor();
             SetViewIdle();
@@ -945,7 +952,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.MoveNode(); });
             if (ok)
             {
-                Model.RefreshDrawData();
+                Model.RefreshEditorData();
                 EditCanvas.Invalidate();
             }
         }
@@ -963,7 +970,7 @@ namespace ModelGraph.Controls
             await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { ok = Model.MoveRegion(); });
             if (ok)
             {
-                Model.RefreshDrawData();
+                Model.RefreshEditorData();
                 EditCanvas.Invalidate();
             }
         }

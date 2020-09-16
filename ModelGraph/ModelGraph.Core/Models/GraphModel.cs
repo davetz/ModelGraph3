@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         internal GraphModel(Root root, Graph graph) : base(root)
         {
             Graph = graph;
-            RefreshDrawData();
+            RefreshEditorData();
         }
         #endregion
 
@@ -38,7 +38,7 @@ namespace ModelGraph.Core
 
 
         #region CreateDrawData  ===============================================
-        override public void RefreshDrawData()
+        override public void RefreshEditorData()
         {
             Editor.Clear();
             foreach (var e in Graph.Edges)

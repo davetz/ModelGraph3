@@ -136,13 +136,13 @@ namespace ModelGraph.Core
         virtual public int Picker1Width => 0;
         virtual public int Picker2Width => 0;
 
-        virtual public void Picker1Select(int YCord) { }
+        virtual public void Picker1Select(int YCord, bool add = false) { }
         virtual public void Picker2Select(int YCord) { }
         virtual public void Picker2Paste() { }
         #endregion
 
         #region IDrawData  ====================================================
-        virtual public void RefreshDrawData() { }
+        virtual public void RefreshEditorData() { }
         virtual public string HeaderTitle => "No Title was specified";
 
 
