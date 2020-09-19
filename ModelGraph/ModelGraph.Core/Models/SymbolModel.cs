@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Core
 {
-    public class SymbolModel : CanvasModel, IPageModel
+    public class SymbolModel : CanvasModel, ILeadModel
     {
         internal readonly SymbolX Symbol;
         override public Extent EditorExtent => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
@@ -14,40 +14,22 @@ namespace ModelGraph.Core
         private const float EditMargin = 32;    //size of empty space arround the shape editor 
         private const float EditExtent = EditRadius + EditMargin;
 
+        public PageModel PageModel { get; private set; }
 
         #region Constructor  ==================================================
-        internal SymbolModel(Root root, SymbolX symbol) : base(root)
+        internal SymbolModel(PageModel pageModel, Root root, SymbolX symbol) : base(root)
         {
+            PageModel = pageModel;
+            pageModel.Add(this);
+
             Symbol = symbol;
             RefreshEditorData();
             RefreshHelperData();
             RefreshPicker1Data();
             RefreshPicker2Data();
-            PageControl?.Refresh();
+            PageModel.TriggerUIRefresh();
         }
         #endregion
-
-        #region IPageModel  ===================================================
-        public string TitleName => "TestModelCanvasControl";
-        public string TitleSummary => string.Empty;
-        public ControlType ControlType => ControlType.SymbolEditor;
-        public IPageControl PageControl { get; set; }
-        public void Release()
-        {
-            Owner.Remove(this);
-            Discard(); //discard myself and recursivly discard all my children
-        }
-
-        public void TriggerUIRefresh()
-        {
-            if (Symbol.ModelDelta != ModelDelta)
-            {
-                ModelDelta = Symbol.ModelDelta;
-                PageControl?.Refresh();
-            }
-        }
-        #endregion
-
 
         #region RefreshEditorData  ============================================
         override public void RefreshEditorData()
@@ -263,19 +245,6 @@ namespace ModelGraph.Core
             return false;
         }
         #endregion
-
-        #region ITreeCanvasModel  =============================================
-
-        override public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
-        override public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
-        {
-            return (new List<ItemModel>(0), null, false, false);
-        }
-        private ItemModel _itemModel;
-        override public string HeaderTitle => _itemModel.GetItem().GetNameId();
-
-        #endregion
-
     }
 }
 

@@ -3,39 +3,22 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class GraphModel : CanvasModel, IPageModel
+    public class GraphModel : CanvasModel, ILeadModel
     {
         internal readonly Graph Graph;
+        public PageModel PageModel { get; private set; }
 
         #region Constructor  ==================================================
-        internal GraphModel(Root root, Graph graph) : base(root)
+        internal GraphModel(PageModel pageModel, Root root, Graph graph) : base(root)
         {
             Graph = graph;
+            PageModel = pageModel;
+            pageModel.Add(this);
+
+            FlyOutTreeModel = new TreeModel(pageModel, root);
             RefreshEditorData();
         }
         #endregion
-
-        #region IPageModel  ===================================================
-        public string TitleName => "TestModelCanvasControl";
-        public string TitleSummary => string.Empty;
-        public ControlType ControlType => ControlType.GraphDisplay;
-        public IPageControl PageControl { get; set; }
-        public void Release()
-        {
-            Owner.Remove(this);
-            Discard(); //discard myself and recursivly discard all my children
-        }
-
-        public void TriggerUIRefresh()
-        {
-            if (Graph.ChildDelta != ChildDelta)
-            {
-                ChildDelta = Graph.ChildDelta;
-                PageControl?.Refresh();
-            }
-        }
-        #endregion
-
 
         #region CreateDrawData  ===============================================
         override public void RefreshEditorData()
@@ -172,36 +155,6 @@ namespace ModelGraph.Core
             }
             return true;
         }
-        #endregion
-
-        #region ITreeCanvasModel  =============================================
-
-        override public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
-        override public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
-        {
-            if (_hitNode is null) return (new List<ItemModel>(0), null, false, false);
-            if (_itemModel != null)
-            {
-                if (_itemModel.GetItem() != _hitNode)
-                {
-                    _itemModel.Discard();
-                    _itemModel = new Model_6DA_HitNode(_hitNode);
-                }
-            }
-            else
-                _itemModel = new Model_6DA_HitNode(_hitNode);
-
-            _itemModel.ExpandRight(Owner);
-
-            if (selected is null || !_itemModel.Items.Contains(selected))
-                selected = _itemModel.Count == 0 ? null : _itemModel.Items[0];
-
-            return (_itemModel.Items, selected, true, true);
-        }
-        private ItemModel _itemModel;
-        override public string HeaderTitle => _itemModel.GetItem().GetNameId();
-
-        override public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => (_itemModel.Items.Count, Sorting.Unsorted, Usage.None, string.Empty);
         #endregion
 
     }

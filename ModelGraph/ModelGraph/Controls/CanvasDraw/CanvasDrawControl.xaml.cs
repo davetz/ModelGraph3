@@ -16,7 +16,7 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl : UserControl
     {
-        public ICanvasModel Model { get; private set; }
+        public IDrawModel Model { get; private set; }
         private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
 
         #region Constructor/Initialize  =======================================
@@ -28,10 +28,10 @@ namespace ModelGraph.Controls
             HideOverview();
         }
 
-        public void Initialize(ICanvasModel model)
+        public void Initialize(IDrawModel model)
         {
             Model = model;
-            TreeCanvas.Initialize(model);
+            TreeCanvas.Initialize(model.FlyOutTreeModel);
         }
 
         internal void Refresh() => EditCanvas.Invalidate();

@@ -51,12 +51,6 @@ namespace ModelGraph.Services
             await ApplicationViewSwitcher.TryShowAsViewModeAsync(viewControl.Id, ApplicationViewMode.Default);
             viewControl.StopViewInUse();
             return viewControl;
-
-            //SecondaryViews.Add(viewControl);
-            //viewControl.StartViewInUse();
-            //await ApplicationViewSwitcher.TryShowAsStandaloneAsync(viewControl.Id, ViewSizePreference.Default, ApplicationView.GetForCurrentView().Id, ViewSizePreference.Default);
-            //viewControl.StopViewInUse();
-            //return viewControl;
         }
         private async Task<ViewLifetimeControl> CreateViewLifetimeControlAsync(string windowTitle, Type pageType, IPageModel model = null)
         {

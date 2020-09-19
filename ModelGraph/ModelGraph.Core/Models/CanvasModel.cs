@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public abstract class CanvasModel : ChildOf<Root>, ICanvasModel
+    public abstract class CanvasModel : ChildOf<Root>, IDrawModel
     {
         #region Constructor  ==================================================
         internal CanvasModel(Root root)
@@ -92,40 +92,9 @@ namespace ModelGraph.Core
         #endregion
 
 
-        #region TreeCanvas  ===================================================
-
-        virtual public void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None) { }
-
-        virtual public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected) => (_emptyList, null, false, false);
-        private static List<ItemModel> _emptyList = new List<ItemModel>(0);
-
-
-        virtual public void SetUsage(ItemModel model, Usage usage) { }
-        virtual public void SetFilter(ItemModel model, string text) { }
-        virtual public void SetSorting(ItemModel model, Sorting sorting) { }
-        virtual public (int, Sorting, Usage, string) GetFilterParms(ItemModel model) => (0,Sorting.Unsorted, Usage.None, string.Empty);
-
-
-        virtual public void GetButtonCommands(List<ItemCommand> buttonCommands) => buttonCommands.Clear();
-        virtual public void GetMenuCommands(ItemModel model, List<ItemCommand> menuCommands) => menuCommands.Clear();
-        virtual public void GetButtonCommands(ItemModel model, List<ItemCommand> buttonCommands) => buttonCommands.Clear();
-        #endregion
-
-        #region PropertyModel  ================================================
-        virtual public int GetIndexValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetIndexValue(Owner) : 0;
-        virtual public bool GetBoolValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetBoolValue(Owner) : false;
-        virtual public string GetTextValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetTextValue(Owner) : string.Empty;
-        virtual public string[] GetListValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetListValue(Owner) : new string[0];
-
-        virtual public void PostSetIndexValue(ItemModel model, int val) { if (model is PropertyModel pm) pm.PostSetIndexValue(Owner, val); }
-        virtual public void PostSetBoolValue(ItemModel model, bool val) { if (model is PropertyModel pm) pm.PostSetBoolValue(Owner, val); }
-        virtual public void PostSetTextValue(ItemModel model, string val) { if (model is PropertyModel pm) pm.PostSetTextValue(Owner, val); }
-        #endregion
-
-        #region DragDrop  =====================================================
-        virtual public void DragDrop(ItemModel model) { }
-        virtual public void DragStart(ItemModel model) { }
-        virtual public DropAction DragEnter(ItemModel model) => DropAction.None;
+        #region ITreeModel  ===================================================
+        public ITreeModel SideTreeModel { get; protected set; }
+        public ITreeModel FlyOutTreeModel { get; protected set; }
         #endregion
 
 
@@ -160,6 +129,7 @@ namespace ModelGraph.Core
         public IDrawData Picker2Data => Picker2;
         protected DrawData Picker2 = new DrawData();
         #endregion
+
     }
 }
 

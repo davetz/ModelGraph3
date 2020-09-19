@@ -4,57 +4,41 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public class TreeModel : ItemModelOf<Root>, IPageModel, ITreeCanvasModel
+    public class TreeModel : ItemModelOf<Root>, ITreeModel, ILeadModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
-        private ItemModel _childModel; // there will only be one child model
-        internal override void Add(ItemModel child) => _childModel = child;
+        internal override void Add(ItemModel headerModel) => HeaderModel = headerModel;
+        public ItemModel HeaderModel { get; private set; }
 
-        public IPageControl PageControl { get; set; } // reference the UI PageControl       
-        public ControlType ControlType { get; private set; }
+        public PageModel PageModel { get; private set; }
+        internal override Item GetOwner() => PageModel;
 
         #region Constructor  ==================================================
-        internal override Item GetOwner() => Item;
-        internal TreeModel() //========== invoked in the RootModel constructor
+        internal TreeModel(PageModel pageModel, Root root) //========== invoked in the RootModel constructor
         {
-            Item = new Root();
+            PageModel = pageModel;
+            Item = root;
             Depth = 254;
-            ControlType = ControlType.PrimaryTree;
-            Item.Add(this);
+            pageModel.Add(this);
 
             new Model_612_Root(this, Item);
         }
-        internal TreeModel(Root root, Action<TreeModel> createChildModel)
+        internal TreeModel(PageModel pageModel, Root root, Action<TreeModel> createHeaderModel)
         {
+            PageModel = pageModel;
             Item = root;
             Depth = 254;
-            ControlType = ControlType.PartialTree;
-            Item.Add(this);
-
-            createChildModel(this);
-            _childModel.ExpandLeft(Item);
-            if (_childModel.Count > 0) RefreshViewList(20, _childModel.Items[0], _childModel.Items[0], ChangeType.None);
+            pageModel.Add(this);
+            SetHeaderModel(createHeaderModel);
         }
-        #endregion
-
-        #region IDataModel  ===================================================
-        public string TitleName => Item.TitleName;
-        public string TitleSummary => Item.TitleSummary;
-
-        public void Release()
+        internal void SetHeaderModel(Action<TreeModel> createHeaderModel)
         {
-            if (Item is null) return;
-
-            Item.Remove(this);
-            Discard(); //discard myself and recursivly discard all my children
-
-            if (this is RootModel)
-                Item.Discard(); //kill off the dataChef
-
-            Item = null;
+            HeaderModel?.Discard();
+            createHeaderModel(this);
+            HeaderModel.ExpandLeft(Item);
+            if (HeaderModel.Count > 0) RefreshViewList(20, HeaderModel.Items[0], HeaderModel.Items[0], ChangeType.None);
         }
-        public void TriggerUIRefresh() => PageControl?.Refresh();
-        public ICanvasModel GetDrawCanvas(CanvasId id) => null;
+
         #endregion
 
         #region FilterParms  ==================================================
@@ -68,7 +52,7 @@ namespace ModelGraph.Core
         /// <summary>We are scrolling back and forth in the flattened model hierarchy</summary>
         public (List<ItemModel>, ItemModel, bool, bool) GetCurrentView(int viewSize, ItemModel leading, ItemModel selected)
         {
-            if (_buffer.IsEmpty) _buffer.Refresh(_childModel, viewSize, leading);
+            if (_buffer.IsEmpty) _buffer.Refresh(HeaderModel, viewSize, leading);
 
             var (list, eov, sov) = _buffer.GetList();
 
@@ -101,49 +85,49 @@ namespace ModelGraph.Core
                 switch (change)
                 {
                     case ChangeType.OneUp:
-                        _buffer.Refresh(_childModel, viewSize, -1);
+                        _buffer.Refresh(HeaderModel, viewSize, -1);
                         break;
                     case ChangeType.TwoUp:
-                        _buffer.Refresh(_childModel, viewSize, -2);
+                        _buffer.Refresh(HeaderModel, viewSize, -2);
                         break;
                     case ChangeType.PageUp:
-                        _buffer.Refresh(_childModel, viewSize, -viewSize);
+                        _buffer.Refresh(HeaderModel, viewSize, -viewSize);
                         break;
                     case ChangeType.OneDown:
-                        _buffer.Refresh(_childModel, viewSize, 1);
+                        _buffer.Refresh(HeaderModel, viewSize, 1);
                         break;
                     case ChangeType.TwoDown:
-                        _buffer.Refresh(_childModel, viewSize, 2);
+                        _buffer.Refresh(HeaderModel, viewSize, 2);
                         break;
                     case ChangeType.PageDown:
-                        _buffer.Refresh(_childModel, viewSize, viewSize);
+                        _buffer.Refresh(HeaderModel, viewSize, viewSize);
                         break;
                     case ChangeType.ToggleLeft:
                         selected.ToggleLeft(Item);
-                        _buffer.Refresh(_childModel, viewSize, leading);
+                        _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleRight:
                         selected.ToggleRight(Item);
-                        _buffer.Refresh(_childModel, viewSize, leading);
+                        _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ExpandAllLeft:
                         selected.ExpandAllLeft(Item);
-                        _buffer.Refresh(_childModel, viewSize, leading);
+                        _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ExpandAllRight:
                         selected.ExpandAllRight(Item);
-                        _buffer.Refresh(_childModel, viewSize, leading);
+                        _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleFilter:
                         selected.IsFilterVisible = !selected.IsFilterVisible;
                         break;
                     case ChangeType.ViewListChanged:
                     case ChangeType.FilterSortChanged:
-                        _buffer.Refresh(_childModel, viewSize, leading);
+                        _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                 }
             }
-            PageControl?.Refresh();
+            PageModel.TriggerUIRefresh();
         }
         int _viewSize;
         ItemModel _leading;
@@ -155,81 +139,9 @@ namespace ModelGraph.Core
         internal void Validate()
         {
             var prev = new Dictionary<Item, ItemModel>();
-            if (_childModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
+            if (HeaderModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
                 RefreshViewList(ChangeType.ViewListChanged);
         }
         #endregion
-
-        #region OverrideMethods  ==============================================
-        public override string GetNameId() => BlankName;
-        public override void GetButtonCommands(Root root, List<ItemCommand> list) => _childModel.GetButtonCommands(root, list);
-        #endregion
-
-        #region Save/SaveAs/Reload  ===========================================
-        public bool IsClosed { get; private set; }
-
-        public string HeaderTitle => Item.TitleName;
-
-        internal void Close()
-        {
-            IsClosed = true;
-            PageControl?.Close();
-        }
-
-        internal void Save()
-        {
-            PageControl?.Save();
-        }
-        internal void SaveAs()
-        {
-            PageControl?.SaveAs();
-        }
-        internal void Reload()
-        {
-            PageControl?.Reload();
-        }
-        internal void NewView(SymbolModel model)
-        {
-            PageControl?.NewView(model);
-        }
-        internal void NewView(GraphModel model)
-        {
-            PageControl?.NewView(model);
-        }
-        internal void NewView(Action<TreeModel> createChildModel = null)
-        {
-            var model = new TreeModel(Item, createChildModel);
-            PageControl?.NewView(model);
-        }
-        internal void NewView(ControlType type)
-        {
-            switch (type)
-            {
-                case ControlType.SymbolEditor:
-                    break;
-                case ControlType.GraphDisplay:
-                    break;
-            }
-        }
-        #endregion
-
-
-        public void DragDrop(ItemModel model) => model.DragDrop(Item);
-        public void DragStart(ItemModel model) => model.DragStart(Item);
-        public DropAction DragEnter(ItemModel model) => model.DragEnter(Item);
-
-        public int GetIndexValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetIndexValue(Item) : 0;
-        public bool GetBoolValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetBoolValue(Item) : false;
-        public string GetTextValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetTextValue(Item) : string.Empty;
-        public string[] GetListValue(ItemModel model) => (model is PropertyModel pm) ? pm.GetListValue(Item) : new string[0];
-
-        public void PostSetIndexValue(ItemModel model, int val) { if (model is PropertyModel pm) pm.PostSetIndexValue(Item, val); }
-        public void PostSetBoolValue(ItemModel model, bool val) { if (model is PropertyModel pm) pm.PostSetBoolValue(Item, val); }
-        public void PostSetTextValue(ItemModel model, string val) { if (model is PropertyModel pm) pm.PostSetTextValue(Item, val); }
-
-        public void GetButtonCommands(List<ItemCommand> buttonCommands) => _childModel.GetButtonCommands(Item, buttonCommands);
-        public void GetMenuCommands(ItemModel model, List<ItemCommand> menuCommands) => model.GetMenuCommands(Item, menuCommands);
-        public void GetButtonCommands(ItemModel model, List<ItemCommand> buttonCommands) => model.GetButtonCommands(Item, buttonCommands);
-
     }
 }

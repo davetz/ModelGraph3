@@ -175,7 +175,7 @@ namespace ModelGraph.Controls
 
 
         #region Properties  ===================================================
-        internal ITreeCanvasModel TCM { get; private set;}
+        internal ITreeModel TCM { get; private set;}
 
         ItemModel Selected;
 
@@ -254,7 +254,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Initialize  ===================================================
-        internal void Initialize(ITreeCanvasModel tcm)
+        internal void Initialize(ITreeModel tcm)
         {
             TCM = tcm;
 
@@ -604,7 +604,7 @@ namespace ModelGraph.Controls
         private void RefreshRoot()
         {
             var buttonCommands = new List<ItemCommand>();
-            TCM.GetButtonCommands(buttonCommands);
+            TCM.HeaderModel.GetButtonCommands(TCM.GetRoot(), buttonCommands);
 
             var N = buttonCommands.Count;
             var M = ControlPanel.Children.Count;
@@ -626,7 +626,7 @@ namespace ModelGraph.Controls
                     }
                 }
             }
-            HeaderTitle.Text = TCM.HeaderTitle;
+            HeaderTitle.Text = TCM.HeaderModel.GetNameId();
             //_root.IsChanged = false;
         }
 
@@ -675,7 +675,7 @@ namespace ModelGraph.Controls
                 TreeCanvas.KeyboardAccelerators.Add(acc);
             }
 
-            if (TCM.DragEnter(Selected) != DropAction.None)
+            if (Selected.DragEnter(TCM.GetRoot()) != DropAction.None)
             {
                 var acc = new KeyboardAccelerator { Key = VirtualKey.V, Modifiers = VirtualKeyModifiers.Control };
                 acc.Invoked += Accelerator_ModelPaste_Invoked;
@@ -698,8 +698,8 @@ namespace ModelGraph.Controls
                 HelpButton.Visibility = Visibility.Collapsed;
             }
 
-            TCM.GetMenuCommands(Selected, MenuCommands);
-            TCM.GetButtonCommands(Selected, ButtonCommands);
+            Selected.GetMenuCommands(TCM.GetRoot(), MenuCommands);
+            Selected.GetButtonCommands(TCM.GetRoot(), ButtonCommands);
 
             var cmds = ButtonCommands;
             var len1 = cmds.Count;
@@ -843,13 +843,13 @@ namespace ModelGraph.Controls
         private void Accelerator_ModelCopy_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (Selected.CanDrag)
-                TCM.DragStart(Selected);
+                Selected.DragStart(TCM.GetRoot());
             args.Handled = true;
         }
         private void Accelerator_ModelPaste_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (TCM.DragEnter(Selected) != DropAction.None)
-                TCM.DragDrop(Selected);
+            if (Selected.DragEnter(TCM.GetRoot()) != DropAction.None)
+                Selected.DragDrop(TCM.GetRoot());
             args.Handled = true;
         }
         private void Accelerator_SortMode_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -966,7 +966,7 @@ namespace ModelGraph.Controls
             {
                 if (mdl.CanDrag)
                 {
-                    TCM.DragStart(mdl);
+                    mdl.DragStart(TCM.GetRoot());
                 }
                 else
                 {
@@ -980,7 +980,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                var type = TCM.DragEnter(mdl);
+                var type = mdl.DragEnter(TCM.GetRoot());
                 switch (type)
                 {
                     case DropAction.None:
@@ -1006,7 +1006,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                TCM.DragDrop(mdl);
+                mdl.DragDrop(TCM.GetRoot());
             }
         }
         #endregion
@@ -1218,7 +1218,7 @@ namespace ModelGraph.Controls
             {
                 if ((string)obj.Tag != obj.Text)
                 {
-                    TCM.PostSetTextValue(mdl, obj.Text);
+                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
                 }
             }
         }
@@ -1232,7 +1232,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        TCM.PostSetTextValue(mdl, obj.Text);
+                        mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
                     }
                     if (e.Key == Windows.System.VirtualKey.Enter)
                         FocusButton.Focus(FocusState.Keyboard);
@@ -1248,7 +1248,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        obj.Text = TCM.GetTextValue(mdl) ?? string.Empty;
+                        obj.Text = mdl.GetTextValue(TCM.GetRoot()) ?? string.Empty;
                     }
                     ToggleParentExpandRight(mdl);
                 }
@@ -1283,7 +1283,7 @@ namespace ModelGraph.Controls
                 {
                     e.Handled = true;
                     _ignoreNextCheckBoxEvent = true;
-                    TCM.PostSetBoolValue(mdl, !val);
+                    mdl.PostSetBoolValue(TCM.GetRoot(), !val);
                 }
                 else if (e.Key == Windows.System.VirtualKey.Tab)
                 {
@@ -1305,7 +1305,7 @@ namespace ModelGraph.Controls
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     var val = obj.IsChecked ?? false;
-                    TCM.PostSetBoolValue(mdl, val);
+                    mdl.PostSetBoolValue(TCM.GetRoot(), val);
                 }
             }
         }
@@ -1327,7 +1327,7 @@ namespace ModelGraph.Controls
             var obj = sender as ComboBox;
             if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl && obj.SelectedIndex >= 0)
             {
-                TCM.PostSetIndexValue(mdl, obj.SelectedIndex);
+                mdl.PostSetIndexValue(TCM.GetRoot(), obj.SelectedIndex);
             }
         }
         internal void ComboProperty_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)

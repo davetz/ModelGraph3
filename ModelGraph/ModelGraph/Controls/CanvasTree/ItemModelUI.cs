@@ -11,6 +11,7 @@ namespace ModelGraph.Controls
         #region Properties  ===================================================
         private readonly CanvasTreeControl TC;
         public ItemModel Model { get; private set; }
+        public PropertyModel PropertyModel { get; private set; }
         internal Root DataRoot { get; private set; }
         internal short ModelDelta { get; private set; }
         internal TextBlock ItemKind { get; private set; }
@@ -57,6 +58,7 @@ namespace ModelGraph.Controls
         internal void Initialize(ItemModel model, int index)
         {
             Model = model;
+            PropertyModel = model as PropertyModel;
             ValidateStackPanel(index);
         }
         internal void Validate(int index)
@@ -604,7 +606,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            var txt = TC.TCM.GetTextValue(Model);
+            var txt = PropertyModel.GetTextValue(TC.TCM.GetRoot());
             obj.Text = txt ?? string.Empty;
             obj.Tag = obj.Text;
             obj.IsReadOnly = (Model is PropertyModel pm) && pm.IsReadOnly;
@@ -647,7 +649,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.IsChecked = TC.TCM.GetBoolValue(Model);
+            obj.IsChecked = PropertyModel.GetBoolValue(TC.TCM.GetRoot());
 
             StackPanel.Children.Add(obj);
         }
@@ -685,8 +687,8 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.ItemsSource = TC.TCM.GetListValue(Model);
-            obj.SelectedIndex = TC.TCM.GetIndexValue(Model);
+            obj.ItemsSource = PropertyModel.GetListValue(TC.TCM.GetRoot());
+            obj.SelectedIndex = PropertyModel.GetIndexValue(TC.TCM.GetRoot());
 
             StackPanel.Children.Add(obj);
         }

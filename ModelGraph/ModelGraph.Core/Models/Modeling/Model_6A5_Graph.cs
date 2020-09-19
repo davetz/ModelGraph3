@@ -17,10 +17,11 @@ namespace ModelGraph.Core
         }
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
-            var treeModel = GetTreeModel();
+            var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new NewViewCommand(this, () => { treeModel.NewView(new GraphModel(Item.Owner.Owner.Owner, Item)); }));
+            list.Add(new NewViewCommand(this, () => { pageModel.NewView( (p) => { new GraphModel(p, root, Item); }, ControlType.GraphDisplay); }));
         }
+        
         public override bool CanExpandLeft => true;
         internal override bool ExpandLeft(Root root)
         {

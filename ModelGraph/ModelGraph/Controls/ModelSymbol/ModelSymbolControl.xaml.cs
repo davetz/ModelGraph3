@@ -19,7 +19,7 @@ namespace ModelGraph.Controls
         {
             Model = model;
             InitializeComponent();
-            SymbolCanvas.Initialize(model as ICanvasModel);
+            SymbolCanvas.Initialize(model.LeadModel as IDrawModel);
             SymbolCanvas.SetOverview(32, 32);
             SymbolCanvas.ShowPicker1(32, 32);
             SymbolCanvas.ShowPicker2(32);

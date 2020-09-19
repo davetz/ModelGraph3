@@ -13,7 +13,7 @@ namespace ModelGraph.Controls
         {
             PageModel = model;
             this.InitializeComponent();
-            TreeCanvas.Initialize(model as ITreeCanvasModel);
+            TreeCanvas.Initialize(model.LeadModel as ITreeModel);
         }
 
 

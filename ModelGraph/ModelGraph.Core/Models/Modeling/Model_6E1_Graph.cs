@@ -9,7 +9,7 @@ namespace ModelGraph.Core
 
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
-            var treeModel = GetTreeModel();
+            var treeModel = GetPageModel();
             list.Clear();
             list.Add(new CreateCommand(this, () => { Item.CreateGraph(); IsExpandedLeft = true; }));
         }

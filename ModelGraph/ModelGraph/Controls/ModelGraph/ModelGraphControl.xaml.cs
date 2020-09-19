@@ -15,7 +15,7 @@ namespace ModelGraph.Controls
         {
             Model = model;
             this.InitializeComponent();
-            GraphCanvas.Initialize(model as ICanvasModel);
+            GraphCanvas.Initialize(model.LeadModel as IDrawModel);
             GraphCanvas.SetOverview(120, 120, true);
         }
 

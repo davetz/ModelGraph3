@@ -24,10 +24,9 @@ namespace ModelGraph.Core
         public override bool ReorderItems(Root root, ItemModel dropModel) => (dropModel is Model_656_Symbol m) && ReorderStoreItems(root, Item.Owner, Item, m.Item);
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
-            var treeModel = GetTreeModel();
+            var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new EditCommand(this, () => { treeModel.NewView(new SymbolModel(Item.Owner.Owner, Item)); }));
+            list.Add(new EditCommand(this, () => { pageModel.NewView( (p) => { new SymbolModel(p, root, Item); }, ControlType.SymbolEditor); }));
         }
-
     }
 }

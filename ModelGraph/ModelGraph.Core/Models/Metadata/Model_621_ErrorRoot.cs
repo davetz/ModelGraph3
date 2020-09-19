@@ -16,9 +16,9 @@ namespace ModelGraph.Core
         }
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
-            var treeModel = GetTreeModel();
+            var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new NewViewCommand(this, () => { treeModel.NewView((m) => { new Model_621_ErrorRoot(m, Item); }); }));
+            list.Add(new NewViewCommand(this, () => { pageModel.NewView((p) => { new TreeModel(p, root, (m) => { new Model_621_ErrorRoot(m, Item); }); }, ControlType.PartialTree); }));
         }
     }
 }

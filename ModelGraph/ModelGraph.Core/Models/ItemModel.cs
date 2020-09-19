@@ -201,12 +201,12 @@ namespace ModelGraph.Core
             }
         }
         /// <summary>Walk up item tree hierachy to find the parent TreeModel</summary>
-        internal TreeModel GetTreeModel()
+        internal PageModel GetPageModel()
         {
             var item = this;
             while (item != null)
             {
-                if (item is TreeModel treeModel) return treeModel;
+                if (item is TreeModel treeModel) return treeModel.PageModel;
                 item = item.Owner;
             }
             throw new Exception("GetRootModel: Corrupted item hierarchy"); // I seriously hope this never happens

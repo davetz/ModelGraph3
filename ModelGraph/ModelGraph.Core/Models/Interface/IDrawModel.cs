@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public interface ICanvasModel : ITreeCanvasModel
+    public interface IDrawModel
     {
         Extent EditorExtent { get; }
         void RefreshEditorData();
@@ -61,5 +61,8 @@ namespace ModelGraph.Core
         IDrawData EditorData { get; } // layer2 - editor & overview data
         IDrawData Picker1Data { get; }
         IDrawData Picker2Data { get; }
+
+        ITreeModel SideTreeModel { get; }
+        ITreeModel FlyOutTreeModel { get; }
     }
 }
