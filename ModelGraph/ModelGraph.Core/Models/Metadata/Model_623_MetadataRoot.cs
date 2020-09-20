@@ -29,7 +29,7 @@ namespace ModelGraph.Core
         {
             var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new NewViewCommand(this, () => { pageModel.NewView((p) => { new TreeModel(p, root, (m) => { new Model_623_MetadataRoot(m, Item); }); }, ControlType.PartialTree); }));
+            list.Add(new NewViewCommand(this, () => { pageModel.NewView((p) => { new TreeModel(p, (m) => { new Model_623_MetadataRoot(m, Item); }); }, ControlType.PartialTree); }));
         }
     }
 }

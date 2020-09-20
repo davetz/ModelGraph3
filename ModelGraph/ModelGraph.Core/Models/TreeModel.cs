@@ -4,39 +4,45 @@ using System.Collections.Generic;
 namespace ModelGraph.Core
 {
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
-    public class TreeModel : ItemModelOf<Root>, ITreeModel, ILeadModel
+    public class TreeModel : ItemModelOf<PageModel>, ITreeModel, ILeadModel
     {
         private ModelBuffer _buffer = new ModelBuffer(20);
         internal override void Add(ItemModel headerModel) => HeaderModel = headerModel;
         public ItemModel HeaderModel { get; private set; }
 
-        public PageModel PageModel { get; private set; }
-        internal override Item GetOwner() => PageModel;
+        public PageModel PageModel => Item;
+        internal override Item GetOwner() => Item; //normally an itemModel is owned by another parent ItemModel
 
         #region Constructor  ==================================================
-        internal TreeModel(PageModel pageModel, Root root) //========== invoked in the RootModel constructor
+        internal TreeModel(PageModel owner) //========== invoked in the RootModel constructor
         {
-            PageModel = pageModel;
-            Item = root;
+            Item = owner;
             Depth = 254;
-            pageModel.Add(this);
+            owner.Add(this);
 
-            new Model_612_Root(this, Item);
+            new Model_612_Root(this, Item.Owner);
         }
-        internal TreeModel(PageModel pageModel, Root root, Action<TreeModel> createHeaderModel)
+        internal TreeModel(PageModel owner, Action<TreeModel> createHeaderModel)
         {
-            PageModel = pageModel;
-            Item = root;
+            Item = owner;
             Depth = 254;
-            pageModel.Add(this);
+            owner.Add(this);
             SetHeaderModel(createHeaderModel);
         }
         internal void SetHeaderModel(Action<TreeModel> createHeaderModel)
         {
             HeaderModel?.Discard();
-            createHeaderModel(this);
-            HeaderModel.ExpandLeft(Item);
-            if (HeaderModel.Count > 0) RefreshViewList(20, HeaderModel.Items[0], HeaderModel.Items[0], ChangeType.None);
+            if (createHeaderModel is null)
+                new Model_600_Dummy(this);
+            else
+            {
+                createHeaderModel(this);
+                if (HeaderModel.CanExpandLeft)
+                    HeaderModel.ExpandLeft(Item.Owner);
+                else if (HeaderModel.CanExpandRight)
+                    HeaderModel.ExpandRight(Item.Owner);
+                if (HeaderModel.Count > 0) RefreshViewList(20, HeaderModel.Items[0], HeaderModel.Items[0], ChangeType.None);
+            }
         }
 
         #endregion
@@ -103,19 +109,19 @@ namespace ModelGraph.Core
                         _buffer.Refresh(HeaderModel, viewSize, viewSize);
                         break;
                     case ChangeType.ToggleLeft:
-                        selected.ToggleLeft(Item);
+                        selected.ToggleLeft(Item.Owner);
                         _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleRight:
-                        selected.ToggleRight(Item);
+                        selected.ToggleRight(Item.Owner);
                         _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ExpandAllLeft:
-                        selected.ExpandAllLeft(Item);
+                        selected.ExpandAllLeft(Item.Owner);
                         _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ExpandAllRight:
-                        selected.ExpandAllRight(Item);
+                        selected.ExpandAllRight(Item.Owner);
                         _buffer.Refresh(HeaderModel, viewSize, leading);
                         break;
                     case ChangeType.ToggleFilter:
@@ -139,7 +145,7 @@ namespace ModelGraph.Core
         internal void Validate()
         {
             var prev = new Dictionary<Item, ItemModel>();
-            if (HeaderModel.Validate(Item, prev)) // will return true if the lineModel hierarchy has changed
+            if (HeaderModel.Validate(Item.Owner, prev)) // will return true if the lineModel hierarchy has changed
                 RefreshViewList(ChangeType.ViewListChanged);
         }
         #endregion

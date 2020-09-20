@@ -3,13 +3,15 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public abstract class CanvasModel : ChildOf<Root>, IDrawModel
+    public abstract class DrawModel : ChildOf<PageModel>, IDrawModel, ILeadModel
     {
+        public PageModel PageModel => Owner;
+
         #region Constructor  ==================================================
-        internal CanvasModel(Root root)
+        internal DrawModel(PageModel owner)
         {
-            Owner = root;
-            root.Add(this);
+            Owner = owner;
+            owner.Add(this);
         }
         #endregion
 

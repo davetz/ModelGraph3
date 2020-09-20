@@ -3,19 +3,16 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class GraphModel : CanvasModel, ILeadModel
+    public class GraphModel : DrawModel
     {
         internal readonly Graph Graph;
-        public PageModel PageModel { get; private set; }
 
         #region Constructor  ==================================================
-        internal GraphModel(PageModel pageModel, Root root, Graph graph) : base(root)
+        internal GraphModel(PageModel owner, Graph graph) : base(owner)
         {
             Graph = graph;
-            PageModel = pageModel;
-            pageModel.Add(this);
 
-            FlyOutTreeModel = new TreeModel(pageModel, root);
+            FlyOutTreeModel = new TreeModel(owner, null);
             RefreshEditorData();
         }
         #endregion
@@ -51,7 +48,6 @@ namespace ModelGraph.Core
             Picker2.AddShape(((new Vector2(x, z), new Vector2(x, x)), (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
         }
         #endregion
-
 
         #region HitTest  ======================================================
         override public Extent EditorExtent => Graph.ResetExtent();
@@ -91,6 +87,10 @@ namespace ModelGraph.Core
             {
                 _hitNode = node;
                 SetHitNode();
+                if (FlyOutTreeModel is TreeModel tm)
+                {
+                    tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, node); });
+                }
             }
             return ok;
         }
@@ -156,7 +156,6 @@ namespace ModelGraph.Core
             return true;
         }
         #endregion
-
     }
 }
 

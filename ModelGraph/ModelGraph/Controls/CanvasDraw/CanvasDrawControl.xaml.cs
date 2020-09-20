@@ -31,10 +31,17 @@ namespace ModelGraph.Controls
         public void Initialize(IDrawModel model)
         {
             Model = model;
-            TreeCanvas.Initialize(model.FlyOutTreeModel);
+            FlyTreeCanvas.Initialize(model.FlyOutTreeModel);
         }
 
-        internal void Refresh() => EditCanvas.Invalidate();
+        internal void Refresh()
+        {
+            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            {
+                FlyTreeCanvas.Refresh();
+                EditCanvas.Invalidate();
+            });
+        }
         #endregion
 
         #region LayoutControl  ================================================
@@ -702,14 +709,14 @@ namespace ModelGraph.Controls
                 if (Model.NodeHit)
                 {
                     ShowResizerGrid();
-                    TreeCanvas.Refresh();
-                    var (w, h) = TreeCanvas.GetSize();
-                    TreeCanvas.SetSize(w, h);
-                    PropertyGrid.Width = w;
-                    PropertyGrid.Height = h;
-                    Canvas.SetLeft(PropertyGrid, Model.GridPoint1.X + 20);
-                    Canvas.SetTop(PropertyGrid, Model.GridPoint1.Y - 8);
-                    PropertyGrid.Visibility = Visibility.Visible;
+                    FlyTreeCanvas.Refresh();
+                    var (w, h) = FlyTreeCanvas.GetSize();
+                    FlyTreeCanvas.SetSize(w, h);
+                    FlyTreeGrid.Width = w;
+                    FlyTreeGrid.Height = h;
+                    Canvas.SetLeft(FlyTreeGrid, Model.GridPoint1.X + 20);
+                    Canvas.SetTop(FlyTreeGrid, Model.GridPoint1.Y - 8);
+                    FlyTreeGrid.Visibility = Visibility.Visible;
                 }
             }
             else
@@ -718,7 +725,7 @@ namespace ModelGraph.Controls
                 HideAlignmentGrid();
                 HideTootlip();
                 SetViewOnVoidTap();
-                PropertyGrid.Visibility = Visibility.Collapsed;
+                FlyTreeGrid.Visibility = Visibility.Collapsed;
             }
         }
 

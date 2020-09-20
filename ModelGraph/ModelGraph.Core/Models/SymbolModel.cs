@@ -6,7 +6,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Core
 {
-    public class SymbolModel : CanvasModel, ILeadModel
+    public class SymbolModel : DrawModel
     {
         internal readonly SymbolX Symbol;
         override public Extent EditorExtent => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
@@ -14,13 +14,9 @@ namespace ModelGraph.Core
         private const float EditMargin = 32;    //size of empty space arround the shape editor 
         private const float EditExtent = EditRadius + EditMargin;
 
-        public PageModel PageModel { get; private set; }
-
         #region Constructor  ==================================================
-        internal SymbolModel(PageModel pageModel, Root root, SymbolX symbol) : base(root)
+        internal SymbolModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
         {
-            PageModel = pageModel;
-            pageModel.Add(this);
 
             Symbol = symbol;
             RefreshEditorData();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Windows.Storage.Pickers;
 
 namespace ModelGraph.Core
 {
@@ -99,7 +100,7 @@ namespace ModelGraph.Core
             //<=== control immediatley returns to the ui thread
             //(some time later the worker task completes and signals the ui thread)
             //===> the ui thread returns here and continues executing the following code            
-            foreach (var item in Items) { if (item is IPageModel dm) dm.TriggerUIRefresh(); }
+            foreach (var pm in Items) { pm.TriggerUIRefresh(); }
         }
         private void ExecuteRequest(Action action)
         {
@@ -113,7 +114,16 @@ namespace ModelGraph.Core
 
                 ExecuteItemTriggeredRefresh();
 
-                foreach (var item in Items) { if (item is TreeModel tm) tm.Validate(); }
+                foreach (var pm in Items) 
+                {
+                    var lm = pm.LeadModel;
+                    if (lm is TreeModel tm) tm.Validate();
+                    if (lm is DrawModel dm)
+                    {
+                        if (dm.FlyOutTreeModel is TreeModel fm) fm.Validate();
+                        if (dm.SideTreeModel is TreeModel sm) sm.Validate();
+                    }
+                }
             }
         }
         #endregion

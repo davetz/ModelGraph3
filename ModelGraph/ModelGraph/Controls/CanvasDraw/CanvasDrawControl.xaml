@@ -175,8 +175,8 @@
                         <Border x:Name="ResizerBorder" BorderThickness="2" Background="Transparent" BorderBrush="White" Margin="8,8,8,8" />
                     </Grid>
 
-                    <Grid x:Name="PropertyGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
-                        <l:CanvasTreeControl x:Name="TreeCanvas"/>
+                    <Grid x:Name="FlyTreeGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
+                        <l:CanvasTreeControl x:Name="FlyTreeCanvas"/>
                     </Grid>
 
                 </Canvas>

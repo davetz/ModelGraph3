@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class Model_6DA_HitNode : List1ModelOf<Node>
     {
-        internal Model_6DA_HitNode(Node item) : base(null, item) { }
+        internal Model_6DA_HitNode(TreeModel owner, Node item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6DA_HitNode;
         public override string GetNameId() => Item.Item.GetNameId();
 

@@ -9,15 +9,15 @@ namespace ModelGraph.Core
         public ILeadModel LeadModel { get; private set; }
         public IPageControl PageControl { get; set; } // reference the UI PageControl       
         public ControlType ControlType { get; private set; }
-        public string TitleName { get; internal set; }
-        public string TitleSummary { get; internal set; }
+        public string TitleName { get; internal set; } = BlankName;
+        public string TitleSummary { get; internal set; } = BlankName;
 
         internal void Add(ILeadModel lead) { if (LeadModel is null) LeadModel = lead; } //works for GraphModel and TreeModel, but doesn't accept FlyoutTreeModel and SideTreeModel
 
         internal PageModel() //========== invoked in the RootModel constructor
         {
             Owner = new Root();
-            new TreeModel(this, Owner);
+            new TreeModel(this);
             ControlType = ControlType.PrimaryTree;
             Owner.Add(this);
         }
