@@ -95,8 +95,8 @@ namespace ModelGraph.Core
 
 
         #region ITreeModel  ===================================================
+        public ITreeModel FlyTreeModel { get; protected set; }
         public ITreeModel SideTreeModel { get; protected set; }
-        public ITreeModel FlyOutTreeModel { get; protected set; }
         #endregion
 
 

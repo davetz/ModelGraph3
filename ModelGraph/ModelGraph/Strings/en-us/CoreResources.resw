@@ -1130,6 +1130,24 @@ NEC – NWC – SEC - SWC</value>
   <data name="4BCS" xml:space="preserve">
     <value>Take a limited number of elements form the full results set</value>
   </data>
+  <data name="4C0N" xml:space="preserve">
+    <value>Strok Width</value>
+  </data>
+  <data name="4C0S" xml:space="preserve">
+    <value>Stroke width for all selected shapes </value>
+  </data>
+  <data name="4C1N" xml:space="preserve">
+    <value>ColorARGB</value>
+  </data>
+  <data name="4C1S" xml:space="preserve">
+    <value>Color of all selected shapes, ARGB color code</value>
+  </data>
+  <data name="4C2N" xml:space="preserve">
+    <value>IsFilled</value>
+  </data>
+  <data name="4C2S" xml:space="preserve">
+    <value>Selected shape is a filled solid</value>
+  </data>
   <data name="600N" xml:space="preserve">
     <value>Diagnostic</value>
   </data>

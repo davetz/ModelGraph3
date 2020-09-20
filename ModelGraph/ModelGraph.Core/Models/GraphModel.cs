@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         {
             Graph = graph;
 
-            FlyOutTreeModel = new TreeModel(owner, null);
+            FlyTreeModel = new TreeModel(owner, null);
             RefreshEditorData();
         }
         #endregion
@@ -87,7 +87,7 @@ namespace ModelGraph.Core
             {
                 _hitNode = node;
                 SetHitNode();
-                if (FlyOutTreeModel is TreeModel tm)
+                if (FlyTreeModel is TreeModel tm)
                 {
                     tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, node); });
                 }

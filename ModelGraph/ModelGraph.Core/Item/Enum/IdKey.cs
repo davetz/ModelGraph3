@@ -333,12 +333,18 @@ namespace ModelGraph.Core
         ComputeXSortingProperty = 0x4BA | Is_Reference,
         ComputeXTakeSetProperty = 0x4BB | Is_Reference,
         ComputeXTakeLimitProperty = 0x4BC | Is_Reference,
+
+        //=========================================
+        ShapeStrokeWidthProperty = 0x4C0 | Is_Covert,
+        ShapeStrokeColorProperty = 0x4C1 | Is_Covert,
+        ShapeIsFilledProperty = 0x4C2 | Is_Covert,
         #endregion
 
         #region Model ================================================(600-7FF)
 
         //=====================================================================
         Model_600_Dummy = 0x600,
+        Model_601_Shape = 0x601,
 
         //=====================================================================
         Model_612_Root = 0x612,

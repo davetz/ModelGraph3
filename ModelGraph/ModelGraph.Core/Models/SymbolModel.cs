@@ -24,7 +24,14 @@ namespace ModelGraph.Core
             RefreshPicker1Data();
             RefreshPicker2Data();
             PageModel.TriggerUIRefresh();
+            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
         }
+        #endregion
+
+        #region ShapeProperty  ================================================
+        internal byte StrokeWidth = 3;
+        internal string ColorARGB = "#FFFFFF00";
+        internal bool IsFilled = false;
         #endregion
 
         #region RefreshEditorData  ============================================

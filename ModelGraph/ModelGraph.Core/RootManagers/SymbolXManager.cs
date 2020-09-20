@@ -22,8 +22,12 @@ namespace ModelGraph.Core
             var sto = root.Get<PropertyManager>();
 
             root.RegisterReferenceItem(new Property_SymbolX_Attatch(sto));
+            root.RegisterReferenceItem(new Property_Shape_StrokeWidth(sto));
+            root.RegisterReferenceItem(new Property_Shape_Color(sto));
+            root.RegisterReferenceItem(new Property_Shape_IsFilled(sto));
 
-            root.RegisterInternalProperties(typeof(SymbolX), GetProps(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(SymbolX), GetProps1(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(SymbolModel), GetProps2(root)); //used by property name lookup
         }
         public void RegisterRelationalReferences(Root root)
         {
@@ -35,13 +39,19 @@ namespace ModelGraph.Core
         }
         public void ValidateDomain(Root root) { }
 
-        private Property[] GetProps(Root root) => new Property[]
+        private Property[] GetProps1(Root root) => new Property[]
         {
             root.Get<Property_Item_Name>(),
             root.Get<Property_Item_Summary>(),
             root.Get<Property_Item_Description>(),
 
             root.Get<Property_SymbolX_Attatch>(),
+        };
+        private Property[] GetProps2(Root root) => new Property[]
+        {
+            root.Get<Property_Shape_StrokeWidth>(),
+            root.Get<Property_Shape_Color>(),
+            root.Get<Property_Shape_IsFilled>(),
         };
         #endregion
 

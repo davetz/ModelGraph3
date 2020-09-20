@@ -62,12 +62,13 @@
                            PointerReleased="RootCanvas_PointerReleased"/>
             </Grid>
         </Border>
-        
+
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Canvas.ZIndex="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" x:Name="Picker1GridColumn"/>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto" x:Name="Picker2GridColumn"/>
+                <ColumnDefinition Width="Auto" x:Name="SideTreeGridColumn"/>
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" x:Name="Picker1Grid" Margin="0,32,2,0"   Background="DarkSlateGray" >
@@ -184,6 +185,9 @@
 
             <Grid Grid.Column="2" x:Name="Picker2Grid" Background="DarkSlateGray" Margin="2,0,2,0" >
                 <canvas:CanvasControl x:Name="Pick2Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick2Canvas_PointerPressed"/>
+            </Grid>
+            <Grid Grid.Column="3" x:Name="SideGreeGrid">
+                <l:CanvasTreeControl x:Name="SideTreeCanvas"/>
             </Grid>
         </Grid>
     </Grid>

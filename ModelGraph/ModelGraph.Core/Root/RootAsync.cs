@@ -120,7 +120,7 @@ namespace ModelGraph.Core
                     if (lm is TreeModel tm) tm.Validate();
                     if (lm is DrawModel dm)
                     {
-                        if (dm.FlyOutTreeModel is TreeModel fm) fm.Validate();
+                        if (dm.FlyTreeModel is TreeModel fm) fm.Validate();
                         if (dm.SideTreeModel is TreeModel sm) sm.Validate();
                     }
                 }

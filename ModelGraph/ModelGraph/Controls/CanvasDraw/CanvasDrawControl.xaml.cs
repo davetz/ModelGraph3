@@ -31,14 +31,24 @@ namespace ModelGraph.Controls
         public void Initialize(IDrawModel model)
         {
             Model = model;
-            FlyTreeCanvas.Initialize(model.FlyOutTreeModel);
+
+            if (model.FlyTreeModel is ITreeModel)
+                FlyTreeCanvas.Initialize(model.FlyTreeModel);
+            else
+                FlyTreeCanvas.IsEnabled = false;
+
+            if (model.SideTreeModel is ITreeModel)
+                SideTreeCanvas.Initialize(model.SideTreeModel);
+            else
+                SideTreeCanvas.IsEnabled = false;
         }
 
         internal void Refresh()
         {
             _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
-                FlyTreeCanvas.Refresh();
+                if(FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
+                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
                 EditCanvas.Invalidate();
             });
         }

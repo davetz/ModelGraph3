@@ -62,7 +62,7 @@ namespace ModelGraph.Core
         IDrawData Picker1Data { get; }
         IDrawData Picker2Data { get; }
 
+        ITreeModel FlyTreeModel { get; }
         ITreeModel SideTreeModel { get; }
-        ITreeModel FlyOutTreeModel { get; }
     }
 }
