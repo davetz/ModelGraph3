@@ -29,9 +29,12 @@ namespace ModelGraph.Core
         #endregion
 
         #region ShapeProperty  ================================================
-        internal byte StrokeWidth = 3;
         internal string ColorARGB = "#FFFFFF00";
-        internal bool IsFilled = false;
+        internal CapStyle EndCapStyle;
+        internal CapStyle DashCapStyle;
+        internal CapStyle StartCapStyle;
+        internal StrokeStyle StrokeStyle;
+        internal byte StrokeWidth = 2;
         #endregion
 
         #region RefreshEditorData  ============================================

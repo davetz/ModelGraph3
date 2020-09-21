@@ -1143,10 +1143,28 @@ NEC – NWC – SEC - SWC</value>
     <value>Color of all selected shapes, ARGB color code</value>
   </data>
   <data name="4C2N" xml:space="preserve">
-    <value>IsFilled</value>
+    <value>StrokeStyle</value>
   </data>
   <data name="4C2S" xml:space="preserve">
-    <value>Selected shape is a filled solid</value>
+    <value>Stroke style of all selected shapes</value>
+  </data>
+  <data name="4C3N" xml:space="preserve">
+    <value>EndCap</value>
+  </data>
+  <data name="4C3S" xml:space="preserve">
+    <value>Line end cap for all selected shapes</value>
+  </data>
+  <data name="4C4N" xml:space="preserve">
+    <value>DashCap</value>
+  </data>
+  <data name="4C4S" xml:space="preserve">
+    <value>Line dash cap for all selected shapes</value>
+  </data>
+  <data name="4C5N" xml:space="preserve">
+    <value>StartCap</value>
+  </data>
+  <data name="4C5S" xml:space="preserve">
+    <value>Line start cap for all selected shapes</value>
   </data>
   <data name="600N" xml:space="preserve">
     <value>Diagnostic</value>
@@ -2022,40 +2040,40 @@ NEC – NWC – SEC - SWC</value>
     <value>NumericTerm</value>
   </data>
   <data name="C00N" xml:space="preserve">
-    <value>Start-Flat</value>
+    <value>Flat</value>
   </data>
   <data name="C01N" xml:space="preserve">
-    <value>Start-Square</value>
+    <value>Square</value>
   </data>
   <data name="C02N" xml:space="preserve">
-    <value>Start-Round</value>
+    <value>Round</value>
   </data>
   <data name="C03N" xml:space="preserve">
-    <value>Start-Triangle</value>
+    <value>Triangle</value>
   </data>
   <data name="C3FN" xml:space="preserve">
-    <value>StartLineCap</value>
+    <value>CapStyle</value>
   </data>
   <data name="C3FS" xml:space="preserve">
-    <value>Type of line-start cap</value>
+    <value>Type of line  cap</value>
   </data>
   <data name="C40N" xml:space="preserve">
-    <value>End-Flat</value>
+    <value>Solid</value>
   </data>
   <data name="C41N" xml:space="preserve">
-    <value>End-Square</value>
+    <value>Dashed</value>
   </data>
   <data name="C42N" xml:space="preserve">
-    <value>End-Round</value>
+    <value>Dotted</value>
   </data>
   <data name="C43N" xml:space="preserve">
-    <value>End-Triangle</value>
+    <value>Filled</value>
   </data>
   <data name="C7FN" xml:space="preserve">
-    <value>EndLineCap</value>
+    <value>StrokeStyle</value>
   </data>
   <data name="C7FS" xml:space="preserve">
-    <value>Type of line-end cap</value>
+    <value>Style of Stroke</value>
   </data>
   <data name="C80N" xml:space="preserve">
     <value>OneValue</value>

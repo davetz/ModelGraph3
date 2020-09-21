@@ -337,7 +337,10 @@ namespace ModelGraph.Core
         //=========================================
         ShapeStrokeWidthProperty = 0x4C0 | Is_Covert,
         ShapeStrokeColorProperty = 0x4C1 | Is_Covert,
-        ShapeIsFilledProperty = 0x4C2 | Is_Covert,
+        ShapeStrokeStyleProperty = 0x4C2 | Is_Covert,
+        ShapeLineEndCapProperty = 0x4C3 | Is_Covert,
+        ShapeLineDashCapProperty = 0x4C4 | Is_Covert,
+        ShapeLineStartCapProperty = 0x4C5 | Is_Covert,
         #endregion
 
         #region Model ================================================(600-7FF)
@@ -667,17 +670,17 @@ namespace ModelGraph.Core
         NumericTerm_Std = 0xBC5,
         NumericTermEnum = 0xBFF,
 
-        StartLine_Flat = 0xC00,
-        StartLine_Square = 0xC01,
-        StartLine_Round = 0xC02,
-        StartLine_Triangle = 0xC03,
-        StartLineEnum = 0xC3F,
+        CapStyle_Flat = 0xC00,
+        CapStyle_Square = 0xC01,
+        CapStyle_Round = 0xC02,
+        CapStyle_Triangle = 0xC03,
+        CapStyleEnum = 0xC3F,
 
-        EndLine_Flat = 0xC40,
-        EndLine_Square = 0xC41,
-        EndLine_Round = 0xC42,
-        EndLine_Triangle = 0xC43,
-        EndLineEnum = 0xC7F,
+        StrokeStyle_Solid = 0xC40,
+        StrokeStyle_Dashed = 0xC41,
+        StrokeStyle_Dotted = 0xC42,
+        StrokeStyle_Filled = 0xC43,
+        StrokeStyleEnum = 0xC7F,
 
         Results_OneValue = 0xC80,
         Results_AllValues = 0xC81,
@@ -705,12 +708,8 @@ namespace ModelGraph.Core
         LineStyle_DoubleSpline = 0xD82,
         LineStyleEnum = 0xDBF,
 
-        DashStyle_Solid = 0xDC0,
-        DashStyle_Dashed = 0xDC1,
-        DashStyle_Dotted = 0xDC2,
-        DashStyle_DashDot = 0xDC3,
-        DashStyle_DashDotDot = 0xDC4,
-        DashStyleEnum = 0xDFF,
+        StaticPairDC0 = 0xDC0,
+        StaticEnumDFF = 0xDFF,
 
         StaticPairE00 = 0xE00,
         StaticEnumE3F = 0xE3F,

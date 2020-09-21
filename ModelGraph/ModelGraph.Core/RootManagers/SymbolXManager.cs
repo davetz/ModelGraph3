@@ -24,7 +24,10 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_SymbolX_Attatch(sto));
             root.RegisterReferenceItem(new Property_Shape_StrokeWidth(sto));
             root.RegisterReferenceItem(new Property_Shape_Color(sto));
-            root.RegisterReferenceItem(new Property_Shape_IsFilled(sto));
+            root.RegisterReferenceItem(new Property_Shape_StrokeStyle(sto));
+            root.RegisterReferenceItem(new Property_Shape_StartCap(sto));
+            root.RegisterReferenceItem(new Property_Shape_DashCap(sto));
+            root.RegisterReferenceItem(new Property_Shape_EndCap(sto));
 
             root.RegisterInternalProperties(typeof(SymbolX), GetProps1(root)); //used by property name lookup
             root.RegisterInternalProperties(typeof(SymbolModel), GetProps2(root)); //used by property name lookup
@@ -49,9 +52,12 @@ namespace ModelGraph.Core
         };
         private Property[] GetProps2(Root root) => new Property[]
         {
-            root.Get<Property_Shape_StrokeWidth>(),
             root.Get<Property_Shape_Color>(),
-            root.Get<Property_Shape_IsFilled>(),
+            root.Get<Property_Shape_StrokeStyle>(),
+            root.Get<Property_Shape_StrokeWidth>(),
+            root.Get<Property_Shape_StartCap>(),
+            root.Get<Property_Shape_DashCap>(),
+            root.Get<Property_Shape_EndCap>(),
         };
         #endregion
 

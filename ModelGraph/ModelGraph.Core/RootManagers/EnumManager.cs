@@ -13,7 +13,8 @@
             root.RegisterPrivateItem(new Enum_CompuType(this));
             root.RegisterPrivateItem(new Enum_Connect(this));
             root.RegisterPrivateItem(new Enum_Contact(this));
-            root.RegisterPrivateItem(new Enum_DashStyle(this));
+            root.RegisterPrivateItem(new Enum_CapStyle(this));
+            root.RegisterPrivateItem(new Enum_StrokeStyle(this));
             root.RegisterPrivateItem(new Enum_Facet(this));
             root.RegisterPrivateItem(new Enum_Labeling(this));
             root.RegisterPrivateItem(new Enum_LineStyle(this));

@@ -62,7 +62,7 @@
 
 
         <Style x:Key="SymbolCanvasStyle" TargetType="controls:CanvasDrawControl">
-            <Setter Property="Width" Value="620" />
+            <Setter Property="Width" Value="860" />
             <Setter Property="Height" Value="560" />
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
