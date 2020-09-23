@@ -15,7 +15,6 @@ namespace ModelGraph.Core
             if (IsExpandedRight) return false;
             IsExpandedRight = true;
 
-            //root.Get<Property_Shape_Color>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_StrokeStyle>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_StrokeWidth>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_StartCap>().CreatePropertyModel(this, Item);

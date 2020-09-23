@@ -23,6 +23,12 @@ namespace ModelGraph.Controls
             SymbolCanvas.SetOverview(32, 32);
             SymbolCanvas.ShowPicker1(32, 32);
             SymbolCanvas.ShowPicker2(32);
+            SizeChanged += ModelSymbolControl_SizeChanged;
+        }
+
+        private void ModelSymbolControl_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        {
+            SymbolCanvas.SetSideTreeSize(320, 500);
         }
 
         #region IPageControl  =================================================

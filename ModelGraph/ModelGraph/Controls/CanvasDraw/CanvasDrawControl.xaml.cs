@@ -8,9 +8,11 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
+using Windows.UI.Input.Spatial;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
+using Windows.UI.Xaml.Media;
 
 namespace ModelGraph.Controls
 {
@@ -128,6 +130,22 @@ namespace ModelGraph.Controls
             Pick2Canvas.IsEnabled = false; //disable CanvasDraw
             Picker2GridColumn.Width = new GridLength(0);
             Picker2Grid.Visibility = Visibility.Collapsed;
+        }
+        #endregion
+
+        #region Set<Fly,Side>TreeSize  ========================================
+        internal void SetFlyTreeSize(int width, int height)
+        {
+            if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.SetSize(width, height);
+        }
+        internal void SetSideTreeSize(int width, int height)
+        {
+            if (SideTreeCanvas.IsEnabled)
+            {
+                SideTreeGrid.Visibility = Visibility.Visible;
+                SideTreeCanvas.SetSize(width, height);
+                PanZoomReset();
+            }
         }
         #endregion
 
@@ -1033,5 +1051,35 @@ namespace ModelGraph.Controls
             }
         }
         #endregion
+
+        #region ColorPickerConrol  ============================================
+        private void ColorSampleBorder_PointerPressed(object sender, PointerRoutedEventArgs e) => ToggleColorPicker();
+        private void ToggleColorPicker()
+        {
+            var (A, R, G, B) = Model.ColorARGB;
+            if (ColorPickerControl.Visibility == Visibility.Visible)
+            {
+                ColorSampleBoarder.Background = new SolidColorBrush(Color.FromArgb(A, R, G, B));
+                ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
+                ColorSampleTextBox.Text = "\uF0AE";
+                ColorPickerControl.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                ColorPickerControl.Visibility = Visibility.Visible;
+                ColorSampleTextBox.Text = "\uF0AD";
+                ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
+            }
+        }
+        private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
+        {
+            if (args.NewColor != args.OldColor)
+            {
+                Model.ColorARGB = (args.NewColor.A, args.NewColor.R, args.NewColor.G, args.NewColor.B);
+                Model.ColorARGBChanged();
+            }
+        }
+        #endregion
+
     }
 }

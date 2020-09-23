@@ -10,7 +10,12 @@
     d:DesignWidth="400">
 
     <Page.Resources>
-
+        <Style x:Key="RadioButtonStyle" TargetType="RadioButton">
+            <Setter Property="Margin" Value="0,0,2,0" />
+            <Setter Property="GroupName" Value="G1" />
+            <Setter Property="MinWidth" Value="40" />
+            <Setter Property="Padding" Value="2,6,0,0" />
+        </Style>
         <RotateTransform x:Key="Rotate90" Angle="90"  CenterX="8" CenterY="9"/>
         <ScaleTransform x:Key="FlipHorizontal" ScaleX="1" ScaleY="-1" CenterX="8" CenterY="10"/>
         <SolidColorBrush x:Key="BackgroundPink" Color="LightPink"/>
@@ -62,7 +67,7 @@
 
 
         <Style x:Key="SymbolCanvasStyle" TargetType="controls:CanvasDrawControl">
-            <Setter Property="Width" Value="860" />
+            <Setter Property="Width" Value="960" />
             <Setter Property="Height" Value="560" />
             <Setter Property="VerticalAlignment" Value="Top"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
@@ -101,11 +106,11 @@
             <Button x:Name="RecenterButton" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
                 <FontIcon  Glyph="&#xF22C;" />
             </Button>
-            <ComboBox x:Name="EditContactComboBox" Style="{StaticResource PropetyComboBoxStyle}"
-                                      ItemsSource="{Binding ElementName=control, Path=EditContactList}"
-                                      SelectedItem="{Binding ElementName=control, Path=EditContact, Mode=TwoWay}"
-                                      SelectionChanged ="EditContactComboBox_SelectionChanged" />
-
+            <StackPanel Orientation="Horizontal" Margin="8,0,0 4">
+                <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True"/>
+                <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" />
+                <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" />
+            </StackPanel>
         </StackPanel>
         <controls:CanvasDrawControl Grid.Row="1" x:Name="SymbolCanvas"  Style="{StaticResource SymbolCanvasStyle}" />
     </Grid>

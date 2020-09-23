@@ -112,10 +112,14 @@ namespace ModelGraph.Core
         virtual public void Picker2Paste() { }
         #endregion
 
+        #region ColorARGB  ====================================================\
+        public (byte, byte, byte, byte) ColorARGB { get; set; } = (255, 255, 255, 255);
+        public virtual void ColorARGBChanged() { }
+        #endregion
+
         #region IDrawData  ====================================================
         virtual public void RefreshEditorData() { }
         virtual public string HeaderTitle => "No Title was specified";
-
 
         public IDrawData HelperData => Helper;      // editor layer1  
         protected DrawData Helper = new DrawData(); 

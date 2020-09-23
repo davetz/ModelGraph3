@@ -29,7 +29,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region ShapeProperty  ================================================
-        internal string ColorARGB = "#FFFFFF00";
         internal CapStyle EndCapStyle;
         internal CapStyle DashCapStyle;
         internal CapStyle StartCapStyle;

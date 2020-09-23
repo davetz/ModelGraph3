@@ -4,6 +4,8 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
+        (byte,byte,byte,byte) ColorARGB { get; set; }
+        void ColorARGBChanged();
         Extent EditorExtent { get; }
         void RefreshEditorData();
         int Picker1Width { get; }
