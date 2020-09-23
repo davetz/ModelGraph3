@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     internal abstract class Polygon : Polyline
     {
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var points = GetDrawingPoints(center, scale);
@@ -16,6 +16,10 @@ namespace ModelGraph.Core
             //    else
             //        ds.DrawGeometry(geo, color, strokeWidth, StrokeStyle());
             //}
+        }
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
+        {
+
         }
 
         protected override (int min, int max) MinMaxDimension => (2, 8);

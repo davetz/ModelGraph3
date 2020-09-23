@@ -391,7 +391,7 @@ namespace ModelGraph.Controls
                     }
                     else
                     {
-                        var V = scale * W;
+                        var V = W * scale;
                         if (V < 1) V = 1;
 
                         using (var pb = new CanvasPathBuilder(ds))
@@ -440,7 +440,7 @@ namespace ModelGraph.Controls
 
                 void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeType shape, bool isFilled, byte w)
                 {
-                    var v = scale * w;
+                    var v = w * scale;
                     if (v < 1) v = 1;
                     switch (shape)
                     {

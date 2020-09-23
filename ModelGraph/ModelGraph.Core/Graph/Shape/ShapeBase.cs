@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         internal abstract Shape Clone();
         internal abstract Shape Clone(Vector2 Center);
 
-        internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal);
+        internal abstract void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal);
         internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip);
 
         protected abstract (float dx1, float dy1, float dx2, float dy2) GetExtent();

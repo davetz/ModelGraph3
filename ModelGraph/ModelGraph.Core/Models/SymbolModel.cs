@@ -13,12 +13,14 @@ namespace ModelGraph.Core
         private const float EditRadius = 256;   //width, height of shape in the editor
         private const float EditMargin = 32;    //size of empty space arround the shape editor 
         private const float EditExtent = EditRadius + EditMargin;
+        private float AbsoluteSize;
 
         #region Constructor  ==================================================
         internal SymbolModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
         {
 
             Symbol = symbol;
+            AbsoluteSize = symbol.AbsoluteSize;
             RefreshEditorData();
             RefreshHelperData();
             RefreshPicker1Data();
@@ -40,15 +42,41 @@ namespace ModelGraph.Core
         override public void RefreshEditorData()
         {
             var r = EditRadius;
-            var c = new Vector2(50,80);
+            var c = new Vector2();
+            var a = AbsoluteSize;
 
             Editor.Clear();
             var shapes = Symbol.GetShapes();
-            if (shapes.Count == 0) shapes.Add(new Circle());
             foreach (var s in shapes)
             {
-                s.AddDrawData(Editor, r, c);
+                s.AddDrawData(Editor, a, r, c, Shape.Coloring.Normal);
             }
+        }
+        #endregion
+
+        #region ColorARGB  ====================================================
+        public override void ColorARGBChanged()
+        {
+            foreach (var s in _selectShapes)
+            {
+                s.SetColor(ColorARGB);
+            }
+            RefreshEditorData();
+            RefreshPicker1Data();
+            PageModel.TriggerUIRefresh();
+        }
+        #endregion
+
+        #region StrokeWidth  ==================================================
+        internal void StrokeWidthChanged()
+        {
+            foreach (var s in _selectShapes)
+            {
+                s.SetStrokeWidth(StrokeWidth);
+            }
+            RefreshEditorData();
+            RefreshPicker1Data();
+            PageModel.TriggerUIRefresh();
         }
         #endregion
 
@@ -150,11 +178,11 @@ namespace ModelGraph.Core
         {
             var r = Picker2Width / 2;
             var c = new Vector2(0, 0);
-
+            var a = (float)Symbol.AbsoluteSize;
             Picker1.Clear();
             foreach (var s in Symbol.GetShapes())
             {
-                s.AddDrawData(Picker1, r, c);
+                s.AddDrawData(Picker1, a, r, c);
                 if (_selectShapes.Contains(s))
                     Picker1.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
                 c = new Vector2(0, c.Y + Picker2Width);
@@ -197,11 +225,12 @@ namespace ModelGraph.Core
         {
             var r = Picker2Width / 2;
             var c = new Vector2(0, 0);
+            var a = (float)Symbol.AbsoluteSize;
 
             Picker2.Clear();
             foreach (var s in _picker2Shapes)
             {
-                s.AddDrawData(Picker2, r, c);
+                s.AddDrawData(Picker2, a, r, c);
                 if (s == _selectPicker2Shape)
                     Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
                 c = new Vector2(0, c.Y + Picker2Width);
@@ -244,8 +273,10 @@ namespace ModelGraph.Core
             }
             else
             {
-                Symbol.GetShapes().Add(_selectPicker2Shape.Clone(DrawPoint1));
+                var cp = DrawPoint1 / EditRadius;
+                Symbol.GetShapes().Add(_selectPicker2Shape.Clone(cp));
                 RefreshEditorData();
+                PageModel.TriggerUIRefresh();
             }
             return false;
         }

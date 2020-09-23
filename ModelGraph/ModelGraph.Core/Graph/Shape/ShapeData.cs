@@ -11,8 +11,8 @@ namespace ModelGraph.Core
         private byte A = 0xFF; // of color(A, R, G, B)
         private byte R = 0xFF; // of color(A, R, G, B)
         private byte G = 0xFF; // of color(A, R, G, B)
-        private byte B = 0xF0; // of color(A, R, G, B)
-        private byte SW = 1;  // stroke width
+        private byte B = 0xFF; // of color(A, R, G, B)
+        private byte SW = 2;  // stroke width
         private byte SS = 2;  // stroke style
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
@@ -24,9 +24,16 @@ namespace ModelGraph.Core
         protected List<(float dx, float dy)> DXY;  // one or more defined points
 
         #region Properties  ===================================================
+        internal void SetStrokeWidth(byte sw) => SW = sw;
 
-        protected (ShapeType, StrokeType, byte) ShapeStrokeWidth => (ShapeType, (StrokeType)SS, SW);
-        protected (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, B, G) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
+        protected (ShapeType, StrokeType, byte) ShapeStrokeWidth() => (ShapeType, (StrokeType)SS, SW);
+        protected (ShapeType, StrokeType, byte) ShapeStrokeWidth(float scale)
+        {
+            var sw = (byte)(SW * scale); // compensate for exagerated size
+            if (sw < 1) sw = 1;
+            return (ShapeType, (StrokeType)SS, sw);
+        }
+        protected (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, G, B) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
         private const byte _g = 0x80;
         private const byte _a = 0x60;
 
@@ -40,6 +47,14 @@ namespace ModelGraph.Core
         private void SetColor(string code)
         {
             var (a, r, g, b) = GetARGB(code);
+            A = a;
+            R = r;
+            G = g;
+            B = b;
+        }
+        internal void SetColor((byte ,byte,byte,byte) color)
+        {
+            var (a, r, g, b) = color;
             A = a;
             R = r;
             G = g;
@@ -143,11 +158,7 @@ namespace ModelGraph.Core
         internal static byte[] SaveShaptes(IEnumerable<Shape> shapes)
         {
             var (_, _, _, _, _, _, fw, fh) = GetExtent(shapes);
-            var data = new List<byte>(shapes.Count() * 30)
-            {
-                ToByte(fw), // overal width
-                ToByte(fh) // overal height
-            };
+            var data = new List<byte>(shapes.Count() * 30);
 
             foreach (var shape in shapes)
             {
@@ -193,7 +204,7 @@ namespace ModelGraph.Core
             if (data is null || data.Length < 2 ) return shapes;
 
             var M = data.Length;
-            var I = 2;
+            var I = 0;
 
             while (IsMoreDataAvailable())
             {

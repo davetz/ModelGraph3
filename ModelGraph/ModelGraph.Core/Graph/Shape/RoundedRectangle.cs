@@ -33,7 +33,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new RoundedRectangle(this);
         internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             //var min = center + (Center - Radius) * scale;

@@ -30,15 +30,15 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new Circle(this);
         internal override Shape Clone(Vector2 center) => new Circle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring colr = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring colr = Coloring.Normal)
         {
             var (cp, r1, _) = GetCenterRadius(center, scale);
-            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, ShapeColor(colr)));
+            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth(scale/size), ShapeColor(colr)));
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             var (cp, r1, r2) = GetCenterRadius(center, scale);
-            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth, ShapeColor()));
+            drawData.AddShape(((cp, new Vector2(r1, r1)), ShapeStrokeWidth(), ShapeColor()));
         }
         protected override void Scale(Vector2 scale)
         {

@@ -39,6 +39,7 @@ namespace ModelGraph.Core
             Data = (_shapes is null || _shapes.Count == 0) ? null : Shape.SaveShaptes(_shapes);
         }
         private List<Shape> _shapes;
+        internal byte AbsoluteSize => Owner.TryGetParent(this, out GraphX p) ? p.SymbolSize : (byte)16;
         #endregion
 
         #region Identity  =====================================================

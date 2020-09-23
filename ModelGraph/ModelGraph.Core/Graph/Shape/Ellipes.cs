@@ -32,7 +32,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new Ellipes(this);
         internal override Shape Clone(Vector2 center) => new Ellipes(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
             //var color = GetColor(coloring);
             var (_, _, _) = GetCenterRadius(center, scale);
