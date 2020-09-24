@@ -54,13 +54,24 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region ColorARGB  ====================================================
+        #region ColorARGB/Apply/Reload  =======================================
         public override void ColorARGBChanged()
         {
             foreach (var s in _selectShapes)
             {
                 s.SetColor(ColorARGB);
             }
+            RefreshEditorData();
+            RefreshPicker1Data();
+            PageModel.TriggerUIRefresh();
+        }
+        public override void Apply()
+        {
+            Symbol.SaveShapes();
+        }
+        public override void Reload()
+        {
+            Symbol.ReloadShapes();
             RefreshEditorData();
             RefreshPicker1Data();
             PageModel.TriggerUIRefresh();

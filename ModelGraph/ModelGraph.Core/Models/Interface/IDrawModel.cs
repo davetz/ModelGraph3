@@ -6,6 +6,9 @@ namespace ModelGraph.Core
     {
         (byte,byte,byte,byte) ColorARGB { get; set; }
         void ColorARGBChanged();
+        void Apply();
+        void Reload();
+
         Extent EditorExtent { get; }
         void RefreshEditorData();
         int Picker1Width { get; }

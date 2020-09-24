@@ -7,7 +7,7 @@ namespace ModelGraph.Core
 {
     internal abstract partial class Shape
     {
-        private const int PointsOffset = 13;
+        private const int PointsOffset = 14;
         private byte A = 0xFF; // of color(A, R, G, B)
         private byte R = 0xFF; // of color(A, R, G, B)
         private byte G = 0xFF; // of color(A, R, G, B)

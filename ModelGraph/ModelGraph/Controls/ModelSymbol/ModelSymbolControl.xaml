@@ -111,6 +111,8 @@
                 <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" />
                 <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" />
             </StackPanel>
+            <Button x:Name="ApplyButton"  x:Uid="SymbolModel_Apply" Style="{StaticResource RightButtonStyle}" Click="ApplyButton_Click" Margin="60,0,10,0" />
+            <Button x:Name="ReloadButton" x:Uid="SymbolModel_Reload" Style="{StaticResource RightButtonStyle}" Click="ReloadButton_Click" />
         </StackPanel>
         <controls:CanvasDrawControl Grid.Row="1" x:Name="SymbolCanvas"  Style="{StaticResource SymbolCanvasStyle}" />
     </Grid>

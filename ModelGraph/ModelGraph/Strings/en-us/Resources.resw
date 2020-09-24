@@ -270,4 +270,10 @@
   <data name="StorageFileRepo_New" xml:space="preserve">
     <value>New Model</value>
   </data>
+  <data name="SymbolModel_Apply.Content" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="SymbolModel_Reload.Content" xml:space="preserve">
+    <value>Reload</value>
+  </data>
 </root>

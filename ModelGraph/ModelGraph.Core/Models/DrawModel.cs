@@ -112,9 +112,12 @@ namespace ModelGraph.Core
         virtual public void Picker2Paste() { }
         #endregion
 
-        #region ColorARGB  ====================================================\
+        #region ColorARGB/Apply/Reload  =======================================
         public (byte, byte, byte, byte) ColorARGB { get; set; } = (255, 255, 255, 255);
         public virtual void ColorARGBChanged() { }
+
+        public virtual void Apply() { }
+        public virtual void Reload() { }
         #endregion
 
         #region IDrawData  ====================================================

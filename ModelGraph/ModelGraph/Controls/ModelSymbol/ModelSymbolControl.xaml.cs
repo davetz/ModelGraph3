@@ -10,6 +10,7 @@ namespace ModelGraph.Controls
     public sealed partial class ModelSymbolControl : Page, IPageControl, IModelPageControl
     {
         IPageModel Model;
+        IDrawModel DrawModel => Model.LeadModel as IDrawModel;
 
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
@@ -19,7 +20,7 @@ namespace ModelGraph.Controls
         {
             Model = model;
             InitializeComponent();
-            SymbolCanvas.Initialize(model.LeadModel as IDrawModel);
+            SymbolCanvas.Initialize(DrawModel);
             SymbolCanvas.SetOverview(32, 32);
             SymbolCanvas.ShowPicker1(32, 32);
             SymbolCanvas.ShowPicker2(32);
@@ -122,6 +123,8 @@ namespace ModelGraph.Controls
         {
         }
 
+        private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.Apply();
+        private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.Reload();
 
         #region LeftButtonHelperMethods  ======================================
         private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();
@@ -142,5 +145,6 @@ namespace ModelGraph.Controls
         #endregion
 
         #endregion
+
     }
 }
