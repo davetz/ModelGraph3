@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ModelGraph.Core;
+using System;
 using System.Collections.Generic;
 using System.Numerics;
 using Windows.UI.Core;
@@ -46,21 +47,22 @@ namespace ModelGraph.Controls
 
         void ConditionalySetNewCursor(CoreCursorType cursorType) { if (_pointerIsPressed) return; TrySetNewCursor(cursorType); }
 
-        private void SizerTop_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.TopHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.LeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.RightHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottom_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.BottomHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerTopLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.TopLeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerTopRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.TopRightHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottomLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.BottomLeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottomRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(EventType.BottomRightHit, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerTop_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.TopHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.LeftHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.RightHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerBottom_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.BottomHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerTopLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.TopLeftHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerTopRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.TopRightHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerBottomLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.BottomLeftHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
+        private void SizerBottomRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Event_Action.TryGetValue(DrawEvent.BottomRightHit, out Func<DrawState> action)) ExecuteSizeHit(e, action); }
 
-        private void ExecuteSizeHit(PointerRoutedEventArgs e, Action action)
+        private void ExecuteSizeHit(PointerRoutedEventArgs e, Func<DrawState> action)
         {
             e.Handled = true;
             _pointerIsPressed = true;
             HideTootlip();
-            action();
+            var newState = action();
+            TrySetState(newState);
         }
         #endregion
 

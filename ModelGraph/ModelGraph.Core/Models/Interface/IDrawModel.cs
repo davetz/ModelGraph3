@@ -1,9 +1,15 @@
-﻿using System.Numerics;
+﻿using System;
+using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
+        (DrawState, Dictionary<DrawEvent,Func<DrawState>>) DrawStateChanged(DrawState newState);
+        DrawState CurrentDrawState { get; set; }
+        DrawMode CurrentDrawMode { get; set; }
+
         (byte,byte,byte,byte) ColorARGB { get; set; }
         void ColorARGBChanged();
         void Apply();

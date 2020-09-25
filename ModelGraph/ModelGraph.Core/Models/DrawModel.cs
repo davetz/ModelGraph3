@@ -1,5 +1,6 @@
 ﻿using System.Numerics;
 using System.Collections.Generic;
+using System;
 
 namespace ModelGraph.Core
 {
@@ -12,6 +13,21 @@ namespace ModelGraph.Core
         {
             Owner = owner;
             owner.Add(this);
+        }
+        #endregion
+
+        #region DrawState  ====================================================
+        public virtual (DrawState, Dictionary<DrawEvent,Func<DrawState>>) DrawStateChanged(DrawState newState)
+        {
+            return (DrawState.NoChange, _dummyEventActions);
+        }
+        private static Dictionary<DrawEvent, Func<DrawState>> _dummyEventActions = new Dictionary<DrawEvent, Func<DrawState>>(0);
+
+        public DrawState CurrentDrawState { get; set; }
+        public DrawMode CurrentDrawMode { get; set; }
+        public DrawState NoopDrawEvent()
+        {
+            return DrawState.NoChange;
         }
         #endregion
 
