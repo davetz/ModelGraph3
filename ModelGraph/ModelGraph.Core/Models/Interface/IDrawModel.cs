@@ -6,9 +6,20 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
-        (DrawState, Dictionary<DrawEvent,Func<DrawState>>) DrawStateChanged(DrawState newState);
-        DrawState CurrentDrawState { get; set; }
-        DrawMode CurrentDrawMode { get; set; }
+        DrawState DrawState { get; }
+        DrawCursor DrawCursor { get; }
+        Dictionary<DrawEvent, Action> DrawEvent_Action { get; }
+        bool TrySetState(DrawState state);
+        void SetEventAction(DrawEvent evt, Action act);
+        bool IsToolTipVisible { get; }
+        bool IsResizerGridVisible { get; }
+        bool IsFlyTreeVisible { get; }
+        bool IsSideTreeVisible { get; }
+        bool IsOverviewVisible { get; }
+        bool IsPicker1Visible { get; }
+        bool IsPicker2Visible { get; }
+        bool IsColorPickerEnabled { get; }
+
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
         void ColorARGBChanged();
@@ -16,6 +27,8 @@ namespace ModelGraph.Core
         void Reload();
 
         Extent EditorExtent { get; }
+        Extent ResizerExtent { get; } //in drawPoint coordinates
+
         void RefreshEditorData();
         int Picker1Width { get; }
         int Picker2Width { get; }
@@ -29,44 +42,11 @@ namespace ModelGraph.Core
         Vector2 DrawPoint1 { get; set; }
         Vector2 DrawPoint2 { get; set; }
 
-        Vector2 NodePoint1 { get; }
-        Vector2 NodePoint2 { get; }
-
-        Vector2 RegionPoint1 { get; set; }
-        Vector2 RegionPoint2 { get; set; }
-
         Vector2 GridPointDelta(bool reset);
 
-        bool AnyHit { get; }
-        bool PinHit { get; }
-        bool NodeHit { get; }
-        bool EdgeHit { get; }
-        bool RegionHit { get; }
-        bool IsValidRegion();
-        void ClearRegion();
-
-        bool TapHitTest();
-        bool EndHitTest();
-        bool SkimHitTest();
-        bool DragHitTest();
-
+        Vector2 ToolTipTarget { get; } //in drawPoint coordinates
         string ToolTip_Text1 { get; }
         string ToolTip_Text2 { get; }
-
-        void ResizeTop();
-        void ResizeLeft();
-        void ResizeRight();
-        void ResizeBottom();
-        void ResizeTopLeft();
-        void ResizeTopRight();
-        void ResizeBottomLeft();
-        void ResizeBottomRight();
-        void ResizePropagate();
-
-        bool MoveNode();
-        bool MoveRegion();
-
-        bool CreateNode();
 
         IDrawData HelperData { get; } // layer1 - static background data - (editor canvas only)
         IDrawData EditorData { get; } // layer2 - editor & overview data

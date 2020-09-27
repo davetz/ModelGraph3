@@ -14,7 +14,7 @@ namespace ModelGraph.Controls
 
         void HideAlignmentGrid()
         {
-            Model.ClearRegion();
+            //Model.ClearRegion();
             AlignmentGrid.Visibility = Visibility.Collapsed;
         }
 
@@ -29,8 +29,8 @@ namespace ModelGraph.Controls
             Canvas.SetTop(AlignmentGrid, min.Y);
             Canvas.SetLeft(AlignmentGrid, min.X);
 
-            Model.RegionPoint1 = Vector2.Min(Model.DrawPoint1, Model.DrawPoint2);
-            Model.RegionPoint2 = Vector2.Max(Model.DrawPoint1, Model.DrawPoint2);
+            //Model.RegionPoint1 = Vector2.Min(Model.DrawPoint1, Model.DrawPoint2);
+            //Model.RegionPoint2 = Vector2.Max(Model.DrawPoint1, Model.DrawPoint2);
         }
     }
 }

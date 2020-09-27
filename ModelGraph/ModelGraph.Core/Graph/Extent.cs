@@ -22,6 +22,7 @@ namespace ModelGraph.Core
             X2 = e.X2;
             Y2 = e.Y2;
         }
+        public (float, float, float, float) GetFloat() => (X1, Y1, X2, Y2);
         public Extent Clone => new Extent(this);
 
         public Extent((float X, float Y) p)

@@ -25,6 +25,7 @@ namespace ModelGraph.Core
             RefreshHelperData();
             RefreshPicker1Data();
             RefreshPicker2Data();
+            SetViewMode();
             PageModel.TriggerUIRefresh();
             SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
         }
@@ -272,10 +273,23 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region DrawStateControl  =============================================
+
+        #region ViewMode == DefineSimbol  =====================================
+        public void SetViewMode()
+        {
+            if (TrySetState(DrawState.ViewMode))
+            {
+            }
+        }
+        #endregion
+
+        #endregion
+
 
         #region HitTest  ======================================================
 
-        override public bool TapHitTest()
+        private bool TapHitTest()
         {
             ClearHit();
             if (_selectPicker2Shape is null)

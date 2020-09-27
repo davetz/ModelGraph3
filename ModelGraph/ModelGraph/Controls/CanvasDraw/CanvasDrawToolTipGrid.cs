@@ -5,11 +5,9 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl
     {
-        private bool _isToolTipVisible;
-
-        private void ShowTooltip()
+        private void ShowToolTip()
         {
-            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text1)) HideTootlip();
+            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text1)) HideToolTip();
             ItemName.Text = Model.ToolTip_Text1;
 
             var offset = 60;
@@ -25,21 +23,20 @@ namespace ModelGraph.Controls
             }
 
             var ds = ItemToolTip.Text.Length * 4;
-            var x = Model.GridPoint2.X - ds;
-            var y = Model.GridPoint2.Y - offset;
+            var (x, y) = GetToolTipGridPoint();
+            x -= ds;
+            y -= offset;
 
             Canvas.SetTop(ToolTipBorder, y);
             Canvas.SetLeft(ToolTipBorder, x);
 
             ToolTipBorder.Visibility = Visibility.Visible;
-            _isToolTipVisible = true;
         }
 
-        private void HideTootlip()
+        private void HideToolTip()
         {
-            if (_isToolTipVisible)
+            if (ToolTipBorder.Visibility == Visibility.Visible)
             {
-                _isToolTipVisible = false;
                 ToolTipBorder.Visibility = Visibility.Collapsed;
             }
         }

@@ -8,7 +8,6 @@ using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
 using Windows.UI.Core;
-using Windows.UI.Input.Spatial;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
@@ -45,14 +44,18 @@ namespace ModelGraph.Controls
                 SideTreeCanvas.IsEnabled = false;
         }
 
-        internal void Refresh()
+        internal async void Refresh()
         {
-            _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
             {
                 if(FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
                 if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
-                EditCanvas.Invalidate();
+                if (Model.IsToolTipVisible) ShowToolTip();
+                else HideToolTip();
             });
+
+
+            EditCanvas.Invalidate();
         }
         #endregion
 
@@ -159,36 +162,39 @@ namespace ModelGraph.Controls
         }
         private void OverviewResize_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (_state != DrawState.ResizeOverview)
+            if (Model.DrawState != DrawState.ResizeOverview)
                 RestorePointerCursor();
         }
 
         private void OverviewResize_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if (_state == DrawState.ViewIdle)
+            if ((Model.DrawState & DrawState.ModeMask) == DrawState.ViewMode)
             {
                 _pointerIsPressed = true;
                 Model.GridPoint1 = new Vector2(0, 0);
                 Model.GridPoint2 = GridPoint(e);
-                if (TrySetState(DrawState.ResizeOverview))
+                if (Model.TrySetState(DrawState.ResizeOverview))
                 {
                     TrySetNewCursor(CoreCursorType.SizeAll);
-//                    SetEventAction(DrawEvent.Drag, ResizingOverview);
-//                    SetEventAction(DrawEvent.TapEnd, TrySetState);
+                    Model.SetEventAction(DrawEvent.Drag, ResizingOverview);
+                    Model.SetEventAction(DrawEvent.TapEnd, RestoreState);
                 }
             }
         }
-        private DrawState ResizingOverview()
+        private void RestoreState()
+        {
+            Model.TrySetState(DrawState.ViewMode);
+        }
+        private void ResizingOverview()
         {
             var size = Vector2.Abs(Model.GridPoint1 - Model.GridPoint2);
-            if (size.X < OverviewBorder.MinWidth) return DrawState.NoChange;
-            if (size.Y < OverviewBorder.MinHeight) return DrawState.NoChange;
+            if (size.X < OverviewBorder.MinWidth) return;
+            if (size.Y < OverviewBorder.MinHeight) return;
 
             OverviewBorder.Width = size.X;
             OverviewBorder.Height = size.Y;
             SetOverviewScaleOffset();
             OverCanvas.Invalidate();
-            return DrawState.NoChange;
         }
         #endregion
 
@@ -499,7 +505,6 @@ namespace ModelGraph.Controls
             EditCanvas.Loaded -= DrawCanvas_Loaded;
             if (_isRootCanvasLoaded)
             {
-                TrySetState(DrawState.ViewIdle);
                 PanZoomReset();
             }
         }
@@ -509,7 +514,6 @@ namespace ModelGraph.Controls
         {
             _isRootCanvasLoaded = true;
             RootCanvas.Loaded -= RootCanvas_Loaded;
-            TrySetState(DrawState.ViewIdle);
             if (_isDrawCanvasLoaded) PanZoomReset();
         }
         bool _isRootCanvasLoaded;
@@ -532,8 +536,7 @@ namespace ModelGraph.Controls
         private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
         {
             e.Handled = true;
-            if (!Model.AnyHit)
-                PanZoomReset();
+            if ((Model.DrawState & DrawState.NowMask) == DrawState.NowOnVoid) PanZoomReset();
         }
         #endregion
 
@@ -605,11 +608,7 @@ namespace ModelGraph.Controls
         }
         private (float top, float left, float width, float height) GetResizerParams()
         {
-            var x1 = Model.NodePoint1.X;
-            var y1 = Model.NodePoint1.Y;
-            var x2 = Model.NodePoint2.X;
-            var y2 = Model.NodePoint2.Y;
-
+            var (x1, y1, x2, y2) = Model.ResizerExtent.GetFloat();
 
             var dx = x2 - x1;
             var dy = y2 - y1;
@@ -622,52 +621,19 @@ namespace ModelGraph.Controls
 
             return (top, left, width, height);
         }
+        private (float,float) GetToolTipGridPoint()
+        {
+            var p = Model.ToolTipTarget * _editScale + _editOffset;
+            return (p.X, p.Y);
+        }
         #endregion
 
-        #region Event/Mode/State/Action  ======================================
+        #region PostEvent  ====================================================
         internal async void PostEvent(DrawEvent evt)
         {
-            if (!Event_Action.TryGetValue(evt, out Func<DrawState> act)) return;
-            DrawState newState = DrawState.NoChange;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { newState = act(); });
-            TrySetState(newState);
+            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
-
-        internal bool TrySetState(DrawState state)
-        {
-            if (state == DrawState.NoChange || state == _state) return false;   //no change, so nothing to do
-            _state = state;
-            Debug.WriteLine($"State: {_state}");
-
-            Event_Action.Clear();
-            HideTootlip();
-            HideResizerGrid();
-            HideSelectorGrid();
-            RestorePointerCursor();
-
-            // allow the DrawModel to directly drive the CanvasDrawControl
-            var (newState, eventActions) = Model.DrawStateChanged(_state);
-            if (newState > DrawState.NoChange && newState != _state) _state = newState;
-            Model.CurrentDrawState = _state;    //let the drawModel know what's going on
-            Model.CurrentDrawMode = (_state <= DrawState.NoChange) ? DrawMode.Unknown :
-                (_state >= DrawState.ViewIdle && _state < DrawState.MoveIdle) ? DrawMode.View :
-                (_state >= DrawState.MoveIdle && _state < DrawState.LinkIdle) ? DrawMode.Move :
-                (_state >= DrawState.LinkIdle && _state < DrawState.CopyIdle) ? DrawMode.Link :
-                (_state >= DrawState.CopyIdle && _state < DrawState.CreateIdle) ? DrawMode.Copy :
-                (_state >= DrawState.CreateIdle && _state < DrawState.OpertateIdel) ? DrawMode.Create :
-                (_state >= DrawState.OpertateIdel && _state < DrawState.ResizeOverview) ? DrawMode.Opertate :
-                (_state == DrawState.ResizeOverview) ? DrawMode.Overview : DrawMode.Resizing;
-            foreach (var e in eventActions) SetEventAction(e.Key, e.Value);
-
-            return true;    // let the caller know that we have changed state and have cleared the Event_Action dictionary
-        }
-        private DrawState _state = DrawState.Unknown;
-
-        internal void SetEventAction(DrawEvent evt, Func<DrawState> act)
-        {
-            Event_Action[evt] = act;
-        }
-        private readonly Dictionary<DrawEvent, Func<DrawState>> Event_Action = new Dictionary<DrawEvent, Func<DrawState>>();
         #endregion
 
         #region ModelCanvas_Unloaded  =========================================

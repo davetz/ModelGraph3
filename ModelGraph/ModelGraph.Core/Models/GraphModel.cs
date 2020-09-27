@@ -52,7 +52,7 @@ namespace ModelGraph.Core
         #region HitTest  ======================================================
         override public Extent EditorExtent => Graph.ResetExtent();
 
-        override public bool SkimHitTest()
+        private bool SkimHitTest()
         {
             ClearHit();
 
@@ -70,10 +70,10 @@ namespace ModelGraph.Core
                 ToolTip_Text1 = node.GetNameId();
                 ToolTip_Text2 = node.GetSummaryId();
             }
-            return NodeHit || RegionHit;
+            return false;
         }
 
-        override public bool TapHitTest()
+        private bool TapHitTest()
         {
             ClearHit();
 
@@ -95,8 +95,8 @@ namespace ModelGraph.Core
             return ok;
         }
 
-        override public void ClearRegion() => _regionNodes.Clear();
-        override public bool IsValidRegion()
+       private void ClearRegion() => _regionNodes.Clear();
+        private bool IsValidRegion()
         {
             var r1 = RegionPoint1;
             var r2 = RegionPoint2;

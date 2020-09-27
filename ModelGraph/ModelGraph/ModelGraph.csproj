@@ -143,6 +143,7 @@
     <Compile Include="Controls\CanvasDraw\CanvasDrawAlignmentGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawCopyGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawMoveGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawCursor.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawResizerGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawSelectorGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawToolTipGrid.cs" />

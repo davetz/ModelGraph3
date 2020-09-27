@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using System.Collections.Generic;
 using System;
+using System.Diagnostics;
 
 namespace ModelGraph.Core
 {
@@ -17,35 +18,58 @@ namespace ModelGraph.Core
         #endregion
 
         #region DrawState  ====================================================
-        public virtual (DrawState, Dictionary<DrawEvent,Func<DrawState>>) DrawStateChanged(DrawState newState)
-        {
-            return (DrawState.NoChange, _dummyEventActions);
-        }
-        private static Dictionary<DrawEvent, Func<DrawState>> _dummyEventActions = new Dictionary<DrawEvent, Func<DrawState>>(0);
+        public DrawState DrawState => _state;
+        public DrawCursor DrawCursor { get; protected set; } = DrawCursor.Arrow;
 
-        public DrawState CurrentDrawState { get; set; }
-        public DrawMode CurrentDrawMode { get; set; }
-        public DrawState NoopDrawEvent()
+        public bool TrySetState(DrawState state)
         {
-            return DrawState.NoChange;
+            if (state == DrawState.NoChange || state == _state) return false;   //no change, so nothing to do
+            _state = state;
+            Debug.WriteLine($"State: {_state}");
+
+            DrawEvent_Action.Clear();
+            IsToolTipVisible = false;
+            IsResizerGridVisible = false;
+            DrawCursor = DrawCursor.Arrow;
+
+            return true;    // let the caller know that we have changed state and have cleared the Event_Action dictionary
         }
+        private DrawState _state = DrawState.Unknown;
+
+        public void SetEventAction(DrawEvent evt, Action act) => DrawEvent_Action[evt] = act;
+        public void ClearEventAction(DrawEvent evt) => DrawEvent_Action.Remove(evt);
+        public Dictionary<DrawEvent, Action> DrawEvent_Action { get; } = new Dictionary<DrawEvent, Action>();
         #endregion
 
-        #region PointerData  ==================================================
+        #region Layout  =======================================================
         public string ToolTip_Text1 { get; set; }
         public string ToolTip_Text2 { get; set; }
 
+        public bool IsToolTipVisible { get; protected set; }
+        public bool IsResizerGridVisible { get; protected set; }
+        public bool IsFlyTreeVisible { get; protected set; }
+        public bool IsSideTreeVisible { get; protected set; }
+        public bool IsOverviewVisible { get; protected set; }
+        public bool IsPicker1Visible { get; protected set; }
+        public bool IsPicker2Visible { get; protected set; }
+        public bool IsColorPickerEnabled { get; protected set; }
+
+        virtual public int Picker1Width => 0;
+        virtual public int Picker2Width => 0;
+        public Vector2 ToolTipTarget { get; set; }
+        public Extent ResizerExtent { get; set; } //in drawPoint coordinates
+        virtual public Extent EditorExtent => new Extent(100, 100);
+        #endregion
+
+        #region PointerData  ==================================================
         public Vector2 GridPoint1 { get; set; }
         public Vector2 GridPoint2 { get; set; }
 
         public Vector2 DrawPoint1 { get; set; }
         public Vector2 DrawPoint2 { get; set; }
 
-        public Vector2 NodePoint1 { get; protected set; }
-        public Vector2 NodePoint2 { get; protected set; }
-
-        public Vector2 RegionPoint1 { get; set; }
-        public Vector2 RegionPoint2 { get; set; }
+        protected Vector2 RegionPoint1 { get; set; }
+        protected Vector2 RegionPoint2 { get; set; }
         public Vector2 GridPointDelta(bool reset = false)
         {
             var delta = GridPoint2 - GridPoint1;
@@ -69,31 +93,17 @@ namespace ModelGraph.Core
 
 
         #region HitTest  ======================================================
-        virtual public bool TapHitTest() => false;
-        virtual public bool EndHitTest() => false;
-        virtual public bool SkimHitTest() => false;
-        virtual public bool DragHitTest() => false;
-
-        public bool AnyHit => _hit != 0;
-        public bool PinHit => (_hit & Hit.Pin) != 0;
-        public bool NodeHit => (_hit & Hit.Node) != 0;
-        public bool EdgeHit => (_hit & Hit.Edge) != 0;
-        public bool RegionHit => (_hit & Hit.Region) != 0;
-        private Hit _hit;
 
         protected void ClearHit()
         {
             ToolTip_Text1 = ToolTip_Text2 = string.Empty;
             _hit = Hit.ZZZ;
         }
+        private Hit _hit;
         protected void SetHitPin() => _hit |= Hit.Pin;
         protected void SetHitNode() => _hit |= Hit.Node;
         protected void SetHitEdge() => _hit |= Hit.Edge;
         protected void SetHitRegion() => _hit |= Hit.Region;
-
-        virtual public bool IsValidRegion() => false;
-        virtual public void ClearRegion() { }
-
         #endregion
 
 
@@ -117,12 +127,6 @@ namespace ModelGraph.Core
 
 
         #region Pickers  ======================================================
-        public int Picker1Index { get; set; }
-        public int Picker2Index { get; set; }
-
-        virtual public int Picker1Width => 0;
-        virtual public int Picker2Width => 0;
-
         virtual public void Picker1Select(int YCord, bool add = false) { }
         virtual public void Picker2Select(int YCord) { }
         virtual public void Picker2Paste() { }
@@ -145,8 +149,6 @@ namespace ModelGraph.Core
 
         public IDrawData EditorData => Editor;      // editor layer2
         protected DrawData Editor = new DrawData();
-
-        virtual public Extent EditorExtent => new Extent(100, 100);
 
         public IDrawData Picker1Data => Picker1;
         protected DrawData Picker1 = new DrawData();
