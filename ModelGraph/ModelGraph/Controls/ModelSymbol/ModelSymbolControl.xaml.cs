@@ -122,9 +122,12 @@ namespace ModelGraph.Controls
         private void EditContactComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
         }
+        private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
+        private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);
+        private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.OperateMode);
 
-        private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.Apply();
-        private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.Reload();
+        private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.Apply);
+        private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.Revert);
 
         #region LeftButtonHelperMethods  ======================================
         private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();
@@ -145,6 +148,5 @@ namespace ModelGraph.Controls
         #endregion
 
         #endregion
-
     }
 }

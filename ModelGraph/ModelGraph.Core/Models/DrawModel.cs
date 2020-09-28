@@ -18,23 +18,40 @@ namespace ModelGraph.Core
         #endregion
 
         #region DrawState  ====================================================
-        public DrawState DrawState => _state;
+        public DrawState DrawState { get; private set; } = DrawState.Unknown;
+        protected DrawState PreviousDrawState;
         public DrawCursor DrawCursor { get; protected set; } = DrawCursor.Arrow;
 
-        public bool TrySetState(DrawState state)
+        internal void SetNowOn(DrawState st)
         {
-            if (state == DrawState.NoChange || state == _state) return false;   //no change, so nothing to do
-            _state = state;
-            Debug.WriteLine($"State: {_state}");
+            var state = (DrawState &= ~DrawState.NowMask) | (st & DrawState.NowMask);
+            if (state == DrawState) return;   //no change, so nothing to do
+            PreviousDrawState = DrawState;
+            DrawState = state;
+            Debug.WriteLine($"New DrawState: {DrawState}");
+        }
+        public bool TrySetState(DrawState state, bool reset = false)
+        {
+            if (state == DrawState.NoChange || state == DrawState) return false;   //no change, so nothing to do
+            PreviousDrawState = DrawState;
+            DrawState = state;
+            Debug.WriteLine($"New DrawState: {DrawState}");
 
-            DrawEvent_Action.Clear();
-            IsToolTipVisible = false;
-            IsResizerGridVisible = false;
-            DrawCursor = DrawCursor.Arrow;
+            if (reset)
+            {
+                DrawEvent_Action.Clear();
+                IsToolTipVisible = false;
+                IsResizerGridVisible = false;
+                DrawCursor = DrawCursor.Arrow;
+            }
+
+            if (DrawStateAction.TryGetValue(state, out Action action)) action();
 
             return true;    // let the caller know that we have changed state and have cleared the Event_Action dictionary
         }
-        private DrawState _state = DrawState.Unknown;
+        private Dictionary<DrawState, Action> DrawStateAction = new Dictionary<DrawState, Action>(5);
+        protected void SetDrawStateAction(DrawState state, Action action) => DrawStateAction[state] = action;
+        protected void ClearDrawStateAction(DrawState state) => DrawStateAction.Remove(state);
 
         public void SetEventAction(DrawEvent evt, Action act) => DrawEvent_Action[evt] = act;
         public void ClearEventAction(DrawEvent evt) => DrawEvent_Action.Remove(evt);

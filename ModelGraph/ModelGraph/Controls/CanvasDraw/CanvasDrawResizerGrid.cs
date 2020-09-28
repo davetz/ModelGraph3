@@ -1,7 +1,5 @@
 ﻿using ModelGraph.Core;
 using System;
-using System.Collections.Generic;
-using System.Numerics;
 using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
@@ -47,14 +45,14 @@ namespace ModelGraph.Controls
 
         void ConditionalySetNewCursor(CoreCursorType cursorType) { if (_pointerIsPressed) return; TrySetNewCursor(cursorType); }
 
-        private void SizerTop_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.LeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.RightHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottom_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerTopLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopLeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerTopRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopRightHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottomLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomLeftHit, out Action action)) ExecuteSizeHit(e, action); }
-        private void SizerBottomRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomRightHit, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerTop_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.LeftTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.RightTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerBottom_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerTopLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopLeftTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerTopRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.TopRightTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerBottomLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomLeftTap, out Action action)) ExecuteSizeHit(e, action); }
+        private void SizerBottomRight_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.DrawEvent_Action.TryGetValue(DrawEvent.BottomRightTap, out Action action)) ExecuteSizeHit(e, action); }
 
         private void ExecuteSizeHit(PointerRoutedEventArgs e, Action action)
         {

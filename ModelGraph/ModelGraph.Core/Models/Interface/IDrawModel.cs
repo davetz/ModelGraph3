@@ -9,7 +9,7 @@ namespace ModelGraph.Core
         DrawState DrawState { get; }
         DrawCursor DrawCursor { get; }
         Dictionary<DrawEvent, Action> DrawEvent_Action { get; }
-        bool TrySetState(DrawState state);
+        bool TrySetState(DrawState state, bool reset = false);
         void SetEventAction(DrawEvent evt, Action act);
         bool IsToolTipVisible { get; }
         bool IsResizerGridVisible { get; }
@@ -23,8 +23,6 @@ namespace ModelGraph.Core
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
         void ColorARGBChanged();
-        void Apply();
-        void Reload();
 
         Extent EditorExtent { get; }
         Extent ResizerExtent { get; } //in drawPoint coordinates

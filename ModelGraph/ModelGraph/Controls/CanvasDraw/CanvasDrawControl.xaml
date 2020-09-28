@@ -93,8 +93,7 @@
                 <Rectangle x:Name="OverviewResize" Style="{StaticResource OverviewResizeStyle}"
                            PointerEntered="OverviewResize_PointerEntered"
                            PointerExited="OverviewResize_PointerExited"
-                           PointerPressed="OverviewResize_PointerPressed"
-                           PointerReleased="RootCanvas_PointerReleased"/>
+                           PointerPressed="OverviewResize_PointerPressed"/>
             </Grid>
         </Border>
 

@@ -1,6 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
+    /// <summary>Used for tracking and debugging program flow</summary>
     public enum DrawState
     {
         Unknown = 0x0,
@@ -24,13 +25,20 @@ namespace ModelGraph.Core
         StartOnMask = 0x70,     //issolate starting location type
 
         ViewMode = 0x100,       //enable viewing
-        MoveMode = 0x200,       //enable moving
-        LinkMode = 0x300,       //enable linking
-        CopyMode = 0x400,       //enable copying
-        CreateMode = 0x500,     //enable createing
-        OperateMode = 0x600,    //enable operating
+        EditMode = 0x200,       //enable editing
+        MoveMode = 0x300,       //enable moving
+        LinkMode = 0x400,       //enable linking
+        CutMode = 0x500,        //enable cutting
+        CopyMode = 0x600,       //enable copying
+        PasteMode = 0x700,      //enable pasting
+        CreateMode = 0x800,     //enable createing
+        OperateMode = 0x900,    //enable operating
+        ContextMenu = 0xA00,    //context menu visible
+        PropertySheet = 0xB00,  //property sheet visible
+        Apply = 0xC00,          //apply changes to model
+        Revert = 0xD00,         //revert to previous version
 
-        ModeMask = 0x700,       //issolage current mode
+        ModeMask = 0xF00,       //issolage current mode
 
         Tapped = 0x1000,         //a pointer tap has occured
         Ending = 0x2000,         //a pointer released has occured
@@ -53,8 +61,19 @@ namespace ModelGraph.Core
         ViewOnEdgeTapped = ViewMode | StartOnEdge | Tapped,     //show property sheet,
         ViewOnRegionTapped = ViewMode | StartOnRegion | Tapped, //show property sheet,
 
-        MoveOnVoid = MoveMode | NowOnVoid, 
+        EditOnVoid = EditMode | NowOnVoid,
+        EditOnPin = EditMode | NowOnPin,
+        EditOnNode = EditMode | NowOnNode,
+        EditOnEdge = EditMode | NowOnEdge,
+        EditOnRegion = EditMode | NowOnRegion,
 
+        EditOnVoidTapped = EditMode | NowOnVoid | Tapped,
+        EditOnPinTapped = EditMode | StartOnPin | Tapped,
+        EditOnNodeTapped = EditMode | StartOnNode | Tapped,
+        EditOnEdgeTapped = EditMode | StartOnEdge | Tapped,
+        EditOnRegionTapped = EditMode | StartOnRegion | Tapped,
+
+        MoveOnVoid = MoveMode | NowOnVoid, 
         MoveOnPin = MoveMode | NowOnPin,                        //moving a pin state-1     
         MoveOnPinTapped = MoveMode | NowOnPin | Tapped,         //moving a pin state-2
         MoveOnPinDragging = MoveMode | StartOnPin | Draging,    //moving a pin state-3
@@ -130,9 +149,18 @@ namespace ModelGraph.Core
         LinkRegionEndingNowOnTargetEdge = LinkMode | StartOnNode | NowOnEdge | Ending | IsTarget,       //linking a region state-7
         LinkRegionEndingNowOnTargetRegion = LinkMode | StartOnNode | NowOnRegion | Ending | IsTarget,   //linking a region state-7
 
+        CutOnVoid = CutMode | NowOnVoid,
+        CutOnPin = CutMode | NowOnPin,
+        CutOnNode = CutMode | NowOnNode,
+        CutOnEdge = CutMode | NowOnEdge,
+        CutOnRegion = CutMode | NowOnRegion,
+
+        CutOnPinTapped = CutMode | StartOnPin | Tapped,
+        CutOnNodeTapped = CutMode | StartOnNode | Tapped,
+        CutOnEdgeTapped = CutMode | StartOnEdge | Tapped,
+        CutOnRegionTapped = CutMode | StartOnRegion | Tapped,
 
         CopyOnVoid = CopyMode | NowOnVoid,
-
         CopyOnNode = CopyMode | NowOnNode,                      //copy node state-1
         CopyOnNodeTapped = CopyMode | NowOnNode | Tapped,       //copy node state-2
         CopyNodeDragging = CopyMode | StartOnNode | Draging,    //copy node state-3
@@ -142,6 +170,18 @@ namespace ModelGraph.Core
         CopyOnRegionTapped = CopyMode | NowOnRegion | Tapped,       //copy region state-2
         CopyRegionDragging = CopyMode | StartOnRegion | Draging,    //copy region state-3
         CopyRegionEnding = CopyMode | StartOnRegion | Ending,       //copy region state-4
+
+        PasteOnVoid = PasteMode | NowOnVoid,
+        PasteOnPin = PasteMode | NowOnPin,
+        PasteOnNode = PasteMode | NowOnNode,
+        PasteOnEdge = PasteMode | NowOnEdge,
+        PasteOnRegion = PasteMode | NowOnRegion,
+
+        PasteOnVoidTapped = PasteMode | NowOnVoid | Tapped,
+        PasteOnPinTapped = PasteMode | StartOnPin | Tapped,
+        PasteOnNodeTapped = PasteMode | StartOnNode | Tapped,
+        PasteOnEdgeTapped = PasteMode | StartOnEdge | Tapped,
+        PasteOnRegionTapped = PasteMode | StartOnRegion | Tapped,
 
         CreateOnVoid = CreateMode | NowOnVoid, 
         CreateOnVoidTapped = CreateMode | NowOnVoid | Tapped,
@@ -153,6 +193,9 @@ namespace ModelGraph.Core
 
         OperateOnNode = OperateMode | NowOnNode,
         OperateNodeTapped = OperateMode | NowOnNode | Tapped,
+
+        ContextMenueOnVoidTapped = ContextMenu | NowOnVoid | Tapped,
+        PropertySheetOnVoidTapped = PropertySheet | NowOnVoid | Tapped,
 
         ResizeOverview,
 

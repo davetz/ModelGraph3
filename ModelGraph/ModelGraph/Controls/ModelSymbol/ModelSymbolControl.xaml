@@ -107,9 +107,9 @@
                 <FontIcon  Glyph="&#xF22C;" />
             </Button>
             <StackPanel Orientation="Horizontal" Margin="8,0,0 4">
-                <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True"/>
-                <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" />
-                <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" />
+                <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Click="EditSelect_Click"/>
+                <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" Click="TermSelect_Click"/>
+                <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" Click="FlipSelect_Click"/>
             </StackPanel>
             <Button x:Name="ApplyButton"  x:Uid="SymbolModel_Apply" Style="{StaticResource RightButtonStyle}" Click="ApplyButton_Click" Margin="60,0,10,0" />
             <Button x:Name="ReloadButton" x:Uid="SymbolModel_Reload" Style="{StaticResource RightButtonStyle}" Click="ReloadButton_Click" />

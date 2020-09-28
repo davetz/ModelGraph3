@@ -158,32 +158,20 @@ namespace ModelGraph.Controls
 
         private void OverviewResize_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            TrySetNewCursor(CoreCursorType.SizeAll);
+            if (!_pointerIsPressed) TrySetNewCursor(CoreCursorType.SizeAll);
         }
         private void OverviewResize_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (Model.DrawState != DrawState.ResizeOverview)
-                RestorePointerCursor();
+            if (!_pointerIsPressed) RestorePointerCursor();
         }
 
         private void OverviewResize_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            if ((Model.DrawState & DrawState.ModeMask) == DrawState.ViewMode)
-            {
-                _pointerIsPressed = true;
-                Model.GridPoint1 = new Vector2(0, 0);
-                Model.GridPoint2 = GridPoint(e);
-                if (Model.TrySetState(DrawState.ResizeOverview))
-                {
-                    TrySetNewCursor(CoreCursorType.SizeAll);
-                    Model.SetEventAction(DrawEvent.Drag, ResizingOverview);
-                    Model.SetEventAction(DrawEvent.TapEnd, RestoreState);
-                }
-            }
-        }
-        private void RestoreState()
-        {
-            Model.TrySetState(DrawState.ViewMode);
+            _pointerIsPressed = true;
+            Model.GridPoint1 = new Vector2(0, 0);
+            Model.GridPoint2 = GridPoint(e);
+            OverridePointerMoved(ResizingOverview);
+            OverridePointerReleased(ClearPointerOverrides);
         }
         private void ResizingOverview()
         {
@@ -533,11 +521,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region RootCanvas_DoubleTapped  ======================================
-        private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e)
-        {
-            e.Handled = true;
-            if ((Model.DrawState & DrawState.NowMask) == DrawState.NowOnVoid) PanZoomReset();
-        }
+        private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => PanZoomReset();
         #endregion
 
         #region RootCanvas_PointerMoved  ======================================
@@ -550,10 +534,15 @@ namespace ModelGraph.Controls
 
                 e.Handled = true;
 
-                if (_pointerIsPressed)
-                    PostEvent(DrawEvent.Drag);
+                if (_overridePointerMoved is null)
+                {
+                    if (_pointerIsPressed)
+                        PostEvent(DrawEvent.Drag);
+                    else
+                        PostEvent(DrawEvent.Skim);
+                }
                 else
-                    PostEvent(DrawEvent.Skim);
+                    _overridePointerMoved();
             }
         }
         private bool _pointerIsPressed;
@@ -569,9 +558,27 @@ namespace ModelGraph.Controls
                 SetDrawPoint1(e);
                 e.Handled = true;
 
-                PostEvent(DrawEvent.Tap);
+                if (_overridePointerPressed is null)
+                    PostEvent(DrawEvent.Tap);
+                else
+                    _overridePointerPressed();
             }
         }
+        #endregion
+
+        #region PointerEventOverride  =========================================
+        private void OverridePointerMoved(Action action) => _overridePointerMoved = action;
+        private void OverridePointerPressed(Action action) => _overridePointerPressed = action;
+        private void OverridePointerReleased(Action action) => _overridePointerReleased = action;
+        private void ClearPointerOverrides()
+        {
+            RestorePointerCursor();
+            _overridePointerPressed = _overridePointerMoved = _overridePointerReleased = null;
+        }
+
+        private Action _overridePointerMoved;
+        private Action _overridePointerPressed;
+        private Action _overridePointerReleased;
         #endregion
 
         #region RootCanvas_PointerReleased  ===================================
@@ -584,7 +591,10 @@ namespace ModelGraph.Controls
                 SetDrawPoint2(e);
                 e.Handled = true;
 
-                PostEvent(DrawEvent.TapEnd);
+                if (_overridePointerReleased is null)
+                    PostEvent(DrawEvent.TapEnd);
+                else
+                    _overridePointerReleased();
             }
         }
         #endregion

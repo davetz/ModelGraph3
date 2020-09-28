@@ -4,19 +4,19 @@ namespace ModelGraph.Core
     public enum DrawEvent
     { 
         Idle, 
-        Tap, 
+        Tap,
+        Context,
         DoubleTap, 
         TapEnd, 
-        ContextMenu, 
         Skim, 
         Drag, 
-        TopHit, 
-        LeftHit, 
-        RightHit, 
-        BottomHit, 
-        TopLeftHit, 
-        TopRightHit, 
-        BottomLeftHit, 
-        BottomRightHit 
+        TopTap, 
+        LeftTap, 
+        RightTap, 
+        BottomTap, 
+        TopLeftTap, 
+        TopRightTap, 
+        BottomLeftTap, 
+        BottomRightTap,
     };
 }

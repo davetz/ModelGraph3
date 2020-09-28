@@ -25,9 +25,15 @@ namespace ModelGraph.Core
             RefreshHelperData();
             RefreshPicker1Data();
             RefreshPicker2Data();
+            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
+
+            SetDrawStateAction(DrawState.Apply, ApplyChange);
+            SetDrawStateAction(DrawState.Revert, Revert);
+
+
+
             SetViewMode();
             PageModel.TriggerUIRefresh();
-            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
         }
         #endregion
 
@@ -66,16 +72,24 @@ namespace ModelGraph.Core
             RefreshPicker1Data();
             PageModel.TriggerUIRefresh();
         }
-        public override void Apply()
+        private void ApplyChange()
         {
             Symbol.SaveShapes();
+            RestoreDrawState();
         }
-        public override void Reload()
+        private void Revert()
         {
             Symbol.ReloadShapes();
             RefreshEditorData();
             RefreshPicker1Data();
+            RestoreDrawState();
             PageModel.TriggerUIRefresh();
+        }
+        private void RestoreDrawState()
+        {
+            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.LinkMode) SetViewMode();
+            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.OperateMode) SetViewMode();
+            SetViewMode();
         }
         #endregion
 
@@ -228,6 +242,11 @@ namespace ModelGraph.Core
             RefreshEditorData();
             RefreshPicker1Data();
             RefreshPicker2Data();
+            if (_selectShapes.Count == 0)
+                SetViewMode();
+            else
+                SetEditMode();
+
         }
         private List<Shape> _selectShapes = new List<Shape>(10);
         #endregion
@@ -270,26 +289,45 @@ namespace ModelGraph.Core
             RefreshEditorData();
             RefreshPicker1Data();
             RefreshPicker2Data();
+
+            if (_selectPicker2Shape is null)
+                SetViewMode();
+            else
+                SetCreateMode();
         }
         #endregion
 
         #region DrawStateControl  =============================================
 
-        #region ViewMode == DefineSimbol  =====================================
+        #region ViewMode == ViewSymbol  =======================================
         public void SetViewMode()
         {
             if (TrySetState(DrawState.ViewMode))
+            {
+                _selectPicker2Shape = null;
+                _selectShapes.Clear();
+            }
+        }
+        #endregion
+
+        #region EditMode == ModifySymbol  =====================================
+        public void SetEditMode()
+        {
+            if (TrySetState(DrawState.EditMode))
             {
             }
         }
         #endregion
 
-        #endregion
-
-
-        #region HitTest  ======================================================
-
-        private bool TapHitTest()
+        #region CreateMode == AddSymbolShape  =================================
+        public void SetCreateMode()
+        {
+            if (TrySetState(DrawState.CreateMode))
+            {
+                SetEventAction(DrawEvent.Tap, TapHitTest);
+            }
+        }
+        private void TapHitTest()
         {
             ClearHit();
             if (_selectPicker2Shape is null)
@@ -303,8 +341,27 @@ namespace ModelGraph.Core
                 RefreshEditorData();
                 PageModel.TriggerUIRefresh();
             }
-            return false;
         }
+        #endregion
+
+        #region LinkMode == DefineTerminals  ==================================
+        public void LinkModeMode()
+        {
+            if (TrySetState(DrawState.LinkMode))
+            {
+            }
+        }
+        #endregion
+
+        #region OperateMode == AutoFlipRotate  ================================
+        public void SetOperateMode()
+        {
+            if (TrySetState(DrawState.OperateMode))
+            {
+            }
+        }
+        #endregion
+
         #endregion
     }
 }
