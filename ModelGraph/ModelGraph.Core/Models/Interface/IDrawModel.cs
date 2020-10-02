@@ -11,6 +11,7 @@ namespace ModelGraph.Core
         Dictionary<DrawEvent, Action> DrawEvent_Action { get; }
         bool TrySetState(DrawState state, bool reset = false);
         void SetEventAction(DrawEvent evt, Action act);
+
         bool IsToolTipVisible { get; }
         bool IsResizerGridVisible { get; }
         bool IsFlyTreeVisible { get; }
@@ -24,23 +25,7 @@ namespace ModelGraph.Core
         (byte,byte,byte,byte) ColorARGB { get; set; }
         void ColorARGBChanged();
 
-        Extent EditorExtent { get; }
         Extent ResizerExtent { get; } //in drawPoint coordinates
-
-        void RefreshEditorData();
-        int Picker1Width { get; }
-        int Picker2Width { get; }
-        void Picker1Select(int YCord, bool add = false);
-        void Picker2Select(int YCord);
-        void Picker2Paste();
-
-        Vector2 GridPoint1 { get; set; }
-        Vector2 GridPoint2 { get; set; }
-
-        Vector2 DrawPoint1 { get; set; }
-        Vector2 DrawPoint2 { get; set; }
-
-        Vector2 GridPointDelta(bool reset);
 
         Vector2 ToolTipTarget { get; } //in drawPoint coordinates
         string ToolTip_Text1 { get; }

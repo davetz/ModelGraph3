@@ -19,6 +19,8 @@ namespace ModelGraph.Controls
     {
         public IDrawModel Model { get; private set; }
         private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
+        private Vector2 GridPoint1;
+        private Vector2 GridPoint2;
 
         #region Constructor/Initialize  =======================================
         public CanvasDrawControl()
@@ -33,6 +35,8 @@ namespace ModelGraph.Controls
         {
             Model = model;
 
+
+
             if (model.FlyTreeModel is ITreeModel)
                 FlyTreeCanvas.Initialize(model.FlyTreeModel);
             else
@@ -42,20 +46,11 @@ namespace ModelGraph.Controls
                 SideTreeCanvas.Initialize(model.SideTreeModel);
             else
                 SideTreeCanvas.IsEnabled = false;
-        }
 
-        internal async void Refresh()
-        {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () =>
-            {
-                if(FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
-                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
-                if (Model.IsToolTipVisible) ShowToolTip();
-                else HideToolTip();
-            });
-
-
-            EditCanvas.Invalidate();
+            CanvasScaleOffset[EditCanvas] = (0.5f, new Vector2());
+            CanvasScaleOffset[OverCanvas] = (0.5f, new Vector2());
+            CanvasScaleOffset[Pick1Canvas] = (0.5f, new Vector2());
+            CanvasScaleOffset[Pick2Canvas] = (0.5f, new Vector2());
         }
         #endregion
 
@@ -168,44 +163,28 @@ namespace ModelGraph.Controls
         private void OverviewResize_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _pointerIsPressed = true;
-            Model.GridPoint1 = new Vector2(0, 0);
-            Model.GridPoint2 = GridPoint(e);
+            GridPoint1 = new Vector2(0, 0);
+            GridPoint2 = GridPoint(e);
             OverridePointerMoved(ResizingOverview);
             OverridePointerReleased(ClearPointerOverrides);
         }
         private void ResizingOverview()
         {
-            var size = Vector2.Abs(Model.GridPoint1 - Model.GridPoint2);
+            var size = Vector2.Abs(GridPoint1 - GridPoint2);
             if (size.X < OverviewBorder.MinWidth) return;
             if (size.Y < OverviewBorder.MinHeight) return;
 
             OverviewBorder.Width = size.X;
             OverviewBorder.Height = size.Y;
-            SetOverviewScaleOffset();
+            SetScaleOffset(OverCanvas, Model.EditorData);
             OverCanvas.Invalidate();
         }
         #endregion
 
         #region PanZoom  ======================================================
-        private float _editScale = 0.5f; //scale the view extent so that it fits on the canvas
-        private Vector2 _editOffset = new Vector2(); //offset need to center the view extent on the canvas
-        private float _overScale = 0.5f; //scale the view extent so that it fits on the canvas
-        private Vector2 _overOffset = new Vector2(); //offset need to center the view extent on the canvas
-        private float _pick1Scale = 0.5f; //scale the view extent so that it fits on the canvas
-        private Vector2 _pick1Offset = new Vector2(); //offset need to center the view extent on the canvas
-        private float _pick2Scale = 0.5f; //scale the view extent so that it fits on the canvas
-        private Vector2 _pick2Offset = new Vector2(); //offset need to center the view extent on the canvas
-        (float,Vector2) GetScaleOffset(CanvasControl sender)
-        {
-            if (sender == EditCanvas) return (_editScale, _editOffset);
-            if (sender == OverCanvas) return (_overScale, _overOffset);
-            if (sender == Pick1Canvas) return (_pick1Scale, _pick1Offset);
-            if (sender == Pick2Canvas) return (_pick2Scale, _pick2Offset);
-            return (1.0f, new Vector2(0, 0));
-        }
-
         private const float maxScale = 10;
         private const float minZoomDiagonal = 8000;
+        private readonly Dictionary<CanvasControl, (float, Vector2)> CanvasScaleOffset = new Dictionary<CanvasControl, (float, Vector2)>(4);
 
         private void Pan(Vector2 adder)
         {
@@ -218,10 +197,35 @@ namespace ModelGraph.Controls
         }
         private void PanZoomReset()
         {
-            var aw = (float)EditCanvas.ActualWidth;
-            var ah = (float)EditCanvas.ActualHeight;
+            if (EditCanvas.IsEnabled)
+            {
+                SetScaleOffset(EditCanvas, Model.EditorData);
+                EditCanvas.Invalidate();
+            }
+            if (OverCanvas.IsEnabled)
+            {
+                SetScaleOffset(OverCanvas, Model.EditorData);
+                OverCanvas.Invalidate();
+            }
+            if (Pick1Canvas.IsEnabled)
+            {
+                SetScaleOffset(Pick1Canvas, Model.Picker1Data);
+                Pick1Canvas.Invalidate();
+            }
+            if (Pick2Canvas.IsEnabled)
+            {
+                SetScaleOffset(Pick2Canvas, Model.Picker2Data);
+                Pick2Canvas.Invalidate();
+            }
+        }
+        private void SetScaleOffset(CanvasControl canvas, IDrawData data)
+        {
+            if (!canvas.IsEnabled || data is null) return;
 
-            var e = Model.EditorExtent;
+            var aw = (float)canvas.ActualWidth;
+            var ah = (float)canvas.ActualHeight;
+
+            var e = data.Extent;
             var ew = (float)e.Width;
             var eh = (float)e.Hieght;
 
@@ -236,77 +240,11 @@ namespace ModelGraph.Controls
 
             // zoom required to make the view extent fit the canvas
             if (z > maxScale) z = maxScale;
-            _editScale = z;
 
             var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
-            var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
-            _editOffset = ac - ec; //complete offset need to center the view extent on the canvas
+            var ac = eh == 1 ? new Vector2( aw /2, aw / 2) : new Vector2(aw / 2, ah / 2); //center point of the canvas
 
-            SetOverviewScaleOffset();
-            SetPicker1ScaleOffset();
-            SetPicker2ScaleOffset();
-            EditCanvas.Invalidate();
-        }
-        private void SetOverviewScaleOffset()
-        {
-            var aw = (float)OverCanvas.ActualWidth;
-            var ah = (float)OverCanvas.ActualHeight;
-
-            var e = Model.EditorExtent;
-            var ew = (float)e.Width;
-            var eh = (float)e.Hieght;
-
-            if (aw < 1) aw = 1;
-            if (ah < 1) ah = 1;
-            if (ew < 1) ew = 1;
-            if (eh < 1) eh = 1;
-
-            var zw = aw / ew;
-            var zh = ah / eh;
-            var z = (zw < zh) ? zw : zh;
-
-            _overScale = z;
-
-            var ec = new Vector2(e.CenterX, e.CenterY) * z; //center point of scaled view extent
-            var ac = new Vector2(aw / 2, ah / 2); //center point of the canvas
-            _overOffset = ac - ec; //complete offset need to center the view extent on the canvas
-        }
-        private void SetPicker1ScaleOffset()
-        {
-            var aw = (float)Pick1Canvas.ActualWidth;
-            var ew = (float)Model.Picker1Width;
-
-            if (aw < 1) aw = 1;
-            if (ew < 1) ew = 1;
-
-            _pick1Scale = aw / ew;
-            _pick1Offset = new Vector2(aw / 2, aw / 2); //center point of the canvas
-        }
-        private void SetPicker2ScaleOffset()
-        {
-            var aw = (float)Pick2Canvas.ActualWidth;
-            var ew = (float)Model.Picker2Width;
-
-            if (aw < 1) aw = 1;
-            if (ew < 1) ew = 1;
-
-            _pick2Scale = aw / ew;
-            _pick2Offset = new Vector2(aw / 2, aw / 2); //center point of the canvas
-        }
-        #endregion
-
-        #region Picker_PointerPressed  ========================================
-        private async void Pick1Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var p = e.GetCurrentPoint(Pick1Canvas).Position;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker1Select((int)p.Y); });
-            EditCanvas.Invalidate();
-        }
-        private async void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            var p = e.GetCurrentPoint(Pick2Canvas).Position;
-            await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { Model.Picker2Select((int)p.Y); });
-            EditCanvas.Invalidate();
+            CanvasScaleOffset[canvas] = (z, ac - ec);
         }
         #endregion
 
@@ -320,7 +258,7 @@ namespace ModelGraph.Controls
                 var sc = s & Core.StrokeType.SC_Triangle;
                 var dc = s & Core.StrokeType.DC_Triangle;
                 var ec = s & Core.StrokeType.EC_Triangle;
-                var ds = s & Core.StrokeType.DashMask;
+                var ds = s & Core.StrokeType.Filled;
 
                 ss.EndCap = ec == Core.StrokeType.EC_Round ? CanvasCapStyle.Round : ec == Core.StrokeType.EC_Square ? CanvasCapStyle.Square : ec == Core.StrokeType.EC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
                 ss.DashCap = dc == Core.StrokeType.DC_Round ? CanvasCapStyle.Round : dc == Core.StrokeType.DC_Square ? CanvasCapStyle.Square : dc == Core.StrokeType.DC_Triangle ? CanvasCapStyle.Triangle : CanvasCapStyle.Flat;
@@ -333,39 +271,45 @@ namespace ModelGraph.Controls
         private CanvasStrokeStyle _strokeStyle = new CanvasStrokeStyle();
         #endregion
 
+        #region Refresh  ======================================================
+        internal async void Refresh()
+        {
+            await _dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, RefreshAll);
+
+            void RefreshAll()
+            {
+                if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
+                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
+
+                if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
+                if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
+                if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
+                if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+
+                if (Model.IsToolTipVisible) ShowToolTip();
+                else HideToolTip();
+            }
+        }
+        internal async void PostEvent(DrawEvent evt)
+        {
+            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+        }
+        #endregion
+
         #region DrawCanvas_Draw  ==============================================
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
-            if (sender == EditCanvas)
-            {
-                DoDraw(Model.HelperData);
-                DoDraw(Model.EditorData);
+            if (sender == EditCanvas) { Draw(Model.HelperData); Draw(Model.EditorData); }
+            else if (sender == OverCanvas) Draw(Model.EditorData);
+            else if (sender == Pick1Canvas) Draw(Model.Picker1Data);
+            else if (sender == Pick2Canvas) Draw(Model.Picker2Data);
 
-                if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
-                else if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
-                else if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
-            }
-            else if (sender == OverCanvas)
-            {
-                DoDraw(Model.EditorData);
-                if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
-                else if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
-            }
-            else if (sender == Pick1Canvas)
-            {
-                DoDraw(Model.Picker1Data);
-                if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
-            }
-            else if (sender == Pick2Canvas)
-            {
-                DoDraw(Model.Picker2Data);
-            }
-
-            void DoDraw(IDrawData data)
+            void Draw(IDrawData data)
             {
                 if (data is null) return;
 
-                var (scale, offset) = GetScaleOffset(sender);
+                var (scale, offset) = CanvasScaleOffset[sender];
                 var ds = args.DrawingSession;
 
                 foreach (var (P, (K, S, W), (A, R, G, B)) in data.Lines)
@@ -473,16 +417,6 @@ namespace ModelGraph.Controls
                     }
                 }
             }
-
-
-            // refresh both picker1 & picker2 canvases
-            if (sender == EditCanvas)
-            {
-                Pick1Canvas.Invalidate();
-                OverCanvas.Invalidate();
-            }
-            else if (sender == Pick1Canvas)
-                Pick2Canvas.Invalidate();
         }
         #endregion
 
@@ -524,13 +458,13 @@ namespace ModelGraph.Controls
         private void RootCanvas_DoubleTapped(object sender, DoubleTappedRoutedEventArgs e) => PanZoomReset();
         #endregion
 
-        #region RootCanvas_PointerMoved  ======================================
+        #region PointerMoved  =================================================
         private void RootCanvas_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (_isRootCanvasLoaded)
             {
                 SetGridPoint2(e);
-                SetDrawPoint2(e);
+                SetDrawPoint2(EditCanvas, Model.EditorData, e);
 
                 e.Handled = true;
 
@@ -545,17 +479,26 @@ namespace ModelGraph.Controls
                     _overridePointerMoved();
             }
         }
+        private void Pick1Canvas_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            e.Handled = true;
+            if (_pointerIsPressed)
+            {
+                SetDrawPoint2(Pick1Canvas, Model.Picker1Data, e);
+                PostEvent(DrawEvent.Picker1Drag);
+            }
+        }
         private bool _pointerIsPressed;
         #endregion
 
-        #region RootCanvas_PointerPressed  ====================================
+        #region PointerPressed  ===============================================
         private void RootCanvas_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             if (_isRootCanvasLoaded)
             {
                 _pointerIsPressed = true;
                 SetGridPoint1(e);
-                SetDrawPoint1(e);
+                SetDrawPoint1(EditCanvas, Model.EditorData, e);
                 e.Handled = true;
 
                 if (_overridePointerPressed is null)
@@ -563,6 +506,55 @@ namespace ModelGraph.Controls
                 else
                     _overridePointerPressed();
             }
+        }
+        private void Pick1Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _pointerIsPressed = true;
+            SetDrawPoint1(Pick1Canvas, Model.Picker1Data, e);
+            e.Handled = true;
+
+            if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control)
+                PostEvent(DrawEvent.Picker1CtrlTap);
+            else
+                PostEvent(DrawEvent.Picker1Tap);
+        }
+        private void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _pointerIsPressed = true;
+            SetDrawPoint1(Pick2Canvas, Model.Picker2Data, e);
+            e.Handled = true;
+
+            PostEvent(DrawEvent.Picker2Tap);
+        }
+        private void OverCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _pointerIsPressed = true;
+            e.Handled = true;
+
+            PostEvent(DrawEvent.OverviewTap);
+        }
+        #endregion
+
+        #region PointerReleased  ==============================================
+        private void RootCanvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (_isRootCanvasLoaded)
+            {
+                _pointerIsPressed = false;
+                SetGridPoint2(e);
+                SetDrawPoint2(EditCanvas, Model.EditorData, e);
+                e.Handled = true;
+
+                if (_overridePointerReleased is null)
+                    PostEvent(DrawEvent.TapEnd);
+                else
+                    _overridePointerReleased();
+            }
+        }
+        private void Canvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            _pointerIsPressed = false;
+            e.Handled = true;
         }
         #endregion
 
@@ -581,68 +573,45 @@ namespace ModelGraph.Controls
         private Action _overridePointerReleased;
         #endregion
 
-        #region RootCanvas_PointerReleased  ===================================
-        private void RootCanvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if (_isRootCanvasLoaded)
-            {
-                _pointerIsPressed = false;
-                SetGridPoint2(e);
-                SetDrawPoint2(e);
-                e.Handled = true;
-
-                if (_overridePointerReleased is null)
-                    PostEvent(DrawEvent.TapEnd);
-                else
-                    _overridePointerReleased();
-            }
-        }
-        #endregion
-
         #region HelperMethods  ================================================
-        private void SetGridPoint1(PointerRoutedEventArgs e) => Model.GridPoint1 = GridPoint(e);
-        private void SetGridPoint2(PointerRoutedEventArgs e) => Model.GridPoint2 = GridPoint(e);
-        private void SetDrawPoint1(PointerRoutedEventArgs e) => Model.DrawPoint1 = DrawPoint(e);
-        private void SetDrawPoint2(PointerRoutedEventArgs e) => Model.DrawPoint2 = DrawPoint(e);
+        private void SetGridPoint1(PointerRoutedEventArgs e) => GridPoint1 = GridPoint(e);
+        private void SetGridPoint2(PointerRoutedEventArgs e) => GridPoint2 = GridPoint(e);
+        private void SetDrawPoint1(CanvasControl canvas, IDrawData data, PointerRoutedEventArgs e) => data.Point1 = DrawPoint(canvas, e);
+        private void SetDrawPoint2(CanvasControl canvas, IDrawData data, PointerRoutedEventArgs e) => data.Point2 = DrawPoint(canvas, e);
         private Vector2 GridPoint(PointerRoutedEventArgs e)
         {
             var p = e.GetCurrentPoint(RootGrid).Position;
             return new Vector2((float)p.X, (float)p.Y);
         }
-        private Vector2 DrawPoint(PointerRoutedEventArgs e)
+        private Vector2 DrawPoint(CanvasControl canvas, PointerRoutedEventArgs e)
         {
-            var p = e.GetCurrentPoint(EditCanvas).Position;
-            var x = (p.X - _editOffset.X) / _editScale;
-            var y = (p.Y - _editOffset.Y) / _editScale;
+            var p = e.GetCurrentPoint(canvas).Position;
+            var (scale, offset) = CanvasScaleOffset[canvas];
+            var x = (p.X - offset.X) / scale;
+            var y = (p.Y - offset.Y) / scale;
             return new Vector2((float)x, (float)y);
         }
         private (float top, float left, float width, float height) GetResizerParams()
         {
+            var (scale, offset) = CanvasScaleOffset[EditCanvas];
             var (x1, y1, x2, y2) = Model.ResizerExtent.GetFloat();
 
             var dx = x2 - x1;
             var dy = y2 - y1;
 
-            var width = dx * _editScale;
-            var height = dy * _editScale;
+            var width = dx * scale;
+            var height = dy * scale;
 
-            var top = y1 * _editScale + _editOffset.X;
-            var left = x1 * _editScale + _editOffset.Y;
+            var top = y1 * scale + offset.X;
+            var left = x1 * scale + offset.Y;
 
             return (top, left, width, height);
         }
         private (float,float) GetToolTipGridPoint()
         {
-            var p = Model.ToolTipTarget * _editScale + _editOffset;
+            var (scale, offset) = CanvasScaleOffset[EditCanvas];
+            var p = Model.ToolTipTarget * scale + offset;
             return (p.X, p.Y);
-        }
-        #endregion
-
-        #region PostEvent  ====================================================
-        internal async void PostEvent(DrawEvent evt)
-        {
-            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
         #endregion
 

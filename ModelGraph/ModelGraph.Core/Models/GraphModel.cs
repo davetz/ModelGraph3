@@ -13,12 +13,14 @@ namespace ModelGraph.Core
             Graph = graph;
 
             FlyTreeModel = new TreeModel(owner, null);
+            Editor.GetExtent = graph.ResetExtent;
+            
             RefreshEditorData();
         }
         #endregion
 
         #region CreateDrawData  ===============================================
-        override public void RefreshEditorData()
+        private void RefreshEditorData()
         {
             Editor.Clear();
             foreach (var e in Graph.Edges)
@@ -37,11 +39,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region PickerEvents  =================================================
-        override public int Picker2Width => 80;
-
-        override public void Picker2Select(int y)
+        private void Picker2Select()
         {
-            var w = Picker2Width;
+            var y = Picker2.Point1.Y;
+            var w = Picker2.Extent.Width;
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
@@ -50,19 +51,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region HitTest  ======================================================
-        override public Extent EditorExtent => Graph.ResetExtent();
 
         private bool SkimHitTest()
         {
             ClearHit();
 
-            if (RegionHitTest(DrawPoint2))
+            if (RegionHitTest(Editor.Point2))
             {
                 SetHitRegion();
             }
 
             _hitNode = null;
-            var (ok, node) = HitNodeTest(DrawPoint2);
+            var (ok, node) = HitNodeTest(Editor.Point2);
             if (ok)
             {
                 _hitNode = node;
@@ -77,12 +77,12 @@ namespace ModelGraph.Core
         {
             ClearHit();
 
-            if (RegionHitTest(DrawPoint1))
+            if (RegionHitTest(Editor.Point1))
             {
                 SetHitRegion();
             }
 
-            var (ok, node) = HitNodeTest(DrawPoint1);
+            var (ok, node) = HitNodeTest(Editor.Point1);
             if (ok)
             {
                 _hitNode = node;
@@ -136,18 +136,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-        override public bool MoveNode()
+        private bool MoveNode()
         {
             if (_hitNode is null) return false;
-            var delta = DrawPointDelta(true);
+            var delta = EditorData.PointDelta(true);
             _hitNode.X += delta.X;
             _hitNode.Y += delta.Y;
             return true;
         }
 
-        override public bool MoveRegion()
+        private bool MoveRegion()
         {
-            var delta = DrawPointDelta(true);
+            var delta = EditorData.PointDelta(true);
             foreach (var n in _regionNodes)
             {
                 n.X += delta.X;

@@ -16,6 +16,7 @@ namespace ModelGraph.Controls
 
         public IPageModel PageModel => throw new System.NotImplementedException();
 
+        #region Constructor  ==================================================
         public ModelSymbolControl(IPageModel model)
         {
             Model = model;
@@ -24,13 +25,15 @@ namespace ModelGraph.Controls
             SymbolCanvas.SetOverview(32, 32);
             SymbolCanvas.ShowPicker1(32, 32);
             SymbolCanvas.ShowPicker2(32);
-            SizeChanged += ModelSymbolControl_SizeChanged;
+            Loaded += ModelSymbolControl_Loaded;
         }
 
-        private void ModelSymbolControl_SizeChanged(object sender, Windows.UI.Xaml.SizeChangedEventArgs e)
+        private void ModelSymbolControl_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
+            Loaded -= ModelSymbolControl_Loaded;
             SymbolCanvas.SetSideTreeSize(320, 500);
         }
+        #endregion
 
         #region IPageControl  =================================================
         public void Reload()

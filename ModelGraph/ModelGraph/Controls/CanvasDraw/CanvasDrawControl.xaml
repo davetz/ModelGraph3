@@ -89,7 +89,7 @@
 
         <Border x:Name="OverviewBorder" Style="{StaticResource OverviewBorderStyle}" Canvas.ZIndex="4">
             <Grid PointerMoved="RootCanvas_PointerMoved" PointerReleased="RootCanvas_PointerReleased">
-                <canvas:CanvasControl x:Name="OverCanvas" Draw="DrawCanvas_Draw"/>
+                <canvas:CanvasControl x:Name="OverCanvas" Draw="DrawCanvas_Draw" PointerPressed="OverCanvas_PointerPressed" />
                 <Rectangle x:Name="OverviewResize" Style="{StaticResource OverviewResizeStyle}"
                            PointerEntered="OverviewResize_PointerEntered"
                            PointerExited="OverviewResize_PointerExited"
@@ -117,7 +117,7 @@
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0" x:Name="Picker1Grid" Margin="0,32,2,0"   Background="DarkSlateGray" >
-                <canvas:CanvasControl x:Name="Pick1Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick1Canvas_PointerPressed"/>
+                <canvas:CanvasControl x:Name="Pick1Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick1Canvas_PointerPressed" PointerMoved="Pick1Canvas_PointerMoved" PointerReleased="Canvas_PointerReleased"/>
             </Grid>
 
             <Grid Grid.Column="1" x:Name="RootGrid" Background="DarkSlateGray">

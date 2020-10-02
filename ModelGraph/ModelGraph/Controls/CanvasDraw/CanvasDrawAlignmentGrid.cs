@@ -20,8 +20,8 @@ namespace ModelGraph.Controls
 
         void PositionAlignmentGrid()
         {
-            var min = Vector2.Min(Model.GridPoint1, Model.GridPoint2);
-            var size = Vector2.Abs(Model.GridPoint1 - Model.GridPoint2);
+            var min = Vector2.Min(GridPoint1, GridPoint2);
+            var size = Vector2.Abs(GridPoint1 - GridPoint2);
 
             AlignmentGrid.Width = size.X + (float)SelectorBorder.Margin.Right;
             AlignmentGrid.Height = size.Y;

@@ -70,42 +70,13 @@ namespace ModelGraph.Core
         public bool IsPicker1Visible { get; protected set; }
         public bool IsPicker2Visible { get; protected set; }
         public bool IsColorPickerEnabled { get; protected set; }
-
-        virtual public int Picker1Width => 0;
-        virtual public int Picker2Width => 0;
         public Vector2 ToolTipTarget { get; set; }
         public Extent ResizerExtent { get; set; } //in drawPoint coordinates
-        virtual public Extent EditorExtent => new Extent(100, 100);
         #endregion
 
         #region PointerData  ==================================================
-        public Vector2 GridPoint1 { get; set; }
-        public Vector2 GridPoint2 { get; set; }
-
-        public Vector2 DrawPoint1 { get; set; }
-        public Vector2 DrawPoint2 { get; set; }
-
         protected Vector2 RegionPoint1 { get; set; }
         protected Vector2 RegionPoint2 { get; set; }
-        public Vector2 GridPointDelta(bool reset = false)
-        {
-            var delta = GridPoint2 - GridPoint1;
-            if (reset) GridPoint1 = GridPoint2;
-            return delta;
-        }
-        public Vector2 DrawPointDelta(bool reset = false)
-        {
-            var delta = DrawPoint2 - DrawPoint1;
-            if (reset) DrawPoint1 = DrawPoint2;
-            return delta;
-        }
-        #endregion
-
-        #region PointerAction  ================================================
-        virtual public bool MoveNode() => false;
-        virtual public bool MoveRegion() => false;
-        virtual public bool CreateNode() => false;
-
         #endregion
 
 
@@ -124,45 +95,11 @@ namespace ModelGraph.Core
         #endregion
 
 
-        #region Resize  =======================================================
-        virtual public void ResizeTop() { }
-        virtual public void ResizeLeft() { }
-        virtual public void ResizeRight() { }
-        virtual public void ResizeBottom() { }
-        virtual public void ResizeTopLeft() { }
-        virtual public void ResizeTopRight() { }
-        virtual public void ResizeBottomLeft() { }
-        virtual public void ResizeBottomRight() { }
-        virtual public void ResizePropagate() { }
-        #endregion
-
-
-        #region ITreeModel  ===================================================
-        public ITreeModel FlyTreeModel { get; protected set; }
-        public ITreeModel SideTreeModel { get; protected set; }
-        #endregion
-
-
-        #region Pickers  ======================================================
-        virtual public void Picker1Select(int YCord, bool add = false) { }
-        virtual public void Picker2Select(int YCord) { }
-        virtual public void Picker2Paste() { }
-        #endregion
-
-        #region ColorARGB/Apply/Reload  =======================================
-        public (byte, byte, byte, byte) ColorARGB { get; set; } = (255, 255, 255, 255);
-        public virtual void ColorARGBChanged() { }
-
-        public virtual void Apply() { }
-        public virtual void Reload() { }
-        #endregion
-
         #region IDrawData  ====================================================
-        virtual public void RefreshEditorData() { }
         virtual public string HeaderTitle => "No Title was specified";
 
         public IDrawData HelperData => Helper;      // editor layer1  
-        protected DrawData Helper = new DrawData(); 
+        protected DrawData Helper = new DrawData();
 
         public IDrawData EditorData => Editor;      // editor layer2
         protected DrawData Editor = new DrawData();
@@ -174,6 +111,15 @@ namespace ModelGraph.Core
         protected DrawData Picker2 = new DrawData();
         #endregion
 
+        #region ITreeModel  ===================================================
+        public ITreeModel FlyTreeModel { get; protected set; }
+        public ITreeModel SideTreeModel { get; protected set; }
+        #endregion
+
+        #region ColorARGB/Apply/Reload  =======================================
+        public (byte, byte, byte, byte) ColorARGB { get; set; } = (255, 255, 255, 255);
+        public virtual void ColorARGBChanged() { }
+        #endregion
     }
 }
 

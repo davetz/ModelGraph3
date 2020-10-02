@@ -13,6 +13,6 @@ namespace ModelGraph.Core
         }
 
         internal override byte GetValue(Item item) => Cast(item).StrokeWidth;
-        internal override void SetValue(Item item, byte val) { Cast(item).StrokeWidth = val; Cast(item).StrokeWidthChanged(); }
+        internal override void SetValue(Item item, byte val) => Cast(item).StrokeWidth = val;
     }
 }

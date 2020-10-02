@@ -18,5 +18,10 @@ namespace ModelGraph.Core
         TopRightTap, 
         BottomLeftTap, 
         BottomRightTap,
+        OverviewTap,
+        Picker2Tap,
+        Picker1Tap,
+        Picker1CtrlTap,
+        Picker1Drag,
     };
 }

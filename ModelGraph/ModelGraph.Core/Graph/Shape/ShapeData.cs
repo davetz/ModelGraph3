@@ -25,15 +25,55 @@ namespace ModelGraph.Core
 
         #region Properties  ===================================================
         internal void SetStrokeWidth(byte sw) => SW = sw;
+        internal void SetEndCap(CapStyle v)
+        {
+            var ss = (StrokeType)SS & ~StrokeType.EC_Triangle;
 
-        protected (ShapeType, StrokeType, byte) ShapeStrokeWidth() => (ShapeType, (StrokeType)SS, SW);
+            if (v == CapStyle.Round) ss |= StrokeType.EC_Round;
+            else if (v == CapStyle.Square) ss |= StrokeType.EC_Square;
+            else if (v == CapStyle.Triangle) ss |= StrokeType.EC_Triangle;
+
+            SS = (byte)ss;
+        }
+        internal void SetDashCap(CapStyle v)
+        {
+            var ss = (StrokeType)SS & ~StrokeType.DC_Triangle;
+
+            if (v == CapStyle.Round) ss |= StrokeType.DC_Round;
+            else if (v == CapStyle.Square) ss |= StrokeType.DC_Square;
+            else if (v == CapStyle.Triangle) ss |= StrokeType.DC_Triangle;
+
+            SS = (byte)ss;
+        }
+        internal void SetStartCap(CapStyle v)
+        {
+            var ss = (StrokeType)SS & ~StrokeType.SC_Triangle;
+
+            if (v == CapStyle.Round) ss |= StrokeType.SC_Round;
+            else if (v == CapStyle.Square) ss |= StrokeType.SC_Square;
+            else if (v == CapStyle.Triangle) ss |= StrokeType.SC_Triangle;
+
+            SS = (byte)ss;
+        }
+        internal void SetStokeStyle(StrokeStyle v)
+        {
+            var ss = (StrokeType)SS & ~StrokeType.Filled;
+
+            if (v == StrokeStyle.Filled) ss = StrokeType.Filled;
+            else if (v == StrokeStyle.Dotted) ss |= StrokeType.Dotted;
+            else if (v == StrokeStyle.Dashed) ss |= StrokeType.Dashed;
+
+            SS = (byte)ss;
+        }
+
+        internal (ShapeType, StrokeType, byte) ShapeStrokeWidth() => (ShapeType, (StrokeType)SS, SW);
         protected (ShapeType, StrokeType, byte) ShapeStrokeWidth(float scale)
         {
             var sw = (byte)(SW * scale); // compensate for exagerated size
             if (sw < 1) sw = 1;
             return (ShapeType, (StrokeType)SS, sw);
         }
-        protected (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, G, B) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
+        internal (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, G, B) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
         private const byte _g = 0x80;
         private const byte _a = 0x60;
 

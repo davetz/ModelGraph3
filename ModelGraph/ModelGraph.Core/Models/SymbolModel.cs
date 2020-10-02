@@ -9,11 +9,10 @@ namespace ModelGraph.Core
     public class SymbolModel : DrawModel
     {
         internal readonly SymbolX Symbol;
-        override public Extent EditorExtent => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
         private const float EditRadius = 256;   //width, height of shape in the editor
         private const float EditMargin = 32;    //size of empty space arround the shape editor 
         private const float EditExtent = EditRadius + EditMargin;
-        private float AbsoluteSize;
+        private readonly float AbsoluteSize;
 
         #region Constructor  ==================================================
         internal SymbolModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
@@ -21,90 +20,194 @@ namespace ModelGraph.Core
 
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
-            RefreshEditorData();
+            RefreshDrawData();
             RefreshHelperData();
-            RefreshPicker1Data();
-            RefreshPicker2Data();
             SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
 
             SetDrawStateAction(DrawState.Apply, ApplyChange);
             SetDrawStateAction(DrawState.Revert, Revert);
 
-
+            Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
+            Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
+            Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
 
             SetViewMode();
-            PageModel.TriggerUIRefresh();
+            RefreshDrawData();
         }
-        #endregion
+       #endregion
 
         #region ShapeProperty  ================================================
-        internal CapStyle EndCapStyle;
-        internal CapStyle DashCapStyle;
-        internal CapStyle StartCapStyle;
-        internal StrokeStyle StrokeStyle;
-        internal byte StrokeWidth = 2;
-        #endregion
 
-        #region RefreshEditorData  ============================================
-        override public void RefreshEditorData()
+        #region SetProperties  ================================================
+        private void SetProperties()
         {
-            var r = EditRadius;
-            var c = new Vector2();
-            var a = AbsoluteSize;
+            Properties = ShowProperty.None;
 
-            Editor.Clear();
-            var shapes = Symbol.GetShapes();
-            foreach (var s in shapes)
+            if (DrawState == DrawState.EditMode && _selectPicker1Shapes.Count > 0 )
+                SetProps(_selectPicker1Shapes[0]);
+            else if (DrawState == DrawState.EditMode && _selectPicker2Shape is Shape s)
+                SetProps(s);
+
+            (SideTreeModel as TreeModel).HeaderModel.ExpandRight(null);
+
+            void SetProps(Shape s1)
             {
-                s.AddDrawData(Editor, a, r, c, Shape.Coloring.Normal);
+                var (_, st, sw) = s1.ShapeStrokeWidth();
+                StrokeWidth = sw;
+
+                var sc = st & StrokeType.SC_Triangle;
+                var dc = st & StrokeType.DC_Triangle;
+                var ec = st & StrokeType.EC_Triangle;
+                var ss = st & StrokeType.Filled;
+
+                _endCapStyle = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                _dashCapStyle = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                _startCapStyle = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                _strokeStyle = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
+
+                ColorARGB = s1.ShapeColor();
+
+
+                Properties |= ShowProperty.StrokeStyle;
+                if (_strokeStyle == StrokeStyle.Filled) return;
+                Properties |= ShowProperty.StartCap | ShowProperty.EndCap;
+                if (_strokeStyle == StrokeStyle.Solid) return;
+                Properties |= ShowProperty.DashCap;
             }
         }
+
+        internal ShowProperty Properties;
         #endregion
 
-        #region ColorARGB/Apply/Reload  =======================================
-        public override void ColorARGBChanged()
+        #region EndCapStyle  ==================================================
+        internal CapStyle EndCapStyle { get => _endCapStyle; set => SetEndCap(value); }
+        private void SetEndCap(CapStyle value)
         {
-            foreach (var s in _selectShapes)
+            _endCapStyle = value;
+            foreach (var s in _selectPicker1Shapes)
             {
-                s.SetColor(ColorARGB);
+                s.SetEndCap(value);
             }
-            RefreshEditorData();
-            RefreshPicker1Data();
+            RefreshDrawData();
             PageModel.TriggerUIRefresh();
         }
-        private void ApplyChange()
+        private CapStyle _endCapStyle;
+        #endregion
+
+        #region DashCapStyle  =================================================
+        internal CapStyle DashCapStyle { get => _dashCapStyle; set => SetDashCap(value); }
+        private void SetDashCap(CapStyle value)
         {
-            Symbol.SaveShapes();
-            RestoreDrawState();
-        }
-        private void Revert()
-        {
-            Symbol.ReloadShapes();
-            RefreshEditorData();
-            RefreshPicker1Data();
-            RestoreDrawState();
+            _dashCapStyle = value;
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetDashCap(value);
+            }
+            RefreshDrawData();
             PageModel.TriggerUIRefresh();
         }
-        private void RestoreDrawState()
+        private CapStyle _dashCapStyle;
+        #endregion
+
+        #region StartCapStyle  ================================================
+        internal CapStyle StartCapStyle { get => _startCapStyle; set => SetStartCap(value); }
+        private void SetStartCap(CapStyle value)
         {
-            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.LinkMode) SetViewMode();
-            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.OperateMode) SetViewMode();
-            SetViewMode();
+            _startCapStyle = value;
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetStartCap(value);
+            }
+            RefreshDrawData();
+            PageModel.TriggerUIRefresh();
         }
+        private CapStyle _startCapStyle;
+        #endregion
+
+        #region StrokeStyle  ==================================================
+        internal StrokeStyle StrokeStyle { get => _strokeStyle; set => SetStrokeStyle(value); }
+        private void SetStrokeStyle(StrokeStyle value)
+        {
+            _strokeStyle = value;
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetStokeStyle(value);
+            }
+            RefreshDrawData();
+            PageModel.TriggerUIRefresh();
+        }
+        private StrokeStyle _strokeStyle;
         #endregion
 
         #region StrokeWidth  ==================================================
-        internal void StrokeWidthChanged()
+        internal byte StrokeWidth { get => _strokeWidth; set => SetStrokeWidth(value); }
+        private void SetStrokeWidth(byte value)
         {
-            foreach (var s in _selectShapes)
+            _strokeWidth = value;
+            foreach (var s in _selectPicker1Shapes)
             {
-                s.SetStrokeWidth(StrokeWidth);
+                s.SetStrokeWidth(_strokeWidth);
             }
-            RefreshEditorData();
-            RefreshPicker1Data();
+            RefreshDrawData();
             PageModel.TriggerUIRefresh();
         }
+        private byte _strokeWidth = 2;
         #endregion
+
+        #endregion
+
+        #region RefreshDrawData  ==================================================
+        private void RefreshDrawData()
+        {
+            RefreshEditorData();
+            RefreshPicker1Data();
+            RefreshPicker2Data();
+
+            PageModel.TriggerUIRefresh();
+
+            void RefreshEditorData()
+            {
+                var r = EditRadius;
+                var c = new Vector2();
+                var a = AbsoluteSize;
+
+                Editor.Clear();
+                var shapes = Symbol.GetShapes();
+                foreach (var s in shapes)
+                {
+                    s.AddDrawData(Editor, a, r, c, Shape.Coloring.Normal);
+                }
+            }
+            void RefreshPicker1Data()
+            {
+                var r = Picker1.Extent.Width / 2;
+                var c = new Vector2(0, 0);
+                var a = (float)Symbol.AbsoluteSize;
+                Picker1.Clear();
+                foreach (var s in Symbol.GetShapes())
+                {
+                    s.AddDrawData(Picker1, a, r, c);
+                    if (_selectPicker1Shapes.Contains(s))
+                        Picker1.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    c = new Vector2(0, c.Y + Picker1.Extent.Width);
+                }
+            }
+            void RefreshPicker2Data()
+            {
+                var r = Picker2.Extent.Width / 2;
+                var c = new Vector2(0, 0);
+                var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
+
+                Picker2.Clear();
+                foreach (var s in _picker2Shapes)
+                {
+                    s.AddDrawData(Picker2, a, r, c);
+                    if (s == _selectPicker2Shape)
+                        Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    c = new Vector2(0, c.Y + Picker2.Extent.Width);
+                }
+            }
+        }
 
         #region RefreshHelperData  ============================================
         private void RefreshHelperData()
@@ -198,75 +301,41 @@ namespace ModelGraph.Core
 
 
         #endregion
+        #endregion
 
-        #region RefreshPicker1Data  ===========================================
-        private void RefreshPicker1Data()
+        #region PickerSelect  ===========================================
+        private void Picker1Select(bool add = false)
         {
-            var r = Picker2Width / 2;
-            var c = new Vector2(0, 0);
-            var a = (float)Symbol.AbsoluteSize;
-            Picker1.Clear();
-            foreach (var s in Symbol.GetShapes())
-            {
-                s.AddDrawData(Picker1, a, r, c);
-                if (_selectShapes.Contains(s))
-                    Picker1.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                c = new Vector2(0, c.Y + Picker2Width);
-            }
-        }
-        override public int Picker1Width => 32;
-        override public void Picker1Select(int y, bool add = false)
-        {
-            var w = Picker1Width;
-            var i = y / w;
+            var i = (int)(0.5f + Picker1.Point1.Y / Picker1.Extent.Width);
 
-            if (!add) _selectShapes.Clear();
+            if (!add) _selectPicker1Shapes.Clear();
             var shapes = Symbol.GetShapes();
-            if (i < shapes.Count)
+            if (i >= 0 && i < shapes.Count)
             {
                 var s = shapes[i];
                 if (add)
                 {
-                    if (_selectShapes.Contains(s))
-                        _selectShapes.Remove(s);
+                    if (_selectPicker1Shapes.Contains(s))
+                        _selectPicker1Shapes.Remove(s);
                     else
-                        _selectShapes.Add(s);
+                        _selectPicker1Shapes.Add(s);
                 }
                 else
-                    _selectShapes.Add(s);
+                    _selectPicker1Shapes.Add(s);
             }
             else
-                _selectShapes.Clear();
+                _selectPicker1Shapes.Clear();
 
             _selectPicker2Shape = null;
-            RefreshEditorData();
-            RefreshPicker1Data();
-            RefreshPicker2Data();
-            if (_selectShapes.Count == 0)
+            RefreshDrawData();
+            if (_selectPicker1Shapes.Count == 0)
                 SetViewMode();
             else
                 SetEditMode();
 
         }
-        private List<Shape> _selectShapes = new List<Shape>(10);
-        #endregion
+        private List<Shape> _selectPicker1Shapes = new List<Shape>(10);
 
-        #region RefreshPicker2Data  ===========================================
-        private void RefreshPicker2Data()
-        {
-            var r = Picker2Width / 2;
-            var c = new Vector2(0, 0);
-            var a = (float)Symbol.AbsoluteSize;
-
-            Picker2.Clear();
-            foreach (var s in _picker2Shapes)
-            {
-                s.AddDrawData(Picker2, a, r, c);
-                if (s == _selectPicker2Shape)
-                    Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                c = new Vector2(0, c.Y + Picker2Width);
-            }
-        }
         Shape _selectPicker2Shape;
         static Shape[] _picker2Shapes =
         {
@@ -277,23 +346,49 @@ namespace ModelGraph.Core
             //new RoundedRectangle(),
             //new PolySide(),
         };
-        override public int Picker2Width => 32;
 
-        override public void Picker2Select(int y)
+        private void Picker2Select()
         {
-            var w = Picker2Width;
-            var i = y / w;
-            _selectPicker2Shape = (i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
+            var i = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
+            _selectPicker2Shape = (i >= 0 && i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
 
-            _selectShapes.Clear();
-            RefreshEditorData();
-            RefreshPicker1Data();
-            RefreshPicker2Data();
+            _selectPicker1Shapes.Clear();
+            RefreshDrawData();
 
             if (_selectPicker2Shape is null)
                 SetViewMode();
             else
                 SetCreateMode();
+        }
+        #endregion
+
+        #region ColorARGB/Apply/Revert  =======================================
+        public override void ColorARGBChanged()
+        {
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetColor(ColorARGB);
+            }
+            RefreshDrawData();
+            PageModel.TriggerUIRefresh();
+        }
+        private void ApplyChange()
+        {
+            Symbol.SaveShapes();
+            RestoreDrawState();
+        }
+        private void Revert()
+        {
+            Symbol.ReloadShapes();
+            RefreshDrawData();
+            RestoreDrawState();
+            PageModel.TriggerUIRefresh();
+        }
+        private void RestoreDrawState()
+        {
+            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.LinkMode) SetViewMode();
+            if ((PreviousDrawState & DrawState.ModeMask) == DrawState.OperateMode) SetViewMode();
+            SetViewMode();
         }
         #endregion
 
@@ -304,8 +399,13 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.ViewMode))
             {
+                SetProperties();
                 _selectPicker2Shape = null;
-                _selectShapes.Clear();
+                _selectPicker1Shapes.Clear();
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
+                SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
+                RefreshDrawData();
             }
         }
         #endregion
@@ -315,6 +415,8 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.EditMode))
             {
+                SetProperties();
+                SetEventAction(DrawEvent.Tap, SetViewMode);
             }
         }
         #endregion
@@ -324,23 +426,18 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.CreateMode))
             {
-                SetEventAction(DrawEvent.Tap, TapHitTest);
+                SetProperties();
+                SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
+                SetEventAction(DrawEvent.Tap, CloneShape);
             }
         }
-        private void TapHitTest()
+        private void CloneShape()
         {
-            ClearHit();
-            if (_selectPicker2Shape is null)
-            {
+            if (_selectPicker2Shape is null) SetViewMode();
 
-            }
-            else
-            {
-                var cp = DrawPoint1 / EditRadius;
-                Symbol.GetShapes().Add(_selectPicker2Shape.Clone(cp));
-                RefreshEditorData();
-                PageModel.TriggerUIRefresh();
-            }
+            var cp = Editor.Point1 / EditRadius;
+            Symbol.GetShapes().Add(_selectPicker2Shape.Clone(cp));
+            RefreshDrawData();
         }
         #endregion
 
