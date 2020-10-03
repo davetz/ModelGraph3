@@ -45,15 +45,15 @@ namespace ModelGraph.Core
 
             if (DrawState == DrawState.EditMode && _selectPicker1Shapes.Count > 0 )
                 SetProps(_selectPicker1Shapes[0]);
-            else if (DrawState == DrawState.EditMode && _selectPicker2Shape is Shape s)
+            else if (DrawState == DrawState.CreateMode && _selectPicker2Shape is Shape s)
                 SetProps(s);
 
-            (SideTreeModel as TreeModel).HeaderModel.ExpandRight(null);
+            (SideTreeModel as TreeModel).Validate();
 
             void SetProps(Shape s1)
             {
                 var (_, st, sw) = s1.ShapeStrokeWidth();
-                StrokeWidth = sw;
+                _strokeWidth = sw;
 
                 var sc = st & StrokeType.SC_Triangle;
                 var dc = st & StrokeType.DC_Triangle;
@@ -70,7 +70,7 @@ namespace ModelGraph.Core
 
                 Properties |= ShowProperty.StrokeStyle;
                 if (_strokeStyle == StrokeStyle.Filled) return;
-                Properties |= ShowProperty.StartCap | ShowProperty.EndCap;
+                Properties |= ShowProperty.StartCap | ShowProperty.EndCap | ShowProperty.StrokeWidth;
                 if (_strokeStyle == StrokeStyle.Solid) return;
                 Properties |= ShowProperty.DashCap;
             }
@@ -88,8 +88,8 @@ namespace ModelGraph.Core
             {
                 s.SetEndCap(value);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private CapStyle _endCapStyle;
         #endregion
@@ -103,8 +103,8 @@ namespace ModelGraph.Core
             {
                 s.SetDashCap(value);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private CapStyle _dashCapStyle;
         #endregion
@@ -118,8 +118,8 @@ namespace ModelGraph.Core
             {
                 s.SetStartCap(value);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private CapStyle _startCapStyle;
         #endregion
@@ -133,8 +133,8 @@ namespace ModelGraph.Core
             {
                 s.SetStokeStyle(value);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private StrokeStyle _strokeStyle;
         #endregion
@@ -148,8 +148,8 @@ namespace ModelGraph.Core
             {
                 s.SetStrokeWidth(_strokeWidth);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private byte _strokeWidth = 2;
         #endregion
@@ -327,6 +327,7 @@ namespace ModelGraph.Core
                 _selectPicker1Shapes.Clear();
 
             _selectPicker2Shape = null;
+            SetProperties();
             RefreshDrawData();
             if (_selectPicker1Shapes.Count == 0)
                 SetViewMode();
@@ -353,6 +354,7 @@ namespace ModelGraph.Core
             _selectPicker2Shape = (i >= 0 && i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
 
             _selectPicker1Shapes.Clear();
+            SetProperties();
             RefreshDrawData();
 
             if (_selectPicker2Shape is null)
@@ -369,8 +371,8 @@ namespace ModelGraph.Core
             {
                 s.SetColor(ColorARGB);
             }
+            SetProperties();
             RefreshDrawData();
-            PageModel.TriggerUIRefresh();
         }
         private void ApplyChange()
         {
@@ -399,12 +401,12 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.ViewMode))
             {
-                SetProperties();
                 _selectPicker2Shape = null;
                 _selectPicker1Shapes.Clear();
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
+                SetProperties();
                 RefreshDrawData();
             }
         }
@@ -415,8 +417,12 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.EditMode))
             {
-                SetProperties();
                 SetEventAction(DrawEvent.Tap, SetViewMode);
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
+                SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
+                SetProperties();
+                RefreshDrawData();
             }
         }
         #endregion
@@ -426,9 +432,10 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.CreateMode))
             {
-                SetProperties();
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
                 SetEventAction(DrawEvent.Tap, CloneShape);
+                SetProperties();
+                RefreshDrawData();
             }
         }
         private void CloneShape()
@@ -436,7 +443,16 @@ namespace ModelGraph.Core
             if (_selectPicker2Shape is null) SetViewMode();
 
             var cp = Editor.Point1 / EditRadius;
-            Symbol.GetShapes().Add(_selectPicker2Shape.Clone(cp));
+            var ns = _selectPicker2Shape.Clone(cp);
+
+            ns.SetColor(ColorARGB);
+            ns.SetStokeStyle(_strokeStyle);
+            ns.SetStrokeWidth(_strokeWidth);
+            ns.SetStartCap(_startCapStyle);
+            ns.SetDashCap(_dashCapStyle);
+            ns.SetEndCap(_endCapStyle);
+
+            Symbol.GetShapes().Add(ns);
             RefreshDrawData();
         }
         #endregion

@@ -278,6 +278,7 @@ namespace ModelGraph.Controls
 
             void RefreshAll()
             {
+                CheckColorChange();
                 if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
                 if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
 
@@ -641,18 +642,37 @@ namespace ModelGraph.Controls
             var (A, R, G, B) = Model.ColorARGB;
             if (ColorPickerControl.Visibility == Visibility.Visible)
             {
+                ColorPickerControl.Visibility = Visibility.Collapsed;
+                ColorSampleTextBox.Text = "\uF0AE";
                 ColorSampleBoarder.Background = new SolidColorBrush(Color.FromArgb(A, R, G, B));
                 ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
-                ColorSampleTextBox.Text = "\uF0AE";
-                ColorPickerControl.Visibility = Visibility.Collapsed;
             }
             else
             {
-                ColorPickerControl.Visibility = Visibility.Visible;
                 ColorSampleTextBox.Text = "\uF0AD";
+                ColorPickerControl.Visibility = Visibility.Visible;
                 ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
             }
         }
+        private void CheckColorChange()
+        {
+            var (A, R, G, B) = Model.ColorARGB;
+            var (a, r, g, b) = _prevModelColorARGB;
+            if (a != A || r != R || g != G || b != B)
+            {
+                _prevModelColorARGB = (A, R, G, B);
+                if (ColorPickerControl.Visibility == Visibility.Visible)
+                {
+                    ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
+                }
+                else
+                {
+                    ColorSampleBoarder.Background = new SolidColorBrush(Color.FromArgb(A, R, G, B));
+                    ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
+                }
+            }
+        }
+        (byte, byte, byte, byte) _prevModelColorARGB;
         private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
             if (args.NewColor != args.OldColor)

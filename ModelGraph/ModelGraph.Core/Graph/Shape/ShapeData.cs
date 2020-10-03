@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         private byte G = 0xFF; // of color(A, R, G, B)
         private byte B = 0xFF; // of color(A, R, G, B)
         private byte SW = 2;  // stroke width
-        private byte SS = 2;  // stroke style
+        private byte SS;      // stroke style
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
         private byte F1;      // auxiliary factor (for PolyGear and PolyPulse) (0 to 100 %)

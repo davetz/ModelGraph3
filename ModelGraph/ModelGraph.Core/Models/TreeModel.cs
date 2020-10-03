@@ -86,52 +86,49 @@ namespace ModelGraph.Core
 
             bool isValidSelect = IsValidModel(selected);
 
-            if (isValidSelect)
+            switch (change)
             {
-                switch (change)
-                {
-                    case ChangeType.OneUp:
-                        _buffer.Refresh(HeaderModel, viewSize, -1);
-                        break;
-                    case ChangeType.TwoUp:
-                        _buffer.Refresh(HeaderModel, viewSize, -2);
-                        break;
-                    case ChangeType.PageUp:
-                        _buffer.Refresh(HeaderModel, viewSize, -viewSize);
-                        break;
-                    case ChangeType.OneDown:
-                        _buffer.Refresh(HeaderModel, viewSize, 1);
-                        break;
-                    case ChangeType.TwoDown:
-                        _buffer.Refresh(HeaderModel, viewSize, 2);
-                        break;
-                    case ChangeType.PageDown:
-                        _buffer.Refresh(HeaderModel, viewSize, viewSize);
-                        break;
-                    case ChangeType.ToggleLeft:
-                        selected.ToggleLeft(Item.Owner);
-                        _buffer.Refresh(HeaderModel, viewSize, leading);
-                        break;
-                    case ChangeType.ToggleRight:
-                        selected.ToggleRight(Item.Owner);
-                        _buffer.Refresh(HeaderModel, viewSize, leading);
-                        break;
-                    case ChangeType.ExpandAllLeft:
-                        selected.ExpandAllLeft(Item.Owner);
-                        _buffer.Refresh(HeaderModel, viewSize, leading);
-                        break;
-                    case ChangeType.ExpandAllRight:
-                        selected.ExpandAllRight(Item.Owner);
-                        _buffer.Refresh(HeaderModel, viewSize, leading);
-                        break;
-                    case ChangeType.ToggleFilter:
-                        selected.IsFilterVisible = !selected.IsFilterVisible;
-                        break;
-                    case ChangeType.ViewListChanged:
-                    case ChangeType.FilterSortChanged:
-                        _buffer.Refresh(HeaderModel, viewSize, leading);
-                        break;
-                }
+                case ChangeType.OneUp:
+                    _buffer.Refresh(HeaderModel, viewSize, -1);
+                    break;
+                case ChangeType.TwoUp:
+                    _buffer.Refresh(HeaderModel, viewSize, -2);
+                    break;
+                case ChangeType.PageUp:
+                    _buffer.Refresh(HeaderModel, viewSize, -viewSize);
+                    break;
+                case ChangeType.OneDown:
+                    _buffer.Refresh(HeaderModel, viewSize, 1);
+                    break;
+                case ChangeType.TwoDown:
+                    _buffer.Refresh(HeaderModel, viewSize, 2);
+                    break;
+                case ChangeType.PageDown:
+                    _buffer.Refresh(HeaderModel, viewSize, viewSize);
+                    break;
+                case ChangeType.ToggleLeft:
+                    selected.ToggleLeft(Item.Owner);
+                    _buffer.Refresh(HeaderModel, viewSize, leading);
+                    break;
+                case ChangeType.ToggleRight when isValidSelect:
+                    selected.ToggleRight(Item.Owner);
+                    _buffer.Refresh(HeaderModel, viewSize, leading);
+                    break;
+                case ChangeType.ExpandAllLeft when isValidSelect:
+                    selected.ExpandAllLeft(Item.Owner);
+                    _buffer.Refresh(HeaderModel, viewSize, leading);
+                    break;
+                case ChangeType.ExpandAllRight when isValidSelect:
+                    selected.ExpandAllRight(Item.Owner);
+                    _buffer.Refresh(HeaderModel, viewSize, leading);
+                    break;
+                case ChangeType.ToggleFilter when isValidSelect:
+                    selected.IsFilterVisible = !selected.IsFilterVisible;
+                    break;
+                case ChangeType.ViewListChanged:
+                case ChangeType.FilterSortChanged:
+                    _buffer.Refresh(HeaderModel, viewSize, leading);
+                    break;
             }
             PageModel.TriggerUIRefresh();
         }
