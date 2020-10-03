@@ -48,7 +48,7 @@ namespace ModelGraph.Core
 
         void PopulateSelectList()
         {
-            var sp = Item.Properties;
+            var sp = Item.ShowProperty;
             _selectList.Clear();
             if ((sp & ShowProperty.StrokeStyle) != 0) _selectList.Add(_fullModelList[I_StrokeStyle]);
             if ((sp & ShowProperty.StrokeWidth) != 0) _selectList.Add(_fullModelList[I_StrokeWidth]);

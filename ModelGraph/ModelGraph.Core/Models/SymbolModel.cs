@@ -42,10 +42,13 @@ namespace ModelGraph.Core
         #region SetProperties  ================================================
         private void SetProperties()
         {
-            Properties = ShowProperty.None;
+            ShowProperty = ShowProperty.None;
 
             if (DrawState == DrawState.EditMode && _selectPicker1Shapes.Count > 0 )
+            {
+                _propertyCopyEnabled = true;
                 SetProps(_selectPicker1Shapes[0]);
+            }
             else if (DrawState == DrawState.CreateMode && _selectPicker2Shape is Shape s)
                 SetProps(s);
 
@@ -55,48 +58,33 @@ namespace ModelGraph.Core
             {
                 var (_, st, sw) = s1.ShapeStrokeWidth();
 
-                if (_skipStrokeWidth)
-                    _skipStrokeStyle = false;
-                else
-                    _strokeWidth = sw;
-
                 var sc = st & StrokeType.SC_Triangle;
                 var dc = st & StrokeType.DC_Triangle;
                 var ec = st & StrokeType.EC_Triangle;
                 var ss = st & StrokeType.Filled;
 
-                if (_skipEndCap)
-                    _skipEndCap = false;
-                else
+                if (_propertyCopyEnabled)
+                {
+                    _propertyCopyEnabled = false;
+                    _strokeWidth = sw;
                     _endCap = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-
-                if (_skipDashCap)
-                    _skipDashCap = false;
-                else
                     _dashCap = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-
-                if (_skipStartCap)
-                    _skipStartCap = false;
-                else
                     _startCap = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-
-                if (_skipStrokeStyle)
-                    _skipStrokeStyle = false;
-                else
                     _strokeStyle = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
-
+                }
                 if (DrawState == DrawState.EditMode) _colorARGB = s1.ShapeColor();
 
 
-                Properties |= ShowProperty.StrokeStyle;
+                ShowProperty |= ShowProperty.StrokeStyle;
                 if (_strokeStyle == StrokeStyle.Filled) return;
-                Properties |= ShowProperty.StartCap | ShowProperty.EndCap | ShowProperty.StrokeWidth;
+                ShowProperty |= ShowProperty.StartCap | ShowProperty.EndCap | ShowProperty.StrokeWidth;
                 if (_strokeStyle == StrokeStyle.Solid) return;
-                Properties |= ShowProperty.DashCap;
+                ShowProperty |= ShowProperty.DashCap;
             }
         }
 
-        internal ShowProperty Properties;
+        internal ShowProperty ShowProperty;
+        private bool _propertyCopyEnabled;
         #endregion
 
         #region EndCapStyle  ==================================================
@@ -104,7 +92,6 @@ namespace ModelGraph.Core
         private void SetEndCap(CapStyle value)
         {
             _endCap = value;
-            _skipEndCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetEndCap(value);
@@ -113,7 +100,6 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private CapStyle _endCap;
-        private bool _skipEndCap;
         #endregion
 
         #region DashCapStyle  =================================================
@@ -121,7 +107,6 @@ namespace ModelGraph.Core
         private void SetDashCap(CapStyle value)
         {
             _dashCap = value;
-            _skipEndCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetDashCap(value);
@@ -130,7 +115,6 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private CapStyle _dashCap;
-        private bool _skipDashCap;
         #endregion
 
         #region StartCapStyle  ================================================
@@ -138,7 +122,6 @@ namespace ModelGraph.Core
         private void SetStartCap(CapStyle value)
         {
             _startCap = value;
-            _skipStartCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStartCap(value);
@@ -147,7 +130,6 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private CapStyle _startCap;
-        private bool _skipStartCap;
         #endregion
 
         #region StrokeStyle  ==================================================
@@ -155,7 +137,6 @@ namespace ModelGraph.Core
         private void SetStrokeStyle(StrokeStyle value)
         {
             _strokeStyle = value;
-            _skipStrokeStyle = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStokeStyle(value);
@@ -164,7 +145,6 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private StrokeStyle _strokeStyle;
-        private bool _skipStrokeStyle;
         #endregion
 
         #region StrokeWidth  ==================================================
@@ -172,7 +152,6 @@ namespace ModelGraph.Core
         private void SetStrokeWidth(byte value)
         {
             _strokeWidth = value;
-            _skipStrokeWidth = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStrokeWidth(_strokeWidth);
@@ -181,7 +160,6 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private byte _strokeWidth = 2;
-        private bool _skipStrokeWidth;
         #endregion
 
         #endregion
@@ -342,6 +320,7 @@ namespace ModelGraph.Core
             var shapes = Symbol.GetShapes();
             if (i >= 0 && i < shapes.Count)
             {
+                _propertyCopyEnabled = true;
                 var s = shapes[i];
                 if (add)
                 {
