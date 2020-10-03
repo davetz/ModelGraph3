@@ -116,9 +116,18 @@ namespace ModelGraph.Core
         public ITreeModel SideTreeModel { get; protected set; }
         #endregion
 
-        #region ColorARGB/Apply/Reload  =======================================
-        public (byte, byte, byte, byte) ColorARGB { get; set; } = (255, 255, 255, 255);
-        public virtual void ColorARGBChanged() { }
+        #region ColorARGB  ====================================================
+        public (byte, byte, byte, byte) ColorARGB { get => _colorARGB; set => SetColor(value); }
+        protected (byte, byte, byte, byte) _colorARGB = (255, 255, 255, 255);
+        private void SetColor((byte, byte, byte, byte) colorARGB)
+        {
+            if (colorARGB != ColorARGB)
+            {
+                _colorARGB = colorARGB;
+                ColorARGBChanged();
+            }
+        }
+        virtual protected void ColorARGBChanged() { }
         #endregion
     }
 }

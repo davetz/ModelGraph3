@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using Windows.Security.Cryptography.Core;
 using Windows.UI.Xaml.Controls;
 
@@ -53,19 +54,38 @@ namespace ModelGraph.Core
             void SetProps(Shape s1)
             {
                 var (_, st, sw) = s1.ShapeStrokeWidth();
-                _strokeWidth = sw;
+
+                if (_skipStrokeWidth)
+                    _skipStrokeStyle = false;
+                else
+                    _strokeWidth = sw;
 
                 var sc = st & StrokeType.SC_Triangle;
                 var dc = st & StrokeType.DC_Triangle;
                 var ec = st & StrokeType.EC_Triangle;
                 var ss = st & StrokeType.Filled;
 
-                _endCapStyle = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                _dashCapStyle = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                _startCapStyle = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                _strokeStyle = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
+                if (_skipEndCap)
+                    _skipEndCap = false;
+                else
+                    _endCap = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
 
-                ColorARGB = s1.ShapeColor();
+                if (_skipDashCap)
+                    _skipDashCap = false;
+                else
+                    _dashCap = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+
+                if (_skipStartCap)
+                    _skipStartCap = false;
+                else
+                    _startCap = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+
+                if (_skipStrokeStyle)
+                    _skipStrokeStyle = false;
+                else
+                    _strokeStyle = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
+
+                if (DrawState == DrawState.EditMode) _colorARGB = s1.ShapeColor();
 
 
                 Properties |= ShowProperty.StrokeStyle;
@@ -80,10 +100,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region EndCapStyle  ==================================================
-        internal CapStyle EndCapStyle { get => _endCapStyle; set => SetEndCap(value); }
+        internal CapStyle EndCapStyle { get => _endCap; set => SetEndCap(value); }
         private void SetEndCap(CapStyle value)
         {
-            _endCapStyle = value;
+            _endCap = value;
+            _skipEndCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetEndCap(value);
@@ -91,14 +112,16 @@ namespace ModelGraph.Core
             SetProperties();
             RefreshDrawData();
         }
-        private CapStyle _endCapStyle;
+        private CapStyle _endCap;
+        private bool _skipEndCap;
         #endregion
 
         #region DashCapStyle  =================================================
-        internal CapStyle DashCapStyle { get => _dashCapStyle; set => SetDashCap(value); }
+        internal CapStyle DashCapStyle { get => _dashCap; set => SetDashCap(value); }
         private void SetDashCap(CapStyle value)
         {
-            _dashCapStyle = value;
+            _dashCap = value;
+            _skipEndCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetDashCap(value);
@@ -106,14 +129,16 @@ namespace ModelGraph.Core
             SetProperties();
             RefreshDrawData();
         }
-        private CapStyle _dashCapStyle;
+        private CapStyle _dashCap;
+        private bool _skipDashCap;
         #endregion
 
         #region StartCapStyle  ================================================
-        internal CapStyle StartCapStyle { get => _startCapStyle; set => SetStartCap(value); }
+        internal CapStyle StartCapStyle { get => _startCap; set => SetStartCap(value); }
         private void SetStartCap(CapStyle value)
         {
-            _startCapStyle = value;
+            _startCap = value;
+            _skipStartCap = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStartCap(value);
@@ -121,7 +146,8 @@ namespace ModelGraph.Core
             SetProperties();
             RefreshDrawData();
         }
-        private CapStyle _startCapStyle;
+        private CapStyle _startCap;
+        private bool _skipStartCap;
         #endregion
 
         #region StrokeStyle  ==================================================
@@ -129,6 +155,7 @@ namespace ModelGraph.Core
         private void SetStrokeStyle(StrokeStyle value)
         {
             _strokeStyle = value;
+            _skipStrokeStyle = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStokeStyle(value);
@@ -137,6 +164,7 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private StrokeStyle _strokeStyle;
+        private bool _skipStrokeStyle;
         #endregion
 
         #region StrokeWidth  ==================================================
@@ -144,6 +172,7 @@ namespace ModelGraph.Core
         private void SetStrokeWidth(byte value)
         {
             _strokeWidth = value;
+            _skipStrokeWidth = true;
             foreach (var s in _selectPicker1Shapes)
             {
                 s.SetStrokeWidth(_strokeWidth);
@@ -152,6 +181,7 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private byte _strokeWidth = 2;
+        private bool _skipStrokeWidth;
         #endregion
 
         #endregion
@@ -365,14 +395,17 @@ namespace ModelGraph.Core
         #endregion
 
         #region ColorARGB/Apply/Revert  =======================================
-        public override void ColorARGBChanged()
+        protected override void ColorARGBChanged()
         {
-            foreach (var s in _selectPicker1Shapes)
+            if (_selectPicker1Shapes.Count > 0)
             {
-                s.SetColor(ColorARGB);
+                foreach (var s in _selectPicker1Shapes)
+                {
+                    s.SetColor(ColorARGB);
+                }
+                SetProperties();
+                RefreshDrawData();
             }
-            SetProperties();
-            RefreshDrawData();
         }
         private void ApplyChange()
         {
@@ -448,9 +481,9 @@ namespace ModelGraph.Core
             ns.SetColor(ColorARGB);
             ns.SetStokeStyle(_strokeStyle);
             ns.SetStrokeWidth(_strokeWidth);
-            ns.SetStartCap(_startCapStyle);
-            ns.SetDashCap(_dashCapStyle);
-            ns.SetEndCap(_endCapStyle);
+            ns.SetStartCap(_startCap);
+            ns.SetDashCap(_dashCap);
+            ns.SetEndCap(_endCap);
 
             Symbol.GetShapes().Add(ns);
             RefreshDrawData();

@@ -657,13 +657,14 @@ namespace ModelGraph.Controls
         private void CheckColorChange()
         {
             var (A, R, G, B) = Model.ColorARGB;
-            var (a, r, g, b) = _prevModelColorARGB;
-            if (a != A || r != R || g != G || b != B)
+            var color = Color.FromArgb(A, R, G, B);
+            if (color != _prevColor)
             {
-                _prevModelColorARGB = (A, R, G, B);
+                _prevColor = color;
                 if (ColorPickerControl.Visibility == Visibility.Visible)
                 {
-                    ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
+                    if (!_ignoreColorChange)
+                        ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
                 }
                 else
                 {
@@ -671,15 +672,16 @@ namespace ModelGraph.Controls
                     ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
                 }
             }
+
         }
-        (byte, byte, byte, byte) _prevModelColorARGB;
+        private Color _prevColor;
+        private bool _ignoreColorChange;
         private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
         {
-            if (args.NewColor != args.OldColor)
-            {
-                Model.ColorARGB = (args.NewColor.A, args.NewColor.R, args.NewColor.G, args.NewColor.B);
-                Model.ColorARGBChanged();
-            }
+            _prevColor = args.NewColor;
+            _ignoreColorChange = true;
+
+            Model.ColorARGB = (args.NewColor.A, args.NewColor.R, args.NewColor.G, args.NewColor.B);
         }
         #endregion
 

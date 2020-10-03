@@ -23,7 +23,6 @@ namespace ModelGraph.Core
 
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
-        void ColorARGBChanged();
 
         Extent ResizerExtent { get; } //in drawPoint coordinates
 
