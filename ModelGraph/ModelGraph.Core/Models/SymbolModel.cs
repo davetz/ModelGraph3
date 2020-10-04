@@ -419,8 +419,22 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
                 SetProperties();
+                if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
+
                 RefreshDrawData();
             }
+        }
+        private void PasteAction()
+        {
+            var shapes = Symbol.GetShapes();
+            foreach (var s in _shapeClipboard)
+            {
+                var ns = s.Clone();
+
+                shapes.Add(ns);
+                RefreshDrawData();
+            }
+
         }
         #endregion
 
@@ -434,8 +448,31 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
                 SetProperties();
+                SetEventAction(DrawEvent.Cut, CutAction);
+                SetEventAction(DrawEvent.Copy, CopyAction);
                 RefreshDrawData();
             }
+        }
+
+        private void CutAction()
+        {
+            _shapeClipboard.Clear();
+            _shapeClipboard.AddRange(_selectPicker1Shapes);
+            IsPasteActionEnabled = true;
+            var shapes = Symbol.GetShapes();
+            foreach (var s in _selectPicker1Shapes)
+            {
+                shapes.Remove(s);
+            }
+            SetViewMode();
+        }
+        private List<Shape> _shapeClipboard = new List<Shape>(10);
+        private void CopyAction()
+        {
+            _shapeClipboard.Clear();
+            _shapeClipboard.AddRange(_selectPicker1Shapes);
+            IsPasteActionEnabled = true;
+            SetViewMode();
         }
         #endregion
 
@@ -445,12 +482,12 @@ namespace ModelGraph.Core
             if (TrySetState(DrawState.CreateMode))
             {
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
-                SetEventAction(DrawEvent.Tap, CloneShape);
+                SetEventAction(DrawEvent.Tap, CloneAction);
                 SetProperties();
                 RefreshDrawData();
             }
         }
-        private void CloneShape()
+        private void CloneAction()
         {
             if (_selectPicker2Shape is null) SetViewMode();
 

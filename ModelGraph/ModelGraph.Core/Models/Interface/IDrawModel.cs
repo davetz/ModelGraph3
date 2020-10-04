@@ -20,6 +20,7 @@ namespace ModelGraph.Core
         bool IsPicker1Visible { get; }
         bool IsPicker2Visible { get; }
         bool IsColorPickerEnabled { get; }
+        bool IsPasteActionEnabled { get; }
 
 
         (byte,byte,byte,byte) ColorARGB { get; set; }

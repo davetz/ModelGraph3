@@ -276,4 +276,34 @@
   <data name="SymbolModel_Reload.Content" xml:space="preserve">
     <value>Reload</value>
   </data>
+  <data name="SymbolModel_Angle_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Angle of Rotation</value>
+  </data>
+  <data name="SymbolModel_Center_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="SymbolModel_Copy_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="SymbolModel_Cut_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="SymbolModel_FlipHorz_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Flip Horizotally</value>
+  </data>
+  <data name="SymbolModel_FlipVert_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Flip Vertically</value>
+  </data>
+  <data name="SymbolModel_Paste_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Paste</value>
+  </data>
+  <data name="SymbolModel_RotateLeft_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rotate Left</value>
+  </data>
+  <data name="SymbolModel_RotateRight_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Rotate Right</value>
+  </data>
+  <data name="SymbolModel_ShowPins_Btn.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Show Pins</value>
+  </data>
 </root>

@@ -23,5 +23,16 @@ namespace ModelGraph.Core
         Picker1Tap,
         Picker1CtrlTap,
         Picker1Drag,
+        Cut,
+        Copy,
+        Paste,
+        RotateLeft,
+        RotateRight,
+        SetDegree22,
+        SetDegree30,
+        VerticalFlip,
+        HorizontalFlip,
+        Center,
+        ShowPins,
     };
 }

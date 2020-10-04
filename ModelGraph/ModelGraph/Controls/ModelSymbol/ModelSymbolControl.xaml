@@ -80,31 +80,34 @@
             <RowDefinition Height="600"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left">
-            <Button x:Name="CutButton" Style="{StaticResource LeftButtonStyle}" Click="CutButton_Click">
+            <Button x:Name="CutButton" x:Uid="SymbolModel_Cut_Btn" Style="{StaticResource LeftButtonStyle}" Click="CutButton_Click">
                 <FontIcon  Glyph="&#xE8C6;" />
             </Button>
-            <Button x:Name="PasteButton" Style="{StaticResource LeftButtonStyle}" Click="PasteButton_Click" >
+            <Button x:Name="PasteButton" x:Uid="SymbolModel_Paste_Btn" Style="{StaticResource LeftButtonStyle}" Click="PasteButton_Click" >
                 <FontIcon  Glyph="&#xE8C8;" />
             </Button>
-            <Button x:Name="CopyButton" Style="{StaticResource LeftButtonStyle}" Click="CopyButton_Click" >
+            <Button x:Name="CopyButton" x:Uid="SymbolModel_Copy_Btn" Style="{StaticResource LeftButtonStyle}" Click="CopyButton_Click" >
                 <FontIcon  Glyph="&#xE77F;" />
             </Button>
-            <Button x:Name="RotateRightButton" Style="{StaticResource LeftButtonStyle}" Click="RotateRightButton_Click" >
+            <Button x:Name="RotateRightButton" x:Uid="SymbolModel_RotateRight_Btn" Style="{StaticResource LeftButtonStyle}" Click="RotateRightButton_Click" >
                 <FontIcon  Glyph="&#xE7AD;" />
             </Button>
-            <Button x:Name="RotateAngleButton" Content="22.5" Background="Transparent" Click="RotateAngleButton_Click" />
+            <Button x:Name="RotateAngleButton" x:Uid="SymbolModel_Angle_Btn" Content="22.5" Background="Transparent" Click="RotateAngleButton_Click" />
 
-            <Button x:Name="RotateLeftButton" Style="{StaticResource LeftButtonStyle}" Click="RotateLeftButton_Click" >
+            <Button x:Name="RotateLeftButton" x:Uid="SymbolModel_RotateLeft_Btn" Style="{StaticResource LeftButtonStyle}" Click="RotateLeftButton_Click" >
                 <FontIcon  Glyph="&#xE7AD;" RenderTransform="{StaticResource FlipHorizontal}"/>
             </Button>
-            <Button x:Name="FlipHorizontalButton" Style="{StaticResource LeftButtonStyle}" Click="FlipHorizontalButton_Click" >
+            <Button x:Name="FlipHorizontalButton" x:Uid="SymbolModel_FlipHorz_Btn" Style="{StaticResource LeftButtonStyle}" Click="FlipHorizontalButton_Click" >
                 <FontIcon  Glyph="&#xE8AB;"  />
             </Button>
-            <Button x:Name="FlipVerticalButton" Style="{StaticResource LeftButtonStyle}" Click="FlipVerticalButton_Click" >
+            <Button x:Name="FlipVerticalButton" x:Uid="SymbolModel_FlipVert_Btn" Style="{StaticResource LeftButtonStyle}" Click="FlipVerticalButton_Click" >
                 <FontIcon  Glyph="&#xE8AB;" RenderTransform="{StaticResource Rotate90}" />
             </Button>
-            <Button x:Name="RecenterButton" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
-                <FontIcon  Glyph="&#xF22C;" />
+            <Button x:Name="RecenterButton" x:Uid="SymbolModel_Center_Btn" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
+                <FontIcon  Glyph="&#xEA38;" />
+            </Button>
+            <Button x:Name="ShowPinsButton" x:Uid="SymbolModel_ShowPins_Btn" Style="{StaticResource LeftButtonStyle}" Click="ShowPinsButton_Click">
+                <FontIcon  Glyph="&#xE759;" />
             </Button>
             <StackPanel Orientation="Horizontal" Margin="8,0,0 4">
                 <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Click="EditSelect_Click"/>
