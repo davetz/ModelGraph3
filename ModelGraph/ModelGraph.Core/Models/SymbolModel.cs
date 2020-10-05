@@ -352,7 +352,7 @@ namespace ModelGraph.Core
             new Line(),
             new Circle(),
             //new Ellipes(),
-            //new Rectangle(),
+            new Rectangle(),
             //new RoundedRectangle(),
             //new PolySide(),
         };

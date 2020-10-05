@@ -32,27 +32,19 @@ namespace ModelGraph.Core
 
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
-            //var color = GetColor(coloring);
-            //var min = center + (Center - Radius) * scale;
-            //var len = Radius * 2 * scale;
+            var min = center + (Center - Radius) * scale;
+            var len = Radius * 2 * scale;
 
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillRectangle( min.X, min.Y, len.X, len.Y, color);
-            //else
-            //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, strokeWidth, StrokeStyle());
+            drawData.AddShape(((new Vector2(min.X, min.Y), new Vector2(len.X, len.Y)), ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
-            //var color = GetColor(Coloring.Normal);
-            //var (cp, r1, r2) = GetCenterRadius(center, scale);
-            //var radius = new Vector2(r1, r2);
-            //var min = cp - radius;
-            //var len = radius * 2;
+            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var radius = new Vector2(r1, r2);
+            var min = cp - radius;
+            var len = radius * 2;
 
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillRectangle(min.X, min.Y, len.X, len.Y, color);
-            //else
-            //    ds.DrawRectangle(min.X, min.Y, len.X, len.Y, color, StrokeWidth, StrokeStyle());
+            drawData.AddShape(((new Vector2(min.X, min.Y), new Vector2(len.X, len.Y)), ShapeStrokeWidth(), ShapeColor()));
         }
         internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
         #endregion

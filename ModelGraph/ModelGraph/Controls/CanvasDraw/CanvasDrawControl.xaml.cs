@@ -301,6 +301,8 @@ namespace ModelGraph.Controls
         #region DrawCanvas_Draw  ==============================================
         private void DrawCanvas_Draw(CanvasControl sender, CanvasDrawEventArgs args)
         {
+            if (_isFirstCall) { _isFirstCall = false; PanZoomReset(); }
+
             if (sender == EditCanvas) { Draw(Model.HelperData); Draw(Model.EditorData); }
             else if (sender == OverCanvas) Draw(Model.EditorData);
             else if (sender == Pick1Canvas) Draw(Model.Picker1Data);
@@ -360,8 +362,6 @@ namespace ModelGraph.Controls
                             }
                         }
                     }
-
-
                 }
 
                 foreach (var ((C, D), (K, S, W), (A, R, G, B)) in data.Shapes)
@@ -419,6 +419,7 @@ namespace ModelGraph.Controls
                 }
             }
         }
+        private bool _isFirstCall = true;
         #endregion
 
         #region Canavas_Loaded  ===============================================
