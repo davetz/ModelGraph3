@@ -3,6 +3,7 @@ using ModelGraph.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
@@ -66,22 +67,27 @@ namespace ModelGraph.Controls
         {
         }
 
-        public void Refresh()
+        public async void Refresh()
         {
-            var enb1 = DrawModel.DrawState == DrawState.EditMode;
-            var enb2 = DrawModel.DrawState == DrawState.ViewMode && DrawModel.IsPasteActionEnabled;
-            CutButton.IsEnabled = enb1;
-            CopyButton.IsEnabled = enb1;
-            PasteButton.IsEnabled = enb2;
-            RecenterButton.IsEnabled = enb1;
-            ShowPinsButton.IsEnabled = enb1;
-            RotateLeftButton.IsEnabled = enb1;
-            RotateRightButton.IsEnabled = enb1;
-            RotateAngleButton.IsEnabled = enb1;
-            FlipVerticalButton.IsEnabled = enb1;
-            FlipHorizontalButton.IsEnabled = enb1;
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, SetButtons);
 
             SymbolCanvas.Refresh();
+
+            void SetButtons()
+            {
+                var enb1 = DrawModel.DrawState == DrawState.EditMode;
+                var enb2 = DrawModel.DrawState == DrawState.ViewMode && DrawModel.IsPasteActionEnabled;
+                CutButton.IsEnabled = enb1;
+                CopyButton.IsEnabled = enb1;
+                PasteButton.IsEnabled = enb2;
+                RecenterButton.IsEnabled = enb1;
+                ShowPinsButton.IsEnabled = enb1;
+                RotateLeftButton.IsEnabled = enb1;
+                RotateRightButton.IsEnabled = enb1;
+                RotateAngleButton.IsEnabled = enb1;
+                FlipVerticalButton.IsEnabled = enb1;
+                FlipHorizontalButton.IsEnabled = enb1;
+            }
         }
 
         public void SetSize(double width, double height)
@@ -102,35 +108,35 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Events  =======================================================
-        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.RotateLeft);
-        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.RotateRight);
+        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateLeft);
+        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateRight);
         private void RotateAngleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (_use30degreeDelta)
             {
                 _use30degreeDelta = false;
                 RotateAngleButton.Content = "22.5";
-                SymbolCanvas.PostEvent(DrawEvent.SetDegree22);
+                PostEvent(DrawEvent.SetDegree22);
             }
             else
             {
                 _use30degreeDelta = true;
                 RotateAngleButton.Content = "30.0";
-                SymbolCanvas.PostEvent(DrawEvent.SetDegree30);
+                PostEvent(DrawEvent.SetDegree30);
             }
         }
-        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.VerticalFlip);
-        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.HorizontalFlip);
+        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.VerticalFlip);
+        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.HorizontalFlip);
 
-        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.Cut);
+        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Cut);
 
-        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.Copy);
+        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Copy);
 
-        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.Paste);
+        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Paste);
 
-        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.Center);
+        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Center);
 
-        private void ShowPinsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => SymbolCanvas.PostEvent(DrawEvent.ShowPins);
+        private void ShowPinsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.ShowPins);
 
         private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
         private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);
@@ -142,6 +148,13 @@ namespace ModelGraph.Controls
         private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();
         private List<(float dx, float dy)> _setList = new List<(float dx, float dy)>();
         private bool _use30degreeDelta;
+
+        internal async void PostEvent(DrawEvent evt)
+        {
+            if (DrawModel.DrawEvent_Action.TryGetValue(evt, out Action action))
+                await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+        }
+
         #endregion
     }
 }
