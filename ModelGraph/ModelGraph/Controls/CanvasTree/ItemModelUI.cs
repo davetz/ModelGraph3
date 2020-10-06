@@ -83,6 +83,7 @@ namespace ModelGraph.Controls
             ClearFilterText(discard);
             ClearFilterCount(discard);
             ClearPropertyName(discard);
+            ClearDeltaProperty(discard);
             ClearTextProperty(discard);
             ClearComboProperty(discard);
             ClearCheckProperty(discard);
@@ -91,6 +92,7 @@ namespace ModelGraph.Controls
             ClearStackPanel(discard);
         }
         #endregion
+
 
         #region AddItemKind  ==================================================
         void AddItemKind(string kind)
@@ -591,6 +593,48 @@ namespace ModelGraph.Controls
         }
         #endregion
 
+        #region AddDeltaProperty  =============================================
+        private void AddDeltaProperty()
+        {
+            var obj = TextProperty;
+            if (obj == null)
+            {
+                obj = TextProperty = new TextBox();
+
+                obj.Style = TC.TextPropertyStyle;
+                obj.PreviewKeyDown += TC.DeltaProperty_KeyDown;
+                obj.LostFocus += TC.TextProperty_LostFocus;
+                obj.GotFocus += TC.TextProperty_GotFocus;
+                obj.DataContext = this;
+            }
+
+            var txt = PropertyModel.GetTextValue(TC.TCM.GetRoot());
+            obj.Text = txt ?? "0";
+            obj.Tag = obj.Text;
+            obj.IsReadOnly = (Model is PropertyModel pm) && pm.IsReadOnly;
+
+            StackPanel.Children.Add(obj);
+        }
+
+        private void ClearDeltaProperty(bool discard)
+        {
+            var obj = TextProperty;
+            if (obj != null)
+            {
+                obj.Tag = null;
+                if (discard)
+                {
+                    obj.DataContext = null;
+                    obj.PreviewKeyDown -= TC.DeltaProperty_KeyDown;
+                    obj.GotFocus -= TC.TextProperty_GotFocus;
+                    obj.LostFocus -= TC.TextProperty_LostFocus;
+
+                    TextProperty = null;
+                }
+            }
+        }
+        #endregion
+
         #region AddTextProperty  ==============================================
         private void AddTextProperty()
         {
@@ -812,7 +856,14 @@ namespace ModelGraph.Controls
 
             if (Model is PropertyModel pm)
             {
-                if (pm.IsTextModel)
+                if (pm.IsDeltaModel)
+                {
+                    AddPropertyName(name);
+                    AddDeltaProperty();
+                    CheckItemHasError();
+                    return;
+                }
+                else if (pm.IsTextModel)
                 {
                     AddPropertyName(name);
                     AddTextProperty();

@@ -21,16 +21,16 @@ namespace ModelGraph.Core
 
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
+            Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
+            Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
+            Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
+
             RefreshDrawData();
             RefreshHelperData();
             SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
 
             SetDrawStateAction(DrawState.Apply, ApplyChange);
             SetDrawStateAction(DrawState.Revert, Revert);
-
-            Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
-            Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
-            Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
 
             SetViewMode();
             RefreshDrawData();
@@ -160,6 +160,37 @@ namespace ModelGraph.Core
             RefreshDrawData();
         }
         private byte _strokeWidth = 2;
+        #endregion
+
+
+        #region StrokeWidth  ==================================================
+        internal byte ShapeWidth { get => _shapeWidth; set => SetShapeWidth(value); }
+        private void SetShapeWidth(byte value)
+        {
+            _shapeWidth = value;
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetShapeWidth(_shapeWidth);
+            }
+            SetProperties();
+            RefreshDrawData();
+        }
+        private byte _shapeWidth = 25;
+        #endregion
+
+        #region StrokeWidth  ==================================================
+        internal byte ShapeHeight { get => _shapeHeight; set => SetShapeHeight(value); }
+        private void SetShapeHeight(byte value)
+        {
+            _shapeHeight = value;
+            foreach (var s in _selectPicker1Shapes)
+            {
+                s.SetShapeHeight(_shapeHeight);
+            }
+            SetProperties();
+            RefreshDrawData();
+        }
+        private byte _shapeHeight = 25;
         #endregion
 
         #endregion

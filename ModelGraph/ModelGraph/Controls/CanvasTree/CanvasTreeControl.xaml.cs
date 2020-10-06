@@ -596,6 +596,12 @@ namespace ModelGraph.Controls
             RefreshRoot();
             RefreshSelector();
 
+            if (Selected is PropertyModel m && m.IsDeltaModel)
+            {
+                var mu = GetModelUI(m);
+                mu.TextProperty.Focus(FocusState.Programmatic);
+            }
+              
             _pointWheelEnabled = true;
         }
         #endregion
@@ -790,14 +796,14 @@ namespace ModelGraph.Controls
         {
             if (focusModel != null) Selected = focusModel;
 
-            var lc = GetModelUI(Selected);
+            var mc = GetModelUI(Selected);
 
             if (Selected.CanFilter)
             {
                 if (Selected.IsFilterVisible)
                 {
                     Selected.IsFilterFocus = false;
-                    SetFocus(lc.FilterText);
+                    SetFocus(mc.FilterText);
                 }
                 else
                 {
@@ -807,9 +813,10 @@ namespace ModelGraph.Controls
             }
             else if (Selected is PropertyModel pm)
             {
-                if (pm.IsTextModel) SetFocus(lc.TextProperty);
-                else if (pm.IsCheckModel) SetFocus(lc.CheckProperty);
-                else if (pm.IsComboModel) SetFocus(lc.ComboProperty);
+                if (pm.IsDeltaModel) SetFocus(mc.TextProperty);
+                else if (pm.IsTextModel) SetFocus(mc.TextProperty);
+                else if (pm.IsCheckModel) SetFocus(mc.CheckProperty);
+                else if (pm.IsComboModel) SetFocus(mc.ComboProperty);
             }
             else
                 SetFocus(FocusButton);
@@ -819,7 +826,7 @@ namespace ModelGraph.Controls
             {
                 _focusControl = ctrl;
                 _tryAfterRefresh = false;
-                ctrl.Focus(FocusState.Keyboard);
+                ctrl.Focus(FocusState.Programmatic);
             }
         }
         private void TryRestoreFocus()
@@ -1218,6 +1225,62 @@ namespace ModelGraph.Controls
             {
                 if ((string)obj.Tag != obj.Text)
                 {
+                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                }
+            }
+        }
+        internal void DeltaProperty_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)
+        {
+            if (e.Key == Windows.System.VirtualKey.Enter || e.Key == Windows.System.VirtualKey.Tab)
+            {
+                e.Handled = true;
+                var obj = sender as TextBox;
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
+                {
+                    if ((string)obj.Tag != obj.Text)
+                    {
+                        mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                    }
+                    if (e.Key == Windows.System.VirtualKey.Enter)
+                        FocusButton.Focus(FocusState.Keyboard);
+                    else
+                        FindNextItemModel(mdl);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Escape)
+            {
+                e.Handled = true;
+                var obj = sender as TextBox;
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
+                {
+                    if ((string)obj.Tag != obj.Text)
+                    {
+                        obj.Text = mdl.GetTextValue(TCM.GetRoot()) ?? string.Empty;
+                    }
+                    ToggleParentExpandRight(mdl);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Up)
+            {
+                e.Handled = true;
+                var obj = sender as TextBox;
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
+                {
+                    var num = mdl.GetInt32Value(TCM.GetRoot()) + 1;
+                    if (num > 100) return;
+                    obj.Text = num.ToString();
+                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                }
+            }
+            else if (e.Key == Windows.System.VirtualKey.Down)
+            {
+                e.Handled = true;
+                var obj = sender as TextBox;
+                if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
+                {
+                    var num = mdl.GetInt32Value(TCM.GetRoot()) - 1;
+                    if (num < 0) return;
+                    obj.Text = num.ToString();
                     mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
                 }
             }

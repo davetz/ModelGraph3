@@ -1134,7 +1134,8 @@ NEC – NWC – SEC - SWC</value>
     <value>Strok Width</value>
   </data>
   <data name="4C0S" xml:space="preserve">
-    <value>Stroke width for all selected shapes </value>
+    <value>Stroke width for all selected shapes
+(use up/down to increment/decrement)</value>
   </data>
   <data name="4C1N" xml:space="preserve">
     <value>ColorARGB</value>
@@ -1165,6 +1166,20 @@ NEC – NWC – SEC - SWC</value>
   </data>
   <data name="4C5S" xml:space="preserve">
     <value>Line start cap for all selected shapes</value>
+  </data>
+  <data name="4C6N" xml:space="preserve">
+    <value>Shape Width %</value>
+  </data>
+  <data name="4C6S" xml:space="preserve">
+    <value>Shape width % (0 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4C7N" xml:space="preserve">
+    <value>Shape Height %</value>
+  </data>
+  <data name="4C7S" xml:space="preserve">
+    <value>Shape height % (0 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
   </data>
   <data name="600N" xml:space="preserve">
     <value>Diagnostic</value>

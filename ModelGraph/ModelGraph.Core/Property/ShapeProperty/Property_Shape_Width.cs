@@ -3,11 +3,11 @@ using System.Collections;
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_StrokeWidth : PropertyOf<SymbolModel, byte>
+    public class Property_Shape_Width : PropertyOf<SymbolModel, byte>
     {
-        internal override IdKey IdKey => IdKey.ShapeStrokeWidthProperty;
+        internal override IdKey IdKey => IdKey.ShapeWidthProperty;
 
-        internal Property_Shape_StrokeWidth(PropertyManager owner) : base(owner)
+        internal Property_Shape_Width(PropertyManager owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

@@ -341,6 +341,8 @@ namespace ModelGraph.Core
         ShapeLineEndCapProperty = 0x4C3 | Is_Covert,
         ShapeLineDashCapProperty = 0x4C4 | Is_Covert,
         ShapeLineStartCapProperty = 0x4C5 | Is_Covert,
+        ShapeWidthProperty = 0x4C6 | Is_Covert,
+        ShapeHeightProperty = 0x4C7 | Is_Covert,
         #endregion
 
         #region Model ================================================(600-7FF)
@@ -351,6 +353,7 @@ namespace ModelGraph.Core
 
         //=====================================================================
         Model_612_Root = 0x612,
+        Model_616_DeltaProperty = 0x616, //numeric with increment/decrement buttons
         Model_617_TextProperty = 0x617,
         Model_618_CheckProperty = 0x618,
         Model_619_ComboProperty = 0x619,

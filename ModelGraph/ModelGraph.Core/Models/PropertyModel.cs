@@ -29,10 +29,12 @@ namespace ModelGraph.Core
         public bool IsReadOnly => Property.IsReadonly;
         public bool IsMultiline => Property.IsMultiline;
 
+        public virtual bool IsDeltaModel => false;
         public virtual bool IsTextModel => false;
         public virtual bool IsCheckModel => false;
         public virtual bool IsComboModel => false;
 
+        public virtual int GetInt32Value(Root root) => default;
         public virtual int GetIndexValue(Root root) => default;
         public virtual bool GetBoolValue(Root root) => default;
         public virtual string GetTextValue(Root root) => default;
