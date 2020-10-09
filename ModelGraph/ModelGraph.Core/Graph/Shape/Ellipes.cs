@@ -53,7 +53,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawEllipse(cp, r1, r2, color, StrokeWidth, StrokeStyle());
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
         #endregion
     }
 }

@@ -72,7 +72,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() => new PolyWave(this);
         internal override Shape Clone(Vector2 center) => new PolyWave(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 22);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim;
         #endregion
     }
 }

@@ -65,7 +65,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new PolySpike(this);
         internal override Shape Clone(Vector2 center) => new PolySpike(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 20);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim;
         #endregion
     }
 }

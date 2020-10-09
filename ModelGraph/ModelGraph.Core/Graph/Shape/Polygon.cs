@@ -23,6 +23,6 @@ namespace ModelGraph.Core
         }
 
         protected override (int min, int max) MinMaxDimension => (2, 8);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Dim;
     }
 }

@@ -24,43 +24,8 @@ namespace ModelGraph.Core
 
         protected virtual void CreatePoints() { }
         protected virtual (int min, int max) MinMaxDimension => (1, 100);
-        #endregion
-
-        #region PropertyFlags  ================================================
         protected abstract ShapeProperty PropertyFlags { get; }
 
-        protected ShapeProperty LinePropertyFlags(StrokeType ss)
-        {
-            var st = ss & StrokeType.Filled;
-            if (st == StrokeType.Filled) return ShapeProperty.LineStyle;
-            if (st == StrokeType.Simple) return ShapeProperty.LineStyle | ShapeProperty.LineWidth | ShapeProperty.EndCap | ShapeProperty.StartCap;
-            return ShapeProperty.LineStyle | ShapeProperty.LineWidth | ShapeProperty.EndCap | ShapeProperty.DashCap | ShapeProperty.StartCap;
-        }
-
-        static internal ShapeProperty GetPropertyFlags(Shape shape) => GetPropertyFlags(new Shape[] { shape });
-        static internal ShapeProperty GetPropertyFlags(IEnumerable<Shape> shapes)
-        {
-            var type = ShapeType.Unknown;
-            var flags = ShapeProperty.None;
-            var isNotMixed = true;
-
-            foreach (var shape in shapes)
-            {
-                if (shape is null)
-                    flags |= ShapeProperty.None;
-                else
-                {
-                    flags |= shape.PropertyFlags;
-
-                    if (type == ShapeType.Unknown)
-                        type = shape.ShapeType;
-                    else if (shape.ShapeType != type)
-                        isNotMixed = false;
-                }
-            }
-
-            return isNotMixed ? flags : (flags &= ~ShapeProperty.MultiSizerMask) | ShapeProperty.Vert | ShapeProperty.Horz;
-        }
         #endregion
 
         #region Flip/Rotate  ==================================================
@@ -233,11 +198,33 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetProperty  ==================================================
+        static internal ShapeProperty GetPropertyFlags(Shape shape) => GetPropertyFlags(new Shape[] { shape });
+        static internal ShapeProperty GetPropertyFlags(IEnumerable<Shape> shapes)
+        {
+            var type = ShapeType.Unknown;
+            var flags = ShapeProperty.None;
+            var isNotMixed = true;
+
+            foreach (var shape in shapes)
+            {
+                if (shape is null)
+                    flags |= ShapeProperty.None;
+                else
+                {
+                    flags |= shape.PropertyFlags | shape.LinePropertyFlags();
+
+                    if (type == ShapeType.Unknown)
+                        type = shape.ShapeType;
+                    else if (shape.ShapeType != type)
+                        isNotMixed = false;
+                }
+            }
+
+            return isNotMixed ? flags : (flags &= ~ShapeProperty.MultiSizerMask) | ShapeProperty.Vert | ShapeProperty.Horz;
+        }
         internal static void GetStrokeProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref byte width, ref StrokeStyle style, ref CapStyle startCap, ref CapStyle dashCap, ref CapStyle endCap, ref (byte,byte,byte,byte) color)
         {
             var first = true;
-            flag = ShapeProperty.LineStyle;
-
             foreach (var s in shapes)
             {
                 var (_, st, sw) = s.ShapeStrokeWidth();
@@ -257,11 +244,10 @@ namespace ModelGraph.Core
                     startCap = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
                     color = s.ShapeColor();
                 }
-                if (ss != StrokeType.Filled) flag |= ShapeProperty.LineWidth | ShapeProperty.StartCap | ShapeProperty.EndCap;
-                if (ss != StrokeType.Dashed || ss != StrokeType.Dotted) flag |= ShapeProperty.DashCap;
             }
+            flag = GetPropertyFlags(shapes);
         }
-        internal static void GetSizerProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref bool locked, ref byte min, ref byte max, ref byte dim, ref byte aux, ref byte major, ref byte minor, ref byte cent, ref byte vert, ref byte horz)
+        internal static void GetSizerProperty(IEnumerable<Shape> shapes, ref bool locked, ref byte min, ref byte max, ref byte dim, ref byte aux, ref byte major, ref byte minor, ref byte cent, ref byte vert, ref byte horz)
         {
             if (shapes.Count() > 0)
             {
@@ -272,10 +258,6 @@ namespace ModelGraph.Core
                 min = (byte)smin;
                 max = (byte)smax;
                 dim = (byte)sdim;
-
-                var (slock, sflag) = GetHasSlider(shapes);
-                flag |= sflag;
-                locked = slock;
 
                 horz = (byte)Limited(dx1, dx2);
                 vert = (byte)Limited(dy1, dy2);

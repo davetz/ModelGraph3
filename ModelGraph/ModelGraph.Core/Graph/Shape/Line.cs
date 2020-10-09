@@ -28,7 +28,7 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         internal override Shape Clone() => new Line(this);
         internal override Shape Clone(Vector2 center) => new Line(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Horz | ShapeProperty.Vert | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Horz;
         #endregion
     }
 }

@@ -49,7 +49,7 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolyStar(this);
         internal override Shape Clone(Vector2 center) => new PolyStar(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim;
         #endregion
     }
 }

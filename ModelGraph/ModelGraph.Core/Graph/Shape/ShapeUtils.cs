@@ -25,20 +25,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GetHasSlider  =================================================
-        static private (bool, ShapeProperty) GetHasSlider(IEnumerable<Shape> shapes)
-        {
-            var locked = false;
-            var slider = ShapeProperty.None;
-            foreach (var shape in shapes)
-            {
-                slider |= shape.PropertyFlags;
-                locked |= shape.IsLocked;
-            }
-            return (locked, slider);
-        }
-        #endregion
-
         #region GetMinMaxDimension  ===========================================
         static private (int min, int max, int dim) GetDimension(IEnumerable<Shape> shapes)
         {

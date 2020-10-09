@@ -54,7 +54,7 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolyGear(this);
         internal override Shape Clone(Vector2 center) => new PolyGear(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim;
         #endregion
     }
 }

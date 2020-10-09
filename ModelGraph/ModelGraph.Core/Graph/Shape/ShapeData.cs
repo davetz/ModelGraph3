@@ -24,8 +24,22 @@ namespace ModelGraph.Core
         protected List<(float dx, float dy)> DXY;  // one or more defined points
 
         #region Properties  ===================================================
-
-        protected StrokeType StrokeType => (StrokeType)SS;
+        protected ShapeProperty LinePropertyFlags()
+        {
+            var ss = (StrokeType)SS & StrokeType.Filled;
+            if (ShapeType == ShapeType.Circle)
+            {
+                if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
+                if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;
+                return ShapeProperty.LineStyle | ShapeProperty.LineWidth;
+            }
+            else
+            {
+                if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
+                if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.LineWidth;
+                return ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.LineWidth;
+            }
+        }
         internal void SetStrokeWidth(byte sw) => SW = sw;
         internal void SetEndCap(CapStyle v)
         {

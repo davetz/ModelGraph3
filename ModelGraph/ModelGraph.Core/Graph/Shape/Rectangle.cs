@@ -44,7 +44,7 @@ namespace ModelGraph.Core
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Vert | ShapeProperty.Horz;
         #endregion
     }
 }

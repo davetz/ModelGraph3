@@ -98,7 +98,7 @@ namespace ModelGraph.Core
                 drawData.AddLine((points, ShapeStrokeWidth(), ShapeColor()));
             }
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
         #endregion
     }
 }

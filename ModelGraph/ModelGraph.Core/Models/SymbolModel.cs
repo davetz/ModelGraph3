@@ -41,10 +41,11 @@ namespace ModelGraph.Core
 
         private void SetProperties(bool copyProperties = false)
         {
+            _propertyFlags = ShapeProperty.None;
             if (copyProperties)
             {
                 Shape.GetStrokeProperty(_selectPicker1Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
-                Shape.GetSizerProperty(_selectPicker1Shapes, ref _propertyFlags, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
+                Shape.GetSizerProperty(_selectPicker1Shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
             }
             else
                 _propertyFlags = Shape.GetPropertyFlags(_selectPicker2Shape);
