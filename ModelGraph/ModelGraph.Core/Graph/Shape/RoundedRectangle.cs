@@ -58,7 +58,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, StrokeWidth, StrokeStyle());
         }
-        internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

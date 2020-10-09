@@ -1131,55 +1131,91 @@ NEC – NWC – SEC - SWC</value>
     <value>Take a limited number of elements form the full results set</value>
   </data>
   <data name="4C0N" xml:space="preserve">
-    <value>Strok Width</value>
+    <value>StrokeStyle</value>
   </data>
   <data name="4C0S" xml:space="preserve">
+    <value>Stroke style of all selected shapes</value>
+  </data>
+  <data name="4C1N" xml:space="preserve">
+    <value>Strok Width</value>
+  </data>
+  <data name="4C1S" xml:space="preserve">
     <value>Stroke width for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
-  <data name="4C1N" xml:space="preserve">
-    <value>ColorARGB</value>
-  </data>
-  <data name="4C1S" xml:space="preserve">
-    <value>Color of all selected shapes, ARGB color code</value>
-  </data>
   <data name="4C2N" xml:space="preserve">
-    <value>StrokeStyle</value>
-  </data>
-  <data name="4C2S" xml:space="preserve">
-    <value>Stroke style of all selected shapes</value>
-  </data>
-  <data name="4C3N" xml:space="preserve">
-    <value>EndCap</value>
-  </data>
-  <data name="4C3S" xml:space="preserve">
-    <value>Line end cap for all selected shapes</value>
-  </data>
-  <data name="4C4N" xml:space="preserve">
-    <value>DashCap</value>
-  </data>
-  <data name="4C4S" xml:space="preserve">
-    <value>Line dash cap for all selected shapes</value>
-  </data>
-  <data name="4C5N" xml:space="preserve">
     <value>StartCap</value>
   </data>
-  <data name="4C5S" xml:space="preserve">
+  <data name="4C2S" xml:space="preserve">
     <value>Line start cap for all selected shapes</value>
   </data>
+  <data name="4C3N" xml:space="preserve">
+    <value>DashCap</value>
+  </data>
+  <data name="4C3S" xml:space="preserve">
+    <value>Line dash cap for all selected shapes</value>
+  </data>
+  <data name="4C4N" xml:space="preserve">
+    <value>EndCap</value>
+  </data>
+  <data name="4C4S" xml:space="preserve">
+    <value>Line end cap for all selected shapes</value>
+  </data>
+  <data name="4C5N" xml:space="preserve">
+    <value>Aux Axis %</value>
+  </data>
+  <data name="4C5S" xml:space="preserve">
+    <value>Auxilary Axis % (1 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
   <data name="4C6N" xml:space="preserve">
-    <value>Shape Width %</value>
+    <value>Size %</value>
   </data>
   <data name="4C6S" xml:space="preserve">
-    <value>Shape width % (0 to 100)  for all selected shapes
+    <value>Shape Size % (1 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C7N" xml:space="preserve">
-    <value>Shape Height %</value>
+    <value>Height %</value>
   </data>
   <data name="4C7S" xml:space="preserve">
     <value>Shape height % (0 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
+  </data>
+  <data name="4C8N" xml:space="preserve">
+    <value>Width %</value>
+  </data>
+  <data name="4C8S" xml:space="preserve">
+    <value>Shape Width % (1 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4C9N" xml:space="preserve">
+    <value>Major Axis %</value>
+  </data>
+  <data name="4C9S" xml:space="preserve">
+    <value>Shape Major Axis % (1 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4CAN" xml:space="preserve">
+    <value>Minor Axis %</value>
+  </data>
+  <data name="4CAS" xml:space="preserve">
+    <value>Shape Minor Axis % (1 to 100)  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4CBN" xml:space="preserve">
+    <value>Dimension</value>
+  </data>
+  <data name="4CBS" xml:space="preserve">
+    <value>Shape Dimension  for all selected shapes
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4CCN" xml:space="preserve">
+    <value>Is Locked</value>
+  </data>
+  <data name="4CCS" xml:space="preserve">
+    <value>Shape dimension and auto generate function is disabled
+(this is becaus you moved individual points of the shape) </value>
   </data>
   <data name="600N" xml:space="preserve">
     <value>Diagnostic</value>

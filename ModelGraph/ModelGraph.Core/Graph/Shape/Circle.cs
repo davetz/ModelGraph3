@@ -47,7 +47,7 @@ namespace ModelGraph.Core
             else
                 Radius1 = Radius2 = (Radius1 * scale.X);
         }
-        internal override HasSlider Sliders => HasSlider.None;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Cent | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

@@ -23,6 +23,6 @@ namespace ModelGraph.Core
         }
 
         protected override (int min, int max) MinMaxDimension => (2, 8);
-        internal override HasSlider Sliders => HasSlider.Major | HasSlider.Minor | HasSlider.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
     }
 }

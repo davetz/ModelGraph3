@@ -53,7 +53,7 @@ namespace ModelGraph.Core
             //else
             //    ds.DrawEllipse(cp, r1, r2, color, StrokeWidth, StrokeStyle());
         }
-        internal override HasSlider Sliders => HasSlider.Vert | HasSlider.Horz;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

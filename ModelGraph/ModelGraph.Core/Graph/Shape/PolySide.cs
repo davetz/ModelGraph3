@@ -46,7 +46,7 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolySide(this);
         internal override Shape Clone(Vector2 center) => new PolySide(this, center);
-        internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

@@ -24,6 +24,8 @@ namespace ModelGraph.Core
         protected List<(float dx, float dy)> DXY;  // one or more defined points
 
         #region Properties  ===================================================
+
+        protected StrokeType StrokeType => (StrokeType)SS;
         internal void SetStrokeWidth(byte sw) => SW = sw;
         internal void SetEndCap(CapStyle v)
         {

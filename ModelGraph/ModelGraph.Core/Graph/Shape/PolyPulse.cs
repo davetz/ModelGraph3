@@ -70,7 +70,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new PolyPulse(this);
         internal override Shape Clone(Vector2 center) => new PolyPulse(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 19);
-        internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert | HasSlider.Major | HasSlider.Minor | HasSlider.Aux | HasSlider.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

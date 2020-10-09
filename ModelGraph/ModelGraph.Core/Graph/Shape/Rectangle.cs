@@ -44,7 +44,7 @@ namespace ModelGraph.Core
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
-        internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

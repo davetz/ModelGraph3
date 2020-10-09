@@ -28,7 +28,7 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         internal override Shape Clone() => new Line(this);
         internal override Shape Clone(Vector2 center) => new Line(this, center);
-        internal override HasSlider Sliders => HasSlider.Horz | HasSlider.Vert;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Horz | ShapeProperty.Vert | LinePropertyFlags(StrokeType);
         #endregion
     }
 }

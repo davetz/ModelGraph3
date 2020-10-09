@@ -35,164 +35,74 @@ namespace ModelGraph.Core
             SetViewMode();
             RefreshDrawData();
         }
-       #endregion
+        #endregion
 
         #region ShapeProperty  ================================================
 
-        #region SetProperties  ================================================
-        private void SetProperties()
+        private void SetProperties(bool copyProperties = false)
         {
-            ShowProperty = ShowProperty.None;
-
-            if (DrawState == DrawState.EditMode && _selectPicker1Shapes.Count > 0 )
+            if (copyProperties)
             {
-                _propertyCopyEnabled = true;
-                SetProps(_selectPicker1Shapes[0]);
+                Shape.GetStrokeProperty(_selectPicker1Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
+                Shape.GetSizerProperty(_selectPicker1Shapes, ref _propertyFlags, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
             }
-            else if (DrawState == DrawState.CreateMode && _selectPicker2Shape is Shape s)
-                SetProps(s);
+            else
+                _propertyFlags = Shape.GetPropertyFlags(_selectPicker2Shape);
 
             (SideTreeModel as TreeModel).Validate();
-
-            void SetProps(Shape s1)
-            {
-                var (_, st, sw) = s1.ShapeStrokeWidth();
-
-                var sc = st & StrokeType.SC_Triangle;
-                var dc = st & StrokeType.DC_Triangle;
-                var ec = st & StrokeType.EC_Triangle;
-                var ss = st & StrokeType.Filled;
-
-                if (_propertyCopyEnabled)
-                {
-                    _propertyCopyEnabled = false;
-                    _strokeWidth = sw;
-                    _endCap = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                    _dashCap = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                    _startCap = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
-                    _strokeStyle = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
-                }
-                if (DrawState == DrawState.EditMode) _colorARGB = s1.ShapeColor();
-
-
-                ShowProperty |= ShowProperty.StrokeStyle;
-                if (_strokeStyle == StrokeStyle.Filled) return;
-                ShowProperty |= ShowProperty.StartCap | ShowProperty.EndCap | ShowProperty.StrokeWidth;
-                if (_strokeStyle == StrokeStyle.Solid) return;
-                ShowProperty |= ShowProperty.DashCap;
-            }
         }
+        private byte _min;
+        private byte _max;
 
-        internal ShowProperty ShowProperty;
-        private bool _propertyCopyEnabled;
-        #endregion
+        internal ShapeProperty PropertyFlags { get => _propertyFlags; }
+        private ShapeProperty _propertyFlags;
 
-        #region EndCapStyle  ==================================================
-        internal CapStyle EndCapStyle { get => _endCap; set => SetEndCap(value); }
-        private void SetEndCap(CapStyle value)
-        {
-            _endCap = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetEndCap(value);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
+        internal CapStyle EndCap { get => _endCap; set => Set(ref _endCap, value, ShapeProperty.EndCap); }
         private CapStyle _endCap;
-        #endregion
 
-        #region DashCapStyle  =================================================
-        internal CapStyle DashCapStyle { get => _dashCap; set => SetDashCap(value); }
-        private void SetDashCap(CapStyle value)
-        {
-            _dashCap = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetDashCap(value);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
+        internal CapStyle DashCap { get => _dashCap; set => Set(ref _dashCap, value, ShapeProperty.DashCap); }
         private CapStyle _dashCap;
-        #endregion
 
-        #region StartCapStyle  ================================================
-        internal CapStyle StartCapStyle { get => _startCap; set => SetStartCap(value); }
-        private void SetStartCap(CapStyle value)
-        {
-            _startCap = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetStartCap(value);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
+        internal CapStyle StartCap { get => _startCap; set => Set(ref _startCap, value, ShapeProperty.StartCap); }
         private CapStyle _startCap;
-        #endregion
 
-        #region StrokeStyle  ==================================================
-        internal StrokeStyle StrokeStyle { get => _strokeStyle; set => SetStrokeStyle(value); }
-        private void SetStrokeStyle(StrokeStyle value)
+        internal StrokeStyle LineStyle { get => _lineStyle; set => Set(ref _lineStyle, value, ShapeProperty.LineStyle); }
+        private StrokeStyle _lineStyle;
+
+        internal byte LineWidth { get => _lineWidth; set => Set(ref _lineWidth, value, ShapeProperty.LineWidth); }
+        private byte _lineWidth = 2;
+
+        internal byte AuxAxis { get => _auxAxis; set => Set(ref _auxAxis, value, ShapeProperty.Aux); }
+        private byte _auxAxis = 25;
+
+        internal byte CentAxis { get => _centAxis; set => Set(ref _centAxis, value, ShapeProperty.Cent); }
+        private byte _centAxis = 25;
+
+        internal byte VertAxis { get => _vertAxis; set => Set(ref _vertAxis, value, ShapeProperty.Vert); }
+        private byte _vertAxis = 25;
+
+        internal byte HorzAxis { get => _horzAxis; set => Set(ref _horzAxis, value, ShapeProperty.Horz); }
+        private byte _horzAxis = 25;
+
+        internal byte MajorAxis { get => _majorAxis; set => Set(ref _majorAxis, value, ShapeProperty.Major); }
+        private byte _majorAxis = 25;
+
+        internal byte MinorAxis { get => _minorAxis; set => Set(ref _minorAxis, value, ShapeProperty.Minor); }
+        private byte _minorAxis = 25;
+
+        internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dim); }
+        private byte _dimension = 3;
+        internal bool PolyLocked { get => _polyLocked; set => Set(ref _polyLocked, value, ShapeProperty.PolyLocked); }
+        private bool _polyLocked = false;
+
+        private void Set<T>(ref T storage, T value, ShapeProperty sp)
         {
-            _strokeStyle = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetStokeStyle(value);
-            }
-            SetProperties();
+            if (Equals(storage, value)) return;
+
+            storage = value;
+            Shape.SetProperty(this, sp, _selectPicker1Shapes);
             RefreshDrawData();
         }
-        private StrokeStyle _strokeStyle;
-        #endregion
-
-        #region StrokeWidth  ==================================================
-        internal byte StrokeWidth { get => _strokeWidth; set => SetStrokeWidth(value); }
-        private void SetStrokeWidth(byte value)
-        {
-            _strokeWidth = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetStrokeWidth(_strokeWidth);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
-        private byte _strokeWidth = 2;
-        #endregion
-
-
-        #region StrokeWidth  ==================================================
-        internal byte ShapeWidth { get => _shapeWidth; set => SetShapeWidth(value); }
-        private void SetShapeWidth(byte value)
-        {
-            _shapeWidth = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetShapeWidth(_shapeWidth);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
-        private byte _shapeWidth = 25;
-        #endregion
-
-        #region StrokeWidth  ==================================================
-        internal byte ShapeHeight { get => _shapeHeight; set => SetShapeHeight(value); }
-        private void SetShapeHeight(byte value)
-        {
-            _shapeHeight = value;
-            foreach (var s in _selectPicker1Shapes)
-            {
-                s.SetShapeHeight(_shapeHeight);
-            }
-            SetProperties();
-            RefreshDrawData();
-        }
-        private byte _shapeHeight = 25;
-        #endregion
-
         #endregion
 
         #region RefreshDrawData  ==================================================
@@ -351,7 +261,6 @@ namespace ModelGraph.Core
             var shapes = Symbol.GetShapes();
             if (i >= 0 && i < shapes.Count)
             {
-                _propertyCopyEnabled = true;
                 var s = shapes[i];
                 if (add)
                 {
@@ -367,7 +276,7 @@ namespace ModelGraph.Core
                 _selectPicker1Shapes.Clear();
 
             _selectPicker2Shape = null;
-            SetProperties();
+            SetProperties(true);
             RefreshDrawData();
             if (_selectPicker1Shapes.Count == 0)
                 SetViewMode();
@@ -526,8 +435,8 @@ namespace ModelGraph.Core
             var ns = _selectPicker2Shape.Clone(cp);
 
             ns.SetColor(ColorARGB);
-            ns.SetStokeStyle(_strokeStyle);
-            ns.SetStrokeWidth(_strokeWidth);
+            ns.SetStokeStyle(_lineStyle);
+            ns.SetStrokeWidth(_lineWidth);
             ns.SetStartCap(_startCap);
             ns.SetDashCap(_dashCap);
             ns.SetEndCap(_endCap);

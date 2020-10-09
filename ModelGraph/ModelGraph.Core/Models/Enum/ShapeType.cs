@@ -30,5 +30,7 @@
         JoinedSplines = 0x80,
         PolyWave = 0x81,
         PolySpring = 0x82,
+
+        Unknown = 0xFF,
     }
 }

@@ -26,13 +26,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetHasSlider  =================================================
-        static private (bool, HasSlider) GetHasSlider(IEnumerable<Shape> shapes)
+        static private (bool, ShapeProperty) GetHasSlider(IEnumerable<Shape> shapes)
         {
             var locked = false;
-            var slider = HasSlider.None;
+            var slider = ShapeProperty.None;
             foreach (var shape in shapes)
             {
-                slider |= shape.Sliders;
+                slider |= shape.PropertyFlags;
                 locked |= shape.IsLocked;
             }
             return (locked, slider);

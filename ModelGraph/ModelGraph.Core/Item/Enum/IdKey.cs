@@ -335,14 +335,19 @@ namespace ModelGraph.Core
         ComputeXTakeLimitProperty = 0x4BC | Is_Reference,
 
         //=========================================
-        ShapeStrokeWidthProperty = 0x4C0 | Is_Covert,
-        ShapeStrokeColorProperty = 0x4C1 | Is_Covert,
-        ShapeStrokeStyleProperty = 0x4C2 | Is_Covert,
-        ShapeLineEndCapProperty = 0x4C3 | Is_Covert,
-        ShapeLineDashCapProperty = 0x4C4 | Is_Covert,
-        ShapeLineStartCapProperty = 0x4C5 | Is_Covert,
-        ShapeWidthProperty = 0x4C6 | Is_Covert,
-        ShapeHeightProperty = 0x4C7 | Is_Covert,
+        ShapeLineStyleProperty = 0x4C0 | Is_Covert,
+        ShapeLineWidthProperty = 0x4C1 | Is_Covert,
+        ShapeStartCapProperty = 0x4C2 | Is_Covert,
+        ShapeDashCapProperty = 0x4C3 | Is_Covert,
+        ShapeEndCapProperty = 0x4C4 | Is_Covert,
+        ShapeAuxAxisProperty = 0x4C5 | Is_Covert,
+        ShapeCentAxisProperty = 0x4C6 | Is_Covert,
+        ShapeVertAxisProperty = 0x4C7 | Is_Covert,
+        ShapeHorzAxisProperty = 0x4C8 | Is_Covert,
+        ShapeMajorAxisProperty = 0x4C9 | Is_Covert,
+        ShapeMinorAxisProperty = 0x4CA | Is_Covert,
+        ShapeDimensionProperty = 0x4CB | Is_Covert,
+        ShapePolylockedProperty = 0x4CC | Is_Covert,
         #endregion
 
         #region Model ================================================(600-7FF)

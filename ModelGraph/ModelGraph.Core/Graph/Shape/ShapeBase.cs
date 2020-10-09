@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Windows.Devices.Bluetooth;
+using Windows.System.Power.Diagnostics;
 
 namespace ModelGraph.Core
 {
@@ -11,18 +13,6 @@ namespace ModelGraph.Core
         internal Shape() { }
 
         #region Abstract/Virtual  =============================================
-        [Flags]
-        internal enum HasSlider
-        {
-            None = 0,
-            Dim = 0x01,
-            Aux = 0x02,
-            Horz = 0x04,
-            Vert = 0x08,
-            Major = 0x20,
-            Minor = 0x40,
-        }
-        internal abstract HasSlider Sliders { get; }
         internal abstract Shape Clone();
         internal abstract Shape Clone(Vector2 Center);
 
@@ -34,6 +24,43 @@ namespace ModelGraph.Core
 
         protected virtual void CreatePoints() { }
         protected virtual (int min, int max) MinMaxDimension => (1, 100);
+        #endregion
+
+        #region PropertyFlags  ================================================
+        protected abstract ShapeProperty PropertyFlags { get; }
+
+        protected ShapeProperty LinePropertyFlags(StrokeType ss)
+        {
+            var st = ss & StrokeType.Filled;
+            if (st == StrokeType.Filled) return ShapeProperty.LineStyle;
+            if (st == StrokeType.Simple) return ShapeProperty.LineStyle | ShapeProperty.LineWidth | ShapeProperty.EndCap | ShapeProperty.StartCap;
+            return ShapeProperty.LineStyle | ShapeProperty.LineWidth | ShapeProperty.EndCap | ShapeProperty.DashCap | ShapeProperty.StartCap;
+        }
+
+        static internal ShapeProperty GetPropertyFlags(Shape shape) => GetPropertyFlags(new Shape[] { shape });
+        static internal ShapeProperty GetPropertyFlags(IEnumerable<Shape> shapes)
+        {
+            var type = ShapeType.Unknown;
+            var flags = ShapeProperty.None;
+            var isNotMixed = true;
+
+            foreach (var shape in shapes)
+            {
+                if (shape is null)
+                    flags |= ShapeProperty.None;
+                else
+                {
+                    flags |= shape.PropertyFlags;
+
+                    if (type == ShapeType.Unknown)
+                        type = shape.ShapeType;
+                    else if (shape.ShapeType != type)
+                        isNotMixed = false;
+                }
+            }
+
+            return isNotMixed ? flags : (flags &= ~ShapeProperty.MultiSizerMask) | ShapeProperty.Vert | ShapeProperty.Horz;
+        }
         #endregion
 
         #region Flip/Rotate  ==================================================
@@ -77,7 +104,29 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Resize  =======================================================
+        #region SetProperty  ==================================================
+        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, Shape shape) => SetProperty(sm, pf, new Shape[] {shape});
+        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
+        {
+            SetStrokeProperty(sm, pf, shapes);
+            if ((pf & ShapeProperty.Aux) != 0) ResizeAuxAxis(shapes, sm.AuxAxis);
+            if ((pf & ShapeProperty.Cent) != 0) ResizeCentral(shapes, sm.CentAxis);
+            if ((pf & ShapeProperty.Vert) != 0) ResizeVertical(shapes, sm.VertAxis);
+            if ((pf & ShapeProperty.Horz) != 0) ResizeHorizontal(shapes, sm.HorzAxis);
+            if ((pf & ShapeProperty.Major) != 0) ResizeMajorAxis(shapes, sm.MajorAxis);
+            if ((pf & ShapeProperty.Minor) != 0) ResizeMinorAxis(shapes, sm.MinorAxis);
+        }
+        internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
+        {
+            foreach (var s in shapes)
+            {
+                if ((pf & ShapeProperty.LineWidth) != 0) s.SetStrokeWidth(sm.LineWidth);
+                if ((pf & ShapeProperty.LineStyle) != 0) s.SetStokeStyle(sm.LineStyle);
+                if ((pf & ShapeProperty.StartCap) != 0) s.SetStartCap(sm.StartCap);
+                if ((pf & ShapeProperty.DashCap) != 0) s.SetDashCap(sm.DashCap);
+                if ((pf & ShapeProperty.EndCap) != 0) s.SetEndCap(sm.EndCap);
+            }
+        }
         internal static void ResizeCentral(IEnumerable<Shape> shapes, float slider)
         {
             var (_, _, _, _, cdx, cdy, dx, dy) = GetExtent(shapes);
@@ -153,7 +202,7 @@ namespace ModelGraph.Core
             }
             SetCenter(shapes, new Vector2(cdx, cdy));
         }
-        internal static void ResizeTernaryAxis(IEnumerable<Shape> shapes, float slider)
+        internal static void ResizeAuxAxis(IEnumerable<Shape> shapes, float slider)
         {
             var (_, _, _, _, cdx, cdy, _, _) = GetExtent(shapes);
             var desiredSize = ConvertSlider(slider);
@@ -183,39 +232,62 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region GetSliders  ===================================================
-        internal static (bool locked, float min, float max, float dim, float aux, float major, float minor, float cent, float vert, float horz) GetSliders(IEnumerable<Shape> shapes)
+        #region GetProperty  ==================================================
+        internal static void GetStrokeProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref byte width, ref StrokeStyle style, ref CapStyle startCap, ref CapStyle dashCap, ref CapStyle endCap, ref (byte,byte,byte,byte) color)
+        {
+            var first = true;
+            flag = ShapeProperty.LineStyle;
+
+            foreach (var s in shapes)
+            {
+                var (_, st, sw) = s.ShapeStrokeWidth();
+
+                var sc = st & StrokeType.SC_Triangle;
+                var dc = st & StrokeType.DC_Triangle;
+                var ec = st & StrokeType.EC_Triangle;
+                var ss = st & StrokeType.Filled;
+
+                if (first)
+                {
+                    first = false;
+                    width = s.SW;
+                    style = ss == StrokeType.Dotted ? StrokeStyle.Dotted : ss == StrokeType.Dashed ? StrokeStyle.Dashed : ss == StrokeType.Filled ? StrokeStyle.Filled : StrokeStyle.Solid;
+                    endCap = ec == StrokeType.EC_Round ? CapStyle.Round : ec == StrokeType.EC_Square ? CapStyle.Square : ec == StrokeType.EC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                    dashCap = dc == StrokeType.DC_Round ? CapStyle.Round : dc == StrokeType.DC_Square ? CapStyle.Square : dc == StrokeType.DC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                    startCap = sc == StrokeType.SC_Round ? CapStyle.Round : sc == StrokeType.SC_Square ? CapStyle.Square : sc == StrokeType.SC_Triangle ? CapStyle.Triangle : CapStyle.Flat;
+                    color = s.ShapeColor();
+                }
+                if (ss != StrokeType.Filled) flag |= ShapeProperty.LineWidth | ShapeProperty.StartCap | ShapeProperty.EndCap;
+                if (ss != StrokeType.Dashed || ss != StrokeType.Dotted) flag |= ShapeProperty.DashCap;
+            }
+        }
+        internal static void GetSizerProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref bool locked, ref byte min, ref byte max, ref byte dim, ref byte aux, ref byte major, ref byte minor, ref byte cent, ref byte vert, ref byte horz)
         {
             if (shapes.Count() > 0)
             {
                 var (dx1, dy1, dx2, dy2, _, _, _, _) = GetExtent(shapes);
                 var (r1, r2, f1) = GetMaxRadius(shapes);
-                var (min, max, dim) = GetDimension(shapes);
-                var (locked, slider) = GetHasSlider(shapes);
 
-                var horz = Limited(dx1, dx2);
-                var vert = Limited(dy1, dy2);
-                var cent = Larger(vert, horz);
-                var major = Factor(r1);
-                var minor = Factor(r2);
-                var aux = Factor(f1);
-                if ((slider & HasSlider.Horz) == 0) horz = -1;
-                if ((slider & HasSlider.Vert) == 0) vert = -1;
-                if ((slider & HasSlider.Major) == 0) major = -1;
-                if ((slider & HasSlider.Minor) == 0) minor = -1;
-                if ((slider & HasSlider.Aux) == 0) aux = -1;
-                if ((slider & HasSlider.Dim) == 0) dim = -1;
-                return (locked, min, max, dim, aux, major, minor, cent, vert, horz);
-            }
-            else
-            {
-                return (false, -1, -1, -1, -1, -1, -1, -1, -1, -1);
-            }
+                var (smin, smax, sdim) = GetDimension(shapes);
+                min = (byte)smin;
+                max = (byte)smax;
+                dim = (byte)sdim;
 
+                var (slock, sflag) = GetHasSlider(shapes);
+                flag |= sflag;
+                locked = slock;
+
+                horz = (byte)Limited(dx1, dx2);
+                vert = (byte)Limited(dy1, dy2);
+                cent = (byte)Larger(vert, horz);
+                major = (byte)Factor(r1);
+                minor = (byte)Factor(r2);
+                aux = (byte)Factor(f1);
+            }
 
             float Larger(float p, float q) => (p > q) ? p : q;
             float Limited(float a, float b) => Larger(Factor(a), Factor(b));
-            float Factor(float v) => (float)System.Math.Round(100 * ((v < 0.01f) ? 0.01 : v));
+            float Factor(float v) => (float)Math.Round(100 * ((v < 0.01f) ? 0.01 : v));
         }
         #endregion
 
