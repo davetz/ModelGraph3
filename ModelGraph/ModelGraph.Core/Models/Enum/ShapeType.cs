@@ -19,10 +19,13 @@
         MultipleSimpleShapesLimit = 0x0F,
 
         //connected line segments
+        ClosedLines = 0x20,
+        PolySide = 0x21,
+        PolyStar = 0x22,
+        PolyGear = 0x23,
+
+        //connected line segments
         JointedLines = 0x40,
-        PolySide = 0x41,
-        PolyStar = 0x42,
-        PolyGear = 0x43,
         PolySpike = 0x44,
         PolyPulse = 0x45,
 

@@ -490,7 +490,8 @@ namespace ModelGraph.Core
             ns.SetStartCap(_startCap);
             ns.SetDashCap(_dashCap);
             ns.SetEndCap(_endCap);
-
+            ns.Dimension = _dimension;
+           
             Symbol.GetShapes().Add(ns);
             RefreshDrawData();
         }

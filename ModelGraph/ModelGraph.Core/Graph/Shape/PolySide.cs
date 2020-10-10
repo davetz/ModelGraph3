@@ -24,7 +24,7 @@ namespace ModelGraph.Core
             var da = FullRadians / D;
             var (r1, _, _) = GetRadius();
             var a = RadiansStart;
-            for (int i = 0; i < D; i++)
+            for (int i = 0; i <= D; i++)
             {
                 DXY.Add(Limit((r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a))));
                 a += da;

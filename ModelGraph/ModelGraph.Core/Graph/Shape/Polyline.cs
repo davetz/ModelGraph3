@@ -78,11 +78,11 @@ namespace ModelGraph.Core
 
             if (points.Length == 2)
             {
-                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth(scale/size), ShapeColor(c)));
+                drawData.AddShape(((points[0], points[1]), ShapeStrokeWidth(scale / size), ShapeColor(c)));
             }
             else if (points.Length > 2)
             {
-                drawData.AddLine((points, ShapeStrokeWidth(scale), ShapeColor()));
+                drawData.AddLine((points, ShapeStrokeWidth(scale / size), ShapeColor()));
             }
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)

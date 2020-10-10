@@ -317,12 +317,12 @@ namespace ModelGraph.Controls
 
                 foreach (var (P, (K, S, W), (A, R, G, B)) in data.Lines)
                 {
+                    var isFilled = S == StrokeType.Filled;
                     if (K < ShapeType.MultipleSimpleShapesLimit)
                     {
                         var k = K & ShapeType.SimpleShapeMask;
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
-                        var isFilled = S == StrokeType.Filled;
 
                         for (int i = 0; i < P.Length; i += 2)
                         {
@@ -338,8 +338,8 @@ namespace ModelGraph.Controls
 
                         using (var pb = new CanvasPathBuilder(ds))
                         {
-                            pb.BeginFigure(P[0] * scale + offset);
-                            if (K == ShapeType.JointedLines)
+                            pb.BeginFigure(P[0] * scale + offset);                          
+                            if ((K & ShapeType.JointedLines) != 0 || (K & ShapeType.ClosedLines) != 0)
                             {
                                 for (int i = 1; i < P.Length; i++)
                                 {
@@ -354,11 +354,17 @@ namespace ModelGraph.Controls
                                     pb.AddCubicBezier(P[i] * scale + offset, P[++i] * scale + offset, P[++i] * scale + offset);
                                 }
                             }
-                            pb.EndFigure(CanvasFigureLoop.Open);
+                            if ((K & ShapeType.ClosedLines) != 0)
+                                pb.EndFigure(CanvasFigureLoop.Closed);
+                            else
+                                pb.EndFigure(CanvasFigureLoop.Open);
 
                             using (var geo = CanvasGeometry.CreatePath(pb))
                             {
-                                ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), V, StrokeStyle(S));
+                                if (isFilled)
+                                    ds.FillGeometry(geo, Color.FromArgb(A, R, G, B));
+                                else
+                                    ds.DrawGeometry(geo, Color.FromArgb(A, R, G, B), V, StrokeStyle(S));
                             }
                         }
                     }

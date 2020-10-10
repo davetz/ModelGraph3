@@ -173,7 +173,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Dimension  ====================================================
-        protected int Dimension
+        internal int Dimension
         {
             get { return PD; }
 
@@ -201,11 +201,11 @@ namespace ModelGraph.Core
         protected void RotateStartRight1() { A1 = (byte)((A1 + 1) % 12); }
         #endregion
 
-        #region Sliders  ======================================================
+        #region Axiss  ======================================================
         internal bool IsLocked { get { return PL != 0; } set { PL = (byte)(value ? 1 : 0); } }
-        internal double AuxSlider { get { return 100 * AuxFactor; } set { AuxFactor = (float)value / 100; CreatePoints(); } }
-        internal double MajorSlider { get { return 100 * Radius2; } set { Radius2 = (float)value / 100; CreatePoints(); } }
-        internal double MinorSlider { get { return 100 * Radius2; } set { Radius1 = (float)value / 100; CreatePoints(); } }
+        internal double AuxAxis { get { return 100 * AuxFactor; } set { AuxFactor = (float)value / 100; CreatePoints(); } }
+        internal double MajorAxis { get { return 100 * Radius2; } set { Radius2 = (float)value / 100; CreatePoints(); } }
+        internal double MinorAxis { get { return 100 * Radius2; } set { Radius1 = (float)value / 100; CreatePoints(); } }
         #endregion
 
         #endregion

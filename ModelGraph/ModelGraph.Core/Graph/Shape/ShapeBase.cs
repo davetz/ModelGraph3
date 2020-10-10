@@ -80,6 +80,7 @@ namespace ModelGraph.Core
             if ((pf & ShapeProperty.Horz) != 0) ResizeHorizontal(shapes, sm.HorzAxis);
             if ((pf & ShapeProperty.Major) != 0) ResizeMajorAxis(shapes, sm.MajorAxis);
             if ((pf & ShapeProperty.Minor) != 0) ResizeMinorAxis(shapes, sm.MinorAxis);
+            if ((pf & ShapeProperty.Dim) != 0) SetDimension(shapes, sm.Dimension);
         }
         internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
