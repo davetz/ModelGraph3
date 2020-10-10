@@ -39,18 +39,19 @@ namespace ModelGraph.Core
 
         #region ShapeProperty  ================================================
 
-        private void SetProperties(bool copyProperties = false)
+        private void SetProperties()
         {
             _propertyFlags = ShapeProperty.None;
-            if (copyProperties)
+            if (_selectPicker1Shapes.Count > 0)
             {
                 Shape.GetStrokeProperty(_selectPicker1Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
                 Shape.GetSizerProperty(_selectPicker1Shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
             }
-            else
+            else if (_selectPicker2Shape != null)
                 _propertyFlags = Shape.GetPropertyFlags(_selectPicker2Shape);
 
             (SideTreeModel as TreeModel).Validate();
+            RefreshDrawData();
         }
         private byte _min;
         private byte _max;
@@ -277,8 +278,9 @@ namespace ModelGraph.Core
                 _selectPicker1Shapes.Clear();
 
             _selectPicker2Shape = null;
-            SetProperties(true);
-            RefreshDrawData();
+
+            SetProperties();
+
             if (_selectPicker1Shapes.Count == 0)
                 SetViewMode();
             else
@@ -287,6 +289,19 @@ namespace ModelGraph.Core
         }
         private List<Shape> _selectPicker1Shapes = new List<Shape>(10);
 
+        private void Picker2Select()
+        {
+            var i = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
+            _selectPicker2Shape = (i >= 0 && i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
+
+            _selectPicker1Shapes.Clear();
+            SetProperties();
+
+            if (_selectPicker2Shape is null)
+                SetViewMode();
+            else
+                SetCreateMode();
+        }
         Shape _selectPicker2Shape;
         static Shape[] _picker2Shapes =
         {
@@ -297,21 +312,6 @@ namespace ModelGraph.Core
             //new RoundedRectangle(),
             //new PolySide(),
         };
-
-        private void Picker2Select()
-        {
-            var i = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
-            _selectPicker2Shape = (i >= 0 && i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
-
-            _selectPicker1Shapes.Clear();
-            SetProperties();
-            RefreshDrawData();
-
-            if (_selectPicker2Shape is null)
-                SetViewMode();
-            else
-                SetCreateMode();
-        }
         #endregion
 
         #region ColorARGB/Apply/Revert  =======================================
@@ -359,10 +359,8 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
-                SetProperties();
                 if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
-
-                RefreshDrawData();
+                SetProperties();
             }
         }
         private void PasteAction()
@@ -388,10 +386,16 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Select(); });
-                SetProperties();
                 SetEventAction(DrawEvent.Cut, CutAction);
                 SetEventAction(DrawEvent.Copy, CopyAction);
-                RefreshDrawData();
+                SetEventAction(DrawEvent.Center, CenterAction);
+                SetEventAction(DrawEvent.RotateLeft, RotateLeft);
+                SetEventAction(DrawEvent.RotateRight, RotateRight);
+                SetEventAction(DrawEvent.SetDegree22, SetDegree22);
+                SetEventAction(DrawEvent.SetDegree30, SetDegree30);
+                SetEventAction(DrawEvent.VerticalFlip, VerticalFlip);
+                SetEventAction(DrawEvent.HorizontalFlip, HorizontalFlip);
+                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
             }
         }
 
@@ -415,6 +419,51 @@ namespace ModelGraph.Core
             IsPasteActionEnabled = true;
             SetViewMode();
         }
+        private void CenterAction()
+        {
+            Shape.SetCenter(_selectPicker1Shapes, new Vector2());
+            RefreshDrawData();
+        }
+        private void RotateLeft()
+        {
+            Shape.RotateLeft(_selectPicker1Shapes, _useAlternate);
+            RefreshDrawData();
+        }
+        private void RotateRight()
+        {
+            Shape.RotateRight(_selectPicker1Shapes, _useAlternate);
+            RefreshDrawData();
+        }
+        private void VerticalFlip()
+        {
+            Shape.VerticalFlip(_selectPicker1Shapes);
+            RefreshDrawData();
+        }
+        private void HorizontalFlip()
+        {
+            Shape.HorizontalFlip(_selectPicker1Shapes);
+            RefreshDrawData();
+        }
+        private void OverviewTap()
+        {
+            var n = _selectPicker1Shapes.Count;
+            _selectPicker1Shapes.Clear();
+
+            var shapes = Symbol.GetShapes();
+            if (n != shapes.Count)
+                _selectPicker1Shapes.AddRange(shapes);
+            _selectPicker2Shape = null;
+
+            SetProperties();
+
+            if (_selectPicker1Shapes.Count == 0)
+                SetViewMode();
+            else
+                SetEditMode();
+        }
+        private void SetDegree22() => _useAlternate = false;
+        private void SetDegree30() => _useAlternate = true;
+        private bool _useAlternate;
         #endregion
 
         #region CreateMode == AddSymbolShape  =================================

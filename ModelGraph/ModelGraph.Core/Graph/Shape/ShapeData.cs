@@ -27,7 +27,7 @@ namespace ModelGraph.Core
         protected ShapeProperty LinePropertyFlags()
         {
             var ss = (StrokeType)SS & StrokeType.Filled;
-            if (ShapeType == ShapeType.Circle)
+            if (this is Central)
             {
                 if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
                 if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;

@@ -198,7 +198,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetProperty  ==================================================
-        static internal ShapeProperty GetPropertyFlags(Shape shape) => GetPropertyFlags(new Shape[] { shape });
+        static internal ShapeProperty GetPropertyFlags(Shape shape) => (shape is null) ? ShapeProperty.None : GetPropertyFlags(new Shape[] { shape });
         static internal ShapeProperty GetPropertyFlags(IEnumerable<Shape> shapes)
         {
             var type = ShapeType.Unknown;
@@ -207,17 +207,12 @@ namespace ModelGraph.Core
 
             foreach (var shape in shapes)
             {
-                if (shape is null)
-                    flags |= ShapeProperty.None;
-                else
-                {
-                    flags |= shape.PropertyFlags | shape.LinePropertyFlags();
+                flags |= shape.PropertyFlags | shape.LinePropertyFlags();
 
-                    if (type == ShapeType.Unknown)
-                        type = shape.ShapeType;
-                    else if (shape.ShapeType != type)
-                        isNotMixed = false;
-                }
+                if (type == ShapeType.Unknown)
+                    type = shape.ShapeType;
+                else if (shape.ShapeType != type)
+                    isNotMixed = false;
             }
 
             return isNotMixed ? flags : (flags &= ~ShapeProperty.MultiSizerMask) | ShapeProperty.Vert | ShapeProperty.Horz;
