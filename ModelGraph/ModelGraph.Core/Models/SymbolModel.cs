@@ -307,10 +307,10 @@ namespace ModelGraph.Core
         {
             new Line(),
             new Circle(),
-            //new Ellipes(),
+            new Ellipes(),
             new Rectangle(),
-            //new RoundedRectangle(),
-            //new PolySide(),
+            new RoundedRectangle(),
+            new PolySide(),
         };
         #endregion
 

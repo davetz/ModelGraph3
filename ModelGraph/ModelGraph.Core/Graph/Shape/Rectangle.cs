@@ -39,7 +39,7 @@ namespace ModelGraph.Core
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
-            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
             var rd = new Vector2(r1, r2);
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));

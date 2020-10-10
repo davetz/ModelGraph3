@@ -411,9 +411,9 @@ namespace ModelGraph.Controls
                             e = a - b;
                             f = 2 * b;
                             if (isFilled)
-                                ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color);
+                                ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, 8, 8, color);
                             else
-                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 6, 6, color, v, stroke);
+                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 8, 8, color, v, stroke);
                             break;
                     }
                 }

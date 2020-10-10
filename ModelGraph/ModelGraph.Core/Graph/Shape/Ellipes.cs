@@ -34,24 +34,18 @@ namespace ModelGraph.Core
 
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
-            //var color = GetColor(coloring);
-            var (_, _, _) = GetCenterRadius(center, scale);
+            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var rd = new Vector2(r1, r2);
 
+            drawData.AddShape(((cp, rd), ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
 
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillEllipse(cp, r1, r2, color);
-            //else
-            //    ds.DrawEllipse(cp, r1, r2, color, strokeWidth, StrokeStyle());
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
-            //var color = GetColor(Coloring.Normal);
-            var (_, _, _) = GetCenterRadius(flip, center, scale);
+            var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
+            var rd = new Vector2(r1, r2);
 
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillEllipse(cp, r1, r2, color);
-            //else
-            //    ds.DrawEllipse(cp, r1, r2, color, StrokeWidth, StrokeStyle());
+            drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
         protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
         #endregion

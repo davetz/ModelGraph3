@@ -35,28 +35,17 @@ namespace ModelGraph.Core
 
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
-            //var color = GetColor(coloring);
-            //var min = center + (Center - Radius) * scale;
-            //var len = Radius * 2 * scale;
-            //var corner = Corner * scale;
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillRoundedRectangle( min.X, min.Y, len.X, len.Y, corner, corner, color);
-            //else
-            //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, strokeWidth, StrokeStyle());
+            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var rd = new Vector2(r1, r2);
+
+            drawData.AddShape(((cp, rd), ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
-            //var color = GetColor(Coloring.Normal);
-            //var (cp, r1, r2) = GetCenterRadius(center, scale);
-            //var radius = new Vector2(r1, r2);
-            //var min = cp - radius;
-            //var len = radius * 2;
-            //var corner = Corner * scale;
+            var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
+            var rd = new Vector2(r1, r2);
 
-            //if (FillStroke == Fill_Stroke.Filled)
-            //    ds.FillRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color);
-            //else
-            //    ds.DrawRoundedRectangle(min.X, min.Y, len.X, len.Y, corner, corner, color, StrokeWidth, StrokeStyle());
+            drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
         protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
         #endregion

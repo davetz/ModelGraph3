@@ -6,6 +6,8 @@ namespace ModelGraph.Core
     {
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
         {
+            
+
             //var color = GetColor(coloring);
             //var points = GetDrawingPoints(center, scale);
 
