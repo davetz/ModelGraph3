@@ -210,6 +210,74 @@ namespace ModelGraph.Core
 
         #endregion
 
+
+        #region GetCentroid  ====================================================
+        static private (float cdx, float cdy) GetCentroid(IEnumerable<Shape> shapes)
+        {
+            var points = new List<(float, float)>();
+            foreach (var s in shapes)
+            {
+                if ((s.ShapeType & ShapeType.ClosedLines) != 0)
+                    points.Add(GetCentroid(s.DXY));
+                else
+                {
+                    var (dx1, dy1, dx2, dy2) = s.GetExtent();
+                    points.Add(((dx1 + dx2) / 2, (dy1 + dy2) / 2));
+                }
+            }
+            if (points.Count == 0) return (0, 0);
+            if (points.Count == 1) return points[0];
+
+            var x1 = 1f;
+            var y1 = 1f;
+            var x2 = -1f;
+            var y2 = -1f;
+
+            foreach (var (dx, dy) in points)
+            {
+                if (dx < x1) x1 = dx;
+                if (dy < y1) y1 = dy;
+
+                if (dx > x2) x2 = dx;
+                if (dy > y2) y2 = dy;
+            }
+            return (((x1 + x2) / 2, (y1 + y2) / 2));
+        }
+        static private (float cdx, float cdy) GetCentroid(List<(float, float)> points)
+        {
+            var n = points.Count;
+            float s = 0;
+            for (int i = 0; i < n - 1; i++)
+            {
+                var (xi, yi) = points[i];
+                var (xj, yj) = points[i + 1];
+                s += (xi * yj - yi * xj);
+            }
+            var a = 3 * s;
+
+            s = 0;
+            for (int i = 0; i < n - 1; i++)
+            {
+                var (xi, yi) = points[i];
+                var (xj, yj) = points[i + 1];
+                s += (xi + xj) * (xi * yj - yi * xj);
+            }
+            var cx = s / a;
+
+            s = 0;
+            for (int i = 0; i < n - 1; i++)
+            {
+                var (xi, yi) = points[i];
+                var (xj, yj) = points[i + 1];
+                s += (yi + yj) * (xi * yj - yi * xj);
+            }
+            var cy = s / a;
+
+            return (cx, cy);
+        }
+        #endregion
+
+
         #region SaveShapes  ===================================================
         internal static byte[] SaveShaptes(IEnumerable<Shape> shapes)
         {

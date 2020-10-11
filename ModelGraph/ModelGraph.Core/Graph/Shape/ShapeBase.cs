@@ -50,15 +50,12 @@ namespace ModelGraph.Core
         #region SetCenter  ====================================================
         static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 cp)
         {
-            var (_, _, _, _, cdx, cdy, dx, dy) = GetExtent(shapes);
+            var (cdx, cdy) = GetCentroid(shapes);
 
-            if (dx + dy > 0)
-            {
-                var ex = cp.X - cdx;
-                var ey = cp.Y - cdy;
+            var ex = cp.X - cdx;
+            var ey = cp.Y - cdy;
 
-                foreach (var shape in shapes) { shape.MoveCenter(ex, ey); }
-            }
+            foreach (var shape in shapes) { shape.MoveCenter(ex, ey); }
         }
         #endregion
 
