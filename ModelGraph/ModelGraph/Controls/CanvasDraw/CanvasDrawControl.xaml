@@ -100,9 +100,14 @@
         <Border x:Name="ColorPickerBorder" Style="{StaticResource ColorPickerBorderStyle}" Canvas.ZIndex="3" >
             <StackPanel>
                 <StackPanel x:Name="ColorControlStackPanel" HorizontalAlignment="Right" Canvas.ZIndex="4">
-                    <Border x:Name="ColorSampleBoarder" Style="{StaticResource ColorSampleBorderStyle}" PointerPressed="ColorSampleBorder_PointerPressed">
-                        <TextBlock x:Name="ColorSampleTextBox" Style="{StaticResource ColorSampleTextBlockStyle}" Text="&#xF0AE;"/>
-                    </Border>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <Border x:Name="UndoColorBoarder" Style="{StaticResource ColorSampleBorderStyle}" Visibility="Collapsed" PointerPressed="UndoColorBoarder_PointerPressed">
+                            <TextBlock x:Name="UndoColorTextBox" Style="{StaticResource ColorSampleTextBlockStyle}" Text="&#xE7A7;"/>
+                        </Border>
+                        <Border x:Name="ColorSampleBoarder" Style="{StaticResource ColorSampleBorderStyle}" PointerPressed="ColorSampleBorder_PointerPressed">
+                            <TextBlock x:Name="ColorSampleTextBox" Style="{StaticResource ColorSampleTextBlockStyle}" Text="&#xF0AE;"/>
+                        </Border>
+                    </StackPanel>
                     <ColorPicker x:Name="ColorPickerControl" Style="{StaticResource ColorPickerStyle}" Visibility="Collapsed" ColorChanged="ColorPickerControl_ColorChanged" />
                 </StackPanel>
             </StackPanel>

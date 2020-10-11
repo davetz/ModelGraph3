@@ -643,53 +643,78 @@ namespace ModelGraph.Controls
         #endregion
 
         #region ColorPickerConrol  ============================================
-        private void ColorSampleBorder_PointerPressed(object sender, PointerRoutedEventArgs e) => ToggleColorPicker();
-        private void ToggleColorPicker()
+        private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args) => SetNewColor(args.NewColor);
+        private void ColorSampleBorder_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var (A, R, G, B) = Model.ColorARGB;
+            var currentColor = Color.FromArgb(A, R, G, B);
             if (ColorPickerControl.Visibility == Visibility.Visible)
             {
-                ColorPickerControl.Visibility = Visibility.Collapsed;
-                ColorSampleTextBox.Text = "\uF0AE";
-                ColorSampleBoarder.Background = new SolidColorBrush(Color.FromArgb(A, R, G, B));
-                ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
+                HideColorPicker(currentColor);
             }
             else
             {
-                ColorSampleTextBox.Text = "\uF0AD";
-                ColorPickerControl.Visibility = Visibility.Visible;
-                ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
+                ShowColorPicker(currentColor);
             }
+        }
+        private void UndoColorBoarder_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            _pickerColor = _originalColor;
+            SetNewColor(_originalColor);
+            HideColorPicker(_originalColor);
+        }
+        private void SetNewColor(Color color)
+        {
+            _pickerColor = color;
+            SetSampleColor(color);
+            Model.ColorARGB = (color.A, color.R, color.G, color.B);
+            if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
+            if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
+            if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
+            if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+        }
+        private void SetSampleColor(Color color)
+        {
+            var (_, R, G, B) = (color.A, color.R, color.G, color.B);
+            ColorSampleBoarder.Background = new SolidColorBrush(color);
+            ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
+        }
+        private void HideColorPicker(Color color)
+        {
+            UndoColorBoarder.Visibility = Visibility.Collapsed;
+            ColorPickerControl.Visibility = Visibility.Collapsed;
+
+            ColorSampleTextBox.Text = "\uF0AE";
+        }
+        private void ShowColorPicker(Color color)
+        {
+            _originalColor = _pickerColor = color;
+            var brush = new SolidColorBrush(color);
+
+            UndoColorBoarder.Background = brush;
+            UndoColorBoarder.Visibility = Visibility.Visible;
+
+            ColorSampleTextBox.Text = "\uF0AD";
+            ColorSampleBoarder.Background = brush;
+
+            ColorPickerControl.Visibility = Visibility.Visible;
+            ColorPickerControl.Color = color;
         }
         private void CheckColorChange()
         {
             var (A, R, G, B) = Model.ColorARGB;
             var color = Color.FromArgb(A, R, G, B);
-            if (color != _prevColor)
+            if (color != _pickerColor)
             {
-                _prevColor = color;
+                _pickerColor = color;
                 if (ColorPickerControl.Visibility == Visibility.Visible)
-                {
-                    if (!_ignoreColorChange)
-                        ColorPickerControl.Color = Color.FromArgb(A, R, G, B);
-                }
+                    ColorPickerControl.Color = _pickerColor;
                 else
-                {
-                    ColorSampleBoarder.Background = new SolidColorBrush(Color.FromArgb(A, R, G, B));
-                    ColorSampleTextBox.Foreground = (G > R + B) ? new SolidColorBrush(Colors.Black) : (R + G + B > 400) ? new SolidColorBrush(Colors.Black) : new SolidColorBrush(Colors.White); ;
-                }
+                    SetSampleColor(color);
             }
-
         }
-        private Color _prevColor;
-        private bool _ignoreColorChange;
-        private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args)
-        {
-            _prevColor = args.NewColor;
-            _ignoreColorChange = true;
-
-            Model.ColorARGB = (args.NewColor.A, args.NewColor.R, args.NewColor.G, args.NewColor.B);
-        }
+        private Color _pickerColor;
+        private Color _originalColor;
         #endregion
 
     }
