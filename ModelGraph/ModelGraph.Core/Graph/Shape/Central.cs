@@ -7,6 +7,8 @@ namespace ModelGraph.Core
         internal Central() { }
 
         protected Vector2 Center { get { return ToVector(DXY[0]); } set { DXY[0] = Limit(value.X, value.Y); } }
+        protected override ShapeProperty ValidLineProperty => ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;
+
 
         #region GetCenterRadius  ==============================================
         protected (Vector2 cp, float r1, float r2) GetCenterRadius(Vector2 center, float scale)

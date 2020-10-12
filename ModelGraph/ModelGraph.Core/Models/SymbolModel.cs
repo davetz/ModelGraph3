@@ -32,6 +32,8 @@ namespace ModelGraph.Core
             SetDrawStateAction(DrawState.Apply, ApplyChange);
             SetDrawStateAction(DrawState.Revert, Revert);
 
+            foreach (var s in _picker2Shapes) { _sampleShapes.Add(s.Clone()); }
+
             SetViewMode();
             RefreshDrawData();
         }
@@ -42,13 +44,12 @@ namespace ModelGraph.Core
         private void SetProperties()
         {
             _propertyFlags = ShapeProperty.None;
-            if (_selectedPicker1Shapes.Count > 0)
+            var shapes = _selectedPicker1Shapes.Count > 0 ? _selectedPicker1Shapes : _clonerShapes.Count > 0 ? _clonerShapes : null;
+            if (shapes != null)
             {
-                Shape.GetStrokeProperty(_selectedPicker1Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
-                Shape.GetSizerProperty(_selectedPicker1Shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
+                Shape.GetStrokeProperty(shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
+                Shape.GetSizerProperty(shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
             }
-            else if (_selectedPicker2Shape != null)
-                _propertyFlags = Shape.GetPropertyFlags(_selectedPicker2Shape);
 
             (SideTreeModel as TreeModel).Validate();
             RefreshDrawData();
@@ -100,10 +101,11 @@ namespace ModelGraph.Core
         private void Set<T>(ref T storage, T value, ShapeProperty sp)
         {
             if (Equals(storage, value)) return;
-
             storage = value;
-            Shape.SetProperty(this, sp, _selectedPicker1Shapes);
-            RefreshDrawData();
+
+            var shapes = _selectedPicker1Shapes.Count > 0 ? _selectedPicker1Shapes : _clonerShapes.Count > 0 ? _clonerShapes : null;
+            if (shapes != null) Shape.SetProperty(this, sp, shapes);
+            SetProperties();
         }
         #endregion
 
@@ -153,7 +155,7 @@ namespace ModelGraph.Core
                 foreach (var s in _picker2Shapes)
                 {
                     s.AddDrawData(Picker2, a, r, c);
-                    if (s == _selectedPicker2Shape)
+                    if (_picker2Index >= 0 && s == _picker2Shapes[_picker2Index])
                         Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     c = new Vector2(0, c.Y + Picker2.Extent.Width);
                 }
@@ -260,7 +262,9 @@ namespace ModelGraph.Core
         {
             var i = (int)(0.5f + Picker1.Point1.Y / Picker1.Extent.Width);
 
+            _clonerShapes.Clear();
             if (!add) _selectedPicker1Shapes.Clear();
+
             var shapes = Symbol.GetShapes();
             if (i >= 0 && i < shapes.Count)
             {
@@ -278,8 +282,6 @@ namespace ModelGraph.Core
             else
                 _selectedPicker1Shapes.Clear();
 
-            _selectedPicker2Shape = null;
-
             SetProperties();
 
             if (_selectedPicker1Shapes.Count == 0)
@@ -292,12 +294,12 @@ namespace ModelGraph.Core
         private void OverviewTap()
         {
             var n = _selectedPicker1Shapes.Count;
+            _clonerShapes.Clear();
             _selectedPicker1Shapes.Clear();
 
             var shapes = Symbol.GetShapes();
             if (n != shapes.Count)
                 _selectedPicker1Shapes.AddRange(shapes);
-            _selectedPicker2Shape = null;
 
             SetProperties();
 
@@ -309,20 +311,27 @@ namespace ModelGraph.Core
 
         private void Picker2Select()
         {
-            var i = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
-            _selectedPicker2Shape = (i >= 0 && i < _picker2Shapes.Length) ? _picker2Shapes[i] : null;
-
+            _picker2Index = -1;
+            _clonerShapes.Clear();
             _selectedPicker1Shapes.Clear();
+            var i = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
+            if (i >= 0 && i < _picker2Shapes.Length)
+            {
+                _picker2Index = i;
+                _clonerShapes.Add(_sampleShapes[i]);
+            }
+
             SetProperties();
 
-            if (_selectedPicker2Shape is null)
+            if (_clonerShapes.Count == 0)
                 SetViewMode();
             else
                 SetCreateMode();
         }
-        Shape _selectedPicker2Shape;
-
-        static Shape[] _picker2Shapes =
+        private int _picker2Index;
+        private List<Shape> _sampleShapes = new List<Shape>(_picker2Shapes.Length);
+        private List<Shape> _clonerShapes = new List<Shape>(2);
+        private static Shape[] _picker2Shapes =
         {
             new Line(),
             new Circle(),
@@ -377,7 +386,8 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.ViewMode))
             {
-                _selectedPicker2Shape = null;
+                _picker2Index = -1;
+                _clonerShapes.Clear();
                 _selectedPicker1Shapes.Clear();
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
@@ -485,10 +495,10 @@ namespace ModelGraph.Core
         }
         private void CloneAction()
         {
-            if (_selectedPicker2Shape is null) SetViewMode();
+            if (_clonerShapes.Count != 1) SetViewMode();
 
             var cp = Editor.Point1 / EditRadius;
-            var ns = _selectedPicker2Shape.Clone(cp);
+            var ns = _clonerShapes[0].Clone(cp);
 
             ns.SetColor(ColorARGB);
             ns.SetStokeStyle(_lineStyle);

@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         private byte G = 0xFF; // of color(A, R, G, B)
         private byte B = 0xFF; // of color(A, R, G, B)
         private byte SW = 2;  // stroke width
-        private byte SS;      // stroke style
+        private byte SS = 4;  // stroke type
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
         private byte F1;      // auxiliary factor (for PolyGear and PolyPulse) (0 to 100 %)
@@ -27,24 +27,15 @@ namespace ModelGraph.Core
         protected ShapeProperty LinePropertyFlags()
         {
             var ss = (StrokeType)SS & StrokeType.Filled;
-            if (this is Central)
-            {
-                if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
-                if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;
-                return ShapeProperty.LineStyle | ShapeProperty.LineWidth;
-            }
-            else
-            {
-                if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
-                if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.LineWidth;
-                return ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.LineWidth;
-            }
+            if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
+            if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return (ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.LineWidth) & ValidLineProperty;
+            return (ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.LineWidth) & ValidLineProperty;
         }
+        protected virtual ShapeProperty ValidLineProperty => ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.LineWidth;
         internal void SetStrokeWidth(byte sw) => SW = sw;
         internal void SetEndCap(CapStyle v)
         {
             var ss = (StrokeType)SS & ~StrokeType.EC_Triangle;
-
             if (v == CapStyle.Round) ss |= StrokeType.EC_Round;
             else if (v == CapStyle.Square) ss |= StrokeType.EC_Square;
             else if (v == CapStyle.Triangle) ss |= StrokeType.EC_Triangle;
@@ -54,8 +45,9 @@ namespace ModelGraph.Core
         internal void SetDashCap(CapStyle v)
         {
             var ss = (StrokeType)SS & ~StrokeType.DC_Triangle;
-
-            if (v == CapStyle.Round) ss |= StrokeType.DC_Round;
+            var st = (StrokeType)SS & StrokeType.Filled;
+            if (st == StrokeType.Dotted && v == CapStyle.Flat) ss |= StrokeType.DC_Square;
+            else if (v == CapStyle.Round) ss |= StrokeType.DC_Round;
             else if (v == CapStyle.Square) ss |= StrokeType.DC_Square;
             else if (v == CapStyle.Triangle) ss |= StrokeType.DC_Triangle;
 
@@ -210,7 +202,6 @@ namespace ModelGraph.Core
 
         #endregion
 
-
         #region GetCentroid  ====================================================
         static private (float cdx, float cdy) GetCentroid(IEnumerable<Shape> shapes)
         {
@@ -246,37 +237,24 @@ namespace ModelGraph.Core
         static private (float cdx, float cdy) GetCentroid(List<(float, float)> points)
         {
             var n = points.Count;
-            float s = 0;
-            for (int i = 0; i < n - 1; i++)
+            float sa = 0, sx = 0, sy = 0, ds;
+            for (int i = 0, j = 1; j < n;)
             {
-                var (xi, yi) = points[i];
-                var (xj, yj) = points[i + 1];
-                s += (xi * yj - yi * xj);
-            }
-            var a = 3 * s;
+                var (xi, yi) = points[i++];
+                var (xj, yj) = points[j++];
+                ds = (xi * yj - yi * xj);
 
-            s = 0;
-            for (int i = 0; i < n - 1; i++)
-            {
-                var (xi, yi) = points[i];
-                var (xj, yj) = points[i + 1];
-                s += (xi + xj) * (xi * yj - yi * xj);
+                sa += ds;
+                sx += (xi + xj) * ds;
+                sy += (yi + yj) * ds;
             }
-            var cx = s / a;
-
-            s = 0;
-            for (int i = 0; i < n - 1; i++)
-            {
-                var (xi, yi) = points[i];
-                var (xj, yj) = points[i + 1];
-                s += (yi + yj) * (xi * yj - yi * xj);
-            }
-            var cy = s / a;
+            var a = 3 * sa;
+            var cx = sx / a;
+            var cy = sy / a;
 
             return (cx, cy);
         }
         #endregion
-
 
         #region SaveShapes  ===================================================
         internal static byte[] SaveShaptes(IEnumerable<Shape> shapes)
