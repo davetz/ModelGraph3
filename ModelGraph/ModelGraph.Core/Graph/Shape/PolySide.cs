@@ -18,7 +18,7 @@ namespace ModelGraph.Core
 
         protected override void CreatePoints()
         {
-
+            var (cx, cy) = GetCenter();
             var D = Dimension;
             DXY = new List<(float dx, float dy)>(D);
             var da = FullRadians / D;
@@ -29,6 +29,9 @@ namespace ModelGraph.Core
                 DXY.Add(Limit((r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a))));
                 a += da;
             }
+            var (nx, ny) = GetCenter();
+            var (dx, dy) = (cx - nx, cy - ny);
+            MoveCenter(dx, dy);
         }
 
         #region PrivateConstructor  ===========================================
@@ -47,6 +50,30 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new PolySide(this);
         internal override Shape Clone(Vector2 center) => new PolySide(this, center);
         protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Dim;
+
+        protected override (float, float) GetCenter()
+        {
+            var n = DXY is null ? 0 : DXY.Count;
+            if (n < 3) return (0, 0);
+
+            float sa = 0, sx = 0, sy = 0, ds;
+            for (int i = 0, j = 1; j < n;)
+            {
+                var (xi, yi) = DXY[i++];
+                var (xj, yj) = DXY[j++];
+                ds = (xi * yj - yi * xj);
+
+                sa += ds;
+                sx += (xi + xj) * ds;
+                sy += (yi + yj) * ds;
+            }
+            var a = 3 * sa;
+            var cx = sx / a;
+            var cy = sy / a;
+
+            return (cx, cy);
+        }
+
         #endregion
     }
 }

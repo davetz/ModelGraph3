@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         private byte G = 0xFF; // of color(A, R, G, B)
         private byte B = 0xFF; // of color(A, R, G, B)
         private byte SW = 2;  // stroke width
-        private byte SS = 4;  // stroke type
+        private byte ST = 4;  // stroke type
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
         private byte F1;      // auxiliary factor (for PolyGear and PolyPulse) (0 to 100 %)
@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         #region Properties  ===================================================
         protected ShapeProperty LinePropertyFlags()
         {
-            var ss = (StrokeType)SS & StrokeType.Filled;
+            var ss = (StrokeType)ST & StrokeType.Filled;
             if (ss == StrokeType.Filled) return ShapeProperty.LineStyle;
             if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return (ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.LineWidth) & ValidLineProperty;
             return (ShapeProperty.LineStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.LineWidth) & ValidLineProperty;
@@ -35,51 +35,51 @@ namespace ModelGraph.Core
         internal void SetStrokeWidth(byte sw) => SW = sw;
         internal void SetEndCap(CapStyle v)
         {
-            var ss = (StrokeType)SS & ~StrokeType.EC_Triangle;
+            var ss = (StrokeType)ST & ~StrokeType.EC_Triangle;
             if (v == CapStyle.Round) ss |= StrokeType.EC_Round;
             else if (v == CapStyle.Square) ss |= StrokeType.EC_Square;
             else if (v == CapStyle.Triangle) ss |= StrokeType.EC_Triangle;
 
-            SS = (byte)ss;
+            ST = (byte)ss;
         }
         internal void SetDashCap(CapStyle v)
         {
-            var ss = (StrokeType)SS & ~StrokeType.DC_Triangle;
-            var st = (StrokeType)SS & StrokeType.Filled;
+            var ss = (StrokeType)ST & ~StrokeType.DC_Triangle;
+            var st = (StrokeType)ST & StrokeType.Filled;
             if (st == StrokeType.Dotted && v == CapStyle.Flat) ss |= StrokeType.DC_Square;
             else if (v == CapStyle.Round) ss |= StrokeType.DC_Round;
             else if (v == CapStyle.Square) ss |= StrokeType.DC_Square;
             else if (v == CapStyle.Triangle) ss |= StrokeType.DC_Triangle;
 
-            SS = (byte)ss;
+            ST = (byte)ss;
         }
         internal void SetStartCap(CapStyle v)
         {
-            var ss = (StrokeType)SS & ~StrokeType.SC_Triangle;
+            var ss = (StrokeType)ST & ~StrokeType.SC_Triangle;
 
             if (v == CapStyle.Round) ss |= StrokeType.SC_Round;
             else if (v == CapStyle.Square) ss |= StrokeType.SC_Square;
             else if (v == CapStyle.Triangle) ss |= StrokeType.SC_Triangle;
 
-            SS = (byte)ss;
+            ST = (byte)ss;
         }
         internal void SetStokeStyle(StrokeStyle v)
         {
-            var ss = (StrokeType)SS & ~StrokeType.Filled;
+            var ss = (StrokeType)ST & ~StrokeType.Filled;
 
             if (v == StrokeStyle.Filled) ss = StrokeType.Filled;
             else if (v == StrokeStyle.Dotted) ss |= StrokeType.Dotted;
             else if (v == StrokeStyle.Dashed) ss |= StrokeType.Dashed;
 
-            SS = (byte)ss;
+            ST = (byte)ss;
         }
 
-        internal (ShapeType, StrokeType, byte) ShapeStrokeWidth() => (ShapeType, (StrokeType)SS, SW);
+        internal (ShapeType, StrokeType, byte) ShapeStrokeWidth() => (ShapeType, (StrokeType)ST, SW);
         protected (ShapeType, StrokeType, byte) ShapeStrokeWidth(float scale)
         {
             var sw = (byte)(SW * scale); // compensate for exagerated size
             if (sw < 1) sw = 1;
-            return (ShapeType, (StrokeType)SS, sw);
+            return (ShapeType, (StrokeType)ST, sw);
         }
         internal (byte, byte, byte, byte) ShapeColor(Coloring c = Coloring.Normal) => c == Coloring.Normal ? (A, R, G, B) : c == Coloring.Light ? (_a, R, B, G) : (_a, _g, _g, _g);
         private const byte _g = 0x80;
@@ -178,9 +178,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Radians  ======================================================
-        protected static float FullRadians = (float)(2 * Math.PI);
-        protected static float DeltaRadians0 = (float)(Math.PI / 8);
-        protected static float DeltaRadians1 = (float)(Math.PI / 6);
+        protected static float FullRadians = (float)(2 * Math.PI);   //360 degrees
+        protected static float DeltaRadians0 = (float)(Math.PI / 8); //22.5 degrees
+        protected static float DeltaRadians1 = (float)(Math.PI / 6); //30 degrees
         protected float RotateLeftRadians0 => -DeltaRadians0;
         protected float RotateRightRadians0 => DeltaRadians0;
         protected float RotateLeftRadians1 => -DeltaRadians1;
@@ -202,19 +202,13 @@ namespace ModelGraph.Core
 
         #endregion
 
-        #region GetCentroid  ====================================================
-        static private (float cdx, float cdy) GetCentroid(IEnumerable<Shape> shapes)
+        #region GetCenter  ====================================================
+        static private (float cdx, float cdy) GetCenter(IEnumerable<Shape> shapes)
         {
             var points = new List<(float, float)>();
             foreach (var s in shapes)
             {
-                if ((s.ShapeType & ShapeType.ClosedLines) != 0)
-                    points.Add(GetCentroid(s.DXY));
-                else
-                {
-                    var (dx1, dy1, dx2, dy2) = s.GetExtent();
-                    points.Add(((dx1 + dx2) / 2, (dy1 + dy2) / 2));
-                }
+                points.Add(s.GetCenter());
             }
             if (points.Count == 0) return (0, 0);
             if (points.Count == 1) return points[0];
@@ -224,35 +218,15 @@ namespace ModelGraph.Core
             var x2 = -1f;
             var y2 = -1f;
 
-            foreach (var (dx, dy) in points)
+            foreach (var (px, py) in points)
             {
-                if (dx < x1) x1 = dx;
-                if (dy < y1) y1 = dy;
+                if (px < x1) x1 = px;
+                if (py < y1) y1 = py;
 
-                if (dx > x2) x2 = dx;
-                if (dy > y2) y2 = dy;
+                if (px > x2) x2 = px;
+                if (py > y2) y2 = py;
             }
             return (((x1 + x2) / 2, (y1 + y2) / 2));
-        }
-        static private (float cdx, float cdy) GetCentroid(List<(float, float)> points)
-        {
-            var n = points.Count;
-            float sa = 0, sx = 0, sy = 0, ds;
-            for (int i = 0, j = 1; j < n;)
-            {
-                var (xi, yi) = points[i++];
-                var (xj, yj) = points[j++];
-                ds = (xi * yj - yi * xj);
-
-                sa += ds;
-                sx += (xi + xj) * ds;
-                sy += (yi + yj) * ds;
-            }
-            var a = 3 * sa;
-            var cx = sx / a;
-            var cy = sy / a;
-
-            return (cx, cy);
         }
         #endregion
 
@@ -271,7 +245,7 @@ namespace ModelGraph.Core
                 data.Add(shape.G);          // 3
                 data.Add(shape.B);          // 4
                 data.Add(shape.SW);         // 5
-                data.Add(shape.SS);         // 6
+                data.Add(shape.ST);         // 6
                 data.Add(shape.R1);         // 7
                 data.Add(shape.R2);         // 8
                 data.Add(shape.F1);         // 9
@@ -385,7 +359,7 @@ namespace ModelGraph.Core
                 shape.G = data[I++];
                 shape.B = data[I++];
                 shape.SW = data[I++];
-                shape.SS = data[I++];
+                shape.ST = data[I++];
                 shape.R1 = data[I++];
                 shape.R2 = data[I++];
                 shape.F1 = data[I++];
@@ -416,7 +390,7 @@ namespace ModelGraph.Core
             G = s.G;
             B = s.B;
             SW = s.SW;
-            SS = s.SS;
+            ST = s.ST;
             R1 = s.R1;
             R2 = s.R2;
             F1 = s.F1;

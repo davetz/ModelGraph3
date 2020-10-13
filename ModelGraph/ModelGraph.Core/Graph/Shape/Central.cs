@@ -11,6 +11,7 @@ namespace ModelGraph.Core
 
 
         #region GetCenterRadius  ==============================================
+        protected override (float, float) GetCenter() => DXY[0];
         protected (Vector2 cp, float r1, float r2) GetCenterRadius(Vector2 center, float scale)
         {
             var (r1, r2, _) = GetRadius(scale);

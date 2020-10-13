@@ -23,6 +23,7 @@ namespace ModelGraph.Core
         protected abstract void Scale(Vector2 scale);
 
         protected virtual void CreatePoints() { }
+        protected virtual (float, float) GetCenter() => (0, 0);
         protected virtual (int min, int max) MinMaxDimension => (1, 100);
         protected abstract ShapeProperty PropertyFlags { get; }
 
@@ -50,7 +51,7 @@ namespace ModelGraph.Core
         #region SetCenter  ====================================================
         static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 cp)
         {
-            var (cdx, cdy) = GetCentroid(shapes);
+            var (cdx, cdy) = GetCenter(shapes);
 
             var ex = cp.X - cdx;
             var ey = cp.Y - cdy;

@@ -66,7 +66,7 @@ namespace ModelGraph.Core
 
         #region Rotation  =====================================================
 
-        private void MoveCenter(float dx, float dy)
+        protected void MoveCenter(float dx, float dy)
         {
             for (int i = 0; i < DXY.Count; i++)
             {

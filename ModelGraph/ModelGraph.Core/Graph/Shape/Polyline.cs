@@ -54,13 +54,23 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
+        protected override (float, float) GetCenter()
+        {
+            if (DXY is null) return (0,0);
+            float sx = 0, sy = 0, n = DXY.Count;
+            foreach (var (x, y) in DXY)
+            {
+                sx += x;
+                sy += y;
+            }
+            return (sx/n, sy/n);
+        }
         protected override (float dx1, float dy1, float dx2, float dy2) GetExtent()
         {
             var x1 = 1f;
             var y1 = 1f;
             var x2 = -1f;
             var y2 = -1f;
-
             foreach (var (dx, dy) in DXY)
             {
                 if (dx < x1) x1 = dx;

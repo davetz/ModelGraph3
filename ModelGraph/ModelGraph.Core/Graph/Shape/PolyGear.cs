@@ -20,6 +20,8 @@ namespace ModelGraph.Core
 
         protected override void CreatePoints()
         {
+            var (cx, cy) = GetCenter();
+
             var D = Dimension;
             var N = 3 * D; //number of points
             var M = 2 * D; //number of angles
@@ -37,6 +39,9 @@ namespace ModelGraph.Core
                 DXY.Add(Limit((r2 * (float)Math.Cos(a), r2 * (float)Math.Sin(a))));
                 a += da;
             }
+            var (nx, ny) = GetCenter();
+            var (dx, dy) = (cx - nx, cy - ny);
+            MoveCenter(dx, dy);
         }
 
         #region PrivateConstructor  ===========================================
