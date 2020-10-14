@@ -67,6 +67,7 @@ namespace ModelGraph.Core
         }
         protected override (float dx1, float dy1, float dx2, float dy2) GetExtent()
         {
+            if (DXY is null) return (0, 0, 0, 0);
             var x1 = 1f;
             var y1 = 1f;
             var x2 = -1f;
@@ -108,7 +109,7 @@ namespace ModelGraph.Core
                 drawData.AddLine((points, ShapeStrokeWidth(), ShapeColor()));
             }
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
         #endregion
     }
 }

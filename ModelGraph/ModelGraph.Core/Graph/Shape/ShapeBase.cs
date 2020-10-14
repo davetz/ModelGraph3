@@ -23,7 +23,6 @@ namespace ModelGraph.Core
         protected abstract void Scale(Vector2 scale);
 
         protected virtual void CreatePoints() { }
-        protected virtual (float, float) GetCenter() => (0, 0);
         protected virtual (int min, int max) MinMaxDimension => (1, 100);
         protected abstract ShapeProperty PropertyFlags { get; }
 
@@ -48,15 +47,51 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region SetCenter  ====================================================
-        static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 cp)
+
+        #region GetCenter  ====================================================
+        protected virtual (float, float) GetCenter() => (0, 0);
+        static private (float cdx, float cdy) GetCenter(IEnumerable<Shape> shapes)
         {
-            var (cdx, cdy) = GetCenter(shapes);
+            var points = new List<(float, float)>();
+            foreach (var s in shapes)
+            {
+                points.Add(s.GetCenter());
+            }
+            if (points.Count == 0) return (0, 0);
+            if (points.Count == 1) return points[0];
 
-            var ex = cp.X - cdx;
-            var ey = cp.Y - cdy;
+            var x1 = 1f;
+            var y1 = 1f;
+            var x2 = -1f;
+            var y2 = -1f;
 
-            foreach (var shape in shapes) { shape.MoveCenter(ex, ey); }
+            foreach (var (px, py) in points)
+            {
+                if (px < x1) x1 = px;
+                if (py < y1) y1 = py;
+
+                if (px > x2) x2 = px;
+                if (py > y2) y2 = py;
+            }
+            return (((x1 + x2) / 2, (y1 + y2) / 2));
+        }
+        #endregion
+
+        #region SetCenter  ====================================================
+        static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 p)
+        {
+            var (cx, cy) = (p.X, p.Y);
+            var (vx, vy) = GetCenter(shapes);
+
+            var (dx, dy) = (cx - vx, cy - vy);
+
+            foreach (var shape in shapes) { shape.MoveCenter(dx, dy); }
+        }
+        protected void SetCenter(float cx, float cy)
+        {
+            var (vx, vy) = GetCenter();
+            var (dx, dy) = (cx - vx, cy - vy);
+            MoveCenter(dx, dy);
         }
         #endregion
 
@@ -65,10 +100,28 @@ namespace ModelGraph.Core
         {
             foreach (var shape in shapes) { shape.MoveCenter(ds.X, ds.Y); }
         }
+        protected void MoveCenter(float dx, float dy)
+        {
+            for (int i = 0; i < DXY.Count; i++)
+            {
+                var (tx, ty) = DXY[i];
+                DXY[i] = Limit(tx + dx, ty + dy);
+            }
+        }
         #endregion
 
         #region SetProperty  ==================================================
-        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, Shape shape) => SetProperty(sm, pf, new Shape[] {shape});
+        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, Shape s)
+        {
+            SetStrokeProperty(sm, pf, s);
+            if ((pf & ShapeProperty.Aux) != 0) s.AuxAxis = sm.AuxAxis;
+            if ((pf & ShapeProperty.Cent) != 0) s.MinorAxis = sm.CentAxis;
+            if ((pf & ShapeProperty.Vert) != 0) s.MajorAxis = sm.VertAxis;
+            if ((pf & ShapeProperty.Horz) != 0) s.MinorAxis = sm.HorzAxis;
+            if ((pf & ShapeProperty.Rad1) != 0) s.MajorAxis = sm.MajorAxis;
+            if ((pf & ShapeProperty.Rad2) != 0) s.MinorAxis = sm.MinorAxis;
+            if ((pf & ShapeProperty.Dim) != 0) s.Dimension = sm.Dimension;
+        }
         internal static void SetProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
             SetStrokeProperty(sm, pf, shapes);
@@ -76,20 +129,21 @@ namespace ModelGraph.Core
             if ((pf & ShapeProperty.Cent) != 0) ResizeCentral(shapes, sm.CentAxis);
             if ((pf & ShapeProperty.Vert) != 0) ResizeVertical(shapes, sm.VertAxis);
             if ((pf & ShapeProperty.Horz) != 0) ResizeHorizontal(shapes, sm.HorzAxis);
-            if ((pf & ShapeProperty.Major) != 0) ResizeMajorAxis(shapes, sm.MajorAxis);
-            if ((pf & ShapeProperty.Minor) != 0) ResizeMinorAxis(shapes, sm.MinorAxis);
+            if ((pf & ShapeProperty.Rad1) != 0) ResizeMajorAxis(shapes, sm.MajorAxis);
+            if ((pf & ShapeProperty.Rad2) != 0) ResizeMinorAxis(shapes, sm.MinorAxis);
             if ((pf & ShapeProperty.Dim) != 0) SetDimension(shapes, sm.Dimension);
         }
         internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
-            foreach (var s in shapes)
-            {
-                if ((pf & ShapeProperty.LineWidth) != 0) s.SetStrokeWidth(sm.LineWidth);
-                if ((pf & ShapeProperty.LineStyle) != 0) s.SetStokeStyle(sm.LineStyle);
-                if ((pf & ShapeProperty.StartCap) != 0) s.SetStartCap(sm.StartCap);
-                if ((pf & ShapeProperty.DashCap) != 0) s.SetDashCap(sm.DashCap);
-                if ((pf & ShapeProperty.EndCap) != 0) s.SetEndCap(sm.EndCap);
-            }
+            foreach (var s in shapes) SetStrokeProperty(sm, pf, s);
+        }
+        internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, Shape s)
+        {
+            if ((pf & ShapeProperty.LineWidth) != 0) s.SetStrokeWidth(sm.LineWidth);
+            if ((pf & ShapeProperty.LineStyle) != 0) s.SetStokeStyle(sm.LineStyle);
+            if ((pf & ShapeProperty.StartCap) != 0) s.SetStartCap(sm.StartCap);
+            if ((pf & ShapeProperty.DashCap) != 0) s.SetDashCap(sm.DashCap);
+            if ((pf & ShapeProperty.EndCap) != 0) s.SetEndCap(sm.EndCap);
         }
         internal static void ResizeCentral(IEnumerable<Shape> shapes, float slider)
         {

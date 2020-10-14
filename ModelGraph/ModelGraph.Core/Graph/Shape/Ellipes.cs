@@ -47,7 +47,7 @@ namespace ModelGraph.Core
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
         #endregion
     }
 }

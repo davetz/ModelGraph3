@@ -29,9 +29,7 @@ namespace ModelGraph.Core
                 DXY.Add(Limit((r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a))));
                 a += da;
             }
-            var (nx, ny) = GetCenter();
-            var (dx, dy) = (cx - nx, cy - ny);
-            MoveCenter(dx, dy);
+            SetCenter(cx, cy);
         }
 
         #region PrivateConstructor  ===========================================
@@ -39,17 +37,17 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolySide(Shape shape, Vector2 center)
+        private PolySide(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolySide(this);
         internal override Shape Clone(Vector2 center) => new PolySide(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Dim;
 
         protected override (float, float) GetCenter()
         {

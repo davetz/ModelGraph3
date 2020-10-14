@@ -1137,7 +1137,7 @@ NEC – NWC – SEC - SWC</value>
     <value>Stroke style of all selected shapes</value>
   </data>
   <data name="4C1N" xml:space="preserve">
-    <value>Strok Width</value>
+    <value>Stroke Width</value>
   </data>
   <data name="4C1S" xml:space="preserve">
     <value>Stroke width for all selected shapes
@@ -1190,17 +1190,17 @@ NEC – NWC – SEC - SWC</value>
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C9N" xml:space="preserve">
-    <value>Major Axis %</value>
+    <value>Radius 1 %</value>
   </data>
   <data name="4C9S" xml:space="preserve">
-    <value>Shape Major Axis % (1 to 100)  for all selected shapes
+    <value>Shape Radius 1 % (1 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4CAN" xml:space="preserve">
-    <value>Minor Axis %</value>
+    <value>Radius 2 %</value>
   </data>
   <data name="4CAS" xml:space="preserve">
-    <value>Shape Minor Axis % (1 to 100)  for all selected shapes
+    <value>Shape Radius 2 %  (1 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4CBN" xml:space="preserve">

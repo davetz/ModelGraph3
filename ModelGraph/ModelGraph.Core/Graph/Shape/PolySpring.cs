@@ -21,10 +21,10 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolySpring(Shape shape, Vector2 center)
+        private PolySpring(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
@@ -32,6 +32,7 @@ namespace ModelGraph.Core
         private enum PS { L1, L2, L3, L4 }
         protected override void CreatePoints()
         {
+            var (cx, cy) = GetCenter();
             var D = Dimension;
             var (r1, r2, _) = GetRadius();
 
@@ -87,6 +88,7 @@ namespace ModelGraph.Core
                     break;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
+            SetCenter(cx, cy);
 
             void SetDelta(float ds)
             {
@@ -117,7 +119,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() => new PolySpring(this);
         internal override Shape Clone(Vector2 center) => new PolySpring(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 18);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad2 | ShapeProperty.Rad1 | ShapeProperty.Dim;
         #endregion
     }
 }

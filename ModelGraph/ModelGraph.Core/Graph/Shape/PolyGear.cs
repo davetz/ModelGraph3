@@ -49,17 +49,17 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolyGear(Shape shape, Vector2 center)
+        private PolyGear(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolyGear(this);
         internal override Shape Clone(Vector2 center) => new PolyGear(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2 | ShapeProperty.Aux | ShapeProperty.Dim;
         #endregion
     }
 }

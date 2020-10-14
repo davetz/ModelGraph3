@@ -19,10 +19,10 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private Rectangle(Shape shape, Vector2 center)
+        private Rectangle(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            Center = center;
+            Center = p;
         }
         #endregion
 
@@ -44,7 +44,7 @@ namespace ModelGraph.Core
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Vert | ShapeProperty.Horz;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
         #endregion
     }
 }

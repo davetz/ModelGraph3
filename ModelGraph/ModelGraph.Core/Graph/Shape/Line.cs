@@ -18,10 +18,10 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private Line(Shape shape, Vector2 center)
+        private Line(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter( new Shape[] { this }, center);
+            SetCenter( p.X, p.Y);
         }
         #endregion
 

@@ -66,14 +66,6 @@ namespace ModelGraph.Core
 
         #region Rotation  =====================================================
 
-        protected void MoveCenter(float dx, float dy)
-        {
-            for (int i = 0; i < DXY.Count; i++)
-            {
-                var (tx, ty) = DXY[i];
-                DXY[i] = Limit(tx + dx, ty + dy);
-            }
-        }
         private void RotateLeft(bool useAlternate = false)
         {
             if (useAlternate)

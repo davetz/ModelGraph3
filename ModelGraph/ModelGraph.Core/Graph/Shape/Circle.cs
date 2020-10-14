@@ -47,7 +47,7 @@ namespace ModelGraph.Core
             else
                 Radius1 = Radius2 = (Radius1 * scale.X);
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Cent;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1;
         #endregion
     }
 }

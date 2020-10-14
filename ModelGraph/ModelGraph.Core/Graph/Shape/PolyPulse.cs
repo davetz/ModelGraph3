@@ -22,10 +22,10 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolyPulse(Shape shape, Vector2 center)
+        private PolyPulse(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
@@ -70,7 +70,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new PolyPulse(this);
         internal override Shape Clone(Vector2 center) => new PolyPulse(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 19);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Aux | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2 | ShapeProperty.Aux | ShapeProperty.Dim;
         #endregion
     }
 }

@@ -23,6 +23,11 @@ namespace ModelGraph.Core
                 drawData.AddLine((points, ShapeStrokeWidth(scale), ShapeColor()));
             }
         }
+        protected override (float, float) GetCenter()
+        {
+            var (x1, y1, x2, y2) = GetExtent();
+            return ((x1 + x2) / 2, (y1 + y2) / 2);
+        }
         #endregion
     }
 }

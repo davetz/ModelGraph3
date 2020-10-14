@@ -22,10 +22,10 @@ namespace ModelGraph.Core
             CopyData(shape);
         }
 
-        internal RoundedRectangle(Shape shape, Vector2 center)
+        internal RoundedRectangle(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            Center = center;
+            Center = p;
         }
         #endregion
 
@@ -47,7 +47,7 @@ namespace ModelGraph.Core
 
             drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
         #endregion
     }
 }

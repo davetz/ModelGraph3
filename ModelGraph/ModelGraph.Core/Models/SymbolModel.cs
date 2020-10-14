@@ -82,10 +82,10 @@ namespace ModelGraph.Core
         internal byte HorzAxis { get => _horzAxis; set => Set(ref _horzAxis, value, ShapeProperty.Horz); }
         private byte _horzAxis = 25;
 
-        internal byte MajorAxis { get => _majorAxis; set => Set(ref _majorAxis, value, ShapeProperty.Major); }
+        internal byte MajorAxis { get => _majorAxis; set => Set(ref _majorAxis, value, ShapeProperty.Rad1); }
         private byte _majorAxis = 25;
 
-        internal byte MinorAxis { get => _minorAxis; set => Set(ref _minorAxis, value, ShapeProperty.Minor); }
+        internal byte MinorAxis { get => _minorAxis; set => Set(ref _minorAxis, value, ShapeProperty.Rad2); }
         private byte _minorAxis = 25;
 
         internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dim); }
@@ -97,7 +97,10 @@ namespace ModelGraph.Core
         {
             if (Equals(storage, value)) return;
             storage = value;
-            Shape.SetProperty(this, sp, SelectedShapes);
+            if (SelectedShapes.Count == 1)
+                Shape.SetProperty(this, sp, SelectedShapes[0]);
+            else
+                Shape.SetProperty(this, sp, SelectedShapes);
             SetProperties();
         }
         #endregion
@@ -484,13 +487,13 @@ namespace ModelGraph.Core
                 var cp = Editor.Point1 / EditRadius;
                 var ns = _templateShapes[_picker2Index].Clone(cp);
 
-                ns.SetColor(ColorARGB);
-                ns.SetStokeStyle(_lineStyle);
-                ns.SetStrokeWidth(_lineWidth);
-                ns.SetStartCap(_startCap);
-                ns.SetDashCap(_dashCap);
-                ns.SetEndCap(_endCap);
-                ns.Dimension = _dimension;
+                //ns.SetColor(ColorARGB);
+                //ns.SetStokeStyle(_lineStyle);
+                //ns.SetStrokeWidth(_lineWidth);
+                //ns.SetStartCap(_startCap);
+                //ns.SetDashCap(_dashCap);
+                //ns.SetEndCap(_endCap);
+                //ns.Dimension = _dimension;
 
                 Symbol.GetShapes().Add(ns);
                 RefreshDrawData();

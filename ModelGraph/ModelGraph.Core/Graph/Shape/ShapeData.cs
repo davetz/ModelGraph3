@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using Windows.UI.ApplicationSettings;
 
 namespace ModelGraph.Core
 {
@@ -88,18 +89,6 @@ namespace ModelGraph.Core
         #region Color  ========================================================
         internal enum Coloring { Gray, Light, Normal };
 
-        //internal Color Color => Color.FromArgb(A, R, G, B);
-        internal string ColorCode { get { return $"#{A:X}{R:X}{G:X}{B:X}"; } set { SetColor(value); } }
-        //internal Color GetColor(Coloring c) => (c == Coloring.Normal) ? Color : (c == Coloring.Light) ? Color.FromArgb(0x60, R, G, B) : Color.FromArgb(0x60, 0X80, 0X80, 0X80);
-
-        private void SetColor(string code)
-        {
-            var (a, r, g, b) = GetARGB(code);
-            A = a;
-            R = r;
-            G = g;
-            B = b;
-        }
         internal void SetColor((byte ,byte,byte,byte) color)
         {
             var (a, r, g, b) = color;
@@ -108,29 +97,6 @@ namespace ModelGraph.Core
             G = g;
             B = b;
         }
-
-        private static (byte, byte, byte, byte) GetARGB(string argbStr)
-        {
-            if (IsInvalid(argbStr)) return _invalidColor;
-            var argb = _invalidColor; // default color when there is a bad color string
-
-            var ca = argbStr.ToLower().ToCharArray();
-            if (ca[0] != '#') return _invalidColor;
-
-            var N = _argbLength;
-            int[] va = new int[N];
-            for (int j = 1; j < N; j++)
-            {
-                va[j] = _hexValues.IndexOf(ca[j]);
-                if (va[j] < 0) return _invalidColor;
-            }
-            return ((byte)((va[1] << 4) | va[2]), (byte)((va[3] << 4) | va[4]), (byte)((va[5] << 4) | va[6]), (byte)((va[7] << 4) | va[8]));
-        }
-        static bool IsValid(string argbStr) => !IsInvalid(argbStr);
-        static bool IsInvalid(string argbStr) => (string.IsNullOrWhiteSpace(argbStr) || argbStr.Length != _argbLength);
-        static readonly (byte, byte, byte, byte) _invalidColor = (0x88, 0x87, 0x86, 0x85);
-        static readonly string _hexValues = "0123456789abcdef";
-        const int _argbLength = 9;
         #endregion
 
         #region Radius  =======================================================
@@ -165,15 +131,12 @@ namespace ModelGraph.Core
         #endregion
 
         #region Dimension  ====================================================
-        internal int Dimension
+        internal int Dimension { get => PD; set => SetPD(value); }
+        private void SetPD(int val)
         {
-            get { return PD; }
-
-            set
-            {
-                var (min, max) = MinMaxDimension;
-                PD = (byte)((value < min) ? min : (value > max) ? max : value);
-            }
+            var (min, max) = MinMaxDimension;
+            PD = (byte)((val < min) ? min : (val > max) ? max : val);
+            CreatePoints();
         }
         #endregion
 
@@ -195,39 +158,11 @@ namespace ModelGraph.Core
 
         #region Axiss  ======================================================
         internal bool IsLocked { get { return PL != 0; } set { PL = (byte)(value ? 1 : 0); } }
-        internal double AuxAxis { get { return 100 * AuxFactor; } set { AuxFactor = (float)value / 100; CreatePoints(); } }
-        internal double MajorAxis { get { return 100 * Radius2; } set { Radius2 = (float)value / 100; CreatePoints(); } }
-        internal double MinorAxis { get { return 100 * Radius2; } set { Radius1 = (float)value / 100; CreatePoints(); } }
+        internal byte AuxAxis { get { return (byte)(100 * AuxFactor); } set { AuxFactor = (float)value / 100; CreatePoints(); } }
+        internal byte MajorAxis { get { return (byte)(100 * Radius1); } set { Radius1 = (float)value / 100; CreatePoints(); } }
+        internal byte MinorAxis { get { return (byte)(100 * Radius2); } set { Radius2 = (float)value / 100; CreatePoints(); } }
         #endregion
 
-        #endregion
-
-        #region GetCenter  ====================================================
-        static private (float cdx, float cdy) GetCenter(IEnumerable<Shape> shapes)
-        {
-            var points = new List<(float, float)>();
-            foreach (var s in shapes)
-            {
-                points.Add(s.GetCenter());
-            }
-            if (points.Count == 0) return (0, 0);
-            if (points.Count == 1) return points[0];
-
-            var x1 = 1f;
-            var y1 = 1f;
-            var x2 = -1f;
-            var y2 = -1f;
-
-            foreach (var (px, py) in points)
-            {
-                if (px < x1) x1 = px;
-                if (py < y1) y1 = py;
-
-                if (px > x2) x2 = px;
-                if (py > y2) y2 = py;
-            }
-            return (((x1 + x2) / 2, (y1 + y2) / 2));
-        }
         #endregion
 
         #region SaveShapes  ===================================================

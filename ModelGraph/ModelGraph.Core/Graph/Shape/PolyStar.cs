@@ -43,17 +43,17 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolyStar(Shape shape, Vector2 center)
+        private PolyStar(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
         internal override Shape Clone() =>new PolyStar(this);
         internal override Shape Clone(Vector2 center) => new PolyStar(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad2 | ShapeProperty.Rad1 | ShapeProperty.Dim;
         #endregion
     }
 }

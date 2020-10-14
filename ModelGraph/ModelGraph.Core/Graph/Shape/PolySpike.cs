@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            Radius1 = 0.75f;
+            Radius1 = 0.25f;
             Radius2 = 0.25f;
             AuxFactor = 0.50f;
             Dimension = 4;
@@ -22,16 +22,17 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolySpike(Shape shape, Vector2 center)
+        private PolySpike(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
         #region CreatePoints  =================================================
         protected override void CreatePoints()
         {
+            var (cx, cy) = GetCenter();
             var D = Dimension;
             var n = 0;
             var N = 1 + D;
@@ -52,6 +53,7 @@ namespace ModelGraph.Core
                 dx += ax;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
+            SetCenter(cx, cy);
 
             bool Add(float x, float y)
             {
@@ -65,7 +67,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new PolySpike(this);
         internal override Shape Clone(Vector2 center) => new PolySpike(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 20);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Major | ShapeProperty.Minor | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2 | ShapeProperty.Dim;
         #endregion
     }
 }

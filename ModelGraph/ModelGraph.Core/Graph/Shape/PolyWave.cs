@@ -10,8 +10,8 @@ namespace ModelGraph.Core
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            Radius1 = 0.75f;
-            Radius2 = 0.35f;
+            Radius1 = 0.25f;
+            Radius2 = 0.25f;
             Dimension = 6;
             CreatePoints();
         }
@@ -21,16 +21,17 @@ namespace ModelGraph.Core
         {
             CopyData(shape);
         }
-        private PolyWave(Shape shape, Vector2 center)
+        private PolyWave(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(new Shape[] { this }, center);
+            SetCenter(p.X, p.Y);
         }
         #endregion
 
         #region CreatePoints  =================================================
         protected override void CreatePoints()
         {
+            var (cx, cy) = GetCenter();
             var D = Dimension;
             var (r1, r2, _) = GetRadius();
 
@@ -46,6 +47,7 @@ namespace ModelGraph.Core
                 if (AddLobe()) break;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
+            SetCenter(cx, cy);
 
             bool AddLobe()
             {
@@ -72,7 +74,7 @@ namespace ModelGraph.Core
         internal override Shape Clone() => new PolyWave(this);
         internal override Shape Clone(Vector2 center) => new PolyWave(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 22);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Minor | ShapeProperty.Major | ShapeProperty.Dim;
+        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad2 | ShapeProperty.Rad1 | ShapeProperty.Dim;
         #endregion
     }
 }

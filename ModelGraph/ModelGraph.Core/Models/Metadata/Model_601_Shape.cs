@@ -74,8 +74,8 @@ namespace ModelGraph.Core
             if ((sp & ShapeProperty.Cent) != 0) _selectList.Add(_fullModelList[I_CentAxis]);
             if ((sp & ShapeProperty.Horz) != 0) _selectList.Add(_fullModelList[I_HorzAxis]);
             if ((sp & ShapeProperty.Vert) != 0) _selectList.Add(_fullModelList[I_VertAxis]);
-            if ((sp & ShapeProperty.Major) != 0) _selectList.Add(_fullModelList[I_MajorAxis]);
-            if ((sp & ShapeProperty.Minor) != 0) _selectList.Add(_fullModelList[I_MinorAxis]);
+            if ((sp & ShapeProperty.Rad1) != 0) _selectList.Add(_fullModelList[I_MajorAxis]);
+            if ((sp & ShapeProperty.Rad2) != 0) _selectList.Add(_fullModelList[I_MinorAxis]);
             if ((sp & ShapeProperty.Aux) != 0) _selectList.Add(_fullModelList[I_AuxAxis]);
             if ((sp & ShapeProperty.Dim) != 0) _selectList.Add(_fullModelList[I_Dimension]);
             if ((sp & ShapeProperty.PolyLocked) != 0) _selectList.Add(_fullModelList[I_PolyLocked]);
