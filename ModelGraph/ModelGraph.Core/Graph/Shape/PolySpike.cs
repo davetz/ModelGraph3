@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Windows.ApplicationModel.Chat;
 
 namespace ModelGraph.Core
 {
@@ -10,7 +11,7 @@ namespace ModelGraph.Core
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            Radius1 = 0.25f;
+            Radius1 = 0.75f;
             Radius2 = 0.25f;
             AuxFactor = 0.50f;
             Dimension = 4;
@@ -48,10 +49,11 @@ namespace ModelGraph.Core
 
             for (int i = 0; i < N; i++)
             {
-                if (Add(dx, -dy)) return;
-                if (Add(dx + bx, dy)) return;
+                if (Add(dx, -dy)) goto Restore;
+                if (Add(dx + bx, dy)) goto Restore;
                 dx += ax;
             }
+            Restore:
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
             SetCenter(cx, cy);
 

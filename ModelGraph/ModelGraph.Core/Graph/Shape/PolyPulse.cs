@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Windows.ApplicationModel.Chat;
 
 namespace ModelGraph.Core
 {
@@ -32,6 +33,7 @@ namespace ModelGraph.Core
         #region CreatePoints  =================================================
         protected override void CreatePoints()
         {
+            var (cx, cy) = GetCenter();
             var D = Dimension;
             var n = 0;
             var N = 1 + D;
@@ -49,14 +51,16 @@ namespace ModelGraph.Core
             dx += bx;
             for (int i = 0; i < D; i++)
             {
-                if (Add(dx + bx, dy)) return;
+                if (Add(dx + bx, dy)) goto Restore;
                 dx += ax;
-                if (Add(dx - bx, dy)) return;
-                if (Add(dx + bx, -dy)) return;
+                if (Add(dx - bx, dy)) goto Restore;
+                if (Add(dx + bx, -dy)) goto Restore;
                 dx += ax;
-                if (Add(dx - bx, -dy)) return;
+                if (Add(dx - bx, -dy)) goto Restore;
             }
+            Restore:
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
+            SetCenter(cx, cy);
 
             bool Add(float x, float y)
             {

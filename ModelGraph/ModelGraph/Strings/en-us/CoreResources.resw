@@ -1131,7 +1131,7 @@ NEC – NWC – SEC - SWC</value>
     <value>Take a limited number of elements form the full results set</value>
   </data>
   <data name="4C0N" xml:space="preserve">
-    <value>StrokeStyle</value>
+    <value>Stroke Style</value>
   </data>
   <data name="4C0S" xml:space="preserve">
     <value>Stroke style of all selected shapes</value>
@@ -1144,28 +1144,28 @@ NEC – NWC – SEC - SWC</value>
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C2N" xml:space="preserve">
-    <value>StartCap</value>
+    <value>Start Cap</value>
   </data>
   <data name="4C2S" xml:space="preserve">
     <value>Line start cap for all selected shapes</value>
   </data>
   <data name="4C3N" xml:space="preserve">
-    <value>DashCap</value>
+    <value>Dash Cap</value>
   </data>
   <data name="4C3S" xml:space="preserve">
     <value>Line dash cap for all selected shapes</value>
   </data>
   <data name="4C4N" xml:space="preserve">
-    <value>EndCap</value>
+    <value>End Cap</value>
   </data>
   <data name="4C4S" xml:space="preserve">
     <value>Line end cap for all selected shapes</value>
   </data>
   <data name="4C5N" xml:space="preserve">
-    <value>Aux Axis %</value>
+    <value>Auxilary %</value>
   </data>
   <data name="4C5S" xml:space="preserve">
-    <value>Auxilary Axis % (1 to 100)  for all selected shapes
+    <value>Auxilary factor % (1 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C6N" xml:space="preserve">

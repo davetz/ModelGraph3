@@ -151,7 +151,7 @@ namespace ModelGraph.Core
                 foreach (var s in _picker2Shapes)
                 {
                     s.AddDrawData(Picker2, a, r, c);
-                    if (_picker2Index >= 0 && s == _picker2Shapes[_picker2Index])
+                    if (Picker2IsValid && s == _picker2Shapes[_picker2Index])
                         Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     c = new Vector2(0, c.Y + Picker2.Extent.Width);
                 }
@@ -261,7 +261,6 @@ namespace ModelGraph.Core
             if (Picker1IsValid)
             {
                 var s = Symbol.GetShapes()[_picker1Index];
-                SelectedShapes.Clear();
                 if (add)
                 {
                     if (SelectedShapes.Contains(s))
@@ -330,6 +329,7 @@ namespace ModelGraph.Core
             new PolySide(),
             new PolyStar(),
             new PolyGear(),
+            new PolyPulse(),
             new PolySpike(),
             new PolyWave(),
             new PolySpring(),

@@ -416,10 +416,11 @@ namespace ModelGraph.Controls
                         case ShapeType.RoundedRectangle:
                             e = a - b;
                             f = 2 * b;
+                            var r = 8 * scale;
                             if (isFilled)
-                                ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, 8, 8, color);
+                                ds.FillRoundedRectangle(e.X, e.Y, f.X, f.Y, r, r, color);
                             else
-                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, 8, 8, color, v, stroke);
+                                ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, r, r, color, v, stroke);
                             break;
                     }
                 }

@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            Radius1 = 0.25f;
+            Radius1 = 0.75f;
             Radius2 = 0.25f;
             Dimension = 6;
             CreatePoints();
