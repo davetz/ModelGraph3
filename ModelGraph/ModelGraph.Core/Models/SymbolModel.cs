@@ -433,30 +433,35 @@ namespace ModelGraph.Core
 
         private void SkimAction()
         {
-            var r = EditRadius;
-            var c = new Vector2();
-            var hit = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
-            if (hit == _hitSelecteShapes) return;
-
-            _hitSelecteShapes = hit;
-            DrawCursor = hit ? DrawCursor.Hand : DrawCursor.Arrow;
-            if (hit)
+            if (Picker1IsValid)
             {
-                SetEventAction(DrawEvent.KeyUpArrow, NudgeUp);
-                SetEventAction(DrawEvent.KeyDownArrow, NudgeDown);
-                SetEventAction(DrawEvent.KeyLeftArrow, NudgeLeft);
-                SetEventAction(DrawEvent.KeyRightArrow, NudgeRight);
-                SetEventAction(DrawEvent.Tap, SetMoveMode);
+                var r = EditRadius;
+                var c = new Vector2();
+                var hit = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
+                if (hit == _hitSelecteShapes) return;
+
+                _hitSelecteShapes = hit;
+                DrawCursor = hit ? DrawCursor.Hand : DrawCursor.Arrow;
+                if (hit)
+                {
+                    SetEventAction(DrawEvent.KeyUpArrow, NudgeUp);
+                    SetEventAction(DrawEvent.KeyDownArrow, NudgeDown);
+                    SetEventAction(DrawEvent.KeyLeftArrow, NudgeLeft);
+                    SetEventAction(DrawEvent.KeyRightArrow, NudgeRight);
+                    SetEventAction(DrawEvent.Tap, SetMoveMode);
+                }
+                else
+                {
+                    ClearEventAction(DrawEvent.KeyUpArrow);
+                    ClearEventAction(DrawEvent.KeyDownArrow);
+                    ClearEventAction(DrawEvent.KeyLeftArrow);
+                    ClearEventAction(DrawEvent.KeyRightArrow);
+                    SetEventAction(DrawEvent.Tap, SetViewMode);
+                }
+                RefreshDrawData();
             }
             else
-            {
-                ClearEventAction(DrawEvent.KeyUpArrow);
-                ClearEventAction(DrawEvent.KeyDownArrow);
-                ClearEventAction(DrawEvent.KeyLeftArrow);
-                ClearEventAction(DrawEvent.KeyRightArrow);
-                SetEventAction(DrawEvent.Tap, SetViewMode);
-            }
-            RefreshDrawData();
+                _hitSelecteShapes = false;
         }
         private void NudgeUp()
         {
