@@ -537,6 +537,7 @@ namespace ModelGraph.Core
                 DrawCursor = DrawCursor.SizeAll;
                 SetEventAction(DrawEvent.TapEnd, EndDragAction);
                 SetEventAction(DrawEvent.Drag, DragShapeAction);
+                RefreshDrawData();
             }
         }
         private void DragShapeAction()

@@ -300,10 +300,11 @@ namespace ModelGraph.Controls
             }
         }
         DrawCursor _drawCursor;
-        internal async void PostEvent(DrawEvent evt)
+        internal void PostEvent(DrawEvent evt)
         {
+            Debug.WriteLine($"Post {evt}");
             if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
-                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
         #endregion
 
@@ -473,6 +474,9 @@ namespace ModelGraph.Controls
         {
             if (_isRootCanvasLoaded)
             {
+                var p = e.GetCurrentPoint(EditCanvas).Position;
+                if (p.X < 0 || p.Y < 0) return;
+
                 SetGridPoint2(e);
                 SetDrawPoint2(EditCanvas, Model.EditorData, e);
 

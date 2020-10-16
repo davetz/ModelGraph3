@@ -44,8 +44,7 @@ namespace ModelGraph.Core
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
-            var points = new Vector2[] { new Vector2(x, z), new Vector2(x, x) };
-            Picker2.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
+            Picker2.AddParms((new Vector2[] { new Vector2(x, z), new Vector2(x, x) }, (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
         }
         #endregion
 
