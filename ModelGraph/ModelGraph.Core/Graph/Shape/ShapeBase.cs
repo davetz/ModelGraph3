@@ -270,7 +270,7 @@ namespace ModelGraph.Core
 
             return isNotMixed ? flags : (flags &= ~ShapeProperty.MultiSizerMask) | ShapeProperty.Vert | ShapeProperty.Horz;
         }
-        internal static void GetStrokeProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref byte width, ref StrokeStyle style, ref CapStyle startCap, ref CapStyle dashCap, ref CapStyle endCap, ref (byte,byte,byte,byte) color)
+        internal static void GetStrokeProperty(IEnumerable<Shape> shapes, ref ShapeProperty flag, ref byte width, ref StrokeStyle style, ref CapStyle startCap, ref CapStyle dashCap, ref CapStyle endCap, ref (byte, byte, byte, byte) color)
         {
             var first = true;
             foreach (var s in shapes)
@@ -332,41 +332,25 @@ namespace ModelGraph.Core
         #endregion
 
         #region AddDrawTargets  ===============================================
-        static internal  void AddDrawTargets(IEnumerable<Shape> shapes, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
+        static internal void AddDrawTargets(IEnumerable<Shape> shapes, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
         {
-            var (_, _, _, _, cdx, cdy, dw, dh) = GetExtent(shapes);
+            var (_, _, _, _, _, _, dw, dh) = GetExtent(shapes);
             if (dw + dh > 0)
             {
-                DrawTarget(new Vector2(cdx, cdy) * scale + center, true);
-                
-                if (shapes.Count() == 1  && shapes.First() is Polyline polyline)
+                if (shapes.Count() == 1 && shapes.First() is Polyline polyline)
                 {
-                    var points = polyline.GetDrawingPoints( center, scale);
+                    var points = polyline.GetDrawingPoints(center, scale);
+                    var points2 = new Vector2[points.Length * 2];
+                    var rd = new Vector2(7, 7);
+                    var i = 0;
                     foreach (var point in points)
                     {
-                        DrawTarget(point);
+                        points2[i++] = point;
+                        points2[i++] = rd;
                     }
-                }
-
-                void DrawTarget(Vector2 c, bool highlight = false)
-                {
-                    targets.Add(c);
-
-                    drawData.AddShape(((c, new Vector2(7, 7)), (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
-                    if  (highlight)
-                        drawData.AddShape(((c, new Vector2(9, 9)), (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 0, 0)));
+                    drawData.AddParms((points2, (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
                 }
             }
-        }
-        #endregion
-
-        #region AddDrawHighLight  =============================================
-        internal static void AddDrawHighLight(DrawData drawData, float width, int index)
-        {
-            var hw = width / 2;
-            var y1 = index * width;
-            var y2 = y1 + width;
-            drawData.AddShape(((new Vector2(hw, y1), new Vector2(hw, y2)), (ShapeType.Line, StrokeType.Simple, (byte)width),( 255, 80, 80, 80)));
         }
         #endregion
     }

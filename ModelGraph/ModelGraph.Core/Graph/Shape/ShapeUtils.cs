@@ -52,12 +52,10 @@ namespace ModelGraph.Core
 
             return !(p.X < x1 || p.X > x2 || p.Y < y1 || p.Y > y2);
         }
-        static internal (Vector2 p1, Vector2 p2) GetHitExtent(float scale, Vector2 center, IEnumerable<Shape> shapes)
+        static internal Vector2[] GetHitExtent(float scale, Vector2 center, IEnumerable<Shape> shapes)
         {
             var (_, _, _, _, cx, cy, dx, dy) = GetExtent(shapes);
-            var c = new Vector2(cx, cy) * scale + center;
-            var r = new Vector2(dx, dy) * scale / 2;
-            return (c, r);
+            return new Vector2[] { new Vector2(cx, cy) * scale + center, new Vector2(dx, dy) * scale / 2 };
         }
         #endregion
 

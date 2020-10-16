@@ -128,7 +128,7 @@ namespace ModelGraph.Core
                 }
                 if (_hitSelecteShapes)
                 {
-                   Editor.AddShape((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
+                   Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
                 }
             }
             
@@ -142,7 +142,10 @@ namespace ModelGraph.Core
                 {
                     s.AddDrawData(Picker1, a, r, c);
                     if (SelectedShapes.Contains(s))
-                        Picker1.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    {
+                        var points = new Vector2[] { c, new Vector2(r, r) };
+                        Picker1.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    }
                     c = new Vector2(0, c.Y + Picker1.Extent.Width);
                 }
             }
@@ -157,7 +160,10 @@ namespace ModelGraph.Core
                 {
                     s.AddDrawData(Picker2, a, r, c);
                     if (Picker2IsValid && s == _picker2Shapes[_picker2Index])
-                        Picker2.AddShape(((c, new Vector2(r, r)), (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    {
+                        var points = new Vector2[] { c, new Vector2(r, r) };
+                        Picker2.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                    }
                     c = new Vector2(0, c.Y + Picker2.Extent.Width);
                 }
             }
@@ -213,10 +219,10 @@ namespace ModelGraph.Core
             (byte, byte, byte, byte) color2 = (0x80, 0xff, 0xff, 0x00);
 
             Helper.Clear();
-            Helper.AddLine((points1.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color1));
-            Helper.AddLine((points2.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color2));
-            Helper.AddShape(((new Vector2(0, 0), new Vector2(r / 2, r / 2)), (ShapeType.Circle, StrokeType.Simple, 1), color2));
-            Helper.AddShape(((new Vector2(0, 0), new Vector2(r, r)), (ShapeType.Circle, StrokeType.Simple, 1), color1));
+            Helper.AddParms((points1.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color1));
+            Helper.AddParms((points2.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color2));
+            Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r / 2, r / 2) }, (ShapeType.Circle, StrokeType.Simple, 1), color2));
+            Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r, r) }, (ShapeType.Circle, StrokeType.Simple, 1), color1));
 
             var yN = -r - 32;
             var x1 = -r - 16;

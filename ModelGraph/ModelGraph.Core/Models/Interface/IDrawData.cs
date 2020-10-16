@@ -11,7 +11,6 @@ namespace ModelGraph.Core
         Vector2 PointDelta(bool reset = false);
 
         List<((Vector2, string), (byte, byte, byte, byte))> Text { get; }
-        List<(Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte))> Lines { get; }
-        List<((Vector2, Vector2), (ShapeType, StrokeType, byte), (byte, byte, byte, byte))> Shapes { get; }
+        List<(Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte))> Parms { get; }
     }
 }

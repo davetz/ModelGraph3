@@ -11,7 +11,7 @@ namespace ModelGraph.Core
 
             if (points.Length > 2)
             {
-                drawData.AddLine((points, ShapeStrokeWidth(scale / size), ShapeColor(c)));
+                drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor(c)));
             }
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
@@ -20,7 +20,7 @@ namespace ModelGraph.Core
 
             if (points.Length > 2)
             {
-                drawData.AddLine((points, ShapeStrokeWidth(scale), ShapeColor()));
+                drawData.AddParms((points, ShapeStrokeWidth(scale), ShapeColor()));
             }
         }
         protected override (float, float) GetCenter()

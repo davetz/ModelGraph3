@@ -36,16 +36,16 @@ namespace ModelGraph.Core
         {
             var (cp, r1, r2) = GetCenterRadius(center, scale);
             var rd = new Vector2(r1, r2);
-
-            drawData.AddShape(((cp, rd), ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
+            var points = new Vector2[] { cp, new Vector2(r1, r2) };
+            drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
 
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {
             var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
             var rd = new Vector2(r1, r2);
-
-            drawData.AddShape(((cp, rd), ShapeStrokeWidth(), ShapeColor()));
+            var points = new Vector2[] { cp, new Vector2(r1, r2) };
+            drawData.AddParms((points, ShapeStrokeWidth(), ShapeColor()));
         }
         protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
         #endregion

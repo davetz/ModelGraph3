@@ -324,7 +324,7 @@ namespace ModelGraph.Controls
                 var (scale, offset) = CanvasScaleOffset[sender];
                 var ds = args.DrawingSession;
 
-                foreach (var (P, (K, S, W), (A, R, G, B)) in data.Lines)
+                foreach (var (P, (K, S, W), (A, R, G, B)) in data.Parms)
                 {
                     var isFilled = S == StrokeType.Filled;
                     if (K < ShapeType.MultipleSimpleShapesLimit)
@@ -377,14 +377,6 @@ namespace ModelGraph.Controls
                             }
                         }
                     }
-                }
-
-                foreach (var ((C, D), (K, S, W), (A, R, G, B)) in data.Shapes)
-                {
-                    var d = D * scale;
-                    var c = C * scale + offset;
-
-                    DrawShape(c, d, Color.FromArgb(A, R, G, B), StrokeStyle(S), K, (S == StrokeType.Filled), W);
                 }
 
                 foreach (var ((P, T), (A, R, G, B)) in data.Text)
