@@ -126,6 +126,14 @@
             </Grid>
 
             <Grid Grid.Column="1" x:Name="RootGrid" Background="DarkSlateGray">
+                <Button x:Name="RootFocusButton" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" Margin="0" Content="">
+                    <Button.KeyboardAccelerators>
+                        <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_UpArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_RightArrow_Invoked"/>
+                    </Button.KeyboardAccelerators>
+                </Button>
 
                 <canvas:CanvasControl x:Name="EditCanvas"
                                   Loaded="DrawCanvas_Loaded"
@@ -137,8 +145,9 @@
                     ContextRequested="RootCanas_ContextRuested"
                     PointerMoved="RootCanvas_PointerMoved"
                     PointerPressed="RootCanvas_PointerPressed"
-                    PointerReleased="RootCanvas_PointerReleased">
-
+                    PointerReleased="RootCanvas_PointerReleased"
+                    PointerExited="RootCanvas_PointerExited">
+                    
                     <Canvas.ContextFlyout>
                         <MenuFlyout Placement="Right">
                         </MenuFlyout>

@@ -126,7 +126,12 @@ namespace ModelGraph.Core
                 {
                     s.AddDrawData(Editor, a, r, c, Shape.Coloring.Normal);
                 }
+                if (_hitSelecteShapes)
+                {
+                   Editor.AddShape((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
+                }
             }
+            
             void RefreshPicker1Data()
             {
                 var r = Picker1.Extent.Width / 2;
@@ -403,12 +408,13 @@ namespace ModelGraph.Core
             if (TrySetState(DrawState.EditMode))
             {
                 SetEventAction(DrawEvent.Tap, SetViewMode);
+                SetEventAction(DrawEvent.Skim, SkimAction);
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
                 SetEventAction(DrawEvent.Cut, CutAction);
                 SetEventAction(DrawEvent.Copy, CopyAction);
-                SetEventAction(DrawEvent.Center, CenterAction);
+                SetEventAction(DrawEvent.Recenter, CenterAction);
                 SetEventAction(DrawEvent.RotateLeft, RotateLeft);
                 SetEventAction(DrawEvent.RotateRight, RotateRight);
                 SetEventAction(DrawEvent.SetDegree22, SetDegree22);
@@ -419,6 +425,54 @@ namespace ModelGraph.Core
             }
         }
 
+        private void SkimAction()
+        {
+            var r = EditRadius;
+            var c = new Vector2();
+            var hit = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
+            if (hit == _hitSelecteShapes) return;
+
+            _hitSelecteShapes = hit;
+            DrawCursor = hit ? DrawCursor.Hand : DrawCursor.Arrow;
+            if (hit)
+            {
+                SetEventAction(DrawEvent.KeyUpArrow, NudgeUp);
+                SetEventAction(DrawEvent.KeyDownArrow, NudgeDown);
+                SetEventAction(DrawEvent.KeyLeftArrow, NudgeLeft);
+                SetEventAction(DrawEvent.KeyRightArrow, NudgeRight);
+                SetEventAction(DrawEvent.Tap, SetMoveMode);
+            }
+            else
+            {
+                ClearEventAction(DrawEvent.KeyUpArrow);
+                ClearEventAction(DrawEvent.KeyDownArrow);
+                ClearEventAction(DrawEvent.KeyLeftArrow);
+                ClearEventAction(DrawEvent.KeyRightArrow);
+                SetEventAction(DrawEvent.Tap, SetViewMode);
+            }
+            RefreshDrawData();
+        }
+        private void NudgeUp()
+        {
+            Shape.MoveCenter(SelectedShapes, new Vector2(0, -0.01f));
+            RefreshDrawData();
+        }
+        private void NudgeDown()
+        {
+            Shape.MoveCenter(SelectedShapes, new Vector2(0, 0.01f));
+            RefreshDrawData();
+        }
+        private void NudgeLeft()
+        {
+            Shape.MoveCenter(SelectedShapes, new Vector2(-0.01f, 0));
+            RefreshDrawData();
+        }
+        private void NudgeRight()
+        {
+            Shape.MoveCenter(SelectedShapes, new Vector2(0.01f, 0));
+            RefreshDrawData();
+        }
+        private bool _hitSelecteShapes;
         private void CutAction()
         {
             _shapeClipboard.Clear();
@@ -467,6 +521,30 @@ namespace ModelGraph.Core
         private void SetDegree22() => _useAlternate = false;
         private void SetDegree30() => _useAlternate = true;
         private bool _useAlternate;
+        #endregion
+
+        #region MoveMode  =====================================================
+        internal void SetMoveMode()
+        {
+            if (TrySetState(DrawState.MoveMode))
+            {
+                DrawCursor = DrawCursor.SizeAll;
+                SetEventAction(DrawEvent.TapEnd, EndDragAction);
+                SetEventAction(DrawEvent.Drag, DragShapeAction);
+            }
+        }
+        private void DragShapeAction()
+        {
+            var delta = Editor.PointDelta(true) / EditRadius;
+            Shape.MoveCenter(SelectedShapes, delta);
+            RefreshDrawData();
+        }
+        private void EndDragAction()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            RefreshDrawData();
+            SetEditMode();
+        }
         #endregion
 
         #region CreateMode == AddSymbolShape  =================================

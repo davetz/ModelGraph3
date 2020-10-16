@@ -42,8 +42,27 @@ namespace ModelGraph.Core
         }
         #endregion
 
+
+        #region HitTestShapes  ================================================
+        static internal bool HitShapes(Vector2 dp, float scale, Vector2 center, IEnumerable<Shape> shapes)
+        {
+            var p = (dp - center) / scale;
+
+            var (x1, y1, x2, y2, _, _, _, _) = GetExtent(shapes);
+
+            return !(p.X < x1 || p.X > x2 || p.Y < y1 || p.Y > y2);
+        }
+        static internal (Vector2 p1, Vector2 p2) GetHitExtent(float scale, Vector2 center, IEnumerable<Shape> shapes)
+        {
+            var (_, _, _, _, cx, cy, dx, dy) = GetExtent(shapes);
+            var c = new Vector2(cx, cy) * scale + center;
+            var r = new Vector2(dx, dy) * scale / 2;
+            return (c, r);
+        }
+        #endregion
+
         #region GetExtent  ====================================================
-        static private (float dx1, float dy1, float dx2, float dy2, float cdx, float cdy, float dx, float dy) GetExtent(IEnumerable<Shape> shapes)
+        static protected (float dx1, float dy1, float dx2, float dy2, float cdx, float cdy, float dx, float dy) GetExtent(IEnumerable<Shape> shapes)
         {
             var x1 = 1f;
             var y1 = 1f;

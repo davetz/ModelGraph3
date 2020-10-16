@@ -36,8 +36,6 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_Shape_MinorAxis(sto));
             root.RegisterReferenceItem(new Property_Shape_Dimension(sto));
             root.RegisterReferenceItem(new Property_Shape_Polylocked(sto));
-            root.RegisterReferenceItem(new Property_Shape_EndCap(sto));
-            root.RegisterReferenceItem(new Property_Shape_EndCap(sto));
 
             root.RegisterInternalProperties(typeof(SymbolX), GetProps1(root)); //used by property name lookup
             root.RegisterInternalProperties(typeof(SymbolModel), GetProps2(root)); //used by property name lookup

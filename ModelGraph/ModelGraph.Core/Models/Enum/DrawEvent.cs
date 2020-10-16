@@ -5,6 +5,8 @@ namespace ModelGraph.Core
     { 
         Idle, 
         Tap,
+        CtrlTap,
+        SiftTap,
         Context,
         DoubleTap, 
         TapEnd, 
@@ -23,6 +25,12 @@ namespace ModelGraph.Core
         Picker1Tap,
         Picker1CtrlTap,
         Picker1Drag,
+        KeyEnter,
+        KeyEscape,
+        KeyUpArrow,
+        KeyLeftArrow,
+        KeyRightArrow,
+        KeyDownArrow,
         Cut,
         Copy,
         Paste,
@@ -32,7 +40,7 @@ namespace ModelGraph.Core
         SetDegree30,
         VerticalFlip,
         HorizontalFlip,
-        Center,
+        Recenter,
         ShowPins,
     };
 }

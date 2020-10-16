@@ -289,8 +289,17 @@ namespace ModelGraph.Controls
 
                 if (Model.IsToolTipVisible) ShowToolTip();
                 else HideToolTip();
+
+                if (Model.DrawCursor != _drawCursor)
+                {
+                    _drawCursor = Model.DrawCursor;
+                    TrySetNewCursor((CoreCursorType)_drawCursor);
+                }
+                if (_currentCusorType == CoreCursorType.Hand)
+                    RootFocusButton.Focus(FocusState.Programmatic);
             }
         }
+        DrawCursor _drawCursor;
         internal async void PostEvent(DrawEvent evt)
         {
             if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
@@ -718,5 +727,23 @@ namespace ModelGraph.Controls
         private Color _originalColor;
         #endregion
 
+        #region RootCanvas_PreviewKeyDown  ====================================
+        private void KeyboardAccelerator_UpArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyUpArrow);
+        private void KeyboardAccelerator_DownArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyDownArrow);
+        private void KeyboardAccelerator_LeftArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyLeftArrow);
+        private void KeyboardAccelerator_RightArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyRightArrow);
+
+        private void TestDrawEvent(DrawEvent evt)
+        {
+            if (Model.DrawEvent_Action.ContainsKey(evt))
+            {
+                PostEvent(evt);
+            }
+        }
+        private void RootCanvas_PointerExited(object sender, PointerRoutedEventArgs e)
+        {
+            SideTreeCanvas.Focus(FocusState.Programmatic);
+        }
+        #endregion
     }
 }
