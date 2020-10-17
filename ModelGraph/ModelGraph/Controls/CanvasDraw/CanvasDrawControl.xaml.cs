@@ -302,7 +302,6 @@ namespace ModelGraph.Controls
         DrawCursor _drawCursor;
         internal void PostEvent(DrawEvent evt)
         {
-            Debug.WriteLine($"Post {evt}");
             if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
                 _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }

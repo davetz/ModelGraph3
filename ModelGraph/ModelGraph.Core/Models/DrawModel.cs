@@ -30,7 +30,7 @@ namespace ModelGraph.Core
             DrawState = state;
             Debug.WriteLine($"New DrawState: {DrawState}");
         }
-        public bool TrySetState(DrawState state, bool reset = false)
+        public bool TrySetState(DrawState state, bool reset = true)
         {
             if (state == DrawState.NoChange || state == DrawState) return false;   //no change, so nothing to do
             PreviousDrawState = DrawState;

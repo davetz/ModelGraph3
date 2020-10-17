@@ -301,7 +301,7 @@ namespace ModelGraph.Core
             var shapes = Symbol.GetShapes();
             if (SelectedShapes.Count == shapes.Count)
                 SetViewMode();
-
+            _picker1Index = 0; //will make Picker1Valid true
             SelectedShapes.AddRange(shapes);
             SetProperties();
             SetEditMode();
@@ -391,6 +391,7 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
+                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
                 SetProperties();
             }
@@ -418,6 +419,7 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
+                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 SetEventAction(DrawEvent.Cut, CutAction);
                 SetEventAction(DrawEvent.Copy, CopyAction);
                 SetEventAction(DrawEvent.Recenter, CenterAction);
@@ -427,7 +429,6 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.SetDegree30, SetDegree30);
                 SetEventAction(DrawEvent.VerticalFlip, VerticalFlip);
                 SetEventAction(DrawEvent.HorizontalFlip, HorizontalFlip);
-                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
             }
         }
 
