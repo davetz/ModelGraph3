@@ -219,8 +219,8 @@ namespace ModelGraph.Core
             (byte, byte, byte, byte) color2 = (0x80, 0xff, 0xff, 0x00);
 
             Helper.Clear();
-            Helper.AddParms((points1.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color1));
-            Helper.AddParms((points2.ToArray(), (ShapeType.MultipleLines, StrokeType.Simple, 1), color2));
+            Helper.AddParms((points1.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color1));
+            Helper.AddParms((points2.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color2));
             Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r / 2, r / 2) }, (ShapeType.Circle, StrokeType.Simple, 1), color2));
             Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r, r) }, (ShapeType.Circle, StrokeType.Simple, 1), color1));
 
@@ -302,6 +302,7 @@ namespace ModelGraph.Core
             if (SelectedShapes.Count == shapes.Count)
                 SetViewMode();
             _picker1Index = 0; //will make Picker1Valid true
+            SelectedShapes.Clear();
             SelectedShapes.AddRange(shapes);
             SetProperties();
             SetEditMode();
@@ -565,6 +566,9 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.CreateMode))
             {
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
+                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
                 SetEventAction(DrawEvent.Tap, CloneAction);
                 SetProperties();
@@ -577,15 +581,6 @@ namespace ModelGraph.Core
             {
                 var cp = Editor.Point1 / EditRadius;
                 var ns = _templateShapes[_picker2Index].Clone(cp);
-
-                //ns.SetColor(ColorARGB);
-                //ns.SetStokeStyle(_lineStyle);
-                //ns.SetStrokeWidth(_lineWidth);
-                //ns.SetStartCap(_startCap);
-                //ns.SetDashCap(_dashCap);
-                //ns.SetEndCap(_endCap);
-                //ns.Dimension = _dimension;
-
                 Symbol.GetShapes().Add(ns);
                 RefreshDrawData();
             }

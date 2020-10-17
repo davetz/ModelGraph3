@@ -33,9 +33,8 @@ namespace ModelGraph.Core
                 DXY.Add(Limit((r2 * (float)Math.Cos(a), r2 * (float)Math.Sin(a))));
                 a += da;
             }
-            var (nx, ny) = GetCenter();
-            var (dx, dy) = (cx - nx, cy - ny);
-            MoveCenter(dx, dy);
+            TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
+            SetCenter(cx, cy);
         }
 
         #region PrivateConstructor  ===========================================

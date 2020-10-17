@@ -10,14 +10,6 @@
         RoundedRectangle = 4,
         SimpleShapeMask = 0x07,
 
-        //multiple simple shapes 
-        MultipleLines = 8,
-        MultipleCircles = 9,
-        MultipleEllipses = 10,
-        MultipleRectangles = 11,
-        MultipleRoundedRectangles = 12,
-        MultipleSimpleShapesLimit = 0x0F,
-
         //connected line segments
         ClosedLines = 0x20,
         PolySide = 0x21,

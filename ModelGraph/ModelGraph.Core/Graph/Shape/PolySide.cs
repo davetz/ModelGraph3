@@ -29,6 +29,7 @@ namespace ModelGraph.Core
                 DXY.Add(Limit((r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a))));
                 a += da;
             }
+            TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
             SetCenter(cx, cy);
         }
 

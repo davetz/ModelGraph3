@@ -327,9 +327,8 @@ namespace ModelGraph.Controls
                 foreach (var (P, (K, S, W), (A, R, G, B)) in data.Parms)
                 {
                     var isFilled = S == StrokeType.Filled;
-                    if (K < ShapeType.MultipleSimpleShapesLimit)
+                    if (K < ShapeType.SimpleShapeMask)
                     {
-                        var k = K & ShapeType.SimpleShapeMask;
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
 
@@ -337,7 +336,7 @@ namespace ModelGraph.Controls
                         {
                             var c = P[i] * scale + offset;
                             var d = P[i + 1] * scale;
-                            DrawShape(c, d, color, stroke, k, isFilled, W);
+                            DrawShape(c, d, color, stroke, K, isFilled, W);
                         }
                     }
                     else
