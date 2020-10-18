@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         bool IsPicker2Visible { get; }
         bool IsColorPickerEnabled { get; }
         bool IsPasteActionEnabled { get; }
-
+        bool IsShowPinsEnabled { get; }
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
 

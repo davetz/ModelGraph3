@@ -71,6 +71,7 @@ namespace ModelGraph.Core
         public bool IsPicker2Visible { get; protected set; }
         public bool IsColorPickerEnabled { get; protected set; }
         public bool IsPasteActionEnabled { get; protected set; }
+        public bool IsShowPinsEnabled { get; protected set; }
         public Vector2 ToolTipTarget { get; set; }
         public Extent ResizerExtent { get; set; } //in drawPoint coordinates
         #endregion

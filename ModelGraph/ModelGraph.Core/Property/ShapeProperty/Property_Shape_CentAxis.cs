@@ -11,8 +11,8 @@ namespace ModelGraph.Core
             Value = new ByteValue(this);
         }
 
-        internal override byte GetValue(Item item) => Cast(item).CentAxis;
-        internal override void SetValue(Item item, byte val) => Cast(item).CentAxis = val;
+        internal override byte GetValue(Item item) => Cast(item).Size;
+        internal override void SetValue(Item item, byte val) => Cast(item).Size = val;
         internal override void CreatePropertyModel(ItemModel owner, Item item) => new Model_616_DeltaProperty(owner, item, this);
     }
 }

@@ -4,6 +4,7 @@ using System.Numerics;
 using System.Runtime.CompilerServices;
 using Windows.Security.Cryptography.Core;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
@@ -44,7 +45,7 @@ namespace ModelGraph.Core
         private void SetProperties()
         {
             Shape.GetStrokeProperty(SelectedShapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
-            Shape.GetSizerProperty(SelectedShapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _majorAxis, ref _minorAxis, ref _centAxis, ref _vertAxis, ref _horzAxis);
+            Shape.GetSizerProperty(SelectedShapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
 
             (SideTreeModel as TreeModel).Validate();
             RefreshDrawData();
@@ -73,20 +74,20 @@ namespace ModelGraph.Core
         internal byte AuxAxis { get => _auxAxis; set => Set(ref _auxAxis, value, ShapeProperty.Aux); }
         private byte _auxAxis = 25;
 
-        internal byte CentAxis { get => _centAxis; set => Set(ref _centAxis, value, ShapeProperty.Cent); }
-        private byte _centAxis = 25;
+        internal byte Size { get => _size; set => Set(ref _size, value, ShapeProperty.Size); }
+        private byte _size = 25;
 
-        internal byte VertAxis { get => _vertAxis; set => Set(ref _vertAxis, value, ShapeProperty.Vert); }
-        private byte _vertAxis = 25;
+        internal byte VSize { get => _vSize; set => Set(ref _vSize, value, ShapeProperty.Vert); }
+        private byte _vSize = 25;
 
-        internal byte HorzAxis { get => _horzAxis; set => Set(ref _horzAxis, value, ShapeProperty.Horz); }
-        private byte _horzAxis = 25;
+        internal byte HSize { get => _hSize; set => Set(ref _hSize, value, ShapeProperty.Horz); }
+        private byte _hSize = 25;
 
-        internal byte MajorAxis { get => _majorAxis; set => Set(ref _majorAxis, value, ShapeProperty.Rad1); }
-        private byte _majorAxis = 25;
+        internal byte Radius1 { get => _radius1; set => Set(ref _radius1, value, ShapeProperty.Rad1); }
+        private byte _radius1 = 25;
 
-        internal byte MinorAxis { get => _minorAxis; set => Set(ref _minorAxis, value, ShapeProperty.Rad2); }
-        private byte _minorAxis = 25;
+        internal byte Radius2 { get => _radius2; set => Set(ref _radius2, value, ShapeProperty.Rad2); }
+        private byte _radius2 = 25;
 
         internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dim); }
         private byte _dimension = 3;
@@ -97,10 +98,7 @@ namespace ModelGraph.Core
         {
             if (Equals(storage, value)) return;
             storage = value;
-            if (SelectedShapes.Count == 1)
-                Shape.SetProperty(this, sp, SelectedShapes[0]);
-            else
-                Shape.SetProperty(this, sp, SelectedShapes);
+            Shape.SetProperty(this, sp, SelectedShapes);
             SetProperties();
         }
         #endregion
@@ -122,11 +120,20 @@ namespace ModelGraph.Core
 
                 Editor.Clear();
                 var shapes = Symbol.GetShapes();
+                var coloring = Shape.Coloring.Normal;
                 foreach (var s in shapes)
                 {
-                    s.AddDrawData(Editor, a, r, c, Shape.Coloring.Normal);
+                    if (IsShowPinsEnabled)
+                    {
+                        coloring = s == SelectedShapes[0] ? Shape.Coloring.Light : Shape.Coloring.Gray;
+                    }
+                    s.AddDrawData(Editor, a, r, c, coloring);
                 }
-                if (_hitSelecteShapes)
+                if (IsShowPinsEnabled && SelectedShapes.Count == 1 )
+                {
+                    Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
+                }
+                else if (_hitSelecteShapes)
                 {
                    Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
                 }
@@ -265,7 +272,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Picker1,Overview,Picker2  =====================================
-        private void Picker1Select(bool add = false)
+        private void Picker1Tap(bool add = false)
         {
             _picker2Index = -1;
             _picker1Index = (int)(0.5f + Picker1.Point1.Y / Picker1.Extent.Width);
@@ -288,6 +295,7 @@ namespace ModelGraph.Core
                     SelectedShapes.Add(s);
                 }
                 SetProperties();
+                IsShowPinsEnabled = (SelectedShapes.Count == 1);
                 SetEditMode();
             }
             else
@@ -295,6 +303,7 @@ namespace ModelGraph.Core
                 SelectedShapes.Clear();
                 SetViewMode();
             }
+
         }
         private void OverviewTap()
         {
@@ -304,13 +313,15 @@ namespace ModelGraph.Core
             _picker1Index = 0; //will make Picker1Valid true
             SelectedShapes.Clear();
             SelectedShapes.AddRange(shapes);
+            IsShowPinsEnabled = (SelectedShapes.Count == 1);
             SetProperties();
             SetEditMode();
         }
 
-        private void Picker2Select()
+        private void Picker2Tap()
         {
             _picker1Index = -1;
+            IsShowPinsEnabled = false;
             SelectedShapes.Clear();
  
             _picker2Index = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
@@ -389,11 +400,12 @@ namespace ModelGraph.Core
             {
                 _picker1Index = _picker2Index = -1;
                 SelectedShapes.Clear();
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
+                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
+                IsShowPinsEnabled = false;
                 SetProperties();
             }
         }
@@ -417,9 +429,9 @@ namespace ModelGraph.Core
             {
                 SetEventAction(DrawEvent.Tap, SetViewMode);
                 SetEventAction(DrawEvent.Skim, SkimAction);
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
+                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 SetEventAction(DrawEvent.Cut, CutAction);
                 SetEventAction(DrawEvent.Copy, CopyAction);
@@ -428,6 +440,7 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.RotateRight, RotateRight);
                 SetEventAction(DrawEvent.SetDegree22, SetDegree22);
                 SetEventAction(DrawEvent.SetDegree30, SetDegree30);
+                SetEventAction(DrawEvent.ShowPins, SetLinkMode);
                 SetEventAction(DrawEvent.VerticalFlip, VerticalFlip);
                 SetEventAction(DrawEvent.HorizontalFlip, HorizontalFlip);
             }
@@ -566,10 +579,10 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.CreateMode))
             {
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Select(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Select(true); });
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Select);
+                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.Tap, CloneAction);
                 SetProperties();
                 RefreshDrawData();
@@ -590,12 +603,19 @@ namespace ModelGraph.Core
         #endregion
 
         #region LinkMode == DefineTerminals  ==================================
-        public void LinkModeMode()
+        public void SetLinkMode()
         {
             if (TrySetState(DrawState.LinkMode))
             {
+                SetEventAction(DrawEvent.ShowPins, SetEditMode);
+                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
+                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
+                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
             }
+            RefreshDrawData();
         }
+        List<Vector2> _pinTargets = new List<Vector2>();
         #endregion
 
         #region OperateMode == AutoFlipRotate  ================================

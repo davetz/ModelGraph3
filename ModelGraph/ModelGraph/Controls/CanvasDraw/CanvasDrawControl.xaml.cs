@@ -721,7 +721,7 @@ namespace ModelGraph.Controls
         private Color _originalColor;
         #endregion
 
-        #region RootCanvas_PreviewKeyDown  ====================================
+        #region RootCanvas_AcceleratorKeys  ===================================
         private void KeyboardAccelerator_UpArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyUpArrow);
         private void KeyboardAccelerator_DownArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyDownArrow);
         private void KeyboardAccelerator_LeftArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyLeftArrow);

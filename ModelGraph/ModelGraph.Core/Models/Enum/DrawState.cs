@@ -48,9 +48,9 @@ namespace ModelGraph.Core
         EventMask = 0x7000,     //issolate current event
 
         ViewOnVoid = ViewMode | NowOnVoid,      //hide tooltips
-        ViewOnPin = ViewMode | NowOnPin,           //show tooltips
-        ViewOnNode = ViewMode | NowOnNode,         //show tooltips
-        ViewOnEdge = ViewMode | NowOnEdge,         //show tooltips
+        ViewOnPin = ViewMode | NowOnPin,        //show tooltips
+        ViewOnNode = ViewMode | NowOnNode,      //show tooltips
+        ViewOnEdge = ViewMode | NowOnEdge,      //show tooltips
         ViewOnRegion = ViewMode | NowOnRegion,
 
 

@@ -111,26 +111,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region SetProperty  ==================================================
-        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, Shape s)
-        {
-            SetStrokeProperty(sm, pf, s);
-            if ((pf & ShapeProperty.Aux) != 0) s.AuxAxis = sm.AuxAxis;
-            if ((pf & ShapeProperty.Cent) != 0) s.MinorAxis = sm.CentAxis;
-            if ((pf & ShapeProperty.Vert) != 0) s.MajorAxis = sm.VertAxis;
-            if ((pf & ShapeProperty.Horz) != 0) s.MinorAxis = sm.HorzAxis;
-            if ((pf & ShapeProperty.Rad1) != 0) s.MajorAxis = sm.MajorAxis;
-            if ((pf & ShapeProperty.Rad2) != 0) s.MinorAxis = sm.MinorAxis;
-            if ((pf & ShapeProperty.Dim) != 0) s.Dimension = sm.Dimension;
-        }
         internal static void SetProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
             SetStrokeProperty(sm, pf, shapes);
             if ((pf & ShapeProperty.Aux) != 0) ResizeAuxAxis(shapes, sm.AuxAxis);
-            if ((pf & ShapeProperty.Cent) != 0) ResizeCentral(shapes, sm.CentAxis);
-            if ((pf & ShapeProperty.Vert) != 0) ResizeVertical(shapes, sm.VertAxis);
-            if ((pf & ShapeProperty.Horz) != 0) ResizeHorizontal(shapes, sm.HorzAxis);
-            if ((pf & ShapeProperty.Rad1) != 0) ResizeMajorAxis(shapes, sm.MajorAxis);
-            if ((pf & ShapeProperty.Rad2) != 0) ResizeMinorAxis(shapes, sm.MinorAxis);
+            if ((pf & ShapeProperty.Size) != 0) ResizeCentral(shapes, sm.Size);
+            if ((pf & ShapeProperty.Vert) != 0) ResizeVertical(shapes, sm.VSize);
+            if ((pf & ShapeProperty.Horz) != 0) ResizeHorizontal(shapes, sm.HSize);
+            if ((pf & ShapeProperty.Rad1) != 0) ResizeMajorAxis(shapes, sm.Radius1);
+            if ((pf & ShapeProperty.Rad2) != 0) ResizeMinorAxis(shapes, sm.Radius2);
             if ((pf & ShapeProperty.Dim) != 0) SetDimension(shapes, sm.Dimension);
         }
         internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
@@ -332,25 +321,18 @@ namespace ModelGraph.Core
         #endregion
 
         #region AddDrawTargets  ===============================================
-        static internal void AddDrawTargets(IEnumerable<Shape> shapes, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
+        static internal void AddDrawTargets(Shape s, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
         {
-            var (_, _, _, _, _, _, dw, dh) = GetExtent(shapes);
-            if (dw + dh > 0)
+            var points = s.GetDrawingPoints(FlipState.None, scale, center);
+            var points2 = new Vector2[points.Length * 2];
+            var rd = new Vector2(7, 7);
+            var i = 0;
+            foreach (var point in points)
             {
-                if (shapes.Count() == 1 && shapes.First() is Polyline polyline)
-                {
-                    var points = polyline.GetDrawingPoints(center, scale);
-                    var points2 = new Vector2[points.Length * 2];
-                    var rd = new Vector2(7, 7);
-                    var i = 0;
-                    foreach (var point in points)
-                    {
-                        points2[i++] = point;
-                        points2[i++] = rd;
-                    }
-                    drawData.AddParms((points2, (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
-                }
+                points2[i++] = point;
+                points2[i++] = rd;
             }
+            drawData.AddParms((points2, (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
         }
         #endregion
     }

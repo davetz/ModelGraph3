@@ -71,7 +71,7 @@ namespace ModelGraph.Core
             if ((sp & ShapeProperty.DashCap) != 0) _selectList.Add(_fullModelList[I_DashCap]);
             if ((sp & ShapeProperty.EndCap) != 0) _selectList.Add(_fullModelList[I_EndCap]);
             if ((sp & ShapeProperty.LineWidth) != 0) _selectList.Add(_fullModelList[I_StrokeWidth]);
-            if ((sp & ShapeProperty.Cent) != 0) _selectList.Add(_fullModelList[I_CentAxis]);
+            if ((sp & ShapeProperty.Size) != 0) _selectList.Add(_fullModelList[I_CentAxis]);
             if ((sp & ShapeProperty.Horz) != 0) _selectList.Add(_fullModelList[I_HorzAxis]);
             if ((sp & ShapeProperty.Vert) != 0) _selectList.Add(_fullModelList[I_VertAxis]);
             if ((sp & ShapeProperty.Rad1) != 0) _selectList.Add(_fullModelList[I_MajorAxis]);

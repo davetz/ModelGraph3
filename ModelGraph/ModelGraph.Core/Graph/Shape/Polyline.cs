@@ -80,7 +80,7 @@ namespace ModelGraph.Core
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring c = Coloring.Normal)
         {
             var points = GetDrawingPoints(center, scale);
-            drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor()));
+            drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor(c)));
         }
         internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
         {

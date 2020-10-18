@@ -81,7 +81,7 @@ namespace ModelGraph.Controls
                 CopyButton.IsEnabled = enb1;
                 PasteButton.IsEnabled = enb2;
                 RecenterButton.IsEnabled = enb1;
-                ShowPinsButton.IsEnabled = enb1;
+                ShowPinsButton.IsEnabled = DrawModel.IsShowPinsEnabled;
                 RotateLeftButton.IsEnabled = enb1;
                 RotateRightButton.IsEnabled = enb1;
                 RotateAngleButton.IsEnabled = enb1;
