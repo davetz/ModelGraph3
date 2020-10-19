@@ -81,7 +81,6 @@ namespace ModelGraph.Controls
                 CopyButton.IsEnabled = enb1;
                 PasteButton.IsEnabled = enb2;
                 RecenterButton.IsEnabled = enb1;
-                ShowPinsButton.IsEnabled = DrawModel.IsShowPinsEnabled;
                 RotateLeftButton.IsEnabled = enb1;
                 RotateRightButton.IsEnabled = enb1;
                 RotateAngleButton.IsEnabled = enb1;
@@ -138,6 +137,7 @@ namespace ModelGraph.Controls
 
         private void ShowPinsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.ShowPins);
 
+        private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.PinsMode);
         private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
         private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);
         private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.OperateMode);

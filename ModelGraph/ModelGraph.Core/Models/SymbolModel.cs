@@ -32,8 +32,12 @@ namespace ModelGraph.Core
 
             SetDrawStateAction(DrawState.Apply, ApplyChange);
             SetDrawStateAction(DrawState.Revert, Revert);
+            SetDrawStateAction(DrawState.PinsMode, InitializePinsMode);
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
+
+            VisibleDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
+            EnabledDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
 
             SetViewMode();
             RefreshDrawData();
@@ -112,33 +116,6 @@ namespace ModelGraph.Core
             if (triggerUIRefresh) PageModel.TriggerUIRefresh();
 
             #region InternalMethods  ==========================================
-            void RefreshEditorData()
-            {
-                var r = EditRadius;
-                var c = new Vector2();
-                var a = AbsoluteSize;
-
-                Editor.Clear();
-                var shapes = Symbol.GetShapes();
-                var coloring = Shape.Coloring.Normal;
-                foreach (var s in shapes)
-                {
-                    if (IsShowPinsEnabled)
-                    {
-                        coloring = s == SelectedShapes[0] ? Shape.Coloring.Light : Shape.Coloring.Gray;
-                    }
-                    s.AddDrawData(Editor, a, r, c, coloring);
-                }
-                if (IsShowPinsEnabled && SelectedShapes.Count == 1 )
-                {
-                    Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
-                }
-                else if (_hitSelecteShapes)
-                {
-                   Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
-                }
-            }
-            
             void RefreshPicker1Data()
             {
                 var r = Picker1.Extent.Width / 2;
@@ -176,6 +153,35 @@ namespace ModelGraph.Core
             }
             #endregion
         }
+
+        #region RefreshEditorData  ============================================
+        void RefreshEditorData()
+        {
+            var r = EditRadius;
+            var c = new Vector2();
+            var a = AbsoluteSize;
+
+            Editor.Clear();
+            var shapes = Symbol.GetShapes();
+            var coloring = Shape.Coloring.Normal;
+            if (DrawState == DrawState.PinsMode && SelectedShapes.Count == 1)
+            {
+                coloring = Shape.Coloring.Light;
+                Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
+            }
+
+            foreach (var s in shapes) { s.AddDrawData(Editor, a, r, c, coloring); }
+
+            if (DrawState == DrawState.PinsMode && SelectedShapes.Count == 1)
+            {
+                Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
+            }
+            else if (DrawState == DrawState.EditMode && _hitSelecteShapes)
+            {
+                Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
+            }
+        }
+        #endregion
 
         #region RefreshHelperData  ============================================
         private void RefreshHelperData()
@@ -295,7 +301,6 @@ namespace ModelGraph.Core
                     SelectedShapes.Add(s);
                 }
                 SetProperties();
-                IsShowPinsEnabled = (SelectedShapes.Count == 1);
                 SetEditMode();
             }
             else
@@ -313,7 +318,6 @@ namespace ModelGraph.Core
             _picker1Index = 0; //will make Picker1Valid true
             SelectedShapes.Clear();
             SelectedShapes.AddRange(shapes);
-            IsShowPinsEnabled = (SelectedShapes.Count == 1);
             SetProperties();
             SetEditMode();
         }
@@ -321,7 +325,6 @@ namespace ModelGraph.Core
         private void Picker2Tap()
         {
             _picker1Index = -1;
-            IsShowPinsEnabled = false;
             SelectedShapes.Clear();
  
             _picker2Index = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
@@ -398,6 +401,8 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.ViewMode))
             {
+                EnabledDrawItems |= DrawItem.Picker2 | DrawItem.SideTree;
+
                 _picker1Index = _picker2Index = -1;
                 SelectedShapes.Clear();
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
@@ -405,7 +410,6 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
                 if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
-                IsShowPinsEnabled = false;
                 SetProperties();
             }
         }
@@ -564,13 +568,68 @@ namespace ModelGraph.Core
         {
             var delta = Editor.PointDelta(true) / EditRadius;
             Shape.MoveCenter(SelectedShapes, delta);
-            RefreshDrawData();
+            RefreshEditorData(); //fast responce
         }
         private void EndDragAction()
         {
             DrawCursor = DrawCursor.Arrow;
             RefreshDrawData();
             SetEditMode();
+        }
+        #endregion
+
+        #region PinsMode  =====================================================
+        internal void InitializePinsMode()
+        {
+            TrySetState(DrawState.PinsMode); //should already be in pinsMode
+            EnabledDrawItems &= ~(DrawItem.Picker2 | DrawItem.SideTree);
+            DrawCursor = DrawCursor.Arrow;
+            RefreshDrawData();
+        }
+        bool IsPinIndexValid;
+        int _pinIndex;
+        private void SkimPinAction()
+        {
+            IsPinIndexValid = false;
+            var dp = Editor.Point2;
+            var ds = 4; //hit zone
+            var ex = new Extent(dp.X - ds, dp.Y - ds, dp.X + ds, dp.Y + ds);
+            for (int i = 0; i < _pinTargets.Count; i++)
+            {
+                var p = _pinTargets[i];
+                if (ex.Contains((p.X, p.Y)))
+                {
+                    _pinIndex = i;
+                    IsPinIndexValid = true;
+                    DrawCursor = DrawCursor.Hand;
+                    SetEventAction(DrawEvent.Tap, TapPinAction);
+                }
+            }
+            DrawCursor = DrawCursor.Arrow;
+            ClearEventAction(DrawEvent.Tap);
+            ClearEventAction(DrawEvent.Drag);
+            ClearEventAction(DrawEvent.TapEnd);
+        }
+        private void TapPinAction()
+        {
+            DrawCursor = DrawCursor.SizeAll;
+            ClearEventAction(DrawEvent.Tap);
+            SetEventAction(DrawEvent.Drag, DragPinAction);
+            SetEventAction(DrawEvent.TapEnd, EndPinAction);
+        }
+        private void DragPinAction()
+        {
+            var delta = Editor.PointDelta(true) / EditRadius;
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, delta, EditRadius);
+            RefreshEditorData(); //fast responce
+        }
+        private void EndPinAction()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            ClearEventAction(DrawEvent.Tap);
+            ClearEventAction(DrawEvent.Drag);
+            ClearEventAction(DrawEvent.TapEnd);
+            RefreshEditorData(); 
         }
         #endregion
 

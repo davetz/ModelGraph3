@@ -35,8 +35,6 @@ namespace ModelGraph.Controls
         {
             Model = model;
 
-
-
             if (model.FlyTreeModel is ITreeModel)
                 FlyTreeCanvas.Initialize(model.FlyTreeModel);
             else
@@ -56,14 +54,89 @@ namespace ModelGraph.Controls
 
         #region LayoutControl  ================================================
 
+        #region CheckDrawItems  ===============================================
+        private void ChedkDrawItems()
+        {
+            var visibleItems = Model.VisibleDrawItems;
+            var enabledItems = Model.EnabledDrawItems;
+            if (visibleItems != _prevVisible)
+            {
+                _prevVisible = visibleItems;
+
+                if ((visibleItems & DrawItem.ToolTip) == 0 && ToolTipBorder.Visibility != Visibility.Collapsed)
+                    ToolTipBorder.Visibility = Visibility.Collapsed;
+                if ((visibleItems & DrawItem.ToolTip) != 0 && EditCanvas.Visibility != Visibility.Visible)
+                    ToolTipBorder.Visibility = Visibility.Visible;
+
+                if ((visibleItems & DrawItem.Resizer) == 0 && ResizerGrid.Visibility != Visibility.Collapsed)
+                    ResizerGrid.Visibility = Visibility.Collapsed;
+                if ((visibleItems & DrawItem.Resizer) != 0 && ResizerGrid.Visibility != Visibility.Visible)
+                    ResizerGrid.Visibility = Visibility.Visible;
+
+                if ((visibleItems & DrawItem.FlyTree) == 0 && FlyTreeGrid.Visibility != Visibility.Collapsed)
+                    ResizerGrid.Visibility = Visibility.Collapsed;
+                if ((visibleItems & DrawItem.FlyTree) != 0 && FlyTreeGrid.Visibility != Visibility.Visible)
+                    FlyTreeGrid.Visibility = Visibility.Visible;
+
+                if ((visibleItems & DrawItem.Picker1) == 0 && Pick1Canvas.Visibility != Visibility.Collapsed)
+                    HidePicker1();
+                if ((visibleItems & DrawItem.Picker1) != 0 && Pick1Canvas.Visibility != Visibility.Visible)
+                    RestorePicker1();
+
+                if ((visibleItems & DrawItem.Picker2) == 0 && Picker2Grid.Visibility != Visibility.Collapsed)
+                    HidePicker2();
+                if ((visibleItems & DrawItem.Picker2) != 0 && Picker2Grid.Visibility != Visibility.Visible)
+                    RestorePicker2();
+
+                if ((visibleItems & DrawItem.SideTree) == 0 && SideTreeGrid.Visibility != Visibility.Collapsed)
+                    SideTreeGrid.Visibility = Visibility.Collapsed;
+                if ((visibleItems & DrawItem.SideTree) != 0 && SideTreeGrid.Visibility != Visibility.Visible)
+                    SideTreeGrid.Visibility = Visibility.Visible;
+
+                if ((visibleItems & DrawItem.Overview) == 0 && OverviewBorder.Visibility != Visibility.Collapsed)
+                    HideOverview();
+                if ((visibleItems & DrawItem.Overview) != 0 && OverviewBorder.Visibility != Visibility.Visible)
+                    RestoreOverview();
+
+                if ((visibleItems & DrawItem.ColorPicker) == 0 && ColorPickerBorder.Visibility != Visibility.Collapsed)
+                    ColorPickerBorder.Visibility = Visibility.Collapsed;
+                if ((visibleItems & DrawItem.ColorPicker) != 0 && ColorPickerBorder.Visibility != Visibility.Visible)
+                    ColorPickerBorder.Visibility = Visibility.Visible;
+            }
+            if (enabledItems != _prevEnabled)
+            {
+                _prevEnabled = enabledItems;
+
+                Pick1Canvas.IsEnabled = (enabledItems & DrawItem.Picker1) != 0;
+                Pick2Canvas.IsEnabled = (enabledItems & DrawItem.Picker2) != 0;
+                OverCanvas.IsEnabled = (enabledItems & DrawItem.Overview) != 0;
+                FlyTreeCanvas.IsEnabled = (enabledItems & DrawItem.FlyTree) != 0;
+                SideTreeCanvas.IsEnabled = (enabledItems & DrawItem.SideTree) != 0;
+            }
+        }
+        private DrawItem _prevVisible;
+        private DrawItem _prevEnabled;
+        #endregion
+
         #region Overview  =====================================================
         internal void SetOverview(int width, int height, bool canResize = false)
         {
-            OverviewBorder.Width = width + OverviewBorder.BorderThickness.Right;
-            OverviewBorder.Height = height;
-            OverviewResize.Visibility = canResize ? Visibility.Visible : Visibility.Collapsed;
+            _overviewWidth = width + OverviewBorder.BorderThickness.Right;
+            _overviewHeight = height;
+            _overviewCanResize = canResize;
+            RestoreOverview();
+        }
+        private double _overviewWidth;
+        private double _overviewHeight;
+        private bool _overviewCanResize;
+        private bool _overviewIsValid;
+        private void RestoreOverview()
+        {
+            OverviewBorder.Width = _overviewWidth;
+            OverviewBorder.Height = _overviewHeight;
+            OverviewResize.Visibility = _overviewCanResize ? Visibility.Visible : Visibility.Collapsed;
 
-            if (width < 4)
+            if (_overviewWidth < 4)
                 HideOverview();
             else
             {
@@ -71,7 +144,6 @@ namespace ModelGraph.Controls
                 ShowOverview();
             }
         }
-        private bool _overviewIsValid;
         internal void ShowOverview()
         {
             if (_overviewIsValid)
@@ -90,16 +162,24 @@ namespace ModelGraph.Controls
         #region Picker1  ======================================================
         internal void ShowPicker1(int width, int topMargin) // this is only way to show Picker1
         {
+            _picker1Width = width;
+            _picker1TopMargin = topMargin;
+            RestorePicker1();
+        }
+        private int _picker1Width;
+        private int _picker1TopMargin;
+        private void RestorePicker1()
+        {
 
-            Pick1Canvas.Width = width;
-            if (width < 4)
+            Pick1Canvas.Width = _picker1Width;
+            if (_picker1Width < 4)
                 HidePicker1();
             else
             {
                 Pick1Canvas.IsEnabled = true;  //enable CanvasDraw
                 Picker1Grid.Visibility = Visibility.Visible;
-                Picker1GridColumn.Width = new GridLength(width + Picker1Grid.Margin.Right);
-                Picker1Grid.Margin = new Thickness(0, topMargin, Picker1Grid.Margin.Right, 0);
+                Picker1GridColumn.Width = new GridLength(_picker1Width + Picker1Grid.Margin.Right);
+                Picker1Grid.Margin = new Thickness(0, _picker1TopMargin, Picker1Grid.Margin.Right, 0);
             }
         }
         internal void HidePicker1()
@@ -113,14 +193,20 @@ namespace ModelGraph.Controls
         #region Picker2  ======================================================
         internal void ShowPicker2(int width) // this is only way to show Picker2
         {
-            Pick2Canvas.Width = width;
-            if (width < 4)
+            _picker2Width = width;
+            RestorePicker2();
+        }
+        private int _picker2Width;
+        private void RestorePicker2()
+        {
+            Pick2Canvas.Width = _picker2Width;
+            if (_picker2Width < 4)
                 HidePicker2();
             else
             {
                 Pick2Canvas.IsEnabled = true;  //enable CanvasDraw
                 Picker2Grid.Visibility = Visibility.Visible;
-                Picker2GridColumn.Width = new GridLength(width + Picker2Grid.Margin.Left);
+                Picker2GridColumn.Width = new GridLength(_picker2Width + Picker2Grid.Margin.Left);
             }
         }
         internal void HidePicker2()
@@ -278,17 +364,14 @@ namespace ModelGraph.Controls
 
             void RefreshAll()
             {
+                ChedkDrawItems();
                 CheckColorChange();
                 if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
-                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
 
                 if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
                 if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
                 if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
                 if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
-
-                if (Model.IsToolTipVisible) ShowToolTip();
-                else HideToolTip();
 
                 if (Model.DrawCursor != _drawCursor)
                 {
@@ -304,6 +387,14 @@ namespace ModelGraph.Controls
         {
             if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
                 _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+        }
+        internal void ExecuteAction(DrawEvent evt)
+        {
+            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
+            {
+                action(); //imediately execute the drag event
+                EditCanvas.Invalidate(); //and then trigger editCanvas refresh
+            }
         }
         #endregion
 
@@ -483,7 +574,7 @@ namespace ModelGraph.Controls
                 if (_overridePointerMoved is null)
                 {
                     if (_pointerIsPressed)
-                        PostEvent(DrawEvent.Drag);
+                        ExecuteAction(DrawEvent.Drag); //we want a fast responce
                     else
                         PostEvent(DrawEvent.Skim);
                 }

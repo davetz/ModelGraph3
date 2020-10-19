@@ -26,17 +26,18 @@ namespace ModelGraph.Core
 
         ViewMode = 0x100,       //enable viewing
         EditMode = 0x200,       //enable editing
-        MoveMode = 0x300,       //enable moving
+        MoveMode = 0x300,       //enable moving nodes and regions
         LinkMode = 0x400,       //enable linking
-        CutMode = 0x500,        //enable cutting
-        CopyMode = 0x600,       //enable copying
-        PasteMode = 0x700,      //enable pasting
-        CreateMode = 0x800,     //enable createing
-        OperateMode = 0x900,    //enable operating
-        ContextMenu = 0xA00,    //context menu visible
-        PropertySheet = 0xB00,  //property sheet visible
-        Apply = 0xC00,          //apply changes to model
-        Revert = 0xD00,         //revert to previous version
+        PinsMode = 0x500,       //enable movinge individual pins
+        CutMode = 0x600,        //enable cutting
+        CopyMode = 0x700,       //enable copying
+        PasteMode = 0x800,      //enable pasting
+        CreateMode = 0x900,     //enable createing
+        OperateMode = 0xA00,    //enable operating
+        ContextMenu = 0xB00,    //context menu visible
+        PropertySheet = 0xC00,  //property sheet visible
+        Apply = 0xD00,          //apply changes to model
+        Revert = 0xE00,         //revert to previous version
 
         ModeMask = 0xF00,       //issolage current mode
 

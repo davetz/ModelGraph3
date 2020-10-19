@@ -42,7 +42,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-
         #region HitTestShapes  ================================================
         static internal bool HitShapes(Vector2 dp, float scale, Vector2 center, IEnumerable<Shape> shapes)
         {

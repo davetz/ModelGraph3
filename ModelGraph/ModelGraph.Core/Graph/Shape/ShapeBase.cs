@@ -334,6 +334,13 @@ namespace ModelGraph.Core
             }
             drawData.AddParms((points2, (ShapeType.Circle, StrokeType.Simple, 3), (255, 255, 255, 255)));
         }
+        static internal void MovePoint(Shape s, int index, Vector2 ds, float scale)
+        {
+            if (s is Polyline pl)
+                pl.MovePoint(index, ds);
+            else
+                s.MoveCenter(ds.X, ds.Y);
+        }
         #endregion
     }
 }

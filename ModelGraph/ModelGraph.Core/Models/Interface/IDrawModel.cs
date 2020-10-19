@@ -12,16 +12,10 @@ namespace ModelGraph.Core
         bool TrySetState(DrawState state, bool reset = false);
         void SetEventAction(DrawEvent evt, Action act);
 
-        bool IsToolTipVisible { get; }
-        bool IsResizerGridVisible { get; }
-        bool IsFlyTreeVisible { get; }
-        bool IsSideTreeVisible { get; }
-        bool IsOverviewVisible { get; }
-        bool IsPicker1Visible { get; }
-        bool IsPicker2Visible { get; }
-        bool IsColorPickerEnabled { get; }
+        DrawItem VisibleDrawItems { get; }
+        DrawItem EnabledDrawItems { get; }
+
         bool IsPasteActionEnabled { get; }
-        bool IsShowPinsEnabled { get; }
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
 

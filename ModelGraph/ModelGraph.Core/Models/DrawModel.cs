@@ -40,8 +40,7 @@ namespace ModelGraph.Core
             if (reset)
             {
                 DrawEvent_Action.Clear();
-                IsToolTipVisible = false;
-                IsResizerGridVisible = false;
+                VisibleDrawItems &= ~(DrawItem.ToolTip | DrawItem.Resizer);
                 DrawCursor = DrawCursor.Arrow;
             }
 
@@ -61,19 +60,11 @@ namespace ModelGraph.Core
         #region Layout  =======================================================
         public string ToolTip_Text1 { get; set; }
         public string ToolTip_Text2 { get; set; }
-
-        public bool IsToolTipVisible { get; protected set; }
-        public bool IsResizerGridVisible { get; protected set; }
-        public bool IsFlyTreeVisible { get; protected set; }
-        public bool IsSideTreeVisible { get; protected set; }
-        public bool IsOverviewVisible { get; protected set; }
-        public bool IsPicker1Visible { get; protected set; }
-        public bool IsPicker2Visible { get; protected set; }
-        public bool IsColorPickerEnabled { get; protected set; }
-        public bool IsPasteActionEnabled { get; protected set; }
-        public bool IsShowPinsEnabled { get; protected set; }
         public Vector2 ToolTipTarget { get; set; }
         public Extent ResizerExtent { get; set; } //in drawPoint coordinates
+        public DrawItem VisibleDrawItems { get; protected set; }
+        public DrawItem EnabledDrawItems { get; protected set; }
+        public bool IsPasteActionEnabled { get; protected set; }
         #endregion
 
         #region PointerData  ==================================================

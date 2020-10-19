@@ -106,10 +106,8 @@
             <Button x:Name="RecenterButton" x:Uid="SymbolModel_Center_Btn" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
                 <FontIcon  Glyph="&#xEA38;" />
             </Button>
-            <Button x:Name="ShowPinsButton" x:Uid="SymbolModel_ShowPins_Btn" Style="{StaticResource LeftButtonStyle}" Click="ShowPinsButton_Click">
-                <FontIcon  Glyph="&#xE759;" />
-            </Button>
             <StackPanel Orientation="Horizontal" Margin="8,0,0 4">
+                <RadioButton x:Name="MovePins" Content="MovePins" Style="{StaticResource RadioButtonStyle}"  Click="MovePins_Click"/>
                 <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Click="EditSelect_Click"/>
                 <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" Click="TermSelect_Click"/>
                 <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" Click="FlipSelect_Click"/>
