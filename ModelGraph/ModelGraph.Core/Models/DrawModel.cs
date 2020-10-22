@@ -30,19 +30,16 @@ namespace ModelGraph.Core
             DrawState = state;
             Debug.WriteLine($"New DrawState: {DrawState}");
         }
-        public bool TrySetState(DrawState state, bool reset = true)
+        public bool TrySetState(DrawState state)
         {
             if (state == DrawState.NoChange || state == DrawState) return false;   //no change, so nothing to do
             PreviousDrawState = DrawState;
             DrawState = state;
             Debug.WriteLine($"New DrawState: {DrawState}");
 
-            if (reset)
-            {
-                DrawEvent_Action.Clear();
-                VisibleDrawItems &= ~(DrawItem.ToolTip | DrawItem.Resizer);
-                DrawCursor = DrawCursor.Arrow;
-            }
+            DrawEvent_Action.Clear();
+            VisibleDrawItems &= ~(DrawItem.ToolTip | DrawItem.Resizer);
+            DrawCursor = DrawCursor.Arrow;
 
             if (DrawStateAction.TryGetValue(state, out Action action)) action();
 

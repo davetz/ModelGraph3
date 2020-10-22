@@ -9,7 +9,7 @@ namespace ModelGraph.Core
         DrawState DrawState { get; }
         DrawCursor DrawCursor { get; }
         Dictionary<DrawEvent, Action> DrawEvent_Action { get; }
-        bool TrySetState(DrawState state, bool reset = false);
+        bool TrySetState(DrawState state);
         void SetEventAction(DrawEvent evt, Action act);
 
         DrawItem VisibleDrawItems { get; }

@@ -135,8 +135,6 @@ namespace ModelGraph.Controls
 
         private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Recenter);
 
-        private void ShowPinsButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.ShowPins);
-
         private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.PinsMode);
         private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
         private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);

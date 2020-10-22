@@ -326,9 +326,11 @@ namespace ModelGraph.Core
             var points = s.GetDrawingPoints(FlipState.None, scale, center);
             var points2 = new Vector2[points.Length * 2];
             var rd = new Vector2(7, 7);
+            targets.Clear();
             var i = 0;
             foreach (var point in points)
             {
+                targets.Add(point);
                 points2[i++] = point;
                 points2[i++] = rd;
             }

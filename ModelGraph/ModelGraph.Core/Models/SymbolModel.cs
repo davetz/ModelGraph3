@@ -32,7 +32,8 @@ namespace ModelGraph.Core
 
             SetDrawStateAction(DrawState.Apply, ApplyChange);
             SetDrawStateAction(DrawState.Revert, Revert);
-            SetDrawStateAction(DrawState.PinsMode, InitializePinsMode);
+            SetDrawStateAction(DrawState.PinsMode, SetPinsMode);
+            SetDrawStateAction(DrawState.ViewMode, SetViewMode);
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
@@ -300,15 +301,15 @@ namespace ModelGraph.Core
                     SelectedShapes.Clear();
                     SelectedShapes.Add(s);
                 }
-                SetProperties();
-                SetEditMode();
             }
             else
             {
                 SelectedShapes.Clear();
-                SetViewMode();
             }
-
+            SetProperties();
+            if (DrawState == DrawState.PinsMode) return;
+            if (SelectedShapes.Count == 0) SetViewMode();
+            SetEditMode();
         }
         private void OverviewTap()
         {
@@ -399,19 +400,17 @@ namespace ModelGraph.Core
         #region ViewMode == ViewSymbol  =======================================
         public void SetViewMode()
         {
-            if (TrySetState(DrawState.ViewMode))
-            {
-                EnabledDrawItems |= DrawItem.Picker2 | DrawItem.SideTree;
+            TrySetState(DrawState.ViewMode);
+            EnabledDrawItems |= DrawItem.Picker2 | DrawItem.SideTree;
 
-                _picker1Index = _picker2Index = -1;
-                SelectedShapes.Clear();
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
-                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
-                SetProperties();
-            }
+            _picker1Index = _picker2Index = -1;
+            SelectedShapes.Clear();
+            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
+            SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
+            SetEventAction(DrawEvent.OverviewTap, OverviewTap);
+            if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
+            SetProperties();
         }
         private void PasteAction()
         {
@@ -579,10 +578,12 @@ namespace ModelGraph.Core
         #endregion
 
         #region PinsMode  =====================================================
-        internal void InitializePinsMode()
+        internal void SetPinsMode()
         {
             TrySetState(DrawState.PinsMode); //should already be in pinsMode
-            EnabledDrawItems &= ~(DrawItem.Picker2 | DrawItem.SideTree);
+            SetEventAction(DrawEvent.Skim, SkimPinAction);
+            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(false); });
             DrawCursor = DrawCursor.Arrow;
             RefreshDrawData();
         }
@@ -603,12 +604,15 @@ namespace ModelGraph.Core
                     IsPinIndexValid = true;
                     DrawCursor = DrawCursor.Hand;
                     SetEventAction(DrawEvent.Tap, TapPinAction);
+                    PageModel.TriggerUIRefresh();
+                    return;
                 }
             }
             DrawCursor = DrawCursor.Arrow;
             ClearEventAction(DrawEvent.Tap);
             ClearEventAction(DrawEvent.Drag);
             ClearEventAction(DrawEvent.TapEnd);
+            PageModel.TriggerUIRefresh();
         }
         private void TapPinAction()
         {

@@ -367,6 +367,7 @@ namespace ModelGraph.Controls
                 ChedkDrawItems();
                 CheckColorChange();
                 if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
+                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
 
                 if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
                 if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
