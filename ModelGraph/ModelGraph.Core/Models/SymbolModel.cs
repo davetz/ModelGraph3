@@ -484,22 +484,26 @@ namespace ModelGraph.Core
         private void NudgeUp()
         {
             Shape.MoveCenter(SelectedShapes, new Vector2(0, -0.01f));
-            RefreshDrawData();
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
         }
         private void NudgeDown()
         {
             Shape.MoveCenter(SelectedShapes, new Vector2(0, 0.01f));
-            RefreshDrawData();
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
         }
         private void NudgeLeft()
         {
             Shape.MoveCenter(SelectedShapes, new Vector2(-0.01f, 0));
-            RefreshDrawData();
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
         }
         private void NudgeRight()
         {
             Shape.MoveCenter(SelectedShapes, new Vector2(0.01f, 0));
-            RefreshDrawData();
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
         }
         private bool _hitSelecteShapes;
         private void CutAction()
@@ -604,12 +608,20 @@ namespace ModelGraph.Core
                     IsPinIndexValid = true;
                     DrawCursor = DrawCursor.Hand;
                     SetEventAction(DrawEvent.Tap, TapPinAction);
+                    SetEventAction(DrawEvent.KeyUpArrow, NudgePinUp);
+                    SetEventAction(DrawEvent.KeyDownArrow, NudgePinDown);
+                    SetEventAction(DrawEvent.KeyLeftArrow, NudgePinLeft);
+                    SetEventAction(DrawEvent.KeyRightArrow, NudgePinRight);
                     PageModel.TriggerUIRefresh();
                     return;
                 }
             }
             DrawCursor = DrawCursor.Arrow;
             ClearEventAction(DrawEvent.Tap);
+            ClearEventAction(DrawEvent.KeyUpArrow);
+            ClearEventAction(DrawEvent.KeyDownArrow);
+            ClearEventAction(DrawEvent.KeyLeftArrow);
+            ClearEventAction(DrawEvent.KeyRightArrow);
             ClearEventAction(DrawEvent.Drag);
             ClearEventAction(DrawEvent.TapEnd);
             PageModel.TriggerUIRefresh();
@@ -634,6 +646,30 @@ namespace ModelGraph.Core
             ClearEventAction(DrawEvent.Drag);
             ClearEventAction(DrawEvent.TapEnd);
             RefreshEditorData(); 
+        }
+        private void NudgePinUp()
+        {
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, -0.01f), 1);
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
+        }
+        private void NudgePinDown()
+        {
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, 0.01f), 1);
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
+        }
+        private void NudgePinLeft()
+        {
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(-0.01f, 0), 1);
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
+        }
+        private void NudgePinRight()
+        {
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0.01f, 0), 1);
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
         }
         #endregion
 
