@@ -591,11 +591,9 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             RefreshDrawData();
         }
-        bool IsPinIndexValid;
         int _pinIndex;
         private void SkimPinAction()
         {
-            IsPinIndexValid = false;
             var dp = Editor.Point2;
             var ds = 4; //hit zone
             var ex = new Extent(dp.X - ds, dp.Y - ds, dp.X + ds, dp.Y + ds);
@@ -605,7 +603,6 @@ namespace ModelGraph.Core
                 if (ex.Contains((p.X, p.Y)))
                 {
                     _pinIndex = i;
-                    IsPinIndexValid = true;
                     DrawCursor = DrawCursor.Hand;
                     SetEventAction(DrawEvent.Tap, TapPinAction);
                     SetEventAction(DrawEvent.KeyUpArrow, NudgePinUp);

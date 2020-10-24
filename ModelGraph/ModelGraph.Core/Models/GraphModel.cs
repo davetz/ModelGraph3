@@ -14,12 +14,24 @@ namespace ModelGraph.Core
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
-            
+            SetDrawStateAction(DrawState.ViewMode, SetViewMode);
+            SetDrawStateAction(DrawState.MoveMode, InitMoveMode);
+            SetDrawStateAction(DrawState.LinkMode, InitLinkMode);
+            SetDrawStateAction(DrawState.CopyMode, InitCopyMode);
+            SetDrawStateAction(DrawState.CreateMode, InitCreateMode);
+            SetDrawStateAction(DrawState.OperateMode, InitOperateMode);
+
             RefreshEditorData();
         }
         #endregion
 
-        #region CreateDrawData  ===============================================
+        #region RefreshDrawData  ==============================================
+        private void RefreshDrawData()
+        {
+            RefreshEditorData();
+            PageModel.TriggerUIRefresh();
+        }
+
         private void RefreshEditorData()
         {
             Editor.Clear();
@@ -48,12 +60,18 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region HitTest  ======================================================
+        #region DrawStates  ===================================================
 
-        private bool SkimHitTest()
+        #region ViewMode  =====================================================
+        private void SetViewMode()
+        {
+            TrySetState(DrawState.ViewMode);
+            SetEventAction(DrawEvent.Skim, ViewSkimAction);
+        }
+
+        private void ViewSkimAction()
         {
             ClearHit();
-
             if (RegionHitTest(Editor.Point2))
             {
                 SetHitRegion();
@@ -64,11 +82,31 @@ namespace ModelGraph.Core
             if (ok)
             {
                 _hitNode = node;
-                SetHitNode();
-                ToolTip_Text1 = node.GetNameId();
-                ToolTip_Text2 = node.GetSummaryId();
+                if (_prevHitNode != node)
+                {
+                    SetNowOn(DrawState.ViewOnNode);
+                    _prevHitNode = node;
+                    SetHitNode();
+                    ToolTip_Text1 = node.GetNameId();
+                    ToolTip_Text2 = node.GetSummaryId();
+                    VisibleDrawItems |= DrawItem.ToolTip;
+                    var (x, y) = node.Center;
+                    ToolTipTarget = new Vector2(x, y);
+                    DrawCursor = DrawCursor.Hand;
+                    PageModel.TriggerUIRefresh();
+                }
             }
-            return false;
+            else
+            {
+                if (_prevHitNode != null)
+                {
+                    SetNowOn(DrawState.ViewOnVoid);
+                    _prevHitNode = null;
+                    DrawCursor = DrawCursor.Arrow;
+                    PageModel.TriggerUIRefresh();
+                    VisibleDrawItems &= ~DrawItem.ToolTip;
+                }
+            }
         }
 
         private bool TapHitTest()
@@ -93,7 +131,7 @@ namespace ModelGraph.Core
             return ok;
         }
 
-       private void ClearRegion() => _regionNodes.Clear();
+        private void ClearRegion() => _regionNodes.Clear();
         private bool IsValidRegion()
         {
             var r1 = RegionPoint1;
@@ -129,11 +167,15 @@ namespace ModelGraph.Core
             return (false, null);
         }
         private Node _hitNode;
+        private Node _prevHitNode;
         private Edge _hitEdge;
         private List<Node> _regionNodes = new List<Node>();
         #endregion
 
-        #region Move  =========================================================
+        #region MoveMode  =====================================================
+        private void InitMoveMode()
+        {
+        }
         private bool MoveNode()
         {
             if (_hitNode is null) return false;
@@ -153,6 +195,32 @@ namespace ModelGraph.Core
             }
             return true;
         }
+        #endregion
+
+        #region LinkMode  =====================================================
+        private void InitLinkMode()
+        {
+        }
+        #endregion
+
+        #region CopyMode  =====================================================
+        private void InitCopyMode()
+        {
+        }
+        #endregion
+
+        #region CreateMode  ===================================================
+        private void InitCreateMode()
+        {
+        }
+        #endregion
+
+        #region OperateMode  ==================================================
+        private void InitOperateMode()
+        {
+        }
+        #endregion
+
         #endregion
     }
 }

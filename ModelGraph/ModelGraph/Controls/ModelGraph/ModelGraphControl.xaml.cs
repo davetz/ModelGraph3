@@ -5,19 +5,19 @@ namespace ModelGraph.Controls
 {
     public sealed partial class ModelGraphControl : Page, IPageControl, IModelPageControl
     {
-        IPageModel Model;
-
+        public IPageModel PageModel { get; }
+        IDrawModel DrawModel => PageModel.LeadModel as IDrawModel;
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
-        public IPageModel PageModel => throw new System.NotImplementedException();
-
+        #region Constructor  ==================================================
         public ModelGraphControl(IPageModel model)
         {
-            Model = model;
+            PageModel = model;
             this.InitializeComponent();
-            GraphCanvas.Initialize(model.LeadModel as IDrawModel);
+            GraphCanvas.Initialize(DrawModel);
             GraphCanvas.SetOverview(120, 120, true);
         }
+        #endregion
 
         #region IPageControl  =================================================
         public void Reload()
@@ -41,35 +41,28 @@ namespace ModelGraph.Controls
         public void Apply()
         {
         }
-
         public void Revert()
         {
         }
-
         public void Release()
         {
         }
-
         public void Refresh()
         {
             GraphCanvas.Refresh();
         }
-
         public void SetSize(double width, double height)
         {
         }
         #endregion
 
         #region RadioButton_Events  ===========================================
-        private void ViewSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
-        private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) { }
+        private void ViewSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
+        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.MoveMode);
+        private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);
+        private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.CopyMode);
+        private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.CreateMode);
+        private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.OperateMode);
         #endregion
-
-
-
     }
 }

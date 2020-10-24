@@ -64,9 +64,9 @@ namespace ModelGraph.Controls
                 _prevVisible = visibleItems;
 
                 if ((visibleItems & DrawItem.ToolTip) == 0 && ToolTipBorder.Visibility != Visibility.Collapsed)
-                    ToolTipBorder.Visibility = Visibility.Collapsed;
-                if ((visibleItems & DrawItem.ToolTip) != 0 && EditCanvas.Visibility != Visibility.Visible)
-                    ToolTipBorder.Visibility = Visibility.Visible;
+                    HideToolTip();
+                if ((visibleItems & DrawItem.ToolTip) != 0 && ToolTipBorder.Visibility != Visibility.Visible)
+                    ShowToolTip();
 
                 if ((visibleItems & DrawItem.Resizer) == 0 && ResizerGrid.Visibility != Visibility.Collapsed)
                     ResizerGrid.Visibility = Visibility.Collapsed;

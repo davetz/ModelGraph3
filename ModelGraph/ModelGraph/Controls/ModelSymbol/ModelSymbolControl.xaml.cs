@@ -10,17 +10,14 @@ namespace ModelGraph.Controls
 {
     public sealed partial class ModelSymbolControl : Page, IPageControl, IModelPageControl
     {
-        IPageModel Model;
-        IDrawModel DrawModel => Model.LeadModel as IDrawModel;
-
+        public IPageModel PageModel { get; }
+        IDrawModel DrawModel => PageModel.LeadModel as IDrawModel;
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
-
-        public IPageModel PageModel => throw new System.NotImplementedException();
 
         #region Constructor  ==================================================
         public ModelSymbolControl(IPageModel model)
         {
-            Model = model;
+            PageModel = model;
             InitializeComponent();
             SymbolCanvas.Initialize(DrawModel);
             SymbolCanvas.SetOverview(32, 32);
