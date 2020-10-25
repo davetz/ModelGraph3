@@ -405,6 +405,8 @@ namespace ModelGraph.Core
 
             _picker1Index = _picker2Index = -1;
             SelectedShapes.Clear();
+
+            ClearAllEventActions();
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
             SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
@@ -430,6 +432,7 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.EditMode))
             {
+                ClearAllEventActions();
                 SetEventAction(DrawEvent.Tap, SetViewMode);
                 SetEventAction(DrawEvent.Skim, SkimAction);
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
@@ -562,6 +565,7 @@ namespace ModelGraph.Core
             if (TrySetState(DrawState.MoveMode))
             {
                 DrawCursor = DrawCursor.SizeAll;
+                ClearAllEventActions();
                 SetEventAction(DrawEvent.TapEnd, EndDragAction);
                 SetEventAction(DrawEvent.Drag, DragShapeAction);
                 RefreshDrawData();
@@ -585,6 +589,8 @@ namespace ModelGraph.Core
         internal void SetPinsMode()
         {
             TrySetState(DrawState.PinsMode); //should already be in pinsMode
+
+            ClearAllEventActions();
             SetEventAction(DrawEvent.Skim, SkimPinAction);
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(false); });
@@ -675,6 +681,7 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.CreateMode))
             {
+                ClearAllEventActions();
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
@@ -703,6 +710,7 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.LinkMode))
             {
+                ClearAllEventActions();
                 SetEventAction(DrawEvent.ShowPins, SetEditMode);
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
@@ -719,6 +727,7 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.OperateMode))
             {
+                ClearAllEventActions();
             }
         }
         #endregion

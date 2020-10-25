@@ -74,9 +74,9 @@ namespace ModelGraph.Controls
                     ResizerGrid.Visibility = Visibility.Visible;
 
                 if ((visibleItems & DrawItem.FlyTree) == 0 && FlyTreeGrid.Visibility != Visibility.Collapsed)
-                    ResizerGrid.Visibility = Visibility.Collapsed;
+                    HideFlyTree();
                 if ((visibleItems & DrawItem.FlyTree) != 0 && FlyTreeGrid.Visibility != Visibility.Visible)
-                    FlyTreeGrid.Visibility = Visibility.Visible;
+                    ShowFlyTree();
 
                 if ((visibleItems & DrawItem.Picker1) == 0 && Pick1Canvas.Visibility != Visibility.Collapsed)
                     HidePicker1();
@@ -230,6 +230,22 @@ namespace ModelGraph.Controls
                 SideTreeCanvas.SetSize(width, height);
                 PanZoomReset();
             }
+        }
+        private void ShowFlyTree()
+        {
+            var (x, y) = GetFlyoutPoint();
+            Canvas.SetTop(FlyTreeGrid, y);
+            Canvas.SetLeft(FlyTreeGrid, x);
+            var sz = Model.FlyOutSize;
+            FlyTreeCanvas.SetSize(sz.X, sz.Y);
+            FlyTreeCanvas.IsEnabled = true;
+            FlyTreeGrid.Visibility = Visibility.Visible;
+
+        }
+        private void HideFlyTree()
+        {
+            FlyTreeGrid.Visibility = Visibility.Collapsed;
+            FlyTreeCanvas.IsEnabled = false;
         }
         #endregion
 
@@ -386,12 +402,12 @@ namespace ModelGraph.Controls
         DrawCursor _drawCursor;
         internal void PostEvent(DrawEvent evt)
         {
-            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
+            if (Model.TryGetDrawEventAction(evt, out Action action))
                 _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
         internal void ExecuteAction(DrawEvent evt)
         {
-            if (Model.DrawEvent_Action.TryGetValue(evt, out Action action))
+            if (Model.TryGetDrawEventAction(evt, out Action action))
             {
                 action(); //imediately execute the drag event
                 EditCanvas.Invalidate(); //and then trigger editCanvas refresh
@@ -711,10 +727,10 @@ namespace ModelGraph.Controls
 
             return (top, left, width, height);
         }
-        private (float,float) GetToolTipGridPoint()
+        private (float,float) GetFlyoutPoint()
         {
             var (scale, offset) = CanvasScaleOffset[EditCanvas];
-            var p = Model.ToolTipTarget * scale + offset;
+            var p = Model.FlyOutPoint * scale + offset;
             return (p.X, p.Y);
         }
         #endregion
@@ -821,7 +837,7 @@ namespace ModelGraph.Controls
 
         private void TestDrawEvent(DrawEvent evt)
         {
-            if (Model.DrawEvent_Action.ContainsKey(evt))
+            if (Model.TryGetDrawEventAction(evt, out _))
             {
                 PostEvent(evt);
             }

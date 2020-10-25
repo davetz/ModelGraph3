@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System;
 using System.Diagnostics;
+using Windows.UI.ApplicationSettings;
 
 namespace ModelGraph.Core
 {
@@ -22,46 +23,52 @@ namespace ModelGraph.Core
         protected DrawState PreviousDrawState;
         public DrawCursor DrawCursor { get; protected set; } = DrawCursor.Arrow;
 
-        internal void SetNowOn(DrawState st)
+        internal void AugmentDrawState(DrawState state, DrawState mask)
         {
-            var state = (DrawState &= ~DrawState.NowMask) | (st & DrawState.NowMask);
+            state = (DrawState & ~mask) | (state & mask);
             if (state == DrawState) return;   //no change, so nothing to do
-            PreviousDrawState = DrawState;
-            DrawState = state;
-            Debug.WriteLine($"New DrawState: {DrawState}");
+            SetDrawState(state);
         }
         public bool TrySetState(DrawState state)
         {
             if (state == DrawState.NoChange || state == DrawState) return false;   //no change, so nothing to do
+            SetDrawState(state);
+            return true;    // let the caller know that we have changed state
+        }
+        private void SetDrawState(DrawState state)
+        {
             PreviousDrawState = DrawState;
             DrawState = state;
             Debug.WriteLine($"New DrawState: {DrawState}");
-
-            DrawEvent_Action.Clear();
-            VisibleDrawItems &= ~(DrawItem.ToolTip | DrawItem.Resizer);
-            DrawCursor = DrawCursor.Arrow;
-
-            if (DrawStateAction.TryGetValue(state, out Action action)) action();
-
-            return true;    // let the caller know that we have changed state and have cleared the Event_Action dictionary
+            if (_drawState_Action.TryGetValue(state, out Action action)) action();
         }
-        private Dictionary<DrawState, Action> DrawStateAction = new Dictionary<DrawState, Action>(5);
-        protected void SetDrawStateAction(DrawState state, Action action) => DrawStateAction[state] = action;
-        protected void ClearDrawStateAction(DrawState state) => DrawStateAction.Remove(state);
+        protected void SetDrawStateAction(DrawState state, Action action) => _drawState_Action[state] = action;
+        protected void ClearDrawStateAction(DrawState state) => _drawState_Action.Remove(state);
 
-        public void SetEventAction(DrawEvent evt, Action act) => DrawEvent_Action[evt] = act;
-        public void ClearEventAction(DrawEvent evt) => DrawEvent_Action.Remove(evt);
-        public Dictionary<DrawEvent, Action> DrawEvent_Action { get; } = new Dictionary<DrawEvent, Action>();
+        public void SetEventAction(DrawEvent evt, Action act) => _drawEvent_Action[evt] = act;
+        public void ClearEventAction(DrawEvent evt) => _drawEvent_Action.Remove(evt);
+        protected void ClearAllEventActions() => _drawEvent_Action.Clear();
+
+        public bool TryGetDrawEventAction(DrawEvent evt, out Action act) => _drawEvent_Action.TryGetValue(evt, out act);
+
+        private Dictionary<DrawEvent, Action> _drawEvent_Action = new Dictionary<DrawEvent, Action>();
+        private Dictionary<DrawState, Action> _drawState_Action = new Dictionary<DrawState, Action>();
         #endregion
 
         #region Layout  =======================================================
-        public string ToolTip_Text1 { get; set; }
-        public string ToolTip_Text2 { get; set; }
-        public Vector2 ToolTipTarget { get; set; }
-        public Extent ResizerExtent { get; set; } //in drawPoint coordinates
+        public string ToolTip_Text1 { get; protected set; }
+        public string ToolTip_Text2 { get; protected set; }
+        public Vector2 FlyOutSize { get; protected set; }
+        public Vector2 FlyOutPoint { get; protected set; }
+        public Extent ResizerExtent { get; protected set; } //in drawPoint coordinates
         public DrawItem VisibleDrawItems { get; protected set; }
         public DrawItem EnabledDrawItems { get; protected set; }
         public bool IsPasteActionEnabled { get; protected set; }
+
+        protected void HideDrawItems(DrawItem flags) => VisibleDrawItems &= ~flags;
+        protected void ShowDrawItems(DrawItem flags) => VisibleDrawItems |= flags;
+        protected void EnableDrawItems(DrawItem flags) => EnabledDrawItems |= flags;
+        protected void DisableDrawItems(DrawItem flags) => EnabledDrawItems &= ~flags;
         #endregion
 
         #region PointerData  ==================================================

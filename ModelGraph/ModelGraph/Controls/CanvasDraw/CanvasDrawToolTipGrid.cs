@@ -23,7 +23,7 @@ namespace ModelGraph.Controls
             }
 
             var ds = ItemToolTip.Text.Length * 4;
-            var (x, y) = GetToolTipGridPoint();
+            var (x, y) = GetFlyoutPoint();
             x -= ds;
             y -= offset;
 

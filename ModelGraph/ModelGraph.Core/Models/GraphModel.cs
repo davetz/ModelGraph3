@@ -14,12 +14,14 @@ namespace ModelGraph.Core
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
-            SetDrawStateAction(DrawState.ViewMode, SetViewMode);
-            SetDrawStateAction(DrawState.MoveMode, InitMoveMode);
-            SetDrawStateAction(DrawState.LinkMode, InitLinkMode);
-            SetDrawStateAction(DrawState.CopyMode, InitCopyMode);
-            SetDrawStateAction(DrawState.CreateMode, InitCreateMode);
-            SetDrawStateAction(DrawState.OperateMode, InitOperateMode);
+            ShowDrawItems(DrawItem.Overview);
+
+            SetEventAction(DrawEvent.Skim, SkimEventAction);
+            SetEventAction(DrawEvent.Tap, TapEventAction);
+            SetDrawStateAction(DrawState.ViewOnVoid, ViewOnVoidAction);
+            SetDrawStateAction(DrawState.ViewOnNode, ViewOnNodeAction);
+            SetDrawStateAction(DrawState.ViewOnNodeTapped, ViewOnNodeTappedAction);
+            SetDrawStateAction(DrawState.ViewOnVoidTapped, ViewOnVoidTappedAction);
 
             RefreshEditorData();
         }
@@ -60,75 +62,70 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region DrawStates  ===================================================
-
-        #region ViewMode  =====================================================
-        private void SetViewMode()
+        #region DrawEvents  ===================================================
+        private void SkimEventAction()
         {
-            TrySetState(DrawState.ViewMode);
-            SetEventAction(DrawEvent.Skim, ViewSkimAction);
-        }
-
-        private void ViewSkimAction()
-        {
-            ClearHit();
-            if (RegionHitTest(Editor.Point2))
-            {
-                SetHitRegion();
-            }
-
-            _hitNode = null;
             var (ok, node) = HitNodeTest(Editor.Point2);
             if (ok)
             {
-                _hitNode = node;
-                if (_prevHitNode != node)
+                if (node != _hitNode)
                 {
-                    SetNowOn(DrawState.ViewOnNode);
-                    _prevHitNode = node;
-                    SetHitNode();
-                    ToolTip_Text1 = node.GetNameId();
-                    ToolTip_Text2 = node.GetSummaryId();
-                    VisibleDrawItems |= DrawItem.ToolTip;
-                    var (x, y) = node.Center;
-                    ToolTipTarget = new Vector2(x, y);
-                    DrawCursor = DrawCursor.Hand;
-                    PageModel.TriggerUIRefresh();
+                    _hitNode = node;
+                    AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
                 }
             }
             else
             {
-                if (_prevHitNode != null)
-                {
-                    SetNowOn(DrawState.ViewOnVoid);
-                    _prevHitNode = null;
-                    DrawCursor = DrawCursor.Arrow;
-                    PageModel.TriggerUIRefresh();
-                    VisibleDrawItems &= ~DrawItem.ToolTip;
-                }
+                _hitNode = null;
+                AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
             }
         }
-
-        private bool TapHitTest()
+        private void TapEventAction()
         {
-            ClearHit();
+            AugmentDrawState(DrawState.Tapped, DrawState.EventMask);
+        }
+        private Node _hitNode;
+        private Edge _hitEdge;
+        private List<Node> _regionNodes = new List<Node>();
+        #endregion
 
-            if (RegionHitTest(Editor.Point1))
-            {
-                SetHitRegion();
-            }
+        #region DrawStates  ===================================================
 
-            var (ok, node) = HitNodeTest(Editor.Point1);
-            if (ok)
+        #region ViewMode  =====================================================
+        private void ViewOnVoidAction()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            HideDrawItems(DrawItem.ToolTip);
+            PageModel.TriggerUIRefresh();
+        }
+        private void ViewOnNodeAction()
+        {
+            ToolTip_Text1 = _hitNode.GetNameId();
+            ToolTip_Text2 = _hitNode.GetSummaryId();
+            var (x, y) = _hitNode.Center;
+            FlyOutPoint = new Vector2(x, y);
+            DrawCursor = DrawCursor.Hand;
+            ShowDrawItems(DrawItem.ToolTip);
+            HideDrawItems(DrawItem.FlyTree);
+            PageModel.TriggerUIRefresh();
+        }
+        private void ViewOnVoidTappedAction()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
+            PageModel.TriggerUIRefresh();
+        }
+        private void ViewOnNodeTappedAction()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            HideDrawItems(DrawItem.ToolTip);
+            ShowDrawItems(DrawItem.FlyTree);
+            if (FlyTreeModel is TreeModel tm)
             {
-                _hitNode = node;
-                SetHitNode();
-                if (FlyTreeModel is TreeModel tm)
-                {
-                    tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, node); });
-                }
+                tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, _hitNode); });
+                FlyOutSize = new Vector2(240, 200);
             }
-            return ok;
+            PageModel.TriggerUIRefresh();
         }
 
         private void ClearRegion() => _regionNodes.Clear();
@@ -166,10 +163,6 @@ namespace ModelGraph.Core
             }
             return (false, null);
         }
-        private Node _hitNode;
-        private Node _prevHitNode;
-        private Edge _hitEdge;
-        private List<Node> _regionNodes = new List<Node>();
         #endregion
 
         #region MoveMode  =====================================================

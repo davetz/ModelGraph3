@@ -146,7 +146,7 @@ namespace ModelGraph.Controls
 
         internal async void PostEvent(DrawEvent evt)
         {
-            if (DrawModel.DrawEvent_Action.TryGetValue(evt, out Action action))
+            if (DrawModel.TryGetDrawEventAction(evt, out Action action))
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
 
