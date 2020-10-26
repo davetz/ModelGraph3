@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Numerics;
+using Windows.Storage;
 
 namespace ModelGraph.Core
 {
@@ -18,10 +19,14 @@ namespace ModelGraph.Core
 
             SetEventAction(DrawEvent.Skim, SkimEventAction);
             SetEventAction(DrawEvent.Tap, TapEventAction);
+            SetEventAction(DrawEvent.TapEnd, EndingEventAction);
+            SetEventAction(DrawEvent.Drag, DragingEventAction);
             SetDrawStateAction(DrawState.ViewOnVoid, ViewOnVoidAction);
             SetDrawStateAction(DrawState.ViewOnNode, ViewOnNodeAction);
             SetDrawStateAction(DrawState.ViewOnNodeTapped, ViewOnNodeTappedAction);
             SetDrawStateAction(DrawState.ViewOnVoidTapped, ViewOnVoidTappedAction);
+            SetDrawStateAction(DrawState.ViewOnVoidEnding, ViewOnVoidEndingAction);
+            SetDrawStateAction(DrawState.ViewOnVoidDraging, ViewOnVoidDragingAction);
 
             RefreshEditorData();
         }
@@ -80,6 +85,14 @@ namespace ModelGraph.Core
                 AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
             }
         }
+        private void EndingEventAction()
+        {
+            AugmentDrawState(DrawState.Ending, DrawState.EventMask);
+        }
+        private void DragingEventAction()
+        {
+            AugmentDrawState(DrawState.Draging, DrawState.EventMask);
+        }
         private void TapEventAction()
         {
             AugmentDrawState(DrawState.Tapped, DrawState.EventMask);
@@ -106,13 +119,13 @@ namespace ModelGraph.Core
             FlyOutPoint = new Vector2(x, y);
             DrawCursor = DrawCursor.Hand;
             ShowDrawItems(DrawItem.ToolTip);
-            HideDrawItems(DrawItem.FlyTree);
             PageModel.TriggerUIRefresh();
         }
         private void ViewOnVoidTappedAction()
         {
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
+            ShowDrawItems(DrawItem.Selector);
             PageModel.TriggerUIRefresh();
         }
         private void ViewOnNodeTappedAction()
@@ -127,12 +140,26 @@ namespace ModelGraph.Core
             }
             PageModel.TriggerUIRefresh();
         }
-
+        private void ViewOnVoidEndingAction()
+        {
+            HideDrawItems(DrawItem.Selector);
+            if (PreviousDrawState == DrawState.ViewOnVoidDraging)
+            {
+                if (IsValidRegion())
+                {
+                }
+                PageModel.TriggerUIRefresh();
+            }
+        }
+        private void ViewOnVoidDragingAction()
+        {
+            ShowDrawItems(DrawItem.Selector);
+        }
         private void ClearRegion() => _regionNodes.Clear();
         private bool IsValidRegion()
         {
-            var r1 = RegionPoint1;
-            var r2 = RegionPoint2;
+            var r1 = Editor.Point1;
+            var r2 = Editor.Point2;
             _regionNodes.Clear();
             foreach (var n in Graph.Nodes)
             {
@@ -143,16 +170,6 @@ namespace ModelGraph.Core
                 _regionNodes.Add(n);
             }
             return _regionNodes.Count > 0;
-        }
-        private bool RegionHitTest(Vector2 p)
-        {
-            var r1 = RegionPoint1;
-            var r2 = RegionPoint2;
-            if (p.X < r1.X) return false;
-            if (p.Y < r1.Y) return false;
-            if (p.X > r2.X) return false;
-            if (p.Y > r2.Y) return false;
-            return true;
         }
 
         private (bool, Node) HitNodeTest(Vector2 p)

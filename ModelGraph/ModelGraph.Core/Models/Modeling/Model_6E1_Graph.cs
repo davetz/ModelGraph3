@@ -9,9 +9,9 @@ namespace ModelGraph.Core
 
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
         {
-            var treeModel = GetPageModel();
+            var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new CreateCommand(this, () => { Item.CreateGraph(); IsExpandedLeft = true; }));
+            list.Add(new CreateCommand(this, () => { IsExpandedLeft = true; pageModel.NewView((p) => { new GraphModel(p, Item.CreateGraph()); }, ControlType.GraphDisplay); } ));
         }
 
         protected override int GetTotalCount() => Item.Count;

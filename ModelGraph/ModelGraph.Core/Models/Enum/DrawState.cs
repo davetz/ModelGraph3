@@ -56,7 +56,8 @@ namespace ModelGraph.Core
 
 
         ViewOnVoidTapped = ViewMode | NowOnVoid | Tapped,       //hide property sheet, enable region tracing
-        ViewOnVoidDragging = ViewMode | NowOnVoid | Draging,  //tracing a new region
+        ViewOnVoidEnding = ViewMode | NowOnVoid | Ending,     //tracing a new region ending
+        ViewOnVoidDraging = ViewMode | NowOnVoid | Draging,  //tracing a new region creating
         ViewOnPinTapped = ViewMode | NowOnPin | Tapped,       //show property sheet
         ViewOnNodeTapped = ViewMode | NowOnNode | Tapped,     //show property sheet,
         ViewOnEdgeTapped = ViewMode | NowOnEdge | Tapped,     //show property sheet,
@@ -81,7 +82,7 @@ namespace ModelGraph.Core
 
         MovenOnNode = MoveMode | NowOnNode,                     //moving a node state-1
         MoveOnNodeTapped = MoveMode | NowOnNode | Tapped,       //moving a node state-2
-        MoveOnNodeDraggging = MoveMode | StartOnNode | Draging, //moving a node state-3
+        MoveOnNodeDraging = MoveMode | StartOnNode | Draging, //moving a node state-3
 
         MoveOnRegion = MoveMode | NowOnRegion,                      //moving a region state-1
         MoveOnRegionTapped = MoveMode | NowOnRegion | Tapped,       //moving a region state-2
@@ -112,7 +113,7 @@ namespace ModelGraph.Core
 
         LinkOnNode = LinkMode | NowOnNode,                      //linking a node state-1
         LinkOnNodeTapped = LinkMode | NowOnNode | Tapped,       //linking a node state-2
-        LinkOnNodeDraggging = LinkMode | StartOnNode | Draging, //linking a node state-3
+        LinkOnNodeDraging = LinkMode | StartOnNode | Draging, //linking a node state-3
 
         LinkNodeDraggingOnVoid = LinkMode | StartOnNode | NowOnVoid | Draging,        //linking a node state-4
         LinkNodeDraggingOnPin = LinkMode | StartOnNode | NowOnPin | Draging,          //linking a node state-5

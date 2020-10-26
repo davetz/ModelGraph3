@@ -63,6 +63,11 @@ namespace ModelGraph.Controls
             {
                 _prevVisible = visibleItems;
 
+                if ((visibleItems & DrawItem.Selector) == 0 && SelectorGrid.Visibility != Visibility.Collapsed)
+                    HideSelectorGrid();
+                if ((visibleItems & DrawItem.Selector) != 0 && SelectorGrid.Visibility != Visibility.Visible)
+                    ShowSelectorGrid();
+
                 if ((visibleItems & DrawItem.ToolTip) == 0 && ToolTipBorder.Visibility != Visibility.Collapsed)
                     HideToolTip();
                 if ((visibleItems & DrawItem.ToolTip) != 0 && ToolTipBorder.Visibility != Visibility.Visible)
@@ -420,7 +425,13 @@ namespace ModelGraph.Controls
         {
             if (_isFirstCall) { _isFirstCall = false; PanZoomReset(); }
 
-            if (sender == EditCanvas) { Draw(Model.HelperData); Draw(Model.EditorData); }
+            if (sender == EditCanvas)
+            {
+                Draw(Model.HelperData);
+                Draw(Model.EditorData);
+                if (SelectorGrid.Visibility == Visibility.Visible)
+                    UpdateSelectorGrid();
+            }
             else if (sender == OverCanvas) Draw(Model.EditorData);
             else if (sender == Pick1Canvas) Draw(Model.Picker1Data);
             else if (sender == Pick2Canvas) Draw(Model.Picker2Data);

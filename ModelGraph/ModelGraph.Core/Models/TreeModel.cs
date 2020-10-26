@@ -41,7 +41,7 @@ namespace ModelGraph.Core
                     HeaderModel.ExpandLeft(Item.Owner);
                 else if (HeaderModel.CanExpandRight)
                     HeaderModel.ExpandRight(Item.Owner);
-                if (HeaderModel.Count > 0) RefreshViewList(20, HeaderModel.Items[0], HeaderModel.Items[0], ChangeType.None);
+                if (HeaderModel.Count > 0) RefreshViewList(20, HeaderModel.Items[0], HeaderModel.Items[0], ChangeType.ViewListChanged);
             }
         }
 

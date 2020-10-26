@@ -10,6 +10,7 @@ namespace ModelGraph.Core
         FlyTree = 0x10,
         SideTree = 0x20,
         Overview = 0x40,
-        ColorPicker = 0x80,
+        Selector = 0X80,
+        ColorPicker = 0x100,
     };
 }

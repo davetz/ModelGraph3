@@ -25,8 +25,10 @@ namespace ModelGraph.Core
 
         internal void AugmentDrawState(DrawState state, DrawState mask)
         {
+            var notDraging = state != DrawState.Draging;
+
             state = (DrawState & ~mask) | (state & mask);
-            if (state == DrawState) return;   //no change, so nothing to do
+            if (state == DrawState && notDraging) return;   //no change, so nothing to do
             SetDrawState(state);
         }
         public bool TrySetState(DrawState state)
@@ -39,7 +41,8 @@ namespace ModelGraph.Core
         {
             PreviousDrawState = DrawState;
             DrawState = state;
-            Debug.WriteLine($"New DrawState: {DrawState}");
+            if (PreviousDrawState != DrawState)
+                Debug.WriteLine($"New DrawState: {DrawState}");
             if (_drawState_Action.TryGetValue(state, out Action action)) action();
         }
         protected void SetDrawStateAction(DrawState state, Action action) => _drawState_Action[state] = action;
@@ -69,11 +72,6 @@ namespace ModelGraph.Core
         protected void ShowDrawItems(DrawItem flags) => VisibleDrawItems |= flags;
         protected void EnableDrawItems(DrawItem flags) => EnabledDrawItems |= flags;
         protected void DisableDrawItems(DrawItem flags) => EnabledDrawItems &= ~flags;
-        #endregion
-
-        #region PointerData  ==================================================
-        protected Vector2 RegionPoint1 { get; set; }
-        protected Vector2 RegionPoint2 { get; set; }
         #endregion
 
 

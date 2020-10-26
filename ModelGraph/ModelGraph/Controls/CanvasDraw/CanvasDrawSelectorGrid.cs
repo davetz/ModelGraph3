@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Diagnostics;
+using System.Numerics;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
@@ -18,8 +19,7 @@ namespace ModelGraph.Controls
         void UpdateSelectorGrid()
         {
             var min = Vector2.Min(GridPoint1, GridPoint2);
-            var size = Vector2.Abs(GridPoint1 -GridPoint2);
-
+            var size = Vector2.Abs(GridPoint1 - GridPoint2);
             SelectorGrid.Width = size.X;
             SelectorGrid.Height = size.Y;
 
