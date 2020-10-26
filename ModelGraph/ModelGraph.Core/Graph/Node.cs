@@ -117,13 +117,13 @@ namespace ModelGraph.Core
         internal int[] CenterXY
         {
             get { return new int[] { (int)X, (int)Y }; }
-            set { if (value != null && value.Length == 2) { X = value[0]; Y = value[1]; } }
+            set { if (value != null && value.Length == 2) { X = value[0]; Y = value[1]; UpdateModels(); } }
         }
 
         internal int[] SizeWH
         {
             get { return new int[] { DX, DY }; }
-            set { if (value != null && value.Length == 2) { DX = ValidSize(value[0]); DY = ValidSize(value[1]); } }
+            set { if (value != null && value.Length == 2) { DX = ValidSize(value[0]); DY = ValidSize(value[1]); UpdateModels(); } }
         }
         private byte ValidSize(int val)
         {
@@ -275,7 +275,15 @@ namespace ModelGraph.Core
         public override string ToString() => Item.GetFullNameId();
         internal int EdgeCount => Owner.Node_Edges.TryGetValue(this, out List<Edge> list) ? list.Count : 0;
         internal List<Edge> EdgeList => Owner.Node_Edges.TryGetValue(this, out List<Edge> list) ? list : null;
-
+        private void UpdateModels()
+        {
+            var graph = Owner;
+            var root = graph.Owner.Owner.Owner;
+            foreach (var pm in root.Items)
+            {
+                if (pm.LeadModel is GraphModel gm && gm.Graph == graph) gm.RefreshDrawData();
+            }
+        }
         #endregion
     }
 }

@@ -44,13 +44,8 @@ namespace ModelGraph.Controls
         public void Revert()
         {
         }
-        public void Release()
-        {
-        }
-        public void Refresh()
-        {
-            GraphCanvas.Refresh();
-        }
+        public void Release() => DrawModel.Release();
+        public void Refresh() => GraphCanvas.Refresh();
         public void SetSize(double width, double height)
         {
         }

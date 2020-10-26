@@ -16,6 +16,7 @@ namespace ModelGraph.Core
             Owner = owner;
             owner.Add(this);
         }
+        public virtual void Release() { }
         #endregion
 
         #region DrawState  ====================================================
@@ -74,7 +75,6 @@ namespace ModelGraph.Core
         protected void DisableDrawItems(DrawItem flags) => EnabledDrawItems &= ~flags;
         #endregion
 
-
         #region HitTest  ======================================================
 
         protected void ClearHit()
@@ -88,7 +88,6 @@ namespace ModelGraph.Core
         protected void SetHitEdge() => _hit |= Hit.Edge;
         protected void SetHitRegion() => _hit |= Hit.Region;
         #endregion
-
 
         #region IDrawData  ====================================================
         virtual public string HeaderTitle => "No Title was specified";

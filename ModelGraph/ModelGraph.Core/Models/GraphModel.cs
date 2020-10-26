@@ -30,10 +30,21 @@ namespace ModelGraph.Core
 
             RefreshEditorData();
         }
+        public override void Release()
+        {
+            var root = Owner.Owner;
+
+            var isOnlyInstance = true;
+            foreach (var pm in root.Items) { if (pm.LeadModel is GraphModel gm && gm != this && gm.Graph == Graph) isOnlyInstance = false; }
+            if (isOnlyInstance) Graph.Owner.Remove(Graph);
+
+            Owner.Release();
+            root.PostRefresh();
+        }
         #endregion
 
         #region RefreshDrawData  ==============================================
-        private void RefreshDrawData()
+        internal void RefreshDrawData()
         {
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
