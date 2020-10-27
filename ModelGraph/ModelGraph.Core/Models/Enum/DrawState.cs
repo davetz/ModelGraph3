@@ -60,6 +60,7 @@ namespace ModelGraph.Core
         ViewOnVoidDraging = ViewMode | NowOnVoid | Draging,  //tracing a new region creating
         ViewOnPinTapped = ViewMode | NowOnPin | Tapped,       //show property sheet
         ViewOnNodeTapped = ViewMode | NowOnNode | Tapped,     //show property sheet,
+        ViewOnNodeEnding = ViewMode | NowOnNode | Ending,     //show property sheet,
         ViewOnEdgeTapped = ViewMode | NowOnEdge | Tapped,     //show property sheet,
         ViewOnRegionTapped = ViewMode | NowOnRegion | Tapped, //show property sheet,
 

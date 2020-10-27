@@ -9,7 +9,6 @@ namespace ModelGraph.Core
         DrawState DrawState { get; }
         DrawCursor DrawCursor { get; }
         DrawItem VisibleDrawItems { get; }
-        DrawItem EnabledDrawItems { get; }
 
         void Release(); //user has closed this standalone view
         bool TrySetState(DrawState state);

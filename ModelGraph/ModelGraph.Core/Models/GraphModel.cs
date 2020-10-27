@@ -144,6 +144,8 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
             ShowDrawItems(DrawItem.FlyTree);
+            var (x, y) = _hitNode.Center;
+            FlyOutPoint = new Vector2(x, y);
             if (FlyTreeModel is TreeModel tm)
             {
                 tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, _hitNode); });

@@ -58,7 +58,6 @@ namespace ModelGraph.Controls
         private void ChedkDrawItems()
         {
             var visibleItems = Model.VisibleDrawItems;
-            var enabledItems = Model.EnabledDrawItems;
             if (visibleItems != _prevVisible)
             {
                 _prevVisible = visibleItems;
@@ -108,19 +107,8 @@ namespace ModelGraph.Controls
                 if ((visibleItems & DrawItem.ColorPicker) != 0 && ColorPickerBorder.Visibility != Visibility.Visible)
                     ColorPickerBorder.Visibility = Visibility.Visible;
             }
-            if (enabledItems != _prevEnabled)
-            {
-                _prevEnabled = enabledItems;
-
-                Pick1Canvas.IsEnabled = (enabledItems & DrawItem.Picker1) != 0;
-                Pick2Canvas.IsEnabled = (enabledItems & DrawItem.Picker2) != 0;
-                OverCanvas.IsEnabled = (enabledItems & DrawItem.Overview) != 0;
-                FlyTreeCanvas.IsEnabled = (enabledItems & DrawItem.FlyTree) != 0;
-                SideTreeCanvas.IsEnabled = (enabledItems & DrawItem.SideTree) != 0;
-            }
         }
         private DrawItem _prevVisible;
-        private DrawItem _prevEnabled;
         #endregion
 
         #region Overview  =====================================================
@@ -387,13 +375,13 @@ namespace ModelGraph.Controls
             {
                 ChedkDrawItems();
                 CheckColorChange();
-                if (FlyTreeCanvas.IsEnabled) FlyTreeCanvas.Refresh();
-                if (SideTreeCanvas.IsEnabled) SideTreeCanvas.Refresh();
+                if (FlyTreeCanvas.IsEnabled && FlyTreeGrid.Visibility == Visibility.Visible) FlyTreeCanvas.Refresh();
+                if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible) SideTreeCanvas.Refresh();
 
                 if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
-                if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
-                if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
-                if (Pick2Canvas.IsEnabled) Pick2Canvas.Invalidate();
+                if (OverCanvas.IsEnabled && OverviewBorder.Visibility == Visibility.Visible) OverCanvas.Invalidate();
+                if (Pick1Canvas.IsEnabled && Pick1Canvas.Visibility == Visibility.Visible) Pick1Canvas.Invalidate();
+                if (Pick2Canvas.IsEnabled && Pick2Canvas.Visibility == Visibility.Visible) Pick2Canvas.Invalidate();
 
                 if (Model.DrawCursor != _drawCursor)
                 {

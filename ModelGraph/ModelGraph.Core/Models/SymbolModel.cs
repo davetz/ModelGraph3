@@ -38,7 +38,6 @@ namespace ModelGraph.Core
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
             VisibleDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
-            EnabledDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
 
             SetViewMode();
             RefreshDrawData();
@@ -401,7 +400,6 @@ namespace ModelGraph.Core
         public void SetViewMode()
         {
             TrySetState(DrawState.ViewMode);
-            EnabledDrawItems |= DrawItem.Picker2 | DrawItem.SideTree;
 
             _picker1Index = _picker2Index = -1;
             SelectedShapes.Clear();
