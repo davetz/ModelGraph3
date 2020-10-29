@@ -3,7 +3,6 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using ModelGraph.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -590,7 +589,14 @@ namespace ModelGraph.Controls
                 if (_overridePointerMoved is null)
                 {
                     if (_pointerIsPressed)
-                        ExecuteAction(DrawEvent.Drag); //we want a fast responce
+                    {
+                        if (_ctrlPointerPressed)
+                            ExecuteAction(DrawEvent.CtrlDrag); // we want a fast responce
+                        else if (_shiftPointerPressed)
+                            ExecuteAction(DrawEvent.ShiftDrag); // we want a fast responce
+                        else
+                            ExecuteAction(DrawEvent.Drag);      // we want a fast responce
+                    }
                     else
                         PostEvent(DrawEvent.Skim);
                 }
@@ -608,6 +614,8 @@ namespace ModelGraph.Controls
             }
         }
         private bool _pointerIsPressed;
+        private bool _ctrlPointerPressed;
+        private bool _shiftPointerPressed;
         #endregion
 
         #region PointerPressed  ===============================================
@@ -616,12 +624,21 @@ namespace ModelGraph.Controls
             if (_isRootCanvasLoaded)
             {
                 _pointerIsPressed = true;
+                _ctrlPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control);
+                _shiftPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift);
                 SetGridPoint1(e);
                 SetDrawPoint1(EditCanvas, Model.EditorData, e);
                 e.Handled = true;
 
                 if (_overridePointerPressed is null)
-                    PostEvent(DrawEvent.Tap);
+                {
+                    if (_ctrlPointerPressed)
+                        PostEvent(DrawEvent.CtrlTap);
+                    else if (_shiftPointerPressed)
+                        PostEvent(DrawEvent.ShiftTap);
+                    else
+                        PostEvent(DrawEvent.Tap);
+                }
                 else
                     _overridePointerPressed();
             }

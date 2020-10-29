@@ -41,12 +41,15 @@ namespace ModelGraph.Core
 
         ModeMask = 0xF00,       //issolage current mode
 
-        Tapped = 0x1000,         //a pointer tap has occured
-        Ending = 0x2000,         //a pointer released has occured
-        Draging = 0x3000,        //currently dragging something
-        Skimming = 0x4000,       //currently skimming over the surface
+        Tapped       = 0x1000,   //a pointer tap has occured
+        CtrlTapped   = 0x2000,   //a pointer ctrl tap has occured
+        ShiftTapped  = 0x3000,   //a pointer shift tap has occured
+        Ending       = 0x4000,   //a pointer released has occured
+        Draging      = 0x5000,   //currently dragging something
+        CtrlDraging  = 0x6000,   //currently ctrl dragging something
+        ShiftDraging = 0x7000,   //currently shift dragging something
 
-        EventMask = 0x7000,     //issolate current event
+        EventMask    = 0xF000,   //issolate current event
 
         ViewOnVoid = ViewMode | NowOnVoid,      //hide tooltips
         ViewOnPin = ViewMode | NowOnPin,        //show tooltips
@@ -55,9 +58,7 @@ namespace ModelGraph.Core
         ViewOnRegion = ViewMode | NowOnRegion,
 
 
-        ViewOnVoidTapped = ViewMode | NowOnVoid | Tapped,       //hide property sheet, enable region tracing
-        ViewOnVoidEnding = ViewMode | NowOnVoid | Ending,     //tracing a new region ending
-        ViewOnVoidDraging = ViewMode | NowOnVoid | Draging,  //tracing a new region creating
+        ViewOnVoidTapped = ViewMode | NowOnVoid | Tapped,     //hide property sheet
         ViewOnPinTapped = ViewMode | NowOnPin | Tapped,       //show property sheet
         ViewOnNodeTapped = ViewMode | NowOnNode | Tapped,     //show property sheet,
         ViewOnNodeEnding = ViewMode | NowOnNode | Ending,     //show property sheet,
@@ -76,14 +77,22 @@ namespace ModelGraph.Core
         EditOnEdgeTapped = EditMode | StartOnEdge | Tapped,
         EditOnRegionTapped = EditMode | StartOnRegion | Tapped,
 
-        MoveOnVoid = MoveMode | NowOnVoid, 
+        MoveOnVoid = MoveMode | NowOnVoid,
+        MoveOnVoidTapped = MoveMode | NowOnVoid | Tapped,
+        MoveOnVoidCtrlTapped = MoveMode | NowOnVoid | CtrlTapped,
+        MoveOnVoidDragging = MoveMode | NowOnVoid | Draging,
+        MoveOnVoidEnding = MoveMode | NowOnVoid | Ending,
+
+        MoveOnNode = MoveMode | NowOnNode,
+        MoveOnNodeTapped = MoveMode | NowOnNode | Tapped,
+        MoveOnNodeDragging = MoveMode | NowOnNode | Draging,
+        MoveOnNodeEnding = MoveMode | NowOnNode | Ending,
+
         MoveOnPin = MoveMode | NowOnPin,                        //moving a pin state-1     
         MoveOnPinTapped = MoveMode | NowOnPin | Tapped,         //moving a pin state-2
         MoveOnPinDragging = MoveMode | StartOnPin | Draging,    //moving a pin state-3
 
         MovenOnNode = MoveMode | NowOnNode,                     //moving a node state-1
-        MoveOnNodeTapped = MoveMode | NowOnNode | Tapped,       //moving a node state-2
-        MoveOnNodeDraging = MoveMode | StartOnNode | Draging, //moving a node state-3
 
         MoveOnRegion = MoveMode | NowOnRegion,                      //moving a region state-1
         MoveOnRegionTapped = MoveMode | NowOnRegion | Tapped,       //moving a region state-2

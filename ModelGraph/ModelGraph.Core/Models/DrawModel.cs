@@ -43,7 +43,21 @@ namespace ModelGraph.Core
             PreviousDrawState = DrawState;
             DrawState = state;
             if (PreviousDrawState != DrawState)
-                Debug.WriteLine($"New DrawState: {DrawState}");
+            {
+                var e = "";
+                var u = "Unknown";
+                var nowOn = state & DrawState.NowMask;
+                var nowOnStr = nowOn == 0 ? e : nowOn.ToString();
+                var isTarg = state & DrawState.IsTarget;
+                var isTartStr = isTarg == 0 ? e : isTarg.ToString();
+                var startOn = state & DrawState.StartOnMask;
+                var startOnStr = startOn == 0 ? e : startOn.ToString();
+                var mode = state & DrawState.ModeMask;
+                var modeStr = mode == 0 ? u : mode.ToString().Replace("Mode", ""); 
+                var evnt = state & DrawState.EventMask;
+                var evntStr = evnt == 0 ? e : evnt.ToString();
+                Debug.WriteLine($"New DrawState: {modeStr} {startOnStr} {nowOnStr} {evntStr} {isTartStr}");
+            }
             if (_drawState_Action.TryGetValue(state, out Action action)) action();
         }
         protected void SetDrawStateAction(DrawState state, Action action) => _drawState_Action[state] = action;
