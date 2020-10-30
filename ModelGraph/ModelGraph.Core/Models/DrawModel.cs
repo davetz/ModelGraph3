@@ -26,10 +26,10 @@ namespace ModelGraph.Core
 
         internal void AugmentDrawState(DrawState state, DrawState mask)
         {
-            var notDraging = state != DrawState.Draging;
+            var mayNotRepeat = (state & DrawState.MayRepeat) == 0;
 
             state = (DrawState & ~mask) | (state & mask);
-            if (state == DrawState && notDraging) return;   //no change, so nothing to do
+            if (state == DrawState && mayNotRepeat) return;   //no change, so nothing to do
             SetDrawState(state);
         }
         public bool TrySetState(DrawState state)

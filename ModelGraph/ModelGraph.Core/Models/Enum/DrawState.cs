@@ -41,179 +41,22 @@ namespace ModelGraph.Core
 
         ModeMask = 0xF00,       //issolage current mode
 
-        Tapped       = 0x1000,   //a pointer tap has occured
-        CtrlTapped   = 0x2000,   //a pointer ctrl tap has occured
-        ShiftTapped  = 0x3000,   //a pointer shift tap has occured
-        Ending       = 0x4000,   //a pointer released has occured
-        Draging      = 0x5000,   //currently dragging something
-        CtrlDraging  = 0x6000,   //currently ctrl dragging something
-        ShiftDraging = 0x7000,   //currently shift dragging something
+        Tapped       = 0x01000,   //a pointer tap has occured
+        CtrlTapped   = 0x02000,   //a pointer ctrl tap has occured
+        ShiftTapped  = 0x03000,   //a pointer shift tap has occured
+        Ending       = 0x04000,   //a pointer released has occured
 
-        EventMask    = 0xF000,   //issolate current event
+        Dragging     = 0x15000,   //currently dragging something
+        CtrlDraging  = 0x16000,   //currently ctrl dragging something
+        ShiftDraging = 0x17000,   //currently shift dragging something
+        UpArrow      = 0x18000,
+        DownArrow    = 0x19000,
+        LeftArrow    = 0x1A000,
+        RightArrow   = 0x1B000,
 
-        ViewOnVoid = ViewMode | NowOnVoid,      //hide tooltips
-        ViewOnPin = ViewMode | NowOnPin,        //show tooltips
-        ViewOnNode = ViewMode | NowOnNode,      //show tooltips
-        ViewOnEdge = ViewMode | NowOnEdge,      //show tooltips
-        ViewOnRegion = ViewMode | NowOnRegion,
+        MayRepeat    = 0x10000,
+        EventMask    = 0x1F000,   //issolate current event
 
-
-        ViewOnVoidTapped = ViewMode | NowOnVoid | Tapped,     //hide property sheet
-        ViewOnPinTapped = ViewMode | NowOnPin | Tapped,       //show property sheet
-        ViewOnNodeTapped = ViewMode | NowOnNode | Tapped,     //show property sheet,
-        ViewOnNodeEnding = ViewMode | NowOnNode | Ending,     //show property sheet,
-        ViewOnEdgeTapped = ViewMode | NowOnEdge | Tapped,     //show property sheet,
-        ViewOnRegionTapped = ViewMode | NowOnRegion | Tapped, //show property sheet,
-
-        EditOnVoid = EditMode | NowOnVoid,
-        EditOnPin = EditMode | NowOnPin,
-        EditOnNode = EditMode | NowOnNode,
-        EditOnEdge = EditMode | NowOnEdge,
-        EditOnRegion = EditMode | NowOnRegion,
-
-        EditOnVoidTapped = EditMode | NowOnVoid | Tapped,
-        EditOnPinTapped = EditMode | StartOnPin | Tapped,
-        EditOnNodeTapped = EditMode | StartOnNode | Tapped,
-        EditOnEdgeTapped = EditMode | StartOnEdge | Tapped,
-        EditOnRegionTapped = EditMode | StartOnRegion | Tapped,
-
-        MoveOnVoid = MoveMode | NowOnVoid,
-        MoveOnVoidTapped = MoveMode | NowOnVoid | Tapped,
-        MoveOnVoidCtrlTapped = MoveMode | NowOnVoid | CtrlTapped,
-        MoveOnVoidDragging = MoveMode | NowOnVoid | Draging,
-        MoveOnVoidEnding = MoveMode | NowOnVoid | Ending,
-
-        MoveOnNode = MoveMode | NowOnNode,
-        MoveOnNodeTapped = MoveMode | NowOnNode | Tapped,
-        MoveOnNodeDragging = MoveMode | NowOnNode | Draging,
-        MoveOnNodeEnding = MoveMode | NowOnNode | Ending,
-
-        MoveOnPin = MoveMode | NowOnPin,                        //moving a pin state-1     
-        MoveOnPinTapped = MoveMode | NowOnPin | Tapped,         //moving a pin state-2
-        MoveOnPinDragging = MoveMode | StartOnPin | Draging,    //moving a pin state-3
-
-        MovenOnNode = MoveMode | NowOnNode,                     //moving a node state-1
-
-        MoveOnRegion = MoveMode | NowOnRegion,                      //moving a region state-1
-        MoveOnRegionTapped = MoveMode | NowOnRegion | Tapped,       //moving a region state-2
-        MoveOnRegionDragging = MoveMode | StartOnRegion | Draging,  //moving a region state-3
-
-
-        LinkOnVoid = LinkMode | NowOnVoid,
-
-        LinkOnPin = LinkMode | NowOnPin,                        //linking a pin state-1     
-        LinkOnPinTapped = LinkMode | NowOnPin | Tapped,         //linking a pin state-2
-        LinkOnPinDragging = LinkMode | StartOnPin | Draging,    //linking a pin state-3
-
-        LinkPinDraggingNowOnVoid = LinkMode | StartOnPin | NowOnVoid | Draging,        //linking a pin state-4
-        LinkPinDraggingNowOnPin = LinkMode | StartOnPin | NowOnPin | Draging,          //linking a pin state-5
-        LinkPinDraggingNowOnNode = LinkMode | StartOnPin | NowOnNode | Draging,        //linking a pin state-5
-        LinkPinDraggingNowOnEdge = LinkMode | StartOnPin | NowOnEdge | Draging,        //linking a pin state-5
-        LinkPinDraggingNoOnRegion = LinkMode | StartOnPin | NowOnRegion | Draging,     //linking a pin state-5
-
-        LinkPinDraggingNowOnTargetPin = LinkMode | StartOnPin | NowOnPin | Draging | IsTarget,         //linking a pin state-6
-        LinkPinDraggingNowOnTargetNode = LinkMode | StartOnPin | NowOnNode | Draging | IsTarget,       //linking a pin state-6
-        LinkPinDraggingNowOnTargetEdge = LinkMode | StartOnPin | NowOnEdge | Draging | IsTarget,       //linking a pin state-6
-        LinkPinDraggingNowOnTargetRegion = LinkMode | StartOnPin | NowOnRegion | Draging | IsTarget,   //linking a pin state-6
-
-        LinkPinEndingNowOnTargetPin = LinkMode | StartOnPin | NowOnPin | Ending | IsTarget,         //linking a pin state-7
-        LinkPinEndingNowOnTargetNode = LinkMode | StartOnPin | NowOnNode | Ending | IsTarget,       //linking a pin state-7
-        LinkPinEndingNowOnTargetEdge = LinkMode | StartOnPin | NowOnEdge | Ending | IsTarget,       //linking a pin state-7
-        LinkPinEndingNowOnTargetRegion = LinkMode | StartOnPin | NowOnRegion | Ending | IsTarget,   //linking a pin state-7
-
-        LinkOnNode = LinkMode | NowOnNode,                      //linking a node state-1
-        LinkOnNodeTapped = LinkMode | NowOnNode | Tapped,       //linking a node state-2
-        LinkOnNodeDraging = LinkMode | StartOnNode | Draging, //linking a node state-3
-
-        LinkNodeDraggingOnVoid = LinkMode | StartOnNode | NowOnVoid | Draging,        //linking a node state-4
-        LinkNodeDraggingOnPin = LinkMode | StartOnNode | NowOnPin | Draging,          //linking a node state-5
-        LinkNodeDraggingOnNode = LinkMode | StartOnNode | NowOnNode | Draging,        //linking a node state-5
-        LinkNodeDraggingOnEdge = LinkMode | StartOnNode | NowOnEdge | Draging,        //linking a node state-5
-        LinkNodeDraggingOnRegion = LinkMode | StartOnNode | NowOnRegion | Draging,    //linking a node state-5
-
-        LinkNodeDraggingNowOnTargetPin = LinkMode | StartOnNode | NowOnPin | Draging | IsTarget,         //linking a node state-6
-        LinkNodeDraggingNowOnTargetNode = LinkMode | StartOnNode | NowOnNode | Draging | IsTarget,       //linking a node state-6
-        LinkNodeDraggingNowOnTargetEdge = LinkMode | StartOnNode | NowOnEdge | Draging | IsTarget,       //linking a node state-6
-        LinkNodeDraggingNowOnTargetRegion = LinkMode | StartOnNode | NowOnRegion | Draging | IsTarget,   //linking a node state-6
-
-        LinkNodeEndingNowOnTargetPin = LinkMode | StartOnNode | NowOnPin | Ending | IsTarget,         //linking a node state-7
-        LinkNodeEndingNowOnTargetNode = LinkMode | StartOnNode | NowOnNode | Ending | IsTarget,       //linking a node state-7
-        LinkNodeEndingNowOnTargetEdge = LinkMode | StartOnNode | NowOnEdge | Ending | IsTarget,       //linking a node state-7
-        LinkNodeEndingNowOnTargetRegion = LinkMode | StartOnNode | NowOnRegion | Ending | IsTarget,   //linking a node state-7
-
-        LinkOnRegion = LinkMode | NowOnRegion,                      //linking a region state-1
-        LinkOnRegionTapped = LinkMode | NowOnRegion | Tapped,       //linking a region state-2
-        LinkOnRegionDragging = LinkMode | StartOnRegion | Draging,  //linking a region state-3
-
-        LinkRegionDraggingOnVoid = LinkMode | StartOnRegion | NowOnVoid | Draging,        //linking a region state-4
-        LinkRegionDraggingOnPin = LinkMode | StartOnRegion | NowOnPin | Draging,          //linking a region state-5
-        LinkRegionDraggingOnNode = LinkMode | StartOnRegion | NowOnNode | Draging,        //linking a region state-5
-        LinkRegionDraggingOnEdge = LinkMode | StartOnRegion | NowOnEdge | Draging,        //linking a region state-5
-        LinkRegionDraggingOnRegion = LinkMode | StartOnRegion | NowOnRegion | Draging,    //linking a region state-5
-
-        LinkRegionDraggingNowOnTargetPin = LinkMode | StartOnNode | NowOnPin | Draging | IsTarget,         //linking a region state-6
-        LinkRegionDraggingNowOnTargetNode = LinkMode | StartOnNode | NowOnNode | Draging | IsTarget,       //linking a region state-6
-        LinkRegionDraggingNowOnTargetEdge = LinkMode | StartOnNode | NowOnEdge | Draging | IsTarget,       //linking a region state-6
-        LinkRegionDraggingNowOnTargetRegion = LinkMode | StartOnNode | NowOnRegion | Draging | IsTarget,   //linking a region state-6
-
-        LinkRegionEndingNowOnTargetPin = LinkMode | StartOnNode | NowOnPin | Ending | IsTarget,         //linking a region state-7
-        LinkRegionEndingNowOnTargetNode = LinkMode | StartOnNode | NowOnNode | Ending | IsTarget,       //linking a region state-7
-        LinkRegionEndingNowOnTargetEdge = LinkMode | StartOnNode | NowOnEdge | Ending | IsTarget,       //linking a region state-7
-        LinkRegionEndingNowOnTargetRegion = LinkMode | StartOnNode | NowOnRegion | Ending | IsTarget,   //linking a region state-7
-
-        CutOnVoid = CutMode | NowOnVoid,
-        CutOnPin = CutMode | NowOnPin,
-        CutOnNode = CutMode | NowOnNode,
-        CutOnEdge = CutMode | NowOnEdge,
-        CutOnRegion = CutMode | NowOnRegion,
-
-        CutOnPinTapped = CutMode | StartOnPin | Tapped,
-        CutOnNodeTapped = CutMode | StartOnNode | Tapped,
-        CutOnEdgeTapped = CutMode | StartOnEdge | Tapped,
-        CutOnRegionTapped = CutMode | StartOnRegion | Tapped,
-
-        CopyOnVoid = CopyMode | NowOnVoid,
-        CopyOnNode = CopyMode | NowOnNode,                      //copy node state-1
-        CopyOnNodeTapped = CopyMode | NowOnNode | Tapped,       //copy node state-2
-        CopyNodeDragging = CopyMode | StartOnNode | Draging,    //copy node state-3
-        CopyNodeEnding = CopyMode | StartOnNode | Ending,       //copy node state-4
-
-        CopyOnRegion = CopyMode | NowOnRegion,                      //copy region state-1
-        CopyOnRegionTapped = CopyMode | NowOnRegion | Tapped,       //copy region state-2
-        CopyRegionDragging = CopyMode | StartOnRegion | Draging,    //copy region state-3
-        CopyRegionEnding = CopyMode | StartOnRegion | Ending,       //copy region state-4
-
-        PasteOnVoid = PasteMode | NowOnVoid,
-        PasteOnPin = PasteMode | NowOnPin,
-        PasteOnNode = PasteMode | NowOnNode,
-        PasteOnEdge = PasteMode | NowOnEdge,
-        PasteOnRegion = PasteMode | NowOnRegion,
-
-        PasteOnVoidTapped = PasteMode | NowOnVoid | Tapped,
-        PasteOnPinTapped = PasteMode | StartOnPin | Tapped,
-        PasteOnNodeTapped = PasteMode | StartOnNode | Tapped,
-        PasteOnEdgeTapped = PasteMode | StartOnEdge | Tapped,
-        PasteOnRegionTapped = PasteMode | StartOnRegion | Tapped,
-
-        CreateOnVoid = CreateMode | NowOnVoid, 
-        CreateOnVoidTapped = CreateMode | NowOnVoid | Tapped,
-
-        OperateOnVoid = OperateMode | NowOnVoid,
-
-        OperateOnPin = OperateMode | NowOnPin,
-        OperatePinTapped = OperateMode | NowOnPin | Tapped,
-
-        OperateOnNode = OperateMode | NowOnNode,
-        OperateNodeTapped = OperateMode | NowOnNode | Tapped,
-
-        ContextMenueOnVoidTapped = ContextMenu | NowOnVoid | Tapped,
-        PropertySheetOnVoidTapped = PropertySheet | NowOnVoid | Tapped,
-
-        ResizeOverview,
-
-        ResizeTop, ResizeLeft, ResizeRight, ResizeBottom,
-        ResizeTopLeft, ResizeTopRight, ResizeBottomLeft, ResizeBottomRight,
-
-        NoChange = 0xFFFF,
+        NoChange = 0xFFFFFFF,
     };
 }
