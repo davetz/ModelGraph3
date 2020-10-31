@@ -22,6 +22,12 @@ namespace ModelGraph.Core
         }
         internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => Aux1.Owner.ModelDrop(this, dropModel, doDrop) ? DropAction.Link : DropAction.None;
 
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
+        {
+            list.Clear();
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Aux2)));
+        }
+
         public override bool CanExpandRight => true;
         internal override bool ExpandRight(Root root)
         {

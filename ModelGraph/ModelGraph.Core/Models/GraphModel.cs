@@ -81,13 +81,31 @@ namespace ModelGraph.Core
                 var points = new Vector2[] { new Vector2(e.Node1.X, e.Node1.Y), new Vector2(e.Node2.X, e.Node2.Y) };
                 Editor.AddParms((points, (ShapeType.Line, StrokeType.Simple, 2), (255, 0, 255, 255)));
             }
+            var scale = Graph.Owner.SymbolSize;
             foreach (var n in Graph.Nodes)
             {
                 var points = new Vector2[] { new Vector2(n.X, n.Y), new Vector2(n.DX, n.DY) };
-                if (SelectedNodes.Contains(n))
-                    Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (255, 0, 255, 0)));
+                var k = n.Symbol - 2;
+                if (k < 0 || k >= Graph.SymbolCount || Graph.Symbols[k].Data == null)
+                {
+                    if (n.IsNodePoint)
+                    {
+                        Editor.AddParms((points, (ShapeType.Circle, StrokeType.Filled, 1), (255, 255, 0, 255)));
+                    }
+                    else
+                    {
+                        Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (255, 255, 0, 255)));
+                    }
+                }
                 else
-                    Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (255, 255, 0, 255)));
+                {
+                    var sym = Graph.Symbols[k];
+                    var shapes = sym.GetShapes();
+                    foreach (var s in shapes)
+                    {
+                        s.AddDrawData(Editor, scale, points[0], n.FlipState);
+                    }
+                }
             }
         }
         #endregion
