@@ -79,7 +79,7 @@ namespace ModelGraph.Core
         public Vector2 FlyOutSize { get; protected set; }
         public Vector2 FlyOutPoint { get; protected set; }
         public Extent ResizerExtent { get; protected set; } //in drawPoint coordinates
-        public DrawItem VisibleDrawItems { get; protected set; }
+        public DrawItem VisibleDrawItems { get; set; }
         public bool IsPasteActionEnabled { get; protected set; }
 
         protected void HideDrawItems(DrawItem flags) => VisibleDrawItems &= ~flags;

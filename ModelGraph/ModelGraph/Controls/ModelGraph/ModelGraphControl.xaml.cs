@@ -59,5 +59,21 @@ namespace ModelGraph.Controls
         private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.CreateMode);
         private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.OperateMode);
         #endregion
+
+        private void OverviewOnOffTextBlock_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if ((DrawModel.VisibleDrawItems & DrawItem.Overview) == 0)
+            {
+                OverviewOnOffTextBlock.Text = "\uF0AD";
+                DrawModel.VisibleDrawItems |= DrawItem.Overview;
+                GraphCanvas.Refresh();
+            }
+            else
+            {
+                OverviewOnOffTextBlock.Text = "\uF0AE";
+                DrawModel.VisibleDrawItems &= ~DrawItem.Overview;
+                GraphCanvas.Refresh();
+            }
+        }
     }
 }

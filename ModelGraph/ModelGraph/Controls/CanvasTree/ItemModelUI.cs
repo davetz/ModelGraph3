@@ -608,7 +608,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            var txt = PropertyModel.GetTextValue(TC.TCM.GetRoot());
+            var txt = PropertyModel.GetTextValue(TC.TCM.Root);
             obj.Text = txt ?? "0";
             obj.Tag = obj.Text;
             obj.IsReadOnly = (Model is PropertyModel pm) && pm.IsReadOnly;
@@ -650,7 +650,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            var txt = PropertyModel.GetTextValue(TC.TCM.GetRoot());
+            var txt = PropertyModel.GetTextValue(TC.TCM.Root);
             obj.Text = txt ?? string.Empty;
             obj.Tag = obj.Text;
             obj.IsReadOnly = (Model is PropertyModel pm) && pm.IsReadOnly;
@@ -693,7 +693,7 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.IsChecked = PropertyModel.GetBoolValue(TC.TCM.GetRoot());
+            obj.IsChecked = PropertyModel.GetBoolValue(TC.TCM.Root);
 
             StackPanel.Children.Add(obj);
         }
@@ -731,8 +731,8 @@ namespace ModelGraph.Controls
                 obj.DataContext = this;
             }
 
-            obj.ItemsSource = PropertyModel.GetListValue(TC.TCM.GetRoot());
-            obj.SelectedIndex = PropertyModel.GetIndexValue(TC.TCM.GetRoot());
+            obj.ItemsSource = PropertyModel.GetListValue(TC.TCM.Root);
+            obj.SelectedIndex = PropertyModel.GetIndexValue(TC.TCM.Root);
 
             StackPanel.Children.Add(obj);
         }

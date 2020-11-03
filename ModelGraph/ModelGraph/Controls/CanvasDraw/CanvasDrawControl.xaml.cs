@@ -113,9 +113,10 @@ namespace ModelGraph.Controls
         #region Overview  =====================================================
         internal void SetOverview(int width, int height, bool canResize = false)
         {
-            _overviewWidth = width + OverviewBorder.BorderThickness.Right;
-            _overviewHeight = height;
+            OverviewBorder.Width = width + OverviewBorder.BorderThickness.Right;
+            OverviewBorder.Height = height;
             _overviewCanResize = canResize;
+            _overviewIsValid = width > 4;
             RestoreOverview();
         }
         private double _overviewWidth;
@@ -124,25 +125,15 @@ namespace ModelGraph.Controls
         private bool _overviewIsValid;
         private void RestoreOverview()
         {
-            OverviewBorder.Width = _overviewWidth;
-            OverviewBorder.Height = _overviewHeight;
-            OverviewResize.Visibility = _overviewCanResize ? Visibility.Visible : Visibility.Collapsed;
-
-            if (_overviewWidth < 4)
-                HideOverview();
-            else
-            {
-                _overviewIsValid = true; // enable method ShowOverview()
-                ShowOverview();
-            }
-        }
-        internal void ShowOverview()
-        {
             if (_overviewIsValid)
             {
+                OverviewResize.Visibility = _overviewCanResize ? Visibility.Visible : Visibility.Collapsed;
                 OverCanvas.IsEnabled = true;  //enable CanvasDraw
-                OverviewBorder.Visibility = Visibility.Visible;
+                OverviewBorder.Visibility = (Model.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible; ;
+                SetScaleOffset(OverCanvas, Model.EditorData);
             }
+            else
+                HideOverview();
         }
         internal void HideOverview()
         {

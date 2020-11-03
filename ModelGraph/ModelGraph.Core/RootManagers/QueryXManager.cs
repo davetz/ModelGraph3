@@ -498,7 +498,7 @@ namespace ModelGraph.Core
         #region GetQueryXTarget  ==============================================
         internal Store GetQueryXTarget(QueryX qx)
         {
-            var (_, tail) = GetHeadTail(qx);
+            var (head, tail) = GetHeadTail(qx);
             return tail;
         }
         #endregion

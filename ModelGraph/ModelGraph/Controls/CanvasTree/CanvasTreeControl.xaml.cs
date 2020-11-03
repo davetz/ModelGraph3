@@ -610,7 +610,7 @@ namespace ModelGraph.Controls
         private void RefreshRoot()
         {
             var buttonCommands = new List<ItemCommand>();
-            TCM.HeaderModel.GetButtonCommands(TCM.GetRoot(), buttonCommands);
+            TCM.HeaderModel.GetButtonCommands(TCM.Root, buttonCommands);
 
             var N = buttonCommands.Count;
             var M = ControlPanel.Children.Count;
@@ -681,7 +681,7 @@ namespace ModelGraph.Controls
                 TreeCanvas.KeyboardAccelerators.Add(acc);
             }
 
-            if (Selected.DragEnter(TCM.GetRoot()) != DropAction.None)
+            if (Selected.DragEnter(TCM.Root) != DropAction.None)
             {
                 var acc = new KeyboardAccelerator { Key = VirtualKey.V, Modifiers = VirtualKeyModifiers.Control };
                 acc.Invoked += Accelerator_ModelPaste_Invoked;
@@ -704,8 +704,8 @@ namespace ModelGraph.Controls
                 HelpButton.Visibility = Visibility.Collapsed;
             }
 
-            Selected.GetMenuCommands(TCM.GetRoot(), MenuCommands);
-            Selected.GetButtonCommands(TCM.GetRoot(), ButtonCommands);
+            Selected.GetMenuCommands(TCM.Root, MenuCommands);
+            Selected.GetButtonCommands(TCM.Root, ButtonCommands);
 
             var cmds = ButtonCommands;
             var len1 = cmds.Count;
@@ -850,13 +850,13 @@ namespace ModelGraph.Controls
         private void Accelerator_ModelCopy_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
             if (Selected.CanDrag)
-                Selected.DragStart(TCM.GetRoot());
+                Selected.DragStart(TCM.Root);
             args.Handled = true;
         }
         private void Accelerator_ModelPaste_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (Selected.DragEnter(TCM.GetRoot()) != DropAction.None)
-                Selected.DragDrop(TCM.GetRoot());
+            if (Selected.DragEnter(TCM.Root) != DropAction.None)
+                Selected.DragDrop(TCM.Root);
             args.Handled = true;
         }
         private void Accelerator_SortMode_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
@@ -973,7 +973,7 @@ namespace ModelGraph.Controls
             {
                 if (mdl.CanDrag)
                 {
-                    mdl.DragStart(TCM.GetRoot());
+                    mdl.DragStart(TCM.Root);
                 }
                 else
                 {
@@ -987,7 +987,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                var type = mdl.DragEnter(TCM.GetRoot());
+                var type = mdl.DragEnter(TCM.Root);
                 switch (type)
                 {
                     case DropAction.None:
@@ -1013,7 +1013,7 @@ namespace ModelGraph.Controls
             var obj = sender as TextBlock;
             if (obj.DataContext is ItemModelUI mc && mc.Model is ItemModel mdl)
             {
-                mdl.DragDrop(TCM.GetRoot());
+                mdl.DragDrop(TCM.Root);
             }
         }
         #endregion
@@ -1225,7 +1225,7 @@ namespace ModelGraph.Controls
             {
                 if ((string)obj.Tag != obj.Text)
                 {
-                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                    mdl.PostSetTextValue(TCM.Root, obj.Text);
                 }
             }
         }
@@ -1239,7 +1239,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                        mdl.PostSetTextValue(TCM.Root, obj.Text);
                     }
                     if (e.Key == Windows.System.VirtualKey.Enter)
                         FocusButton.Focus(FocusState.Keyboard);
@@ -1255,7 +1255,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        obj.Text = mdl.GetTextValue(TCM.GetRoot()) ?? string.Empty;
+                        obj.Text = mdl.GetTextValue(TCM.Root) ?? string.Empty;
                     }
                     ToggleParentExpandRight(mdl);
                 }
@@ -1266,10 +1266,10 @@ namespace ModelGraph.Controls
                 var obj = sender as TextBox;
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
-                    var num = mdl.GetInt32Value(TCM.GetRoot()) + 1;
+                    var num = mdl.GetInt32Value(TCM.Root) + 1;
                     if (num > 100) return;
                     obj.Text = num.ToString();
-                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                    mdl.PostSetTextValue(TCM.Root, obj.Text);
                 }
             }
             else if (e.Key == Windows.System.VirtualKey.Down)
@@ -1278,10 +1278,10 @@ namespace ModelGraph.Controls
                 var obj = sender as TextBox;
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
-                    var num = mdl.GetInt32Value(TCM.GetRoot()) - 1;
+                    var num = mdl.GetInt32Value(TCM.Root) - 1;
                     if (num < 0) return;
                     obj.Text = num.ToString();
-                    mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                    mdl.PostSetTextValue(TCM.Root, obj.Text);
                 }
             }
         }
@@ -1295,7 +1295,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        mdl.PostSetTextValue(TCM.GetRoot(), obj.Text);
+                        mdl.PostSetTextValue(TCM.Root, obj.Text);
                     }
                     if (e.Key == Windows.System.VirtualKey.Enter)
                         FocusButton.Focus(FocusState.Keyboard);
@@ -1311,7 +1311,7 @@ namespace ModelGraph.Controls
                 {
                     if ((string)obj.Tag != obj.Text)
                     {
-                        obj.Text = mdl.GetTextValue(TCM.GetRoot()) ?? string.Empty;
+                        obj.Text = mdl.GetTextValue(TCM.Root) ?? string.Empty;
                     }
                     ToggleParentExpandRight(mdl);
                 }
@@ -1346,7 +1346,7 @@ namespace ModelGraph.Controls
                 {
                     e.Handled = true;
                     _ignoreNextCheckBoxEvent = true;
-                    mdl.PostSetBoolValue(TCM.GetRoot(), !val);
+                    mdl.PostSetBoolValue(TCM.Root, !val);
                 }
                 else if (e.Key == Windows.System.VirtualKey.Tab)
                 {
@@ -1368,7 +1368,7 @@ namespace ModelGraph.Controls
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     var val = obj.IsChecked ?? false;
-                    mdl.PostSetBoolValue(TCM.GetRoot(), val);
+                    mdl.PostSetBoolValue(TCM.Root, val);
                 }
             }
         }
@@ -1390,7 +1390,7 @@ namespace ModelGraph.Controls
             var obj = sender as ComboBox;
             if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl && obj.SelectedIndex >= 0)
             {
-                mdl.PostSetIndexValue(TCM.GetRoot(), obj.SelectedIndex);
+                mdl.PostSetIndexValue(TCM.Root, obj.SelectedIndex);
             }
         }
         internal void ComboProperty_KeyDown(object sender, Windows.UI.Xaml.Input.KeyRoutedEventArgs e)

@@ -8,7 +8,7 @@ namespace ModelGraph.Core
     {
         DrawState DrawState { get; }
         DrawCursor DrawCursor { get; }
-        DrawItem VisibleDrawItems { get; }
+        DrawItem VisibleDrawItems { get; set; }
 
         void Release(); //user has closed this standalone view
         bool TrySetState(DrawState state);

@@ -9,7 +9,7 @@ namespace ModelGraph.Core
         private ModelBuffer _buffer = new ModelBuffer(20);
         internal override void Add(ItemModel headerModel) => HeaderModel = headerModel;
         public ItemModel HeaderModel { get; private set; }
-
+        public Root Root => PageModel.Root;
         public PageModel PageModel => Item;
         internal override Item GetOwner() => Item; //normally an itemModel is owned by another parent ItemModel
 

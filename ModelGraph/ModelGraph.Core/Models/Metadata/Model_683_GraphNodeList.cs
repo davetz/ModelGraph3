@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 
 namespace ModelGraph.Core
 {
@@ -11,11 +12,8 @@ namespace ModelGraph.Core
         public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetSummaryId() => Root.GetSummaryId(IdKey);
 
-        protected override int GetTotalCount() => 0;
-        protected override IList<Store> GetChildItems() => new Store[0];
-        protected override void CreateChildModel(Store childItem)
-        {
-        }
-
+        protected override int GetTotalCount() => Item.NodeOwners.Count;
+        protected override IList<Store> GetChildItems() => Item.NodeOwners.ToArray();
+        protected override void CreateChildModel(Store childItem) => new Model_684_GraphNode(this, childItem);
     }
 }

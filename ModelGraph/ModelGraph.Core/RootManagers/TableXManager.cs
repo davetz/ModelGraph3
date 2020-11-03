@@ -126,6 +126,7 @@ namespace ModelGraph.Core
         private QueryXManager _queryXManager;
         private ComputeXManager _computeXManager;
 
+        private Relation_Store_QueryX _relation_Store_QueryX;
         private Relation_Store_ColumnX _relation_Store_ColumnX;
         private Relation_Store_ComputeX _relation_Store_ComputeX;
         private Relation_ComputeX_QueryX _relation_ComputeX_QueryX;
@@ -138,6 +139,7 @@ namespace ModelGraph.Core
             _queryXManager = root.Get<QueryXManager>();
             _computeXManager = root.Get<ComputeXManager>();
 
+            _relation_Store_QueryX = root.Get<Relation_Store_QueryX>();
             _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
             _relation_Store_ComputeX = root.Get<Relation_Store_ComputeX>();
             _relation_ComputeX_QueryX = root.Get<Relation_ComputeX_QueryX>();
@@ -175,15 +177,16 @@ namespace ModelGraph.Core
         internal IList<ComputeX> GetChildItems(Model_666_ComputeList m) => _relation_Store_ComputeX.TryGetChildren(m.Item, out IList<ComputeX> list) ? list : new ComputeX[0];
         internal void AddNewComputeX(Model_666_ComputeList m)
         {
+            var st = m.Item;
             var cx = new ComputeX(_computeXManager, true);
             var qx = new QueryX(_queryXManager, QueryType.Value, true, true);
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(Owner, cx);
             ItemCreated.Record(Owner, qx);
-            ItemLinked.Record(Owner, _relation_Store_ComputeX, m.Item, cx);
+            ItemLinked.Record(Owner, _relation_Store_QueryX, st, qx);
+            ItemLinked.Record(Owner, _relation_Store_ComputeX, st, cx);
             ItemLinked.Record(Owner, _relation_ComputeX_QueryX, cx, qx);
-            ItemLinked.Record(Owner, _relation_Store_ComputeX, m.Item, qx);
         }
         #endregion
 

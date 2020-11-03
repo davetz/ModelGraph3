@@ -35,7 +35,7 @@ namespace ModelGraph.Core
 
         /// <summary>Walk up item tree hierachy to find the parent DataRoot</summary>
         internal abstract Item GetOwner();
-        public Root GetRoot()
+        internal Root GetRoot()
         {
             var itm = this;
             for (int i = 0; i < 20; i++)

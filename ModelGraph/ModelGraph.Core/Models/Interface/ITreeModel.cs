@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public interface ITreeModel
     {
-        Root GetRoot();
+        Root Root { get; }
         ItemModel HeaderModel { get; }
 
         void RefreshViewList(int viewSize, ItemModel leading, ItemModel selected, ChangeType change = ChangeType.None);

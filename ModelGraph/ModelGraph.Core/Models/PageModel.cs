@@ -6,6 +6,7 @@ namespace ModelGraph.Core
     /// <summary>Flat list of LineModel that emulates a UI tree view</summary>
     public class PageModel : ChildOf<Root>, IPageModel
     {
+        public Root Root => Owner;
         public ILeadModel LeadModel { get; private set; }
         public IPageControl PageControl { get; set; } // reference the UI PageControl       
         public ControlType ControlType { get; private set; }
