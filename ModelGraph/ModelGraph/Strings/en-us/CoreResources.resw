@@ -1397,6 +1397,15 @@ NEC – NWC – SEC - SWC</value>
   <data name="685K" xml:space="preserve">
     <value>Column</value>
   </data>
+  <data name="686N" xml:space="preserve">
+    <value>Color</value>
+  </data>
+  <data name="688N" xml:space="preserve">
+    <value>Symbols</value>
+  </data>
+  <data name="68AN" xml:space="preserve">
+    <value>TootTips</value>
+  </data>
   <data name="691K" xml:space="preserve">
     <value>RootTable</value>
   </data>

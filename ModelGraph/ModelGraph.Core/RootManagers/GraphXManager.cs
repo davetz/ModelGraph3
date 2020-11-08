@@ -32,11 +32,12 @@ namespace ModelGraph.Core
 
             root.RegisterInternalProperties(typeof(GraphX), GetProps(root)); //used by property name lookup
         }
+
         public void RegisterRelationalReferences(Root root)
         {
-            root.RegisterChildRelation(this, root.Get<Relation_GraphX_ColorColumnX>());
+            root.RegisterChildRelation(this, root.Get<Relation_GraphX_ColorProperty>());
             root.RegisterChildRelation(this, root.Get<Relation_GraphX_QueryX>());
-            root.RegisterChildRelation(this, root.Get<Relation_GraphX_SymbolQueryX>());
+            root.RegisterChildRelation(this, root.Get<Relation_GraphX_ToolTipProperty>());
             root.RegisterChildRelation(this, root.Get<Relation_GraphX_SymbolX>());
 
             InitializeLocalReferences(root);
@@ -145,11 +146,12 @@ namespace ModelGraph.Core
         private Relation_Store_QueryX _relation_Store_QueryX;
         private Relation_GraphX_QueryX _relation_GraphX_QueryX;
         private Relation_GraphX_SymbolX _relation_GraphX_SymbolX;
-        private Relation_GraphX_SymbolQueryX _relation_GraphX_SymbolQueryX;
         private Relation_Store_ColumnX _relation_Store_ColumnX;
         private Relation_SymbolX_QueryX _relation_SymbolX_QueryX;
         private Relation_Relation_QueryX _relation_Relation_QueryX;
-        private Relation_GraphX_ColorColumnX _relation_GraphX_ColorColumnX;
+        private Relation_GraphX_SymbolQueryX _relation_GraphX_SymbolQueryX;
+        private Relation_GraphX_ColorProperty _relation_GraphX_ColorProperty;
+        private Relation_GraphX_ToolTipProperty _relation_GraphX_ToolTipProperty;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
@@ -164,10 +166,11 @@ namespace ModelGraph.Core
             _relation_GraphX_QueryX = root.Get<Relation_GraphX_QueryX>();
             _relation_GraphX_SymbolX = root.Get<Relation_GraphX_SymbolX>();
             _relation_GraphX_SymbolQueryX = root.Get<Relation_GraphX_SymbolQueryX>();
+            _relation_GraphX_ToolTipProperty = root.Get<Relation_GraphX_ToolTipProperty>();
             _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();
             _relation_SymbolX_QueryX = root.Get<Relation_SymbolX_QueryX>();
             _relation_Relation_QueryX = root.Get<Relation_Relation_QueryX>();
-            _relation_GraphX_ColorColumnX = root.Get<Relation_GraphX_ColorColumnX>();
+            _relation_GraphX_ColorProperty = root.Get<Relation_GraphX_ColorProperty>();
         }
         #endregion
 
@@ -175,8 +178,6 @@ namespace ModelGraph.Core
         // Ensure all edges and nodes have parameters.
         bool ValidateGraphParms(Graph g)
         {
-            var GraphX_SymbolX = _relation_GraphX_SymbolX;
-
             var gx = g.Owner;
             var rt = (g.SeedItem == null) ? _dummyItem : g.SeedItem;
             var anyChange = false;
@@ -449,60 +450,34 @@ namespace ModelGraph.Core
 
             #region AssignSymbolIndex  ========================================
 
-            if (GraphX_SymbolX.TryGetChildren(gx, out IList<SymbolX> symbols))
+            if (gx.HasSymbols)
             {
-                g.Symbols = symbols.ToArray();
-
-                var storeNonSymbols = new HashSet<Store>();
-                var storeSymbolXQueryX = new Dictionary<Store, (List<SymbolX>, List<QueryX>)>();
-                foreach (var node in g.Nodes)
+                foreach (var n in g.Nodes)
                 {
-                    var sto = node.Item.Store;
-                    if (storeNonSymbols.Contains(sto)) continue;
-                    if (storeSymbolXQueryX.ContainsKey(sto)) continue;
-
-                    var sxqx = GetSymbolXQueryX(gx, sto);
-                    if (sxqx.symbols == null)
-                        storeNonSymbols.Add(sto);
-                    else
-                        storeSymbolXQueryX.Add(sto, sxqx);
-                }
-
-                foreach (var node in g.Nodes)
-                {
-                    node.Symbol = 0;
-                    var row = node.Item;
-                    var sto = row.Store;
-                    if (storeNonSymbols.Contains(sto)) continue;
-
-                    (var sxList, var qxList) = storeSymbolXQueryX[sto];
-
-                    int i, j;
-                    for (j = 0; j < sxList.Count; j++)
+                    n.Symbol = 0;
+                    var itm = n.Item;
+                    if (gx.NodeStore_QuerySymbol.TryGetValue(itm.Store, out List<(QueryX, byte)> lst) && lst != null)
                     {
-                        var filter = qxList[j].Where;
-                        if (filter == null || filter.Matches(row)) break;
-                    }
-                    if (j == sxList.Count) continue;
-
-                    var sx = sxList[j];
-                    for (i = 0; i < symbols.Count; i++)
-                    {
-                        if (symbols[i] == sx) break;
-                    }
-                    if (i == symbols.Count) continue;
-
-                    node.Symbol = (byte)(i + 2);
-                    node.Aspect = Aspect.Square;
-                    if (node.FlipState < FlipState.LeftRotate)
-                    {
-                        node.DX = (byte)(sx.Width * gx.SymbolScale / 2);
-                        node.DY = (byte)(sx.Height * gx.SymbolScale / 2);
-                    }
-                    else
-                    {
-                        node.DY = (byte)(sx.Width * gx.SymbolScale / 2);
-                        node.DX = (byte)(sx.Height * gx.SymbolScale / 2);
+                        foreach (var (q, i) in lst)
+                        {
+                            var s = gx.Symbols[i];
+                            var filter = q.Where;
+                            if (filter == null || filter.Matches(itm))
+                            {
+                                n.Symbol = (byte)(i + 2);
+                                n.Aspect = Aspect.Square;
+                                if (n.FlipState < FlipState.LeftRotate)
+                                {
+                                    n.DX = (byte)(s.Width * gx.SymbolScale / 2);
+                                    n.DY = (byte)(s.Height * gx.SymbolScale / 2);
+                                }
+                                else
+                                {
+                                    n.DY = (byte)(s.Width * gx.SymbolScale / 2);
+                                    n.DX = (byte)(s.Height * gx.SymbolScale / 2);
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -510,29 +485,6 @@ namespace ModelGraph.Core
 
             return anyChange;
         }
-        (List<SymbolX> symbols, List<QueryX> querys) GetSymbolXQueryX(GraphX gx, Store nodeOwner)
-        {
-            if (_relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> sqxList))
-            {
-                var sxList = new List<SymbolX>(sqxList.Count);
-                var qxList = new List<QueryX>(sqxList.Count);
-
-                foreach (var qx in sqxList)
-                {
-                    if (_relation_Store_QueryX.TryGetParent(qx, out Store store) && store == nodeOwner)
-                    {
-                        if (_relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx))
-                        {
-                            sxList.Add(sx);
-                            qxList.Add(qx);
-                        }
-                    }
-                }
-                if (sxList.Count > 0) return (sxList, qxList);
-            }
-            return (null, null);
-        }
-
         #endregion
 
         #region RefreshGraph  =================================================
@@ -558,21 +510,19 @@ namespace ModelGraph.Core
             return true;
         }
 
-
-        internal void RebuildGraphX_ARGBList_NodeOwners(GraphX gx)
+        internal void RebuildGraphX_Colors_Symbols_NodeStore(GraphX gx)
         {
             gx.Color.Reset();
-            gx.NodeOwners.Clear();
-
-            if (_relation_GraphX_ColorColumnX.TryGetChild(gx, out ColumnX cx) && _relation_Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
+            if (_relation_GraphX_ColorProperty.TryGetChild(gx, out Property pr) && _relation_Store_ColumnX.TryGetParent(pr, out Store st) && st.Count > 0)
             {
-                var items = tx.GetItems();
+                var items = st.GetItems();
                 foreach (var item in items)
                 {
-                    gx.Color.BuildARGBList(cx.Value.GetString(item));
+                    gx.Color.BuildARGBList(pr.Value.GetString(item)); // build ordered list of distinct ARGB colors
                 }
             }
-
+            gx.Symbols = null;
+            gx.NodeStore_QuerySymbol.Clear();
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> qxList))
             {
                 var workQueue = new Queue<QueryX>(qxList);
@@ -592,23 +542,41 @@ namespace ModelGraph.Core
                     }
                     if (qx.QueryKind == QueryType.Path && qx.IsHead)
                     {
-                        var (head, _) = qx.Owner.GetHeadTail(qx);
-                        gx.NodeOwners.Add(head);
+                        var (head, _) = _queryXManager.GetHeadTail(qx);
+                        gx.NodeStore_QuerySymbol[head] = null;
 
                         var qt = qx;
                         while (_relation_QueryX_QueryX.TryGetChild(qt, out QueryX qn)) { qt = qn; }
 
-                        var (_, tail) = qt.Owner.GetHeadTail(qt);
-                        gx.NodeOwners.Add(tail);
+                        var (_, tail) = _queryXManager.GetHeadTail(qt);
+                        gx.NodeStore_QuerySymbol[tail] = null;
+                    }
+                }
+            }
+            if (_relation_GraphX_SymbolX.TryGetChildren(gx, out IList<SymbolX> sxList) && _relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> sqxList))
+            {
+                gx.Symbols = sxList;
+                var sx_ix = new Dictionary<SymbolX, byte>(sxList.Count);
+                byte ix = 0;
+                foreach (var sx in sxList) { sx_ix[sx] = ix++; }
+                foreach (var qx in sqxList)
+                {
+                    if (_relation_Store_QueryX.TryGetParent(qx, out Store ns) && gx.NodeStore_QuerySymbol.TryGetValue(ns, out List<(QueryX, byte)> lst) && _relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx) && sx_ix.TryGetValue(sx, out ix))
+                    {
+                        if (lst is null)
+                        {
+                            lst = new List<(QueryX, byte)>(2);
+                            gx.NodeStore_QuerySymbol[ns] = lst;
+                        }
+                        lst.Add((qx, ix));
                     }
                 }
             }
         }
 
-
         private void RefreshGraphX(GraphX gx)
         {
-            RebuildGraphX_ARGBList_NodeOwners(gx);
+            RebuildGraphX_Colors_Symbols_NodeStore(gx);
 
             foreach (var g in gx.Items)
             {
@@ -622,7 +590,7 @@ namespace ModelGraph.Core
             var rt = g.SeedItem;
 
             g.Reset();
-            _queryXManager.TryGetForest(g, rt, gx.NodeOwners);
+            _queryXManager.TryGetForest(g, rt);
             var anyChange = ValidateGraphParms(g);
 
             TryCreateQueryPaths(g);
@@ -642,7 +610,7 @@ namespace ModelGraph.Core
             var group_Color = new Dictionary<Item, byte>();
             var item_group = new Dictionary<Item, Item>();
 
-            if (_relation_GraphX_ColorColumnX.TryGetChild(g.Owner, out ColumnX cx) && _relation_Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
+            if (_relation_GraphX_ColorProperty.TryGetChild(g.Owner, out Property cx) && _relation_Store_ColumnX.TryGetParent(cx, out Store tx) && tx.Count > 0)
             {
                 var items = tx.GetItems();
                 foreach (var gp in items)
@@ -1371,6 +1339,62 @@ namespace ModelGraph.Core
             ItemCreated.Record(Owner, sx);
             ItemLinked.Record(Owner, _relation_GraphX_SymbolX, m.Item, sx);
         }
+        #endregion
+
+        #region Model_688_NodeSymbolList  =====================================
+        internal int ChildCount(Model_688_NodeSymbolList m) => (m.Aux.NodeStore_QuerySymbol.TryGetValue(m.Item, out List<(QueryX,byte)> lst) && lst != null) ? lst.Count : 0;
+
+        internal IList<SymbolX> GetChildren(Model_688_NodeSymbolList m)
+        {
+            if (m.Aux.NodeStore_QuerySymbol.TryGetValue(m.Item, out List<(QueryX, byte)> lst1) && lst1 != null && lst1.Count > 0)
+            {
+                var lst2 = new List<SymbolX>(lst1.Count);
+                foreach (var (qx, ix) in lst1) { lst2.Add(m.Aux.Symbols[ix]); }
+                return lst2;
+            }
+            return new SymbolX[0];
+        }
+        internal bool DropSymbol(Model_688_NodeSymbolList m, SymbolX sx, Store st, bool doDrop)
+        {
+            if (doDrop)
+            {
+                var qx = new QueryX(_queryXManager, QueryType.Symbol);
+                ItemCreated.Record(Owner, qx);
+                ItemLinked.Record(Owner, _relation_Store_QueryX, st, qx);
+                ItemLinked.Record(Owner, _relation_SymbolX_QueryX, sx, qx);
+                m.ChildDelta++;
+                m.AutoExpandLeft = true;
+            }
+            return true;
+        }
+        #endregion
+
+        #region Model_689_NodeSymbol  =========================================
+        #endregion
+
+        #region Model_686_NodeColorList  ======================================
+
+        internal int GetTotalCount(Model_686_NodeColorList model_686_NodeColorList)
+        {
+            return 0;
+        }
+        internal bool ModelDrop(Model_686_NodeColorList model_686_NodeColorList, Property np, Store item, bool doDrop)
+        {
+            return true;
+        }
+        internal IList<Property> GetChildItems(Model_686_NodeColorList model_686_NodeColorList)
+        {
+            return new Property[0];
+        }
+        #endregion
+
+        #region Model_687_NodeColorProperty  ==================================
+        #endregion
+
+        #region Model_68A_NodeToolTipList  ====================================
+        #endregion
+
+        #region Model_68B_NodeToolTip  ========================================
         #endregion
 
         #region Helper-Helpers  ===============================================

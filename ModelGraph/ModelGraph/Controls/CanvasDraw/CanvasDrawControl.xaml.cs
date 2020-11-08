@@ -119,8 +119,6 @@ namespace ModelGraph.Controls
             _overviewIsValid = width > 4;
             RestoreOverview();
         }
-        private double _overviewWidth;
-        private double _overviewHeight;
         private bool _overviewCanResize;
         private bool _overviewIsValid;
         private void RestoreOverview()

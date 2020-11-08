@@ -6,8 +6,6 @@ namespace ModelGraph.Core
     {
         internal Item SeedItem;    // seed of query forest 
         internal Query[] Forest;   // roots of the query forest
-        internal SymbolX[] Symbols; // referenced by [Node.Symbol][Node.FlipRotate]
-        internal Dictionary<SymbolX, List<Shape>> SymbolShapes; // expanded form of SymbolX.Data
 
         internal List<Node> Nodes = new List<Node>();
         internal List<Edge> Edges = new List<Edge>();
@@ -69,21 +67,19 @@ namespace ModelGraph.Core
 
         public int NodeCount { get { return (Nodes == null) ? 0 : Nodes.Count; } }
         public int EdgeCount { get { return (Edges == null) ? 0 : Edges.Count; } }
-        public int SymbolCount { get { return (Symbols == null) ? 0 : Symbols.Length; } }
 
         internal Attach GetAttach(Node node)
         {
             var n = node.Symbol - 2;
-            if (n < 0 || n > Symbols.Length) return Attach.Normal;
+            if (n < 0 || n > Owner.Symbols.Count) return Attach.Normal;
 
-            return Symbols[n].Attach;
+            return Owner.Symbols[n].Attach;
         }
 
         public void Reset()
         {
             Forest = null;
-            Symbols = null;
-
+    
             Nodes.Clear();
             Edges.Clear();
             Paths.Clear();

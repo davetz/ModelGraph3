@@ -15,9 +15,10 @@ namespace ModelGraph.Core
         {
             root.RegisterReferenceItem(new Relation_ComputeX_QueryX(this));
             root.RegisterReferenceItem(new Relation_EnumX_ColumnX(this));
-            root.RegisterReferenceItem(new Relation_GraphX_ColorColumnX(this));
             root.RegisterReferenceItem(new Relation_GraphX_QueryX(this));
             root.RegisterReferenceItem(new Relation_GraphX_SymbolQueryX(this));
+            root.RegisterReferenceItem(new Relation_GraphX_ColorProperty(this));
+            root.RegisterReferenceItem(new Relation_GraphX_ToolTipProperty(this));
             root.RegisterReferenceItem(new Relation_GraphX_SymbolX(this));
             root.RegisterReferenceItem(new Relation_Property_ViewX(this));
             root.RegisterReferenceItem(new Relation_QueryX_Property(this));

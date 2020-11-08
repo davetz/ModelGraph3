@@ -10,6 +10,7 @@
         {
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
+            Item.Owner.RebuildGraphX_Colors_Symbols_NodeStore(Item);
 
             new Model_682_GraphRootList(this, Item);
             new Model_683_GraphNodeList(this, Item);
@@ -23,7 +24,6 @@
         {
             if (IsExpandedRight) return false;
             IsExpandedRight = true;
-
             root.Get<Property_Item_Name>().CreatePropertyModel(this, Item);
             root.Get<Property_Item_Summary>().CreatePropertyModel(this, Item);
             root.Get<Property_GraphX_TerminalLength>().CreatePropertyModel(this, Item);

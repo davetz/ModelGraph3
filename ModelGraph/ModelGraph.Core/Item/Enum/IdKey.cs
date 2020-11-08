@@ -212,8 +212,9 @@ namespace ModelGraph.Core
         Relation_SymbolX_QueryX = 0x342 | Is_Reference,
         Relation_GraphX_QueryX = 0x343 | Is_Reference,
         Relation_QueryX_QueryX = 0x344 | Is_Reference,
-        Relation_GraphX_ColorColumnX = 0x345 | Is_Reference,
-        Relation_GraphX_SymbolQueryX = 0x346 | Is_Reference,
+        Relation_GraphX_SymbolQueryX = 0x345 | Is_Reference,
+        Relation_GraphX_ColorProperty = 0x346 | Is_Reference,
+        Relation_GraphX_ToolTipProperty = 0x347 | Is_Reference,
 
         //=========================================
         Relation_Store_QueryX = 0x351 | Is_Reference,
@@ -392,6 +393,7 @@ namespace ModelGraph.Core
         Model_646_GraphParmList = 0x646,
         Model_647_TableList = 0x647,
         Model_648_GraphList = 0x648,
+
         //=====================================================================
         Model_652_Pair = 0x652,
         Model_653_Enum = 0x653,
@@ -420,8 +422,16 @@ namespace ModelGraph.Core
         Model_681_GraphColoring = 0x681,
         Model_682_GraphRootList = 0x682,
         Model_683_GraphNodeList = 0x683,
+
         Model_684_GraphNode = 0x684,
-        Model_685_GraphColorColumn = 0x685,
+        Model_685_GraphColorColumn = 0x685,  //defunct
+
+        Model_686_NodeColorList = 0x686,
+        Model_687_NodeColorProperty = 0x687,
+        Model_688_NodeSymbolList = 0x688,
+        Model_689_NodeSymbol = 0x689,
+        Model_68A_NodeToolTipList = 0x68A,
+        Model_68B_NodeToolTip = 0x68B,
         //=====================================================================
         Model_691_GraphRoot = 0x691,
         Model_692_GraphLink = 0x692,

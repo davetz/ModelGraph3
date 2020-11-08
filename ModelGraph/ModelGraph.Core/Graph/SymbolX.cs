@@ -56,9 +56,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region Properties/Methods  ===========================================
-        internal bool NoData { get { return (Data == null || Data.Length < 2); } }
-        internal float Width { get { return NoData ? 1f : Data[0] / 255f; } } //overall width factor 0..1f
-        internal float Height { get { return NoData ? 1f : Data[1] / 255f; } } //overall height factor 0..1f 
+        internal float Width => 1;
+        internal float Height => 1;
 
         #region GetFlipTarget  ================================================
         internal (float sdx, float sdy, byte tsiz, byte tix, Direction tdir) GetFlipTarget(int ti, FlipState flip, float scale)

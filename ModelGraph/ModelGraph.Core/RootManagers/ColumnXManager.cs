@@ -31,7 +31,7 @@ namespace ModelGraph.Core
         {
             root.RegisterParentRelation(this, root.Get<Relation_Store_ColumnX>());
             root.RegisterParentRelation(this, root.Get<Relation_EnumX_ColumnX>());
-            root.RegisterParentRelation(this, root.Get<Relation_GraphX_ColorColumnX>());
+            root.RegisterParentRelation(this, root.Get<Relation_GraphX_ColorProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_Store_NameProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_Store_SummaryProperty>());
             root.RegisterParentRelation(this, root.Get<Relation_QueryX_Property>());

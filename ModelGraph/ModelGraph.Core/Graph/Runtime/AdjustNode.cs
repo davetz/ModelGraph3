@@ -48,14 +48,14 @@ namespace ModelGraph.Core
             var barSize = ((node.BarWidth == BarWidth.Thin) ? gx.ThinBusSize : (node.BarWidth == BarWidth.Wide) ? gx.WideBusSize : gx.ExtraBusSize) / 2;
 
             var si = node.Symbol - 2;
-            var symbols = node.Owner.Symbols;
+            var symbols = node.Owner.Owner.Symbols;
 
             var (ncx, ncy, ndx, ndy) = node.Values(); //node's center x,y and node's half width,height
 
-            if (si >= 0 && si < symbols.Length)
+            if (si >= 0 && si < symbols.Count)
             {
                 #region AdjustSymbol  =========================================
-                var symbol = Symbols[si];
+                var symbol = symbols[si];
                 var targetCount = symbol.TargetContacts.Count;
 
                 var targetContacts = new List<(Target trg, byte tix, Contact con, (float dx, float dy) pnt)>(targetCount);

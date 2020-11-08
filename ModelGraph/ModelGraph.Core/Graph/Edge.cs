@@ -132,12 +132,12 @@
         internal (Node other, (float, float) bend, Target targ, Attach atch, Direction tdir) OtherBendTargetAttachDirection(Node node)
         {
             if (Points == null) Refresh();
-            var symbols = Graph.Symbols;
+            var symbols = Graph.Owner.Symbols;
 
             if (node == Node1)
             {
                 var si = Node2.Symbol - 2;
-                var atch = (si < 0 || si >= symbols.Length) ? Attach.Normal : symbols[si].Attach;
+                var atch = (si < 0 || si >= symbols.Count) ? Attach.Normal : symbols[si].Attach;
                 var bend = Points[Bp1];
                 var targ = QueryX.PathParm.Target1; 
                 return (Node2, bend, targ, atch, TD2);
@@ -145,7 +145,7 @@
             else
             {
                 var si = Node1.Symbol - 2;
-                var atch = (si < 0 || si >= symbols.Length) ? Attach.Normal : symbols[si].Attach;
+                var atch = (si < 0 || si >= symbols.Count) ? Attach.Normal : symbols[si].Attach;
                 var bend = Points[Bp2];
                 var targ = QueryX.PathParm.Target2;
                 return (Node1, bend, targ, atch, TD1);

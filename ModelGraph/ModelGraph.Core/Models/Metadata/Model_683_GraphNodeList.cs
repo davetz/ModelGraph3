@@ -12,8 +12,8 @@ namespace ModelGraph.Core
         public override string GetNameId() => Root.GetNameId(IdKey);
         public override string GetSummaryId() => Root.GetSummaryId(IdKey);
 
-        protected override int GetTotalCount() => Item.NodeOwners.Count;
-        protected override IList<Store> GetChildItems() => Item.NodeOwners.ToArray();
-        protected override void CreateChildModel(Store childItem) => new Model_684_GraphNode(this, childItem);
+        protected override int GetTotalCount() => Item.NodeStore_QuerySymbol.Count;
+        protected override IList<Store> GetChildItems() => Item.NodeStore_QuerySymbol.Keys.ToArray();
+        protected override void CreateChildModel(Store childItem) => new Model_684_GraphNode(this, Item, childItem);
     }
 }

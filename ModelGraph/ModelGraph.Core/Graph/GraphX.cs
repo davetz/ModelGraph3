@@ -1,14 +1,15 @@
 ﻿using System.Collections.Generic;
-using Windows.UI.Xaml.Automation;
 
 namespace ModelGraph.Core
 {
     public class GraphX : ChildOfStoreOf<GraphXManager, Graph>
     {
         internal Color Color = new Color();
-        internal HashSet<Store> NodeOwners = new HashSet<Store>();
-        internal Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>> Root_QueryX_Parms = new Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>>(10);
+        internal IList<SymbolX> Symbols = null;
+        internal bool HasSymbols => Symbols is null ? false : Symbols.Count > 0;
+        internal Dictionary<Store, List<(QueryX, byte)>> NodeStore_QuerySymbol = new Dictionary<Store, List<(QueryX, byte)>>(); //used to build node query symbol index
 
+        internal Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>> Root_QueryX_Parms = new Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>>(10);
         internal override string Name { get => _name; set => _name = value; }
         private string _name;
         internal override string Summary { get => _summary; set => _summary = value; }

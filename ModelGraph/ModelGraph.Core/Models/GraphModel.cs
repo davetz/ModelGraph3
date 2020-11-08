@@ -86,7 +86,7 @@ namespace ModelGraph.Core
             {
                 var points = new Vector2[] { new Vector2(n.X, n.Y), new Vector2(n.DX, n.DY) };
                 var k = n.Symbol - 2;
-                if (k < 0 || k >= Graph.SymbolCount || Graph.Symbols[k].Data == null)
+                if (k < 0)
                 {
                     if (n.IsNodePoint)
                     {
@@ -99,7 +99,7 @@ namespace ModelGraph.Core
                 }
                 else
                 {
-                    var sym = Graph.Symbols[k];
+                    var sym = Graph.Owner.Symbols[k];
                     var shapes = sym.GetShapes();
                     foreach (var s in shapes)
                     {

@@ -55,7 +55,7 @@ namespace ModelGraph.Core
             root.RegisterParentRelation(this, root.Get<Relation_SymbolX_QueryX>());
             root.RegisterParentRelation(this, root.Get<Relation_ComputeX_QueryX>());
             root.RegisterParentRelation(this, root.Get<Relation_Relation_QueryX>());
-            root.RegisterParentRelation(this, root.Get<Relation_GraphX_SymbolQueryX>());
+            root.RegisterParentRelation(this, root.Get<Relation_GraphX_ToolTipProperty>());
 
             InitializeLocalReferences(root);
         }
@@ -192,7 +192,7 @@ namespace ModelGraph.Core
         private Relation_Store_ComputeX _relation_Store_ComputeX;
         private Relation_ComputeX_QueryX _relation_ComputeX_QueryX;
         private Relation_Relation_QueryX _relation_Relation_QueryX;
-        private Relation_GraphX_SymbolQueryX _relation_GraphX_SymbolQueryX;
+        private Relation_GraphX_ToolTipProperty _relation_GraphX_SymbolQueryX;
 
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
@@ -213,7 +213,7 @@ namespace ModelGraph.Core
             _relation_Store_ComputeX = root.Get<Relation_Store_ComputeX>();
             _relation_ComputeX_QueryX = root.Get<Relation_ComputeX_QueryX>();
             _relation_Relation_QueryX = root.Get<Relation_Relation_QueryX>();
-            _relation_GraphX_SymbolQueryX = root.Get<Relation_GraphX_SymbolQueryX>();
+            _relation_GraphX_SymbolQueryX = root.Get<Relation_GraphX_ToolTipProperty>();
         }
         #endregion
 
@@ -340,11 +340,6 @@ namespace ModelGraph.Core
 
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> pathQuery))
                 ValidateQueryHierarchy(pathQuery, clearError);
-
-            if (_relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> list))
-            {
-                ValidateQueryHierarchy(list, clearError);
-            }
         }
         private void RevalidateUnresolved()
         {
@@ -516,40 +511,6 @@ namespace ModelGraph.Core
                 _relation_Store_QueryX.TryGetParent(qx, out Store head);
                 return (head, head);
             }
-        }
-        #endregion
-
-        #region GetSymbolXQueryX  =============================================
-        int GetSymbolQueryXCount(GraphX gx, Store nodeOwner)
-        {
-            var N = 0;
-            if (_relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> qxList))
-            {
-                foreach (var qx in qxList) { if (_relation_Store_QueryX.TryGetParent(qx, out Store parent) && nodeOwner == parent) N++; }
-            }
-            return N;
-        }
-        (List<SymbolX> symbols, List<QueryX> querys) GetSymbolXQueryX(GraphX gx, Store nodeOwner)
-        {
-            if (_relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> sqxList))
-            {
-                var sxList = new List<SymbolX>(sqxList.Count);
-                var qxList = new List<QueryX>(sqxList.Count);
-
-                foreach (var qx in sqxList)
-                {
-                    if (_relation_Store_QueryX.TryGetParent(qx, out Store store) && store == nodeOwner)
-                    {
-                        if (_relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx))
-                        {
-                            sxList.Add(sx);
-                            qxList.Add(qx);
-                        }
-                    }
-                }
-                if (sxList.Count > 0) return (sxList, qxList);
-            }
-            return (null, null);
         }
         #endregion
 
@@ -743,12 +704,12 @@ namespace ModelGraph.Core
         /// <summary>
         /// Return a GraphX forest of query trees
         /// </summary>
-        internal bool TryGetForest(Graph g, Item seed, HashSet<Store> nodeOwners)
+        internal bool TryGetForest(Graph g, Item seed)
         {
             g.Forest = null;
             var gx = g.Owner;
 
-            _graphXManager.RebuildGraphX_ARGBList_NodeOwners(gx);
+            _graphXManager.RebuildGraphX_Colors_Symbols_NodeStore(gx);
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> roots))
             {
                 var workList = new List<Query>();
@@ -762,9 +723,9 @@ namespace ModelGraph.Core
                     {
                         var query = workQueue.Dequeue();
 
-                        if (nodeOwners.Contains(query.Item.Store)) g.NodeItems.Add(query.Item);
+                        if (gx.NodeStore_QuerySymbol.ContainsKey(query.Item.Store)) g.NodeItems.Add(query.Item);
                         if (query.Items == null) continue;
-                        foreach (var itm in query.Items) { if (nodeOwners.Contains(itm.Store)) g.NodeItems.Add(itm); }
+                        foreach (var itm in query.Items) { if (gx.NodeStore_QuerySymbol.ContainsKey(itm.Store)) g.NodeItems.Add(itm); }
 
                         if (_relation_QueryX_QueryX.TryGetChildren(query.Owner, out IList<QueryX> qxChildren))
                         {
