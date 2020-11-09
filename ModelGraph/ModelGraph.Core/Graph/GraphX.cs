@@ -4,10 +4,12 @@ namespace ModelGraph.Core
 {
     public class GraphX : ChildOfStoreOf<GraphXManager, Graph>
     {
+        internal int SymbolCount => Symbols is null ? 0 : Symbols.Count;
         internal Color Color = new Color();
         internal IList<SymbolX> Symbols = null;
-        internal bool HasSymbols => Symbols is null ? false : Symbols.Count > 0;
         internal Dictionary<Store, List<(QueryX, byte)>> NodeStore_QuerySymbol = new Dictionary<Store, List<(QueryX, byte)>>(); //used to build node query symbol index
+        internal Dictionary<Store, Property> NodeStore_Color = new Dictionary<Store, Property>();
+        internal Dictionary<Store, List<Property>> NodeStore_ToolTip = new Dictionary<Store, List<Property>>();
 
         internal Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>> Root_QueryX_Parms = new Dictionary<Item, Dictionary<QueryX, List<NodeEdge>>>(10);
         internal override string Name { get => _name; set => _name = value; }

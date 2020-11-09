@@ -450,7 +450,7 @@ namespace ModelGraph.Core
 
             #region AssignSymbolIndex  ========================================
 
-            if (gx.HasSymbols)
+            if (gx.SymbolCount > 0)
             {
                 foreach (var n in g.Nodes)
                 {
@@ -512,6 +512,13 @@ namespace ModelGraph.Core
 
         internal void RebuildGraphX_Colors_Symbols_NodeStore(GraphX gx)
         {
+            Rebuild_Color(gx);
+            Rebuild_NodeStore_Symbol(gx);
+            Rebuild_NodeStore_Color(gx);
+            Rebuild_NodeStore_ToolTip(gx);
+        }
+        private void Rebuild_Color(GraphX gx)
+        {
             gx.Color.Reset();
             if (_relation_GraphX_ColorProperty.TryGetChild(gx, out Property pr) && _relation_Store_ColumnX.TryGetParent(pr, out Store st) && st.Count > 0)
             {
@@ -521,7 +528,9 @@ namespace ModelGraph.Core
                     gx.Color.BuildARGBList(pr.Value.GetString(item)); // build ordered list of distinct ARGB colors
                 }
             }
-            gx.Symbols = null;
+        }
+        private void Rebuild_NodeStore_Symbol(GraphX gx)
+        {
             gx.NodeStore_QuerySymbol.Clear();
             if (_relation_GraphX_QueryX.TryGetChildren(gx, out IList<QueryX> qxList))
             {
@@ -553,6 +562,7 @@ namespace ModelGraph.Core
                     }
                 }
             }
+            gx.Symbols = null;
             if (_relation_GraphX_SymbolX.TryGetChildren(gx, out IList<SymbolX> sxList) && _relation_GraphX_SymbolQueryX.TryGetChildren(gx, out IList<QueryX> sqxList))
             {
                 gx.Symbols = sxList;
@@ -569,6 +579,40 @@ namespace ModelGraph.Core
                             gx.NodeStore_QuerySymbol[ns] = lst;
                         }
                         lst.Add((qx, ix));
+                    }
+                }
+            }
+        }
+
+        private void Rebuild_NodeStore_Color(GraphX gx)
+        {
+            gx.NodeStore_Color.Clear();
+            if (_relation_GraphX_ColorProperty.TryGetChildren(gx, out IList<Property> ls2))
+            {
+                foreach (var p in ls2)
+                {
+                    if (p.GetParent() is Store s)
+                    {
+                        gx.NodeStore_Color[s] = p;
+                    }
+                }
+            }
+        }
+        private void Rebuild_NodeStore_ToolTip(GraphX gx)
+        {
+            gx.NodeStore_ToolTip.Clear();
+            if (_relation_GraphX_ToolTipProperty.TryGetChildren(gx, out IList<Property> ls3))
+            {
+                foreach (var p in ls3)
+                {
+                    if (p.GetParent() is Store s)
+                    {
+                        if (!gx.NodeStore_ToolTip.TryGetValue(s, out List<Property> ls4))
+                        {
+                            ls4 = new List<Property>(2);
+                            gx.NodeStore_ToolTip[s] = ls4;
+                        }
+                        ls4.Add(p);
                     }
                 }
             }
@@ -1349,19 +1393,22 @@ namespace ModelGraph.Core
             if (m.Aux.NodeStore_QuerySymbol.TryGetValue(m.Item, out List<(QueryX, byte)> lst1) && lst1 != null && lst1.Count > 0)
             {
                 var lst2 = new List<SymbolX>(lst1.Count);
-                foreach (var (qx, ix) in lst1) { lst2.Add(m.Aux.Symbols[ix]); }
+                foreach (var (_, ix) in lst1) { lst2.Add(m.Aux.Symbols[ix]); }
                 return lst2;
             }
             return new SymbolX[0];
         }
         internal bool DropSymbol(Model_688_NodeSymbolList m, SymbolX sx, Store st, bool doDrop)
         {
+            var gx = m.Aux;
             if (doDrop)
             {
                 var qx = new QueryX(_queryXManager, QueryType.Symbol);
                 ItemCreated.Record(Owner, qx);
                 ItemLinked.Record(Owner, _relation_Store_QueryX, st, qx);
                 ItemLinked.Record(Owner, _relation_SymbolX_QueryX, sx, qx);
+                ItemLinked.Record(Owner, _relation_GraphX_SymbolQueryX, gx, qx);
+                Rebuild_NodeStore_Symbol(gx);
                 m.ChildDelta++;
                 m.AutoExpandLeft = true;
             }
@@ -1374,17 +1421,39 @@ namespace ModelGraph.Core
 
         #region Model_686_NodeColorList  ======================================
 
-        internal int GetTotalCount(Model_686_NodeColorList model_686_NodeColorList)
+        internal int GetTotalCount(Model_686_NodeColorList m)
         {
-            return 0;
+            return m.Aux.NodeStore_Color.ContainsKey(m.Item) ? 1 : 0;
         }
-        internal bool ModelDrop(Model_686_NodeColorList model_686_NodeColorList, Property np, Store item, bool doDrop)
+        internal bool ModelDrop(Model_686_NodeColorList m, Property p, GraphX gx, Store s, bool doDrop)
         {
+            if (p.GetParent() != s || p.Value.ValType != ValType.String) return false;
+            if (gx.NodeStore_Color.TryGetValue(s, out Property ep))
+            {
+                if (ep == p) return false;
+                if (doDrop)
+                {
+                    ItemUnLinked.Record(Owner, _relation_GraphX_ColorProperty, gx, ep);
+                    ItemLinked.Record(Owner, _relation_GraphX_ColorProperty, gx, p);
+                    Rebuild_NodeStore_Color(gx);
+                    m.ChildDelta++;
+                    m.AutoExpandLeft = true;
+                }
+                return true;
+            }
+            if (doDrop)
+            {
+                ItemLinked.Record(Owner, _relation_GraphX_ColorProperty, gx, p);
+                Rebuild_Color(gx);
+                Rebuild_NodeStore_Color(gx);
+                m.ChildDelta++;
+                m.AutoExpandLeft = true;
+            }
             return true;
         }
-        internal IList<Property> GetChildItems(Model_686_NodeColorList model_686_NodeColorList)
+        internal IList<Property> GetChildItems(Model_686_NodeColorList m)
         {
-            return new Property[0];
+            return m.Aux.NodeStore_Color.TryGetValue(m.Item, out Property p) ? new Property[] { p } : new Property[0];
         }
         #endregion
 
@@ -1392,6 +1461,23 @@ namespace ModelGraph.Core
         #endregion
 
         #region Model_68A_NodeToolTipList  ====================================
+        internal int GetTotalCount(Model_68A_NodeToolTipList m) => m.Aux.NodeStore_ToolTip.TryGetValue(m.Item, out List<Property> lst) ? lst.Count : 0;
+
+        internal IList<Property> GetChildItems(Model_68A_NodeToolTipList m) => m.Aux.NodeStore_ToolTip.TryGetValue(m.Item, out List<Property> lst) ? lst : null;
+
+        internal bool ModelDrop(Model_68A_NodeToolTipList m, Property p, GraphX gx, Store s, bool doDrop)
+        {
+            if (p.GetParent() != s || p.Value.ValType != ValType.String) return false;
+            if (gx.NodeStore_ToolTip.TryGetValue(s, out List<Property> lst) && lst.Contains(p)) return false;
+            if (doDrop)
+            {
+                ItemLinked.Record(Owner, _relation_GraphX_ToolTipProperty, gx, p);
+                Rebuild_NodeStore_ToolTip(gx);
+                m.ChildDelta++;
+                m.AutoExpandLeft = true;
+            }
+            return true;
+        }
         #endregion
 
         #region Model_68B_NodeToolTip  ========================================

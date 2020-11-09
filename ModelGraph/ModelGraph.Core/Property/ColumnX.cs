@@ -105,7 +105,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region PropertyModel  ================================================
-        internal override string[] GetlListValue(Root root) => Owner.GetEnumXlListValue(this);
+        internal override string[] GetListValue(Root root) => Owner.GetEnumXlListValue(this);
         internal override int GetIndexValue(Item item) => Owner.GetEnumXlIndexValue(this, item);
         internal override void SetIndexValue(Item item, int index) => Owner.SetEnumXIndexValue(this, item, index);
 

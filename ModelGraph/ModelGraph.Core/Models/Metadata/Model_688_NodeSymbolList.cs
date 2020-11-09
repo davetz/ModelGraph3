@@ -20,7 +20,7 @@ namespace ModelGraph.Core
 
         protected override void CreateChildModel(SymbolX sx)
         {
-            //new Model_675_NameProperty(this, np);
+            new Model_689_NodeSymbol(this, Aux, Item, sx);
         }
         internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => (dropModel.GetItem() is SymbolX sx && Aux.Owner.DropSymbol(this, sx, Item, doDrop)) ? DropAction.Link :  DropAction.None;
     }

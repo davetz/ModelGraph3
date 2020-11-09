@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class Model_687_NodeColorProperty : ItemModelOf<Property>
     {
-        internal Model_687_NodeColorProperty(Model_673_NamePropertyRelation owner, Property item) : base(owner, item) { }
+        internal Model_687_NodeColorProperty(Model_686_NodeColorList owner, Property item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_687_NodeColorProperty;
 
         public override void GetMenuCommands(Root root, List<ItemCommand> list)

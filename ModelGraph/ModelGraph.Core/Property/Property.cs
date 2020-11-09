@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         internal virtual bool IsReadonly => false;
         internal virtual bool IsMultiline => false;
 
-        internal virtual string[] GetlListValue(Root root) => new string[0];
+        internal virtual string[] GetListValue(Root root) => new string[0];
         internal virtual int GetIndexValue(Item item) => 0;
         internal virtual void SetIndexValue(Item item, int val) { }
 
