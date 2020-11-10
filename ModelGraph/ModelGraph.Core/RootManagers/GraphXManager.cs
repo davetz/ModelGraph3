@@ -1410,7 +1410,7 @@ namespace ModelGraph.Core
                 ItemLinked.Record(Owner, _relation_GraphX_SymbolQueryX, gx, qx);
                 Rebuild_NodeStore_Symbol(gx);
                 m.ChildDelta++;
-                m.AutoExpandLeft = true;
+                m.ExpandLeft(Owner);
             }
             return true;
         }
@@ -1437,7 +1437,7 @@ namespace ModelGraph.Core
                     ItemLinked.Record(Owner, _relation_GraphX_ColorProperty, gx, p);
                     Rebuild_NodeStore_Color(gx);
                     m.ChildDelta++;
-                    m.AutoExpandLeft = true;
+                    m.ExpandLeft(Owner);
                 }
                 return true;
             }
@@ -1447,7 +1447,7 @@ namespace ModelGraph.Core
                 Rebuild_Color(gx);
                 Rebuild_NodeStore_Color(gx);
                 m.ChildDelta++;
-                m.AutoExpandLeft = true;
+                m.ExpandLeft(Owner);
             }
             return true;
         }
@@ -1458,12 +1458,19 @@ namespace ModelGraph.Core
         #endregion
 
         #region Model_687_NodeColorProperty  ==================================
+        internal void RemoveItem(Model_687_NodeColorProperty m, Property p)
+        {
+            var gx = m.Aux;
+            ItemUnLinked.Record(Owner, _relation_GraphX_ColorProperty, gx, p);
+            Rebuild_NodeStore_Color(gx);
+            m.Owner.ChildDelta++;
+        }
         #endregion
 
         #region Model_68A_NodeToolTipList  ====================================
         internal int GetTotalCount(Model_68A_NodeToolTipList m) => m.Aux.NodeStore_ToolTip.TryGetValue(m.Item, out List<Property> lst) ? lst.Count : 0;
 
-        internal IList<Property> GetChildItems(Model_68A_NodeToolTipList m) => m.Aux.NodeStore_ToolTip.TryGetValue(m.Item, out List<Property> lst) ? lst : null;
+        internal IList<Property> GetChildItems(Model_68A_NodeToolTipList m) => m.Aux.NodeStore_ToolTip.TryGetValue(m.Item, out List<Property> lst) ? lst : new List<Property>(0);
 
         internal bool ModelDrop(Model_68A_NodeToolTipList m, Property p, GraphX gx, Store s, bool doDrop)
         {
@@ -1474,13 +1481,20 @@ namespace ModelGraph.Core
                 ItemLinked.Record(Owner, _relation_GraphX_ToolTipProperty, gx, p);
                 Rebuild_NodeStore_ToolTip(gx);
                 m.ChildDelta++;
-                m.AutoExpandLeft = true;
+                m.ExpandLeft(Owner);
             }
             return true;
         }
         #endregion
 
         #region Model_68B_NodeToolTip  ========================================
+        internal void RemoveItem(Model_68B_NodeToolTip m, Property p)
+        {
+            var gx = m.Aux;
+            ItemUnLinked.Record(Owner, _relation_GraphX_ToolTipProperty, gx, p);
+            Rebuild_NodeStore_ToolTip(gx);
+            m.Owner.ChildDelta++;
+        }
         #endregion
 
         #region Helper-Helpers  ===============================================

@@ -16,7 +16,7 @@ namespace ModelGraph.Core
 
         protected override void CreateChildModel(Property np)
         {
-            new Model_687_NodeColorProperty(this, np);
+            new Model_687_NodeColorProperty(this, Aux, np);
         }
 
         internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => (dropModel.GetItem() is Property p && Aux.Owner.ModelDrop(this, p, Aux, Item, doDrop)) ?  DropAction.Link :  DropAction.None;
