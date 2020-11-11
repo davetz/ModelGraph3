@@ -4,7 +4,7 @@ namespace ModelGraph.Core
 {
     public class Model_684_GraphNode : List1ModelOf<Store>
     {
-        GraphX Aux;
+        internal GraphX Aux;
         internal Model_684_GraphNode(Model_683_GraphNodeList owner, GraphX aux, Store item) : base(owner, item) { Aux = aux; } 
         internal override IdKey IdKey => IdKey.Model_684_GraphNode;
 

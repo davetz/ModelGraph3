@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
-using System.Linq;
-using System.Runtime.CompilerServices;
 using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
@@ -39,6 +36,7 @@ namespace ModelGraph.Core
             root.RegisterChildRelation(this, root.Get<Relation_GraphX_QueryX>());
             root.RegisterChildRelation(this, root.Get<Relation_GraphX_ToolTipProperty>());
             root.RegisterChildRelation(this, root.Get<Relation_GraphX_SymbolX>());
+            root.RegisterChildRelation(this, root.Get<Relation_GraphX_SymbolQueryX>());
 
             InitializeLocalReferences(root);
         }
@@ -1388,16 +1386,19 @@ namespace ModelGraph.Core
         #region Model_688_NodeSymbolList  =====================================
         internal int ChildCount(Model_688_NodeSymbolList m) => (m.Aux.NodeStore_QuerySymbol.TryGetValue(m.Item, out List<(QueryX,byte)> lst) && lst != null) ? lst.Count : 0;
 
-        internal IList<SymbolX> GetChildren(Model_688_NodeSymbolList m)
+        internal IList<QueryX> GetChildren(Model_688_NodeSymbolList m)
         {
             if (m.Aux.NodeStore_QuerySymbol.TryGetValue(m.Item, out List<(QueryX, byte)> lst1) && lst1 != null && lst1.Count > 0)
             {
-                var lst2 = new List<SymbolX>(lst1.Count);
-                foreach (var (_, ix) in lst1) { lst2.Add(m.Aux.Symbols[ix]); }
+                var lst2 = new List<QueryX>(lst1.Count);
+                foreach (var (qx, ix) in lst1) { lst2.Add(qx); }
                 return lst2;
             }
-            return new SymbolX[0];
+            return new QueryX[0];
         }
+
+        internal SymbolX GetSymbol(Model_688_NodeSymbolList model_688_NodeSymbolList, QueryX qx) => _relation_SymbolX_QueryX.TryGetParent(qx, out SymbolX sx) ? sx : null;
+
         internal bool DropSymbol(Model_688_NodeSymbolList m, SymbolX sx, Store st, bool doDrop)
         {
             var gx = m.Aux;
@@ -1417,6 +1418,12 @@ namespace ModelGraph.Core
         #endregion
 
         #region Model_689_NodeSymbol  =========================================
+        internal void RemoveItem(Model_689_NodeSymbol m, QueryX item)
+        {
+            Owner.Get<ChangeManager>().RemoveItem(item);
+            Rebuild_NodeStore_Symbol(m.Aux1);
+            m.Owner.ChildDelta++;
+        }
         #endregion
 
         #region Model_686_NodeColorList  ======================================

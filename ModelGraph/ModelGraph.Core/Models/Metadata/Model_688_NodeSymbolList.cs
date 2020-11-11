@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_688_NodeSymbolList : List2ModelOf<Store, SymbolX>
+    public class Model_688_NodeSymbolList : List2ModelOf<Store, QueryX>
     {
         internal readonly GraphX Aux;
 
@@ -16,11 +16,12 @@ namespace ModelGraph.Core
 
         protected override int GetTotalCount() => Aux.Owner.ChildCount(this);
 
-        protected override IList<SymbolX> GetChildItems() => Aux.Owner.GetChildren(this);
+        protected override IList<QueryX> GetChildItems() => Aux.Owner.GetChildren(this);
 
-        protected override void CreateChildModel(SymbolX sx)
+        protected override void CreateChildModel(QueryX qx)
         {
-            new Model_689_NodeSymbol(this, Aux, Item, sx);
+            var sx = Aux.Owner.GetSymbol(this, qx);
+            new Model_689_NodeSymbol(this, Aux, sx, qx);
         }
         internal override DropAction ModelDrop(Root root, ItemModel dropModel, bool doDrop) => (dropModel.GetItem() is SymbolX sx && Aux.Owner.DropSymbol(this, sx, Item, doDrop)) ? DropAction.Link :  DropAction.None;
     }
