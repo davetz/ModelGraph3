@@ -76,11 +76,24 @@ namespace ModelGraph.Core
         private void RefreshEditorData()
         {
             Editor.Clear();
-            foreach (var e in Graph.Edges)
+
+            #region AddEdgeParms  =============================================
+            for (int i = 0; i < Graph.EdgeCount; i++)
             {
-                var points = new Vector2[] { new Vector2(e.Node1.X, e.Node1.Y), new Vector2(e.Node2.X, e.Node2.Y) };
-                Editor.AddParms((points, (ShapeType.Line, StrokeType.Simple, 2), (255, 0, 255, 255)));
+                var edge = Graph.Edges[i];
+                var points = edge.GetPointVectors();
+                var ipc = edge.LineColor;
+                if (ipc == 0)
+                {
+                    var i1 = edge.Node1.Color;
+                    var i2 = edge.Node2.Color;
+                    ipc = (i1 > i2) ? i1 : i2;
+                }
+                Editor.AddParms((points, (ShapeType.JointedLines, StrokeType.Simple, 1), Graph.Owner.Color.ARGBList[ipc]));
             }
+            #endregion
+
+            #region AddNodeParms  =============================================
             var scale = Graph.Owner.SymbolSize;
             foreach (var n in Graph.Nodes)
             {
@@ -107,6 +120,7 @@ namespace ModelGraph.Core
                     }
                 }
             }
+            #endregion
         }
         #endregion
 
@@ -268,16 +282,29 @@ namespace ModelGraph.Core
             var v = Editor.PointDelta(true);
             if (SelectedNodes.Contains(_hitNode))
             {
+                _modifiedEdges.Clear();
                 foreach (var n in SelectedNodes)
                 {
                     n.Move((v.X,v.Y));
+                    if (Graph.Node_Edges.TryGetValue(n, out List<Edge> edges))
+                    {
+                        foreach (var e in edges) { _modifiedEdges.Add(e); }
+                    }
                 }
+                foreach (var e in _modifiedEdges) { e.Refresh(); }
             }
             else
+            {
                 _hitNode.Move((v.X, v.Y));
-            
+                if (Graph.Node_Edges.TryGetValue(_hitNode, out List<Edge> edges))
+                {
+                    foreach (var e in edges) { e.Refresh(); }
+                }
+            }
             RefreshEditorData();
         }
+        HashSet<Edge> _modifiedEdges = new HashSet<Edge>();
+
         private void MoveOnNodeEnding()
         {
             DrawCursor = DrawCursor.Arrow;

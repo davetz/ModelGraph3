@@ -92,7 +92,7 @@ namespace ModelGraph.Core
                 }
             }
             else
-                throw new Exception($"ColumnXDomain ReadData, unknown format version: {fv}");
+                throw new Exception($"GraphXManager ReadData, unknown format version: {fv}");
         }
 
         public void WriteData(DataWriter w, Dictionary<Item, int> itemIndex)

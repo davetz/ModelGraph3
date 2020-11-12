@@ -1,4 +1,6 @@
-﻿namespace ModelGraph.Core
+﻿using System.Numerics;
+
+namespace ModelGraph.Core
 {
     public class Edge : NodeEdge
     {
@@ -33,6 +35,19 @@
         
         public byte LineColor;
         internal override IdKey IdKey => IdKey.Edge;
+
+        internal Vector2[] GetPointVectors()
+        {
+            if (Points == null) Refresh();
+            var vect = new Vector2[Points.Length];
+            var i = 0;
+            foreach (var (X, Y) in Points)
+            {
+                vect[i++] = new Vector2(X, Y);
+            }
+            return vect;
+        }
+
 
         #region Constructors  =================================================
         internal Edge(QueryX queryX)

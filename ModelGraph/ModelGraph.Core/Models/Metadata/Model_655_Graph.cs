@@ -15,7 +15,6 @@
             new Model_682_GraphRootList(this, Item);
             new Model_683_GraphNodeList(this, Item);
             new Model_645_GraphSymbolList(this, Item);
-            new Model_681_GraphColoring(this, Item);
             return true;
         }
 
