@@ -604,7 +604,7 @@ namespace ModelGraph.Core
             for (int i = 0; i < _pinTargets.Count; i++)
             {
                 var p = _pinTargets[i];
-                if (ex.Contains((p.X, p.Y)))
+                if (ex.Contains(p))
                 {
                     _pinIndex = i;
                     DrawCursor = DrawCursor.Hand;

@@ -5,13 +5,13 @@ namespace ModelGraph.Core
     public class Edge : NodeEdge
     {
         private readonly QueryX _queryX;
-        public (float X, float Y)[] Points;
+        public Vector2[] Points;
         public Extent Extent = new Extent(); // all points are withing this extent+
 
         public Node Node1;
         public Node Node2;
 
-        public (float X, float Y)[] Bends;
+        public Vector2[] Bends;
 
         public short Tm1; // index of terminal point 1
         public short Bp1; // index of closest bend point after Tm1 (to the right) 
@@ -35,18 +35,6 @@ namespace ModelGraph.Core
         
         public byte LineColor;
         internal override IdKey IdKey => IdKey.Edge;
-
-        internal Vector2[] GetPointVectors()
-        {
-            if (Points == null) Refresh();
-            var vect = new Vector2[Points.Length];
-            var i = 0;
-            foreach (var (X, Y) in Points)
-            {
-                vect[i++] = new Vector2(X, Y);
-            }
-            return vect;
-        }
 
 
         #region Constructors  =================================================
@@ -78,13 +66,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region Snapshot  =====================================================
-        internal ((float, float)[] bends, Facet facet1, Facet facet2) Snapshot
+        internal (Vector2[] bends, Facet facet1, Facet facet2) Snapshot
         {
             get
             {
                 if (HasBends)
                 {
-                    var bends = new (float, float)[Bends.Length];
+                    var bends = new Vector2[Bends.Length];
                     Bends.CopyTo(bends, 0);
                     return (bends, Facet1, Facet2);
                 }
@@ -95,7 +83,7 @@ namespace ModelGraph.Core
             {
                 if (value.bends != null)
                 {
-                    Bends = new (float, float)[value.bends.Length];
+                    Bends = new Vector2[value.bends.Length];
                     value.bends.CopyTo(Bends, 0);
                 }
                 Facet1 = value.facet1;
@@ -105,7 +93,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-        internal void Move((float X, float Y) delta)
+        internal void Move(Vector2 delta)
         {
             if (HasBends)
             {
@@ -121,7 +109,7 @@ namespace ModelGraph.Core
                 Points[i].Y = Points[i].Y + delta.Y;
             }
         }
-        internal void Move((float X, float Y) delta, int index1, int index2)
+        internal void Move(Vector2 delta, int index1, int index2)
         {
             if (HasBends)
             {
@@ -144,7 +132,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region OtherBendTargetAttachDirection  ===============================
-        internal (Node other, (float, float) bend, Target targ, Attach atch, Direction tdir) OtherBendTargetAttachDirection(Node node)
+        internal (Node other, Vector2 bend, Target targ, Attach atch, Direction tdir) OtherBendTargetAttachDirection(Node node)
         {
             if (Points == null) Refresh();
             var symbols = Graph.Owner.Symbols;
@@ -173,19 +161,19 @@ namespace ModelGraph.Core
         //            Tm1   Bp1         Bp2   Tm2
         static readonly int _ds = GraphDefault.HitMargin;
 
-        internal void SetExtent((float X, float Y)[] points, int margin)
+        internal void SetExtent(Vector2[] points, int margin)
         {
             Extent = Extent.SetExtent(points, margin);
         }
 
 
         // quickly eliminate edges that don't qaulify
-        internal bool HitTest((float X, float Y) p)
+        internal bool HitTest(Vector2 p)
         {
             return Extent.Contains(p);
         }
 
-        internal bool HitTest((float X, float Y) p, ref HitLocation hit, ref int hitBend, ref int hitIndex, ref (float X, float Y) hitPoint)
+        internal bool HitTest(Vector2 p, ref HitLocation hit, ref int hitBend, ref int hitIndex, ref Vector2 hitPoint)
         {
             var len = Points.Length;
             if (len == 0) return false;
@@ -247,14 +235,14 @@ namespace ModelGraph.Core
                         {
                             gotHit = true;
                             hitIndex = i;
-                            hitPoint = (p.X, p2.Y);
+                            hitPoint = new Vector2(p.X, p2.Y);
                             break;
                         }
                         else if (e.IsVertical)
                         {
                             gotHit = true;
                             hitIndex = i;
-                            hitPoint = (p1.X, p.Y);
+                            hitPoint = new Vector2(p1.X, p.Y);
                             break;
                         }
                         else
@@ -267,7 +255,7 @@ namespace ModelGraph.Core
                             {
                                 gotHit = true;
                                 hitIndex = i;
-                                hitPoint = (xi, p.Y);
+                                hitPoint = new Vector2(xi, p.Y);
                                 break;
                             }
                             xi = (int)(p2.X + (dx * (p.Y - p2.Y)) / dy);
@@ -275,7 +263,7 @@ namespace ModelGraph.Core
                             {
                                 gotHit = true;
                                 hitIndex = i;
-                                hitPoint = (xi, p.Y);
+                                hitPoint = new Vector2(xi, p.Y);
                                 break;
                             }
 
@@ -284,7 +272,7 @@ namespace ModelGraph.Core
                             {
                                 gotHit = true;
                                 hitIndex = i;
-                                hitPoint = (p.X, yi);
+                                hitPoint = new Vector2(p.X, yi);
                                 break;
                             }
                             yi = (int)(p2.Y + (dy * (p.X - p2.X)) / dx);
@@ -292,7 +280,7 @@ namespace ModelGraph.Core
                             {
                                 gotHit = true;
                                 hitIndex = i;
-                                hitPoint = (p.X, yi);
+                                hitPoint = new Vector2(p.X, yi);
                                 break;
                             }
                         }
@@ -373,7 +361,7 @@ namespace ModelGraph.Core
             var len2 = facet2.Length;
 
             var len = len1 + bendCount + len2 + 6; // allow for pseudo points sp1 fp1 tp1 tp2 fp2 sp2 (x,y)
-            var P = new (float X, float Y)[len];        // line coordinate values (x,y), (x,y),..
+            var P = new Vector2[len];        // line coordinate values (x,y), (x,y),..
 
             var sp1 = 0;               // index of surface point 1 value
             var fp1 = 1;               // index of facet point 1 value
@@ -393,13 +381,13 @@ namespace ModelGraph.Core
             (float cx1, float cy1, _, _) = Node1.Values();
             (float cx2, float cy2, _, _) = Node2.Values();
 
-            P[sp1] = (cx1 + SP1.dx, cy1 + SP1.dy); // surface point 1
-            P[fp1] = (cx1 + FP1.dx, cy1 + FP1.dy); // facet point 1
-            P[tp1] = (cx1 + TP1.dx, cy1 + TP1.dy); // terminal point 1
+            P[sp1] = new Vector2(cx1 + SP1.dx, cy1 + SP1.dy); // surface point 1
+            P[fp1] = new Vector2(cx1 + FP1.dx, cy1 + FP1.dy); // facet point 1
+            P[tp1] = new Vector2(cx1 + TP1.dx, cy1 + TP1.dy); // terminal point 1
 
-            P[sp2] = (cx2 + SP2.dx, cy2 + SP2.dy); // surface point 2
-            P[fp2] = (cx2 + FP2.dx, cy2 + FP2.dy); // facet point 2
-            P[tp2] = (cx2 + TP2.dx, cy2 + TP2.dy); // terminal point 2
+            P[sp2] = new Vector2(cx2 + SP2.dx, cy2 + SP2.dy); // surface point 2
+            P[fp2] = new Vector2(cx2 + FP2.dx, cy2 + FP2.dy); // facet point 2
+            P[tp2] = new Vector2(cx2 + TP2.dx, cy2 + TP2.dy); // terminal point 2
 
             #region Bend Points  ==============================================
             if (bendCount > 0)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
@@ -75,7 +76,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Center, Extent, Radius  =======================================
-        public (float x, float y) Center { get { return (X, Y); } set { X = value.x; Y = value.y; } }
+        public Vector2 Center { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
         public (float X1, float Y1, float X2, float Y2) Extent => (X - DX, Y - DY, X + DX, Y + DY);
         public (float X1, float Y1, float X2, float Y2, float DX, float DY, Node node) FullExtent(int ds)
         {
@@ -113,7 +114,6 @@ namespace ModelGraph.Core
         {
             return IsGraphPoint ? (X, Y, 1, 1) : (X, Y, DX, DY);
         }
-        internal (float X, float Y) GetCenter() => (X, Y);
         internal int[] CenterXY
         {
             get { return new int[] { (int)X, (int)Y }; }
@@ -152,7 +152,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move, Resize  =================================================
-        internal void Resize((float X, float Y) delta, ResizerType resizer)
+        internal void Resize(Vector2 delta, ResizerType resizer)
         {
             var x1 = X - DX;
             var x2 = X + DX;
@@ -194,7 +194,7 @@ namespace ModelGraph.Core
                 Y = (y1 + y2) / 2;
             }
         }
-        internal void Move((float X, float Y) delta)
+        internal void Move(Vector2 delta)
         {
             X = X + delta.X;
             Y = Y + delta.Y;
@@ -214,7 +214,7 @@ namespace ModelGraph.Core
 
 
         // quickly eliminate nodes that don't qaulify
-        public bool HitTest((float X, float Y) p)
+        public bool HitTest(Vector2 p)
         {
             var x = p.X + 1;
             if (x < (X - DX - _ds)) return false;
@@ -226,13 +226,12 @@ namespace ModelGraph.Core
             return true;
         }
 
-        public (HitLocation hit, (float X, float Y) pnt) RefinedHit((float X, float Y) p)
+        public (HitLocation hit, Vector2 pnt) RefinedHit(Vector2 p)
         {
             float ds;
             var x = p.X + 1;
             var y = p.Y + 1;
             var hit = HitLocation.Node;
-            var pnt = (X, Y);
 
             if (DX >= _ds)
             {
@@ -265,7 +264,7 @@ namespace ModelGraph.Core
                     else if (ds > 0 && ds - _ds <= 0) hit |= HitLocation.Bottom;
                 }
             }
-            return (hit, pnt);
+            return (hit, p);
         }
         #endregion
 

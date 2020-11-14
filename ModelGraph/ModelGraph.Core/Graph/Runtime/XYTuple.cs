@@ -8,36 +8,15 @@ namespace ModelGraph.Core
         #region Rotation  =====================================================
         static readonly float Radians45Degree = (float)(Math.PI / 4);
         static readonly float Radians90Degree = (float)(Math.PI / 2);
-        static internal Matrix3x2 RotateLeft45Matrix((float x, float y) f)
-        {
-            var cp = new Vector2(f.x, f.y);
-            return Matrix3x2.CreateRotation(-Radians45Degree, cp);
-        }
-        static internal Matrix3x2 RotateLeft90Matrix((float x, float y) f)
-        {
-            var cp = new Vector2(f.x, f.y);
-            return Matrix3x2.CreateRotation(-Radians90Degree, cp);
-        }
-        static internal Matrix3x2 RotateRight45Matrix((float x, float y) f)
-        {
-            var cp = new Vector2(f.x, f.y);
-            return Matrix3x2.CreateRotation(Radians45Degree, cp);
-        }
-        static internal Matrix3x2 RotateRight90Matrix((float x, float y) f)
-        {
-            var cp = new Vector2(f.x, f.y);
-            return Matrix3x2.CreateRotation(Radians90Degree, cp);
-        }
-        static internal (float X, float Y) Transform(Matrix3x2 mx, (float x, float y) p)
-        {
-            var pt = new Vector2(p.x, p.y);
-            pt = Vector2.Transform(pt, mx);
-            return (pt.X, pt.Y);
-        }
+        static internal Matrix3x2 RotateLeft45Matrix(Vector2 cp) => Matrix3x2.CreateRotation(-Radians45Degree, cp);
+        static internal Matrix3x2 RotateLeft90Matrix(Vector2 cp) => Matrix3x2.CreateRotation(-Radians90Degree, cp);
+        static internal Matrix3x2 RotateRight45Matrix(Vector2 cp) => Matrix3x2.CreateRotation(Radians45Degree, cp);
+        static internal Matrix3x2 RotateRight90Matrix(Vector2 cp) =>Matrix3x2.CreateRotation(Radians90Degree, cp);
+        static internal Vector2 Transform(Matrix3x2 mx, Vector2 p) => Vector2.Transform(p, mx);
         #endregion
 
         #region SlopeSlice  ===================================================
-        public static (float dx, float dy, float slope, int slice) SlopeSlice((float x1, float y1) startPoint, (float x2, float y2) endPoint)
+        public static (float dx, float dy, float slope, int slice) SlopeSlice(Vector2 startPoint, Vector2 endPoint)
         {/*
             . 11|12 .     Draw a circle arround the startPoint. Divided the circle into 16 slices numbered 0 to 15        
            8    |    15   The endPoint is contained within reported slice, (slice lines are ourward pointing rays)
@@ -49,8 +28,8 @@ namespace ModelGraph.Core
             const float b = 1.0f;                //tan(45.0)
             const float c = 2.4142135623730950f; //tan(67.5)
 
-            var (x1, y1) = startPoint;
-            var (x2, y2) = endPoint;
+            var (x1, y1) = (startPoint.X, startPoint.Y);
+            var (x2, y2) = (endPoint.X, endPoint.Y);
 
             var dx = x2 - x1;
             var dy = y2 - y1;

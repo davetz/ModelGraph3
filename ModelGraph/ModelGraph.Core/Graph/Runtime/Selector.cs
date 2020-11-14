@@ -16,7 +16,7 @@ namespace ModelGraph.Core
         public int HitBend;  // index of bend point (relative to edge.bends)
         public int HitIndex; // index of start of the hit segment (relative to edge.point)
         public Extent HitRegion;
-        public (float x, float y) HitPoint; // the refined hit point location
+        public Vector2 HitPoint; // the refined hit point location
         public HitLocation HitLocation; // hit location details
 
         public Edge BendEdge;     // when bending an edge, remember which edge it is
@@ -73,8 +73,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region SelectorRectangle  ============================================
-        public void StartPoint((float X, float Y) p) => Extent.Point1 = Extent.Point2 = p;
-        public void NextPoint((float X, float Y) p) => Extent.Point2 = p;
+        public void StartPoint(Vector2 p) => Extent.Point1 = Extent.Point2 = p;
+        public void NextPoint(Vector2 p) => Extent.Point2 = p;
         public (float X, float Y, float W, float H) Rectangle => (Extent.Xmin, Extent.Ymin, Extent.Width, Extent.Hieght);
         #endregion
 
@@ -325,7 +325,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region HitTest  ======================================================
-        public void HitTest((float x, float y) p)
+        public void HitTest(Vector2 p)
         {
             PrevNode = HitNode;
             PrevEdge = HitEdge;
@@ -402,7 +402,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Resize  =======================================================
-        public void Resize((float X, float Y) delta, ResizerType resizer)
+        public void Resize(Vector2 delta, ResizerType resizer)
         {
             if (resizer == ResizerType.None) return;
             HitNode.Resize(delta, resizer);
@@ -410,7 +410,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-            public void Move((float X, float Y) delta)
+            public void Move(Vector2 delta)
         {
             if (IsRegionHit || IsNodeHit)
             {
@@ -573,7 +573,7 @@ namespace ModelGraph.Core
         #region Align  ========================================================
         public void AlignVert()
         {
-            var x = HitPoint.x;
+            var x = HitPoint.X;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -583,7 +583,7 @@ namespace ModelGraph.Core
         }
         public void AlignHorz()
         {
-            var y = HitPoint.y;
+            var y = HitPoint.Y;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -596,7 +596,7 @@ namespace ModelGraph.Core
         #region Flip  =========================================================
         public void FlipHorz()
         {
-            var x = HitPoint.x;
+            var x = HitPoint.X;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -606,7 +606,7 @@ namespace ModelGraph.Core
         }
         public void FlipVert()
         {
-            var y = HitPoint.y;
+            var y = HitPoint.Y;
             TakeSnapshot();
             foreach (var node in Nodes)
             {

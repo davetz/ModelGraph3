@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
@@ -217,7 +218,7 @@ namespace ModelGraph.Core
                                     if ((b & B3) != 0)
                                     {
                                         var pnCount = r.ReadUInt16();
-                                        edge.Bends = new (float X, float Y)[pnCount];
+                                        edge.Bends = new Vector2[pnCount];
                                         for (int n = 0; n < pnCount; n++)
                                         {
                                             edge.Bends[n].X = r.ReadSingle();
@@ -449,7 +450,7 @@ namespace ModelGraph.Core
                     foreach (var gp in e3.Value)//GP
                     {
                         var nd = gp as Node;
-                        var (x, y) = nd.GetCenter();
+                        var (x, y) = (nd.X, nd.Y);
                         {
                             if (x < x1) x1 = x;
                             if (y < y1) y1 = y;

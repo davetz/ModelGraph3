@@ -81,7 +81,7 @@ namespace ModelGraph.Core
             for (int i = 0; i < Graph.EdgeCount; i++)
             {
                 var edge = Graph.Edges[i];
-                var points = edge.GetPointVectors();
+                var points = edge.Points;
                 var ipc = edge.LineColor;
                 if (ipc == 0)
                 {
@@ -158,7 +158,7 @@ namespace ModelGraph.Core
         {
             foreach (var n in Graph.Nodes)
             {
-                if (n.HitTest((p.X, p.Y))) return (true, n);
+                if (n.HitTest(p)) return (true, n);
             }
             return (false, null);
         }
@@ -233,8 +233,7 @@ namespace ModelGraph.Core
         {
             ToolTip_Text1 = _hitNode.GetNameId();
             ToolTip_Text2 = _hitNode.GetSummaryId();
-            var (x, y) = _hitNode.Center;
-            FlyOutPoint = new Vector2(x, y);
+            FlyOutPoint = _hitNode.Center;
             DrawCursor = DrawCursor.Hand;
             ShowDrawItems(DrawItem.ToolTip);
             PageModel.TriggerUIRefresh();
@@ -244,8 +243,7 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
             ShowDrawItems(DrawItem.FlyTree);
-            var (x, y) = _hitNode.Center;
-            FlyOutPoint = new Vector2(x, y);
+            FlyOutPoint = _hitNode.Center;
             if (FlyTreeModel is TreeModel tm)
             {
                 tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, _hitNode); });
@@ -285,7 +283,7 @@ namespace ModelGraph.Core
                 _modifiedEdges.Clear();
                 foreach (var n in SelectedNodes)
                 {
-                    n.Move((v.X,v.Y));
+                    n.Move(v);
                     if (Graph.Node_Edges.TryGetValue(n, out List<Edge> edges))
                     {
                         foreach (var e in edges) { _modifiedEdges.Add(e); }
@@ -295,7 +293,7 @@ namespace ModelGraph.Core
             }
             else
             {
-                _hitNode.Move((v.X, v.Y));
+                _hitNode.Move(v);
                 if (Graph.Node_Edges.TryGetValue(_hitNode, out List<Edge> edges))
                 {
                     foreach (var e in edges) { e.Refresh(); }
@@ -310,11 +308,11 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             PageModel.TriggerUIRefresh();
         }
-        private void MoveOnNodeUpArrow() => MoveOnNode(_hitNode, (0, -1));
-        private void MoveOnNodeDownArrow() => MoveOnNode(_hitNode, (0, 1));
-        private void MoveOnNodeLeftArrow() => MoveOnNode(_hitNode, (-1, 0));
-        private void MoveOnNodeRightArrow() => MoveOnNode(_hitNode, (1, 0));
-        private void MoveOnNode(Node node, (float,float) ds)
+        private void MoveOnNodeUpArrow() => MoveOnNode(_hitNode, new Vector2(0, -1));
+        private void MoveOnNodeDownArrow() => MoveOnNode(_hitNode, new Vector2(0, 1));
+        private void MoveOnNodeLeftArrow() => MoveOnNode(_hitNode, new Vector2(-1, 0));
+        private void MoveOnNodeRightArrow() => MoveOnNode(_hitNode, new Vector2(1, 0));
+        private void MoveOnNode(Node node, Vector2 ds)
         {
             if (SelectedNodes.Contains(node))
             {

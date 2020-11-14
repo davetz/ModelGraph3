@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 using System.Runtime.InteropServices.ComTypes;
 
 namespace ModelGraph.Core
@@ -241,7 +242,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetFlipTargetContacts  ========================================
-        internal void GetFlipTargetContacts(FlipState flip, float cx, float cy, float scale, float tmLen, List<(Target trg, byte tix, Contact con, (float x, float y) pnt)> list)
+        internal void GetFlipTargetContacts(FlipState flip, float cx, float cy, float scale, float tmLen, List<(Target trg, byte tix, Contact con, Vector2 pnt)> list)
         {
             list.Clear();
             foreach (var (trg, tix, con, pnt, siz) in TargetContacts)
@@ -256,7 +257,7 @@ namespace ModelGraph.Core
                 var x = fdx * scale + cx + dx * tmLen;
                 var y = fdy * scale + cy + dy * tmLen;
 
-                list.Add((trg, (byte)tix, con, (x, y)));
+                list.Add((trg, (byte)tix, con, new Vector2(x, y)));
             }           
         }
         private const float Q = 0.7071067811865f; // 1 / SQRT(2)

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
@@ -10,8 +11,8 @@ namespace ModelGraph.Core
             var N = edges.Count;
             if (N == 0) return;
 
-            var E = new ((float x, float y) bend, Node other, int order, Target targ, Attach atch, Direction odir)[N];  // primary edge data
-            var F = new ((float dx, float dy) delta, float slope, byte slice, byte tix, byte tsiz, Direction tdir)[N];  // secondary edge target data
+            var E = new (Vector2 bend, Node other, int order, Target targ, Attach atch, Direction odir)[N];  // primary edge data
+            var F = new (Vector2 delta, float slope, byte slice, byte tix, byte tsiz, Direction tdir)[N];  // secondary edge target data
             var I = new List<int>(N);                                                                                   // sorted edge index list
 
             #region PopulateEdgeDataArrays  ===================================
@@ -26,7 +27,7 @@ namespace ModelGraph.Core
                 var (dx, dy, slope, slice) = XYTuple.SlopeSlice(node.Center, bend);
 
                 E[i] = (bend, other, 0, targ, atch, tdir);
-                F[i] = ((dx, dy), slope, (byte)slice, 0, 0, Direction.Any);
+                F[i] = (new Vector2(dx, dy), slope, (byte)slice, 0, 0, Direction.Any);
 
                 var isTuple = node_tuple.ContainsKey(other);
                 node_tuple[other] = isTuple;
@@ -58,7 +59,7 @@ namespace ModelGraph.Core
                 var symbol = symbols[si];
                 var targetCount = symbol.TargetContacts.Count;
 
-                var targetContacts = new List<(Target trg, byte tix, Contact con, (float dx, float dy) pnt)>(targetCount);
+                var targetContacts = new List<(Target trg, byte tix, Contact con, Vector2 pnt)>(targetCount);
 
                 var testResult = new List<(int ei, float c, float m, int x1, int y1, int x2, int y2, int s)>[targetCount];
 
@@ -146,7 +147,7 @@ namespace ModelGraph.Core
                                 var (sdx, sdy, tsiz, tix, tdir) = symbol.GetFlipTarget(ti, bestFlip, scale);
                                 foreach (var (ei, cost, slope, x1, y1, x2, y2, slice) in result)
                                 {
-                                    F[ei] = ((sdx, sdy), slope, (byte)slice, tix, tsiz, tdir);
+                                    F[ei] = (new Vector2(sdx, sdy), slope, (byte)slice, tix, tsiz, tdir);
                                 }
                             }
                         }
@@ -289,10 +290,10 @@ namespace ModelGraph.Core
                     var pi = penalty[tix][six]; // [from direction sector index] [to target location index]
                     var cost = ((dx * dx) + (dy * dy)) * _penaltyFactor[pi]; //weighted cost
 
-                    var (x1, y1) = targetContacts[ti].pnt;
-                    var (x2, y2) = E[ei].bend;
+                    var p = targetContacts[ti].pnt;
+                    var b = E[ei].bend;
 
-                    return (cost, slope, (int)x1, (int)y1, (int)x2, (int)y2, six);
+                    return (cost, slope, (int)p.X, (int)p.Y, (int)b.X, (int)b.Y, six);
                 }
                 #endregion
                 #endregion
@@ -397,7 +398,9 @@ namespace ModelGraph.Core
                     #region Point  ================================================
                     for (int i = 0; i < N; i++)
                     {
-                        var ((dx, dy), slope, slice, tix, tsiz, tdir) = F[i];
+                        var (d, slope, slice, tix, tsiz, tdir) = F[i];
+                        var dx = d.X;
+                        var dy = d.Y;
                         var quad = (slice / 4) + 1;
 
                         if (E[i].atch == Attach.RightAngle)
@@ -449,7 +452,8 @@ namespace ModelGraph.Core
 
                     for (int i = 0; i < N; i++)
                     {
-                        var (x2, y2) = E[i].bend;
+                        var b = E[i].bend;
+                        var (x2, y2) = (b.X, b.Y);
 
                         if (y2 < yN)
                         {
@@ -481,7 +485,8 @@ namespace ModelGraph.Core
 
                     for (int i = 0; i < N; i++)
                     {
-                        var (x2, y2) = E[i].bend;
+                        var b =  E[i].bend;
+                        var (x2, y2) = (b.X, b.Y);
 
                         if (x2 < xW)
                         {
@@ -515,8 +520,9 @@ namespace ModelGraph.Core
 
                     for (int i = 0; i < N; i++)
                     {
-                        var (x2, y2) = E[i].bend;
-                        var (dx, dy, slope, slice) = XYTuple.SlopeSlice((x, y), E[i].bend);
+                        var b = E[i].bend;
+                        var (x2, y2) = (b.X, b.Y);
+                        var (dx, dy, slope, slice) = XYTuple.SlopeSlice(new Vector2(x, y), E[i].bend);
 
                         if (x2 > xE && y2 < yN)
                             edges[i].SetFace(node, (w, -h), (w + tmLen, -h - tmLen), Direction.NEC);
@@ -552,15 +558,15 @@ namespace ModelGraph.Core
 
                     switch (F[i].tdir)
                     {
-                        case Direction.Any: F[i].delta = (0, 0); break;
-                        case Direction.E: F[i].delta = (dx, 0); break;
-                        case Direction.S: F[i].delta = (0, dy); break;
-                        case Direction.W: F[i].delta = (-dx, 0); break;
-                        case Direction.N: F[i].delta = (0, -dy); break;
-                        case Direction.SEC: F[i].delta = (dx, dy); break;
-                        case Direction.SWC: F[i].delta = (-dx, dy); break;
-                        case Direction.NWC: F[i].delta = (-dx, -dy); break;
-                        case Direction.NEC: F[i].delta = (dx, -dy); break;
+                        case Direction.Any: F[i].delta = new Vector2(0, 0); break;
+                        case Direction.E: F[i].delta = new Vector2(dx, 0); break;
+                        case Direction.S: F[i].delta = new Vector2(0, dy); break;
+                        case Direction.W: F[i].delta = new Vector2(-dx, 0); break;
+                        case Direction.N: F[i].delta = new Vector2(0, -dy); break;
+                        case Direction.SEC: F[i].delta = new Vector2(dx, dy); break;
+                        case Direction.SWC: F[i].delta = new Vector2(-dx, dy); break;
+                        case Direction.NWC: F[i].delta = new Vector2(-dx, -dy); break;
+                        case Direction.NEC: F[i].delta = new Vector2(dx, -dy); break;
                     }
                 }
 
@@ -601,7 +607,8 @@ namespace ModelGraph.Core
                     }
                     var (odx, ody) = _terminalOutwardDirection[(int)dir];
                     var (tdx, tdy) = _terminalTangentDirection[(int)dir];
-                    var (dx, dy) = F[I[i]].delta;
+                    var d =  F[I[i]].delta;
+                    var (dx, dy) = (d.X, d.Y);
                     os = (k++ * 2) + 1 - n;
                     o1 = w1 * os;
                     o2 = w2 * os;

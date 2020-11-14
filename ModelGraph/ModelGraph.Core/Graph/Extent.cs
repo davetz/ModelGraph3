@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
@@ -25,7 +26,7 @@ namespace ModelGraph.Core
         public (float, float, float, float) GetFloat() => (X1, Y1, X2, Y2);
         public Extent Clone => new Extent(this);
 
-        public Extent((float X, float Y) p)
+        public Extent(Vector2 p)
         {
             X1 = X2 = p.X;
             Y1 = Y2 = p.Y;
@@ -53,7 +54,7 @@ namespace ModelGraph.Core
             Y2 = e.y2 + ds;
         }
 
-        public Extent((float X, float Y) p, float ds)
+        public Extent(Vector2 p, float ds)
         {
             X1 = p.X + 1 - ds;
             X2 = p.X + 1 + ds;
@@ -66,7 +67,7 @@ namespace ModelGraph.Core
             var e = new Extent();
             return e.SetExtent(nodes, margin);
         }
-        public Extent((float X, float Y) p1, (float X, float Y) p2)
+        public Extent(Vector2 p1, Vector2 p2)
         {
             if (p1.X < p2.X)
             {
@@ -92,7 +93,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-        public void Move((float X, float Y) delta)
+        public void Move(Vector2 delta)
         {
             X1 += delta.X;
             X2 += delta.X;
@@ -113,18 +114,18 @@ namespace ModelGraph.Core
         #region Center  =======================================================
         public float CenterX => (X2 + X1) / 2;
         public float CenterY => (Y2 + Y1) / 2;
-        public (float X, float Y) Center => (CenterX, CenterY);
+        public Vector2 Center => new Vector2(CenterX, CenterY);
         #endregion
 
         #region Points  =======================================================
-        public void Points((float X, float Y) p1, (float X, float Y) p2) { Point1 = p1; Point2 = p2; }
-        public (float X, float Y) Point1 { get { return (X1, Y1); } set { X1 = value.X; Y1 = value.Y; } }
-        public (float X, float Y) Point2 { get { return (X2, Y2); } set { X2 = value.X; Y2 = value.Y; } }
-        public void Record((float X, float Y) p) { Point1 = Point2; Point2 = p; }
+        public void Points(Vector2 p1, Vector2 p2) { Point1 = p1; Point2 = p2; }
+        public Vector2 Point1 { get { return new Vector2(X1, Y1); } set { X1 = value.X; Y1 = value.Y; } }
+        public Vector2 Point2 { get { return new Vector2(X2, Y2); } set { X2 = value.X; Y2 = value.Y; } }
+        public void Record(Vector2 p) { Point1 = Point2; Point2 = p; }
 
-        public void Record((float X, float Y) p, float scale) { Point1 = Point2; SetPoint2(p, scale); }
-        public void SetPoint1((float X, float Y) p, float scale) { X1 = (int)(p.X * scale); Y1 = (int)(p.Y * scale); }
-        public void SetPoint2((float X, float Y) p, float scale) { X2 = (int)(p.X * scale); Y2 = (int)(p.Y * scale); }
+        public void Record(Vector2 p, float scale) { Point1 = Point2; SetPoint2(p, scale); }
+        public void SetPoint1(Vector2 p, float scale) { X1 = (int)(p.X * scale); Y1 = (int)(p.Y * scale); }
+        public void SetPoint2(Vector2 p, float scale) { X2 = (int)(p.X * scale); Y2 = (int)(p.Y * scale); }
         #endregion
 
         #region Expand  =======================================================
@@ -143,7 +144,7 @@ namespace ModelGraph.Core
             if (x > X2) X2 = x;
             if (y > Y2) Y2 = y;
         }
-        public void Expand((float X, float Y) p)
+        public void Expand(Vector2 p)
         {
             if (p.X < X1) X1 = p.X;
             if (p.Y < Y1) Y1 = p.Y;
@@ -165,9 +166,8 @@ namespace ModelGraph.Core
         #region Diagonal  =====================================================
         public float DX => X2 - X1;
         public float DY => Y2 - Y1;
-        public (float X, float Y) Delta => (DX, DY);
-        public float Length => (float)Math.Sqrt(Diagonal);
-        public float Diagonal => XYTuple.Diagonal(Delta);
+        public Vector2 Delta => new Vector2(DX, DY);
+        public float Diagonal =>  Vector2.DistanceSquared( Point1, Point2);
         #endregion
 
         #region Normalize  ====================================================
@@ -178,7 +178,7 @@ namespace ModelGraph.Core
             Normalize(Point1, Point2);
         }
 
-        public void Normalize((float X, float Y) p1, (float X, float Y) p2)
+        public void Normalize(Vector2 p1, Vector2 p2)
         {
             if (p2.X < p1.X)
             {
@@ -245,7 +245,7 @@ namespace ModelGraph.Core
             return this;
         }
 
-        public Extent SetExtent((float X, float Y)[] points, int margin)
+        public Extent SetExtent(Vector2[] points, int margin)
         {
             var N = (points == null) ? 0 : points.Length;
             if (N == 0)
@@ -282,38 +282,38 @@ namespace ModelGraph.Core
 
         public float Width => (Xmax - Xmin);
         public float Hieght => (Ymax - Ymin);
-        public (float X, float Y) TopLeft => (Xmin, Ymin);
-        public (float X, float Y) TopRight => (Xmax, Ymin);
-        public (float X, float Y) BottomLeft => (Xmin, Ymax);
-        public (float X, float Y) BottomRight => (Xmax, Ymax);
+        public Vector2 TopLeft => new Vector2(Xmin, Ymin);
+        public Vector2 TopRight => new Vector2(Xmax, Ymin);
+        public Vector2 BottomLeft => new Vector2(Xmin, Ymax);
+        public Vector2 BottomRight => new Vector2(Xmax, Ymax);
         #endregion
 
         #region RoundedRectanglePoints  =======================================
-        internal List<(float X, float Y)> RoundedRectanglePoints()
+        internal List<Vector2> RoundedRectanglePoints()
         {
             const int r = 4;
             const int c = 1;
-            var list = new List<(float X, float Y)>(12);
+            var list = new List<Vector2>(12);
             var tl = TopLeft;
             var tr = TopRight;
             var bl = BottomLeft;
             var br = BottomRight;
 
-            list.Add((tl.X, tl.Y + r));
-            list.Add((tl.X + c, tl.Y + c));
-            list.Add((tl.X + r, tl.Y));
+            list.Add(new Vector2(tl.X, tl.Y + r));
+            list.Add(new Vector2(tl.X + c, tl.Y + c));
+            list.Add(new Vector2(tl.X + r, tl.Y));
 
-            list.Add((tr.X - r, tl.Y));
-            list.Add((tr.X - c, tr.Y + c));
-            list.Add((tr.X, tr.Y + r));
+            list.Add(new Vector2(tr.X - r, tl.Y));
+            list.Add(new Vector2(tr.X - c, tr.Y + c));
+            list.Add(new Vector2(tr.X, tr.Y + r));
 
-            list.Add((br.X, br.Y - r));
-            list.Add((br.X - c, br.Y - c));
-            list.Add((br.X - r, br.Y));
+            list.Add(new Vector2(br.X, br.Y - r));
+            list.Add(new Vector2(br.X - c, br.Y - c));
+            list.Add(new Vector2(br.X - r, br.Y));
 
-            list.Add((bl.X + r, bl.Y));
-            list.Add((bl.X + c, bl.Y - c));
-            list.Add((bl.X, bl.Y - r));
+            list.Add(new Vector2(bl.X + r, bl.Y));
+            list.Add(new Vector2(bl.X + c, bl.Y - c));
+            list.Add(new Vector2(bl.X, bl.Y - r));
 
             return list;
         }
@@ -339,7 +339,7 @@ namespace ModelGraph.Core
             return true;
         }
 
-        public bool Contains((float X, float Y) p)
+        public bool Contains(Vector2 p)
         {
             if (p.X < X1 && p.X < X2) return false;
             if (p.Y < Y1 && p.Y < Y2) return false;
@@ -381,7 +381,7 @@ namespace ModelGraph.Core
         //                     :      \:
         //                     - - - - o my Point2
         //
-        public bool HitTest(ref (float X, float Y) p, Extent E)
+        public bool HitTest(ref Vector2 p, Extent E)
         {
             if (Intersects(E))  // my extent intersects with E
             {

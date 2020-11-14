@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
     internal class Snapshot
     {
-        private readonly List<(Edge edge, ((float x, float y)[], Facet, Facet) snapshot)> _edges;
+        private readonly List<(Edge edge, (Vector2[], Facet, Facet) snapshot)> _edges;
         private readonly List<(Node node, (float, float, byte, byte, byte, byte, Labeling, Sizing, BarWidth, FlipState, Aspect) snapshot)> _nodes;
 
         internal Snapshot(Selector selector)
@@ -23,7 +24,7 @@ namespace ModelGraph.Core
                 }
                 if (selector.Edges.Count > 0 || selector.Points.Count > 0)
                 {
-                    _edges = new List<(Edge edge, ((float x, float y)[], Facet, Facet))>(selector.Edges.Count + selector.Points.Count);
+                    _edges = new List<(Edge edge, (Vector2[], Facet, Facet))>(selector.Edges.Count + selector.Points.Count);
                     foreach (var edge in selector.Edges)
                     {
                         _edges.Add((edge, edge.Snapshot));
@@ -41,7 +42,7 @@ namespace ModelGraph.Core
             }
             else if (selector.IsEdgeHit)
             {
-                _edges = new List<(Edge edge, ((float x, float y)[], Facet, Facet))>(1);
+                _edges = new List<(Edge edge, (Vector2[], Facet, Facet))>(1);
                 _edges.Add((selector.HitEdge, selector.HitEdge.Snapshot));
             }
         }
@@ -65,7 +66,7 @@ namespace ModelGraph.Core
             }
             if (snap._edges != null)
             {
-                _edges = new List<(Edge edge, ((float x, float y)[], Facet, Facet))>(snap._edges.Count);
+                _edges = new List<(Edge edge, (Vector2[], Facet, Facet))>(snap._edges.Count);
                 foreach (var e in snap._edges)
                 {
                     _edges.Add((e.edge, e.edge.Snapshot));
