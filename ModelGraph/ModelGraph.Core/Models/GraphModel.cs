@@ -7,6 +7,7 @@ namespace ModelGraph.Core
     public class GraphModel : DrawModel
     {
         internal readonly Graph Graph;
+        private Selector Selector => Graph.Selector;
 
         #region Constructor  ==================================================
         internal GraphModel(PageModel owner, Graph graph) : base(owner)
@@ -139,20 +140,11 @@ namespace ModelGraph.Core
         #region SkimHitTest  ==================================================
         private void SkimHitTest()
         {
-            var (ok, node) = HitNodeTest(Editor.Point2);
-            if (ok)
-            {
-                if (node != _hitNode)
-                {
-                    _hitNode = node;
-                    AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
-                }
-            }
-            else
-            {
-                _hitNode = null;
+            Selector.HitTest(Editor.Point2);
+            if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
+                AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
+            else if (Selector.IsVoidHit)
                 AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
-            }
         }
         private (bool, Node) HitNodeTest(Vector2 p)
         {
@@ -162,9 +154,6 @@ namespace ModelGraph.Core
             }
             return (false, null);
         }
-
-        private Node _hitNode;
-        private Edge _hitEdge;
         #endregion
 
         #region Selector  =====================================================
@@ -231,9 +220,9 @@ namespace ModelGraph.Core
         #region ViewMode  =====================================================
         private void ViewOnNode()
         {
-            ToolTip_Text1 = _hitNode.GetNameId();
-            ToolTip_Text2 = _hitNode.GetSummaryId();
-            FlyOutPoint = _hitNode.Center;
+            ToolTip_Text1 = Selector.HitNode.GetNameId();
+            ToolTip_Text2 = Selector.HitNode.GetSummaryId();
+            FlyOutPoint = Selector.HitNode.Center;
             DrawCursor = DrawCursor.Hand;
             ShowDrawItems(DrawItem.ToolTip);
             PageModel.TriggerUIRefresh();
@@ -243,10 +232,10 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
             ShowDrawItems(DrawItem.FlyTree);
-            FlyOutPoint = _hitNode.Center;
+            FlyOutPoint = Selector.HitNode.Center;
             if (FlyTreeModel is TreeModel tm)
             {
-                tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, _hitNode); });
+                tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, Selector.HitNode); });
                 FlyOutSize = new Vector2(240, 200);
             }
             PageModel.TriggerUIRefresh();
@@ -278,7 +267,7 @@ namespace ModelGraph.Core
         private void MoveOnNodeDragging()
         {
             var v = Editor.PointDelta(true);
-            if (SelectedNodes.Contains(_hitNode))
+            if (SelectedNodes.Contains(Selector.HitNode))
             {
                 _modifiedEdges.Clear();
                 foreach (var n in SelectedNodes)
@@ -293,8 +282,8 @@ namespace ModelGraph.Core
             }
             else
             {
-                _hitNode.Move(v);
-                if (Graph.Node_Edges.TryGetValue(_hitNode, out List<Edge> edges))
+                Selector.HitNode.Move(v);
+                if (Graph.Node_Edges.TryGetValue(Selector.HitNode, out List<Edge> edges))
                 {
                     foreach (var e in edges) { e.Refresh(); }
                 }
@@ -308,10 +297,10 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             PageModel.TriggerUIRefresh();
         }
-        private void MoveOnNodeUpArrow() => MoveOnNode(_hitNode, new Vector2(0, -1));
-        private void MoveOnNodeDownArrow() => MoveOnNode(_hitNode, new Vector2(0, 1));
-        private void MoveOnNodeLeftArrow() => MoveOnNode(_hitNode, new Vector2(-1, 0));
-        private void MoveOnNodeRightArrow() => MoveOnNode(_hitNode, new Vector2(1, 0));
+        private void MoveOnNodeUpArrow() => MoveOnNode(Selector.HitNode, new Vector2(0, -1));
+        private void MoveOnNodeDownArrow() => MoveOnNode(Selector.HitNode, new Vector2(0, 1));
+        private void MoveOnNodeLeftArrow() => MoveOnNode(Selector.HitNode, new Vector2(-1, 0));
+        private void MoveOnNodeRightArrow() => MoveOnNode(Selector.HitNode, new Vector2(1, 0));
         private void MoveOnNode(Node node, Vector2 ds)
         {
             if (SelectedNodes.Contains(node))

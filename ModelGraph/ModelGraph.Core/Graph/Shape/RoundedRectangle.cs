@@ -12,7 +12,7 @@ namespace ModelGraph.Core
 
             Radius1 = 0.5f;
             Radius2 = 0.3f;
-            DXY = new List<(float dx, float dy)>() { (0, 0) };
+            DXY = new List<Vector2>() { new Vector2(0, 0) };
         }
         internal float Corner => 0.1f;
 
@@ -33,15 +33,15 @@ namespace ModelGraph.Core
         internal override Shape Clone() =>new RoundedRectangle(this);
         internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
 
-        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring coloring = Coloring.Normal)
         {
-            var (cp, r1, r2) = GetCenterRadius(center, scale);
+            var (cp, r1, r2) = GetCenterRadius(scale, offset);
             var points = new Vector2[] { cp, new Vector2(r1, r2) };
             drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor(coloring)));
         }
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 offset, FlipState flip)
         {
-            var (cp, r1, r2) = GetCenterRadius(flip, center, scale);
+            var (cp, r1, r2) = GetCenterRadius(flip, scale, offset);
             var points = new Vector2[] { cp, new Vector2(r1, r2) };
             drawData.AddParms((points, ShapeStrokeWidth(), ShapeColor()));
         }

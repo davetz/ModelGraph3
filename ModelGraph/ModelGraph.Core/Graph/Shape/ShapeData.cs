@@ -22,7 +22,7 @@ namespace ModelGraph.Core
         private byte PL;      // the polyline control parameters are locked
         private byte A0;      // rotation index for 22.5 degree delta
         private byte A1;      // rotation index for 30.0 degree delta
-        protected List<(float dx, float dy)> DXY;  // one or more defined points
+        protected List<Vector2> DXY;  // one or more defined points
 
         #region Properties  ===================================================
         protected ShapeProperty LinePropertyFlags()
@@ -197,9 +197,9 @@ namespace ModelGraph.Core
 
                 for (int i = 0; i < count; i++)
                 {
-                    var (dx, dy) = points[i];
-                    data.Add((byte)ToSByte(dx));
-                    data.Add((byte)ToSByte(dy));
+                    var p = points[i];
+                    data.Add((byte)ToSByte(p.X));
+                    data.Add((byte)ToSByte(p.Y));
                 }
             }
 
@@ -305,12 +305,12 @@ namespace ModelGraph.Core
                 var pc = data[I++];
                 if (pc > 0)
                 {
-                    shape.DXY = new List<(float dx, float dy)>(pc);
+                    shape.DXY = new List<Vector2>(pc);
                     for (int i = 0; i < pc; i++)
                     {
                         var dx = ((sbyte)data[I++]) / 127.0f; //use as much of the sbyte
                         var dy = ((sbyte)data[I++]) / 127.0f; //precision as posible
-                        shape.DXY.Add((dx, dy));
+                        shape.DXY.Add(new Vector2(dx, dy));
                     }
                 }
             }
@@ -333,7 +333,7 @@ namespace ModelGraph.Core
             PL = s.PL;
             A0 = s.A0;
             A1 = s.A1;
-            DXY = new List<(float dx, float dy)>(s.DXY);
+            DXY = new List<Vector2>(s.DXY);
         }
         #endregion
     }

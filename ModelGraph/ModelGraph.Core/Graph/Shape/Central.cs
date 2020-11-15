@@ -6,19 +6,18 @@ namespace ModelGraph.Core
     {
         internal Central() { }
 
-        protected Vector2 Center { get { return ToVector(DXY[0]); } set { DXY[0] = Limit(value.X, value.Y); } }
+        protected Vector2 Center { get { return DXY[0]; } set { DXY[0] = Limit(value.X, value.Y); } }
         protected override ShapeProperty ValidLineProperty => ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;
 
 
         #region GetCenterRadius  ==============================================
-        protected override (float, float) GetCenter() => DXY[0];
-        protected (Vector2 cp, float r1, float r2) GetCenterRadius(Vector2 center, float scale)
+        protected override Vector2 GetCenter() => DXY[0];
+        protected (Vector2 cp, float r1, float r2) GetCenterRadius(float scale, Vector2 offset)
         {
             var (r1, r2, _) = GetRadius(scale);
-            return (center + Center * scale, r1, r2);
+            return (offset + Center * scale, r1, r2);
         }
-
-        protected (Vector2 cp, float r1, float r2) GetCenterRadius(FlipState flip, Vector2 center, float scale)
+        protected (Vector2 cp, float r1, float r2) GetCenterRadius(FlipState flip, float scale, Vector2 offset)
         {
             var (r1, r2, _) = GetRadius(scale);
 
@@ -67,32 +66,18 @@ namespace ModelGraph.Core
                 r1 = r2;
                 r2 = t;
             }
-            (Vector2 cp, float r1, float r2) ConvertedPoint()
-            {
-                var (dx, dy) = DXY[0];
-                var p = new Vector2(dx, dy);
-                p = center + p * scale;
-                return (p, r1, r2);
-            }
-            (Vector2 cp, float r1, float r2) TransformedPoint(Matrix3x2 m)
-            {
-                var (dx, dy) = DXY[0];
-                var p = new Vector2(dx, dy);
-                p = Vector2.Transform(p, m);
-                p = center + p * scale;
-
-                return (p, r1, r2);
-            }
+            (Vector2 cp, float r1, float r2) ConvertedPoint() => (offset + DXY[0] * scale, r1, r2);
+            (Vector2 cp, float r1, float r2) TransformedPoint(Matrix3x2 m) => (offset + Vector2.Transform(DXY[0], m) * scale, r1, r2);
         }
         #endregion
 
         #region OverideAbstract  ==============================================
         protected override (float dx1, float dy1, float dx2, float dy2) GetExtent()
         {
-            var r1 = Radius1;
-            var r2 = Radius2;
-            var (dx, dy) = DXY[0];
-            return (dx - r1, dy - r2, dx + r1, dy + r2);
+            var r = new Vector2(Radius1, Radius2);
+            var p1 = DXY[0] - r;
+            var p2 = DXY[0] + r;
+            return (p1.X, p1.Y, p2.X, p2.Y);
         }
         protected override void Scale(Vector2 scale)
         {

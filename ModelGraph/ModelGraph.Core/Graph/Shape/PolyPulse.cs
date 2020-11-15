@@ -26,18 +26,18 @@ namespace ModelGraph.Core
         private PolyPulse(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(p.X, p.Y);
+            SetCenter(p);
         }
         #endregion
 
         #region CreatePoints  =================================================
         protected override void CreatePoints()
         {
-            var (cx, cy) = GetCenter();
+            var cp = GetCenter();
             var D = Dimension;
             var n = 0;
             var N = 1 + D;
-            DXY = new List<(float dx, float dy)>(N);
+            DXY = new List<Vector2>(N);
 
             var (r1, r2, f1) = GetRadius();
 
@@ -60,7 +60,7 @@ namespace ModelGraph.Core
             }
             Restore:
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
-            SetCenter(cx, cy);
+            SetCenter(cp);
 
             bool Add(float x, float y)
             {

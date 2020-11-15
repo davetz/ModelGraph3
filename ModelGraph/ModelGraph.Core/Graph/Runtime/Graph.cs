@@ -21,6 +21,7 @@ namespace ModelGraph.Core
         internal Dictionary<Item, Node> Item_Node = new Dictionary<Item, Node>();              // look up item -> node
 
         internal List<(byte A, byte R, byte G, byte B)> ARGBList => Owner.ARGBList;
+        internal readonly Selector Selector;
 
         internal Extent Extent;  // current x,y extent of this graph
 
@@ -35,7 +36,7 @@ namespace ModelGraph.Core
         {
             Owner = owner;
             SeedItem = seedItem;
-
+            Selector = new Selector(this);
             owner.Add(this);
         }
         public GraphX GraphX => Owner;

@@ -18,19 +18,19 @@ namespace ModelGraph.Core
 
         protected override void CreatePoints()
         {
-            var (cx, cy) = GetCenter();
+            var cp = GetCenter();
             var D = Dimension;
-            DXY = new List<(float dx, float dy)>(D);
+            DXY = new List<Vector2>(D);
             var da = FullRadians / D;
             var (r1, _, _) = GetRadius();
             var a = RadiansStart;
             for (int i = 0; i <= D; i++)
             {
-                DXY.Add(Limit((r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a))));
+                DXY.Add(Limit(r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a)));
                 a += da;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
-            SetCenter(cx, cy);
+            SetCenter(cp);
         }
 
         #region PrivateConstructor  ===========================================
@@ -41,7 +41,7 @@ namespace ModelGraph.Core
         private PolySide(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(p.X, p.Y);
+            SetCenter(p);
         }
         #endregion
 
@@ -50,27 +50,23 @@ namespace ModelGraph.Core
         internal override Shape Clone(Vector2 center) => new PolySide(this, center);
         protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Dim;
 
-        protected override (float, float) GetCenter()
+        protected override Vector2 GetCenter()
         {
             var n = DXY is null ? 0 : DXY.Count;
-            if (n < 3) return (0, 0);
+            if (n < 3) return Vector2.Zero;
 
             float sa = 0, sx = 0, sy = 0, ds;
             for (int i = 0, j = 1; j < n;)
             {
-                var (xi, yi) = DXY[i++];
-                var (xj, yj) = DXY[j++];
-                ds = (xi * yj - yi * xj);
+                var pi = DXY[i++];
+                var pj = DXY[j++];
+                ds = (pi.X * pj.Y - pi.Y * pj.X);
 
                 sa += ds;
-                sx += (xi + xj) * ds;
-                sy += (yi + yj) * ds;
+                sx += (pi.X + pj.X) * ds;
+                sy += (pi.Y + pj.Y) * ds;
             }
-            var a = 3 * sa;
-            var cx = sx / a;
-            var cy = sy / a;
-
-            return (cx, cy);
+            return new Vector2 (sx, sy) / 3 * sa;
         }
 
         #endregion

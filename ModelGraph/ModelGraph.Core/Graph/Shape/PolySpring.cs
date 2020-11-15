@@ -24,7 +24,7 @@ namespace ModelGraph.Core
         private PolySpring(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(p.X, p.Y);
+            SetCenter(p);
         }
         #endregion
 
@@ -32,13 +32,13 @@ namespace ModelGraph.Core
         private enum PS { L1, L2, L3, L4 }
         protected override void CreatePoints()
         {
-            var (cx, cy) = GetCenter();
+            var cp = GetCenter();
             var D = Dimension;
             var (r1, r2, _) = GetRadius();
 
             var n = 0;
             var N = 1 + D * 2; // number of points per spline
-            DXY = new List<(float dx, float dy)>(N);
+            DXY = new List<Vector2>(N);
             float dx = -r1, dy = r2, adx, bdx, cdx;
 
             var ps = (D < 7) ? PS.L1 : (D < 11) ? PS.L2 : (D < 15) ? PS.L3 : PS.L4;
@@ -88,7 +88,7 @@ namespace ModelGraph.Core
                     break;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
-            SetCenter(cx, cy);
+            SetCenter(cp);
 
             void SetDelta(float ds)
             {

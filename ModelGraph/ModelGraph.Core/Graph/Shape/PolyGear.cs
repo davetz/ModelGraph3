@@ -20,12 +20,12 @@ namespace ModelGraph.Core
 
         protected override void CreatePoints()
         {
-            var (cx, cy) = GetCenter();
+            var cp = GetCenter();
 
             var D = Dimension;
             var N = 3 * D; //number of points
             var M = 2 * D; //number of angles
-            DXY = new List<(float dx, float dy)>(N);
+            DXY = new List<Vector2>(N);
             var (r1, r2, f1) = GetRadius();
 
             var da = FullRadians / M;
@@ -33,14 +33,14 @@ namespace ModelGraph.Core
             var a = RadiansStart;
             for (int i = 0; i < D; i++)
             {
-                DXY.Add(Limit((r1 * (float)Math.Cos(a - ta), r1 * (float)Math.Sin(a - ta))));
-                DXY.Add(Limit((r1 * (float)Math.Cos(a + ta), r1 * (float)Math.Sin(a + ta))));
+                DXY.Add(Limit(r1 * (float)Math.Cos(a - ta), r1 * (float)Math.Sin(a - ta)));
+                DXY.Add(Limit(r1 * (float)Math.Cos(a + ta), r1 * (float)Math.Sin(a + ta)));
                 a += da;
-                DXY.Add(Limit((r2 * (float)Math.Cos(a), r2 * (float)Math.Sin(a))));
+                DXY.Add(Limit(r2 * (float)Math.Cos(a), r2 * (float)Math.Sin(a)));
                 a += da;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
-            SetCenter(cx, cy);
+            SetCenter(cp);
         }
 
         #region PrivateConstructor  ===========================================
@@ -51,7 +51,7 @@ namespace ModelGraph.Core
         private PolyGear(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(p.X, p.Y);
+            SetCenter(p);
         }
         #endregion
 

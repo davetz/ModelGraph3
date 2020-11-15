@@ -16,8 +16,8 @@ namespace ModelGraph.Core
         internal abstract Shape Clone();
         internal abstract Shape Clone(Vector2 Center);
 
-        internal abstract void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring coloring = Coloring.Normal);
-        internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip);
+        internal abstract void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring coloring = Coloring.Normal);
+        internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 offset, FlipState flip);
 
         protected abstract (float dx1, float dy1, float dx2, float dy2) GetExtent();
         protected abstract void Scale(Vector2 scale);
@@ -49,15 +49,15 @@ namespace ModelGraph.Core
 
 
         #region GetCenter  ====================================================
-        protected virtual (float, float) GetCenter() => (0, 0);
-        static private (float cdx, float cdy) GetCenter(IEnumerable<Shape> shapes)
+        protected virtual Vector2 GetCenter() => Vector2.Zero;
+        static private Vector2 GetCenter(IEnumerable<Shape> shapes)
         {
-            var points = new List<(float, float)>();
+            var points = new List<Vector2>();
             foreach (var s in shapes)
             {
                 points.Add(s.GetCenter());
             }
-            if (points.Count == 0) return (0, 0);
+            if (points.Count == 0) return Vector2.Zero;
             if (points.Count == 1) return points[0];
 
             var x1 = 1f;
@@ -65,47 +65,36 @@ namespace ModelGraph.Core
             var x2 = -1f;
             var y2 = -1f;
 
-            foreach (var (px, py) in points)
+            foreach (var p in points)
             {
-                if (px < x1) x1 = px;
-                if (py < y1) y1 = py;
+                if (p.X < x1) x1 = p.X;
+                if (p.Y < y1) y1 = p.Y;
 
-                if (px > x2) x2 = px;
-                if (py > y2) y2 = py;
+                if (p.X > x2) x2 = p.X;
+                if (p.Y > y2) y2 = p.Y;
             }
-            return (((x1 + x2) / 2, (y1 + y2) / 2));
+            return new Vector2((x1 + x2), (y1 + y2)) / 2;
         }
         #endregion
 
         #region SetCenter  ====================================================
         static internal void SetCenter(IEnumerable<Shape> shapes, Vector2 p)
         {
-            var (cx, cy) = (p.X, p.Y);
-            var (vx, vy) = GetCenter(shapes);
-
-            var (dx, dy) = (cx - vx, cy - vy);
-
-            foreach (var shape in shapes) { shape.MoveCenter(dx, dy); }
+            foreach (var shape in shapes) { shape.MoveCenter(p - GetCenter(shapes)); }
         }
-        protected void SetCenter(float cx, float cy)
-        {
-            var (vx, vy) = GetCenter();
-            var (dx, dy) = (cx - vx, cy - vy);
-            MoveCenter(dx, dy);
-        }
+        protected void SetCenter(Vector2 p) => MoveCenter(p - GetCenter());
         #endregion
 
         #region MoveCenter  ===================================================
         static internal void MoveCenter(IEnumerable<Shape> shapes, Vector2 ds)
         {
-            foreach (var shape in shapes) { shape.MoveCenter(ds.X, ds.Y); }
+            foreach (var shape in shapes) { shape.MoveCenter(ds); }
         }
-        protected void MoveCenter(float dx, float dy)
+        protected void MoveCenter(Vector2 ds)
         {
             for (int i = 0; i < DXY.Count; i++)
             {
-                var (tx, ty) = DXY[i];
-                DXY[i] = Limit(tx + dx, ty + dy);
+                DXY[i] = Limit(ds + DXY[i]);
             }
         }
         #endregion
@@ -321,9 +310,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region AddDrawTargets  ===============================================
-        static internal void AddDrawTargets(Shape s, List<Vector2> targets, DrawData drawData, float scale, Vector2 center)
+        static internal void AddDrawTargets(Shape s, List<Vector2> targets, DrawData drawData, float scale, Vector2 offset)
         {
-            var points = s.GetDrawingPoints(FlipState.None, scale, center);
+            var points = s.GetDrawingPoints(FlipState.None, scale, offset);
             var points2 = new Vector2[points.Length * 2];
             var rd = new Vector2(7, 7);
             targets.Clear();
@@ -341,7 +330,7 @@ namespace ModelGraph.Core
             if (s is Polyline pl)
                 pl.MovePoint(index, ds);
             else
-                s.MoveCenter(ds.X, ds.Y);
+                s.MoveCenter(ds);
         }
         #endregion
     }

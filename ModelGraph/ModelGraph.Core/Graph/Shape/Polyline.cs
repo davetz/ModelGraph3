@@ -7,12 +7,12 @@ namespace ModelGraph.Core
     {
 
         #region Polyline Methods  =============================================
-        internal Vector2[] GetDrawingPoints(Vector2 center, float scale)
+        internal Vector2[] GetDrawingPoints(float scale, Vector2 offset)
         {
             var list = new List<Vector2>(DXY.Count);
-            foreach (var (dx, dy) in DXY)
+            foreach (var p in DXY)
             {
-                list.Add(new Vector2(dx, dy) * scale + center);
+                list.Add(offset + p * scale);
             }
             return list.ToArray();
         }
@@ -22,8 +22,7 @@ namespace ModelGraph.Core
             if (index < 0) return;
             if (index < DXY.Count)
             {
-                var (dx, dy) = DXY[index];
-                DXY[index] = Limit(dx + ds.X, dy + ds.Y);
+                DXY[index] = Limit(DXY[index] + ds);
             }
         }
         internal bool TryDeletePoint(int index)
@@ -36,17 +35,17 @@ namespace ModelGraph.Core
             }
             return false;
         }
-        internal bool TryAddPoint(int index, Vector2 point)
-        {
+        internal bool TryAddPoint(int index, Vector2 p)
+        { 
             if (index < 0) return false;
             if (index < DXY.Count)
             {
-                DXY.Insert(index + 1, (point.X, point.Y));
+                DXY.Insert(index + 1, p);
                 return true;
             }
             else if (index == DXY.Count)
             {
-                DXY.Add((point.X, point.Y));
+                DXY.Add(p);
                 return true;
             }
             return false;
@@ -54,10 +53,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        protected override (float, float) GetCenter()
+        protected override Vector2 GetCenter()
         {
             var (x1, y1, x2, y2) = GetExtent();
-            return ((x1 + x2) / 2, (y1 + y2) / 2);
+            return new Vector2((x1 + x2), (y1 + y2)) / 2;
         }
         protected override (float dx1, float dy1, float dx2, float dy2) GetExtent()
         {
@@ -66,25 +65,25 @@ namespace ModelGraph.Core
             var y1 = 1f;
             var x2 = -1f;
             var y2 = -1f;
-            foreach (var (dx, dy) in DXY)
+            foreach (var d in DXY)
             {
-                if (dx < x1) x1 = dx;
-                if (dy < y1) y1 = dy;
+                if (d.X < x1) x1 = d.X;
+                if (d.Y < y1) y1 = d.Y;
 
-                if (dx > x2) x2 = dx;
-                if (dy > y2) y2 = dy;
+                if (d.X > x2) x2 = d.X;
+                if (d.Y > y2) y2 = d.Y;
             }
             return (x1 == 1) ? (0, 0, 0, 0) : (x1, y1, x2, y2);
         }
         protected override void Scale(Vector2 scale) => TransformPoints(Matrix3x2.CreateScale(scale));
-        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 center, Coloring c = Coloring.Normal)
+        internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring c = Coloring.Normal)
         {
-            var points = GetDrawingPoints(center, scale);
+            var points = GetDrawingPoints(scale, offset);
             drawData.AddParms((points, ShapeStrokeWidth(scale / size), ShapeColor(c)));
         }
-        internal override void AddDrawData(DrawData drawData, float scale, Vector2 center, FlipState flip)
+        internal override void AddDrawData(DrawData drawData, float scale, Vector2 offset, FlipState flip)
         {
-            var points = GetDrawingPoints(flip, scale, center);
+            var points = GetDrawingPoints(flip, scale, offset);
             drawData.AddParms((points, ShapeStrokeWidth(), ShapeColor()));
         }
         protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;

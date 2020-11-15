@@ -24,20 +24,20 @@ namespace ModelGraph.Core
         private PolyWave(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter(p.X, p.Y);
+            SetCenter(p);
         }
         #endregion
 
         #region CreatePoints  =================================================
         protected override void CreatePoints()
         {
-            var (cx, cy) = GetCenter();
+            var cp = GetCenter();
             var D = Dimension;
             var (r1, r2, _) = GetRadius();
 
             var n = 0;
             var N = 1 + D * 2; // number of points per spline
-            DXY = new List<(float dx, float dy)>(N);
+            DXY = new List<Vector2>(N);
             float dx = -r1, dy = r2, adx = r1 / D;
 
             Add(dx, 0);
@@ -47,7 +47,7 @@ namespace ModelGraph.Core
                 if (AddLobe()) break;
             }
             TransformPoints(Matrix3x2.CreateRotation(RadiansStart));
-            SetCenter(cx, cy);
+            SetCenter(cp);
 
             bool AddLobe()
             {

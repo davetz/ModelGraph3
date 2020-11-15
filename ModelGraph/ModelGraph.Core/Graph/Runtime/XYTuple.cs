@@ -133,9 +133,9 @@ namespace ModelGraph.Core
             var v1 = ToVector(p1);
             var v2 = ToVector(p2);
             return (center + scale * v1, center + scale * v2);
-
-            Vector2 ToVector((float x, float y) q) => new Vector2(q.x, q.y);
         }
+        internal static Vector2 ToVector((float x, float y) q) => new Vector2(q.x, q.y);
+        internal static (float X, float Y) OfVector(Vector2 p) => (p.X, p.Y);
         #endregion  
 
         public static float Diagonal((float dx, float dy) p) => ((p.dx * p.dx) + (p.dy * p.dy));

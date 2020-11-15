@@ -10,7 +10,7 @@ namespace ModelGraph.Core
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            DXY = new List<(float dx, float dy)>() {(-0.25f, 0), (0.25f, 0)};
+            DXY = new List<Vector2>() {new Vector2(-0.25f, 0), new Vector2(0.25f, 0)};
         }
 
         #region PrivateConstructor  ===========================================
@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         private Line(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter( p.X, p.Y);
+            SetCenter( p);
         }
         #endregion
 

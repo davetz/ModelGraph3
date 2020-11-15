@@ -6,9 +6,8 @@ namespace ModelGraph.Core
     internal abstract partial class Shape
     {
         static private float LIM(float v) => (v < -1) ? -1 : (v > 1) ? 1 : v;
-        static protected (float dx, float dy) Limit(float x, float y) => (LIM(x), LIM(y));
-        static protected (float dx, float dy) Limit((float x, float y) p) => Limit(p.x, p.y);
-        static protected Vector2 ToVector((float x, float y) p) => new Vector2(p.x, p.y);
+        static protected Vector2 Limit(float x, float y) => new Vector2(LIM(x), LIM(y));
+        static protected Vector2 Limit(Vector2 p) => new Vector2(LIM(p.X), LIM(p.Y));
 
         #region GetMaxRadius  =================================================
         static private (float r1, float r2, float f1) GetMaxRadius(IEnumerable<Shape> shapes)
@@ -123,13 +122,10 @@ namespace ModelGraph.Core
         {
             for (int i = 0; i < DXY.Count; i++)
             {
-                var (dx, dy) = DXY[i];
-                var p = new Vector2(dx, dy);
-                p = Vector2.Transform(p, m);
-                DXY[i] = Limit(p.X, p.Y);
+                DXY[i] = Limit(Vector2.Transform(DXY[i], m));
             }
         }
-        protected Vector2[] GetDrawingPoints(FlipState flip, float scale, Vector2 center)
+        protected Vector2[] GetDrawingPoints(FlipState flip, float scale, Vector2 offset)
         {
             var N = DXY.Count;
             var points = new Vector2[N];
@@ -173,9 +169,7 @@ namespace ModelGraph.Core
             {
                 for (int i = 0; i < N; i++)
                 {
-                    var (dx, dy) = DXY[i];
-                    var p = new Vector2(dx, dy);
-                    points[i] = center + p * scale;
+                    points[i] = offset + DXY[i] * scale;
                 }
                 return points;
             }
@@ -183,10 +177,7 @@ namespace ModelGraph.Core
             {
                 for (int i = 0; i < N; i++)
                 {
-                    var (dx, dy) = DXY[i];
-                    var p = new Vector2(dx, dy);
-                    p = Vector2.Transform(p, m);
-                    points[i] = center + p * scale;
+                    points[i] = offset + Vector2.Transform(DXY[i], m) * scale;
                 }
                 return points;
             }
