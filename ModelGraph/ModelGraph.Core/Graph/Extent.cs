@@ -127,6 +127,8 @@ namespace ModelGraph.Core
         public void Record(Vector2 p, float scale) { Point1 = Point2; SetPoint2(p, scale); }
         public void SetPoint1(Vector2 p, float scale) { X1 = (int)(p.X * scale); Y1 = (int)(p.Y * scale); }
         public void SetPoint2(Vector2 p, float scale) { X2 = (int)(p.X * scale); Y2 = (int)(p.Y * scale); }
+        internal Vector2[] DrawPoints => new Vector2[] { TopLeft, TopRight, BottomRight, BottomLeft };
+
         #endregion
 
         #region Expand  =======================================================

@@ -122,6 +122,15 @@ namespace ModelGraph.Core
                 }
             }
             #endregion
+
+            #region AddRegionParms  ===========================================
+            var m = 4;
+            foreach (var n in Selector.Nodes)
+            {
+                var points = new Vector2[] { n.Center, new Vector2(n.DX + m, n.DY + m) };
+                Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (100, 255, 200, 200)));
+            }
+            #endregion
         }
         #endregion
 
@@ -167,7 +176,8 @@ namespace ModelGraph.Core
         {
             _tracingSelector = true;
             _selectToggleMode = false;
-            SelectedNodes.Clear();
+            Selector.Clear();
+            Selector.SetPoint1(Editor.Point1);
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             ShowDrawItems(DrawItem.Selector);
@@ -190,31 +200,14 @@ namespace ModelGraph.Core
             if (_tracingSelector)
             {
                 _tracingSelector = false;
-                var r1 = Editor.Point1;
-                var r2 = Editor.Point2;
-                foreach (var n in Graph.Nodes)
-                {
-                    if (n.X < r1.X) continue;
-                    if (n.Y < r1.Y) continue;
-                    if (n.X > r2.X) continue;
-                    if (n.Y > r2.Y) continue;
-                    if (_selectToggleMode)
-                    {
-                        if (SelectedNodes.Contains(n))
-                            SelectedNodes.Remove(n);
-                        else
-                            SelectedNodes.Add(n);
-                    }
-                    else
-                        SelectedNodes.Add(n);
-                }
+                Selector.SetPoint2(Editor.Point2);
+                Selector.TryAdd(_selectToggleMode);
             }
             HideDrawItems(DrawItem.Selector);
             RefreshDrawData();
         }
         private bool _tracingSelector;
         private bool _selectToggleMode;
-        private readonly HashSet<Node> SelectedNodes = new HashSet<Node>();
         #endregion
 
         #region ViewMode  =====================================================
@@ -267,30 +260,9 @@ namespace ModelGraph.Core
         private void MoveOnNodeDragging()
         {
             var v = Editor.PointDelta(true);
-            if (SelectedNodes.Contains(Selector.HitNode))
-            {
-                _modifiedEdges.Clear();
-                foreach (var n in SelectedNodes)
-                {
-                    n.Move(v);
-                    if (Graph.Node_Edges.TryGetValue(n, out List<Edge> edges))
-                    {
-                        foreach (var e in edges) { _modifiedEdges.Add(e); }
-                    }
-                }
-                foreach (var e in _modifiedEdges) { e.Refresh(); }
-            }
-            else
-            {
-                Selector.HitNode.Move(v);
-                if (Graph.Node_Edges.TryGetValue(Selector.HitNode, out List<Edge> edges))
-                {
-                    foreach (var e in edges) { e.Refresh(); }
-                }
-            }
+            Selector.Move(v);
             RefreshEditorData();
         }
-        HashSet<Edge> _modifiedEdges = new HashSet<Edge>();
 
         private void MoveOnNodeEnding()
         {
@@ -303,16 +275,7 @@ namespace ModelGraph.Core
         private void MoveOnNodeRightArrow() => MoveOnNode(Selector.HitNode, new Vector2(1, 0));
         private void MoveOnNode(Node node, Vector2 ds)
         {
-            if (SelectedNodes.Contains(node))
-            {
-                foreach (var n in SelectedNodes)
-                {
-                    n.Move(ds);
-                }
-            }
-            else
-                node.Move(ds);
-
+            Selector.Move(ds);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }

@@ -73,21 +73,31 @@ namespace ModelGraph.Core
         #endregion
 
         #region SelectorRectangle  ============================================
-        public void StartPoint(Vector2 p) => Extent.Point1 = Extent.Point2 = p;
-        public void NextPoint(Vector2 p) => Extent.Point2 = p;
-        public (float X, float Y, float W, float H) Rectangle => (Extent.Xmin, Extent.Ymin, Extent.Width, Extent.Hieght);
+        public void SetPoint1(Vector2 p) => Extent.Point1 = Extent.Point2 = p;
+        public void SetPoint2(Vector2 p) => Extent.Point2 = p;
         #endregion
 
         #region TryAdd  =======================================================
-        public void TryAdd()
+        public void TryAdd(bool toggleMode)
         {
             if (Extent.HasArea)
             {
+                Extent.Normalize();
                 var count = Nodes.Count;
-                foreach (var node in Graph.Nodes)
+                if (toggleMode)
                 {
-                    if (Nodes.Contains(node)) continue;
-                    if (Extent.Contains(node.Center)) Nodes.Add(node);
+                    foreach (var node in Graph.Nodes)
+                    {
+                        if (Extent.Contains(node.Center)) Nodes.Remove(node);
+                    }
+                }
+                else
+                {
+                    foreach (var node in Graph.Nodes)
+                    {
+                        if (Nodes.Contains(node)) continue;
+                        if (Extent.Contains(node.Center)) Nodes.Add(node);
+                    }
                 }
                 if (count != Nodes.Count)
                 {
@@ -410,7 +420,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-            public void Move(Vector2 delta)
+        public void Move(Vector2 delta)
         {
             if (IsRegionHit || IsNodeHit)
             {
