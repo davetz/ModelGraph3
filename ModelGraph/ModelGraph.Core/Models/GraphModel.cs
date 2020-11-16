@@ -98,7 +98,7 @@ namespace ModelGraph.Core
             var scale = Graph.Owner.SymbolSize;
             foreach (var n in Graph.Nodes)
             {
-                var points = new Vector2[] { new Vector2(n.X, n.Y), new Vector2(n.DX, n.DY) };
+                var points = new Vector2[] { n.Center, n.Radius };
                 var k = n.Symbol - 2;
                 if (k < 0)
                 {
@@ -177,7 +177,6 @@ namespace ModelGraph.Core
             _tracingSelector = true;
             _selectToggleMode = false;
             Selector.Clear();
-            Selector.SetPoint1(Editor.Point1);
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             ShowDrawItems(DrawItem.Selector);
@@ -201,7 +200,7 @@ namespace ModelGraph.Core
             {
                 _tracingSelector = false;
                 Selector.SetPoint2(Editor.Point2);
-                Selector.TryAdd(_selectToggleMode);
+                Selector.HitTestRegion(_selectToggleMode, Editor.Point1, Editor.Point2);
             }
             HideDrawItems(DrawItem.Selector);
             RefreshDrawData();

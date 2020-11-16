@@ -77,6 +77,7 @@ namespace ModelGraph.Core
 
         #region Center, Extent, Radius  =======================================
         public Vector2 Center { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
+        public Vector2 Radius => new Vector2(DX, DY);
         public (float X1, float Y1, float X2, float Y2) Extent => (X - DX, Y - DY, X + DX, Y + DY);
         public (float X1, float Y1, float X2, float Y2, float DX, float DY, Node node) FullExtent(int ds)
         {
@@ -88,7 +89,6 @@ namespace ModelGraph.Core
             var dy = y2 - y1;
             return (x1, y1, x2, y2, dx, dy, this);
         }
-        public int Radius => (DX + DY) / 2;
         #endregion
 
         #region Tryinitialize  ================================================
