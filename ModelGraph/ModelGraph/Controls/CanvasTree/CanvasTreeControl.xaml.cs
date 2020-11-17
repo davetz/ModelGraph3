@@ -284,7 +284,8 @@ namespace ModelGraph.Controls
 {
                 ItemButton1,
                 ItemButton2,
-                ItemButton3
+                ItemButton3,
+                ItemButton4
 };
             MenuItems = new MenuFlyoutItem[]
             {

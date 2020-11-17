@@ -34,8 +34,6 @@ namespace ModelGraph.Core
         PasteMode = 0x800,      //enable pasting
         CreateMode = 0x900,     //enable createing
         OperateMode = 0xA00,    //enable operating
-        ContextMenu = 0xB00,    //context menu visible
-        PropertySheet = 0xC00,  //property sheet visible
         Apply = 0xD00,          //apply changes to model
         Revert = 0xE00,         //revert to previous version
 
@@ -53,8 +51,9 @@ namespace ModelGraph.Core
         DownArrow    = 0x19000,
         LeftArrow    = 0x1A000,
         RightArrow   = 0x1B000,
+        ContextMenu  = 0x0C000,    //context menu visible
 
-        MayRepeat    = 0x10000,
+        MayRepeat = 0x10000,
         EventMask    = 0x1F000,   //issolate current event
 
         NoChange = 0xFFFFFFF,

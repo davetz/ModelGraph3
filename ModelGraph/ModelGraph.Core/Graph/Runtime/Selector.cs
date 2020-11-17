@@ -370,6 +370,7 @@ namespace ModelGraph.Core
                     }
                 }
             }
+            UpdateModels();
         }
         #endregion
 
@@ -382,6 +383,7 @@ namespace ModelGraph.Core
             {
                 node.AlignVert(x);
             }
+            UpdateModels();
         }
         public void AlignHorz()
         {
@@ -391,6 +393,7 @@ namespace ModelGraph.Core
             {
                 node.AlignHorz(y);
             }
+            UpdateModels();
         }
         #endregion
 
@@ -403,6 +406,7 @@ namespace ModelGraph.Core
             {
                 node.FlipHorz(x);
             }
+            UpdateModels();
         }
         public void FlipVert()
         {
@@ -412,7 +416,20 @@ namespace ModelGraph.Core
             {
                 node.FlipVert(y);
             }
+            UpdateModels();
         }
+        #endregion
+
+        #region UpdateModels  =================================================
+        private void UpdateModels()
+        {
+            var root = Graph.Owner.Owner.Owner;
+            foreach (var pm in root.Items)
+            {
+                if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.RefreshDrawData();
+            }
+        }
+
         #endregion
 
         #region Snapshot  =====================================================

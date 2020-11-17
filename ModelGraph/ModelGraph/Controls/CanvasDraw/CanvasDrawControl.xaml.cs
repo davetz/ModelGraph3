@@ -552,8 +552,7 @@ namespace ModelGraph.Controls
             if (args.TryGetPosition(RootCanvas, out Point p))
             {
                 args.Handled = true;
-
-                sender.ContextFlyout.ShowAt(RootCanvas);
+                PostEvent(DrawEvent.Context);
             }
         }
         #endregion

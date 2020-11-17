@@ -246,6 +246,84 @@
   <data name="03DS" xml:space="preserve">
     <value>Make this an egress sequence</value>
   </data>
+  <data name="03EN" xml:space="preserve">
+    <value>Top</value>
+  </data>
+  <data name="03ES" xml:space="preserve">
+    <value>Align tops</value>
+  </data>
+  <data name="03FN" xml:space="preserve">
+    <value>Left</value>
+  </data>
+  <data name="03FS" xml:space="preserve">
+    <value>Align left sides</value>
+  </data>
+  <data name="040N" xml:space="preserve">
+    <value>Right</value>
+  </data>
+  <data name="040S" xml:space="preserve">
+    <value>Align right sides </value>
+  </data>
+  <data name="041N" xml:space="preserve">
+    <value>Bottom</value>
+  </data>
+  <data name="041S" xml:space="preserve">
+    <value>Align bottoms</value>
+  </data>
+  <data name="042N" xml:space="preserve">
+    <value>Center</value>
+  </data>
+  <data name="042S" xml:space="preserve">
+    <value>Align centers</value>
+  </data>
+  <data name="043N" xml:space="preserve">
+    <value>Undo</value>
+  </data>
+  <data name="043S" xml:space="preserve">
+    <value>Undo the privious action</value>
+  </data>
+  <data name="044N" xml:space="preserve">
+    <value>Redo</value>
+  </data>
+  <data name="044S" xml:space="preserve">
+    <value>Redo the previous action</value>
+  </data>
+  <data name="045N" xml:space="preserve">
+    <value>Vertical</value>
+  </data>
+  <data name="045S" xml:space="preserve">
+    <value>Vertically flip</value>
+  </data>
+  <data name="046N" xml:space="preserve">
+    <value>Horizontal</value>
+  </data>
+  <data name="046S" xml:space="preserve">
+    <value>Horizontally flip </value>
+  </data>
+  <data name="047N" xml:space="preserve">
+    <value>L-90</value>
+  </data>
+  <data name="047S" xml:space="preserve">
+    <value>Rotate left 90 degrees</value>
+  </data>
+  <data name="048N" xml:space="preserve">
+    <value>R-90</value>
+  </data>
+  <data name="048S" xml:space="preserve">
+    <value>Rotate right 90 degrees</value>
+  </data>
+  <data name="049N" xml:space="preserve">
+    <value>L-45</value>
+  </data>
+  <data name="049S" xml:space="preserve">
+    <value>Rotate left 45 degrees</value>
+  </data>
+  <data name="050N" xml:space="preserve">
+    <value>R-45</value>
+  </data>
+  <data name="050S" xml:space="preserve">
+    <value>Rotate right 45 degrees</value>
+  </data>
   <data name="0E1K" xml:space="preserve">
     <value>Enum</value>
   </data>
@@ -1544,14 +1622,29 @@ NEC – NWC – SEC - SWC</value>
   <data name="6EBS" xml:space="preserve">
     <value>List of incomplete paths</value>
   </data>
+  <data name="6F0N" xml:space="preserve">
+    <value>Action</value>
+  </data>
   <data name="6F1K" xml:space="preserve">
     <value>PathCount</value>
+  </data>
+  <data name="6F1N" xml:space="preserve">
+    <value>Align</value>
   </data>
   <data name="6F2K" xml:space="preserve">
     <value>PathCheck</value>
   </data>
+  <data name="6F2N" xml:space="preserve">
+    <value>Align</value>
+  </data>
   <data name="6F3K" xml:space="preserve">
     <value>PathComposite</value>
+  </data>
+  <data name="6F3N" xml:space="preserve">
+    <value>Flip</value>
+  </data>
+  <data name="6F4N" xml:space="preserve">
+    <value>Rotate</value>
   </data>
   <data name="7D0N" xml:space="preserve">
     <value>Compute</value>

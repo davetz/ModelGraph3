@@ -658,6 +658,7 @@
                         <Button x:Name="ItemButton1" Style="{StaticResource ItemButtonStyle}"  Click="ItemButton_Click" />
                         <Button x:Name="ItemButton2" Style="{StaticResource ItemButtonStyle}"  Click="ItemButton_Click" />
                         <Button x:Name="ItemButton3" Style="{StaticResource ItemButtonStyle}"  Click="ItemButton_Click" />
+                        <Button x:Name="ItemButton4" Style="{StaticResource ItemButtonStyle}"  Click="ItemButton_Click" />
                         <Button x:Name="MenuButton"  x:Uid="MenuButton"  Style="{StaticResource ItemButtonStyle}" >
                             <Button.Flyout>
                                 <MenuFlyout Opening="MenuFlyout_Opening">

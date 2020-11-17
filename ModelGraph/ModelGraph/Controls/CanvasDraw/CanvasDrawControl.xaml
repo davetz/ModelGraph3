@@ -148,11 +148,6 @@
                     PointerReleased="RootCanvas_PointerReleased"
                     PointerExited="RootCanvas_PointerExited">
                     
-                    <Canvas.ContextFlyout>
-                        <MenuFlyout Placement="Right">
-                        </MenuFlyout>
-                    </Canvas.ContextFlyout>
-
                     <Grid x:Name="SelectorGrid" Background="Transparent" Visibility="Collapsed">
                         <Border  BorderThickness="1" BorderBrush="White" Margin="0" />
                         <Border  BorderThickness="1" BorderBrush="CornflowerBlue" Margin="1"/>

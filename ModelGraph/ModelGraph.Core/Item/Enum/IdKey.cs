@@ -50,6 +50,20 @@ namespace ModelGraph.Core
         MakePathHeadCommand = 0x3B,
         MakeGroupHeadCommand = 0x3C,
         MakeEgressHeadCommand = 0x3D,
+        AlignTopCommand = 0x3E,
+        AlignLeftCommand = 0x3F,
+        AlignRightCommand = 0x40,
+        AlignBottomCommand = 0x41,
+        AlignCenterCommand = 0x42,
+        GraphUndoCommand = 0x43,
+        GraphRedoCommand = 0x44,
+        FlipVertCommand = 0x45,
+        FlipHorzCommand = 0x46,
+        Rotate90LeftCommand = 0x47,
+        Rotate90RightCommand = 0x48,
+        Rotate45LeftCommand = 0x49,
+        Rotate45RightCommand = 0x50,
+
         #endregion
 
         #region Store ================================================(0E0-0FF)
@@ -480,6 +494,7 @@ namespace ModelGraph.Core
         //=====================================================================
 
         Model_6DA_HitNode = 0x6DA,
+        Model_6DB_MoveNodeMenu = 0x6DB,
 
         //=====================================================================
         Model_6E1_Graph = 0x6E1,
@@ -496,6 +511,14 @@ namespace ModelGraph.Core
 
         Model_6EB_OpenList = 0x6EB,
         Model_6EC_Open = 0x6EC,
+
+        //=====================================================================
+        Model_6F0_UndoRedo = 0x6F0,
+        Model_6F1_VertAlign = 0x6F1,
+        Model_6F2_HorzAlign = 0x6F2,
+        Model_6F3_Flip = 0x6F3,
+        Model_6F4_Rotate = 0x6F4,
+
         //=====================================================================
         PrimeCompute_Model = 0x7D0,
         ComputeStore_Model = 0x7D1,

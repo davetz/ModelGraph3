@@ -31,6 +31,7 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.KeyLeftArrow, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.KeyDownArrow, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.Context, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
 
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid, SelectorOnVoid);
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode, ViewOnNode);
@@ -51,6 +52,8 @@ namespace ModelGraph.Core
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.LeftArrow, MoveOnNodeLeftArrow);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.DownArrow, MoveOnNodeDownArrow);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.RightArrow, MoveOnNodeRightArrow);
+
+            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.ContextMenu, MoveOnNodeContextMenu);
 
             RefreshEditorData();
         }
@@ -268,14 +271,27 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             PageModel.TriggerUIRefresh();
         }
-        private void MoveOnNodeUpArrow() => MoveOnNode(Selector.HitNode, new Vector2(0, -1));
-        private void MoveOnNodeDownArrow() => MoveOnNode(Selector.HitNode, new Vector2(0, 1));
-        private void MoveOnNodeLeftArrow() => MoveOnNode(Selector.HitNode, new Vector2(-1, 0));
-        private void MoveOnNodeRightArrow() => MoveOnNode(Selector.HitNode, new Vector2(1, 0));
-        private void MoveOnNode(Node node, Vector2 ds)
+        private void MoveOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
+        private void MoveOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
+        private void MoveOnNodeLeftArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(-1, 0));
+        private void MoveOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
+        private void MoveOnNodeDelta(Node node, Vector2 delta)
         {
-            Selector.Move(ds);
+            Selector.Move(delta);
             RefreshEditorData();
+            PageModel.TriggerUIRefresh();
+        }
+        private void MoveOnNodeContextMenu()
+        {
+            DrawCursor = DrawCursor.Arrow;
+            HideDrawItems(DrawItem.ToolTip);
+            ShowDrawItems(DrawItem.FlyTree);
+            FlyOutPoint = Selector.HitNode.Center;
+            if (FlyTreeModel is TreeModel tm)
+            {
+                tm.SetHeaderModel((m) => { new Model_6DB_MoveNodeMenu(m, Graph); });
+                FlyOutSize = new Vector2(280, 200);
+            }
             PageModel.TriggerUIRefresh();
         }
         #endregion
