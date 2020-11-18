@@ -24,7 +24,7 @@ namespace ModelGraph.Core
                 I.Add(i); // the edge index list will be sorted based on comparison of edge data
 
                 var (other, bend, targ, atch, tdir) = edges[i].OtherBendTargetAttachDirection(node);
-                var (dx, dy, slope, slice) = XYTuple.SlopeSlice(node.Center, bend);
+                var (dx, dy, slope, slice) = UTL1.SlopeSlice(node.Center, bend);
 
                 E[i] = (bend, other, 0, targ, atch, tdir);
                 F[i] = (new Vector2(dx, dy), slope, (byte)slice, 0, 0, Direction.Any);
@@ -284,7 +284,7 @@ namespace ModelGraph.Core
                 // populate the edgeSect list for given target point
                 (float cost, float slope, int x1, int y1, int x2, int y2, int six) EdgetTarget_CostSlopSectorIndex(int ei, int ti)
                 {
-                    var (dx, dy, slope, six) = XYTuple.SlopeSlice(targetContacts[ti].pnt, E[ei].bend);
+                    var (dx, dy, slope, six) = UTL1.SlopeSlice(targetContacts[ti].pnt, E[ei].bend);
                     var tix = targetContacts[ti].tix;
 
                     var pi = penalty[tix][six]; // [from direction sector index] [to target location index]
@@ -522,7 +522,7 @@ namespace ModelGraph.Core
                     {
                         var b = E[i].bend;
                         var (x2, y2) = (b.X, b.Y);
-                        var (dx, dy, slope, slice) = XYTuple.SlopeSlice(new Vector2(x, y), E[i].bend);
+                        var (dx, dy, slope, slice) = UTL1.SlopeSlice(new Vector2(x, y), E[i].bend);
 
                         if (x2 > xE && y2 < yN)
                             edges[i].SetFace(node, (w, -h), (w + tmLen, -h - tmLen), Direction.NEC);

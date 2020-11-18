@@ -12,11 +12,10 @@ namespace ModelGraph.Core
         {
             var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new DrawCommand(this, IdKey.Rotate90LeftCommand, Noop));
-            list.Add(new DrawCommand(this, IdKey.Rotate45LeftCommand, Noop));
-            list.Add(new DrawCommand(this, IdKey.Rotate45RightCommand, Noop));
-            list.Add(new DrawCommand(this, IdKey.Rotate90RightCommand, Noop));
+            list.Add(new DrawCommand(this, IdKey.Rotate90LeftCommand, Item.Selector.RotateLeft90));
+            list.Add(new DrawCommand(this, IdKey.Rotate45LeftCommand, Item.Selector.RotateLeft45));
+            list.Add(new DrawCommand(this, IdKey.Rotate45RightCommand, Item.Selector.RotateRight45));
+            list.Add(new DrawCommand(this, IdKey.Rotate90RightCommand, Item.Selector.RotateRight90));
         }
-        private void Noop() { }
     }
 }

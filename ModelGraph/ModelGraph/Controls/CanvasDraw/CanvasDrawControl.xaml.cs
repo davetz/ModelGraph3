@@ -552,7 +552,7 @@ namespace ModelGraph.Controls
             if (args.TryGetPosition(RootCanvas, out Point p))
             {
                 args.Handled = true;
-                PostEvent(DrawEvent.Context);
+                PostEvent(DrawEvent.ContextMenu);
             }
         }
         #endregion

@@ -31,7 +31,7 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.KeyLeftArrow, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.KeyDownArrow, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.Context, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
+            SetEventAction(DrawEvent.ContextMenu, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
 
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid, SelectorOnVoid);
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode, ViewOnNode);
@@ -157,14 +157,6 @@ namespace ModelGraph.Core
                 AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
             else if (Selector.IsVoidHit)
                 AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
-        }
-        private (bool, Node) HitNodeTest(Vector2 p)
-        {
-            foreach (var n in Graph.Nodes)
-            {
-                if (n.HitTest(p)) return (true, n);
-            }
-            return (false, null);
         }
         #endregion
 

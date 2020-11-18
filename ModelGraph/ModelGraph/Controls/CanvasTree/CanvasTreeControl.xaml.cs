@@ -16,6 +16,11 @@ namespace ModelGraph.Controls
         public CanvasTreeControl()
         {
             InitializeComponent();
+            PointerMoved += CanvasTreeControl_PointerMoved;
+        }
+        private void CanvasTreeControl_PointerMoved(object sender, PointerRoutedEventArgs e)
+        {
+           e.Handled = true;
         }
         #endregion
 

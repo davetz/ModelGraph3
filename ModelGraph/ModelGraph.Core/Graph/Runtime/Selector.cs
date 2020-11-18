@@ -339,34 +339,33 @@ namespace ModelGraph.Core
         #region Rotate  =======================================================
         public void RotateLeft45()
         {
-            Rotate(XYTuple.RotateLeft45Matrix(HitPoint));
+            Rotate(UTL1.RotateLeft45Matrix(HitPoint));
         }
         public void RotateRight45()
         {
-            Rotate(XYTuple.RotateRight45Matrix(HitPoint));
+            Rotate(UTL1.RotateRight45Matrix(HitPoint));
         }
         public void RotateLeft90()
         {
-            Rotate(XYTuple.RotateLeft90Matrix(HitPoint));
+            Rotate(UTL1.RotateLeft90Matrix(HitPoint));
         }
         public void RotateRight90()
         {
-            Rotate(XYTuple.RotateRight90Matrix(HitPoint));
+            Rotate(UTL1.RotateRight90Matrix(HitPoint));
         }
         public void Rotate(Matrix3x2 mx)
         {
+            if (Nodes.Count < 2) return; // this is nonsense
+
             TakeSnapshot();
-            if (IsRegionHit)
+            foreach (var node in Nodes) { node.Center = Vector2.Transform(node.Center, mx); }
+            foreach (var edge in Edges)
             {
-                foreach (var node in Nodes) { node.Center = XYTuple.Transform(mx, node.Center); }
-                foreach (var edge in Edges)
+                if (edge.HasBends)
                 {
-                    if (edge.HasBends)
+                    for (int i = 0; i < edge.Bends.Length; i++)
                     {
-                        for (int i = 0; i < edge.Bends.Length; i++)
-                        {
-                            edge.Bends[i] = XYTuple.Transform(mx, edge.Bends[i]);
-                        }
+                        edge.Bends[i] = Vector2.Transform(edge.Bends[i], mx);
                     }
                 }
             }
@@ -377,6 +376,8 @@ namespace ModelGraph.Core
         #region Align  ========================================================
         public void AlignVert()
         {
+            if (Nodes.Count < 2) return; // this is nonsense
+
             var x = HitPoint.X;
             TakeSnapshot();
             foreach (var node in Nodes)
@@ -387,6 +388,8 @@ namespace ModelGraph.Core
         }
         public void AlignHorz()
         {
+            if (Nodes.Count < 2) return; // this is nonsense
+
             var y = HitPoint.Y;
             TakeSnapshot();
             foreach (var node in Nodes)
@@ -424,6 +427,7 @@ namespace ModelGraph.Core
         private void UpdateModels()
         {
             var root = Graph.Owner.Owner.Owner;
+            Graph.AdjustGraph(this);
             foreach (var pm in root.Items)
             {
                 if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.RefreshDrawData();

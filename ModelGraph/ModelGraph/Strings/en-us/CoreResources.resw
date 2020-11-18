@@ -1629,13 +1629,13 @@ NEC – NWC – SEC - SWC</value>
     <value>PathCount</value>
   </data>
   <data name="6F1N" xml:space="preserve">
-    <value>Align</value>
+    <value>AlignTB</value>
   </data>
   <data name="6F2K" xml:space="preserve">
     <value>PathCheck</value>
   </data>
   <data name="6F2N" xml:space="preserve">
-    <value>Align</value>
+    <value>AlignLR</value>
   </data>
   <data name="6F3K" xml:space="preserve">
     <value>PathComposite</value>

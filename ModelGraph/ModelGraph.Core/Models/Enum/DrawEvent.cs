@@ -3,17 +3,17 @@ namespace ModelGraph.Core
 {
     public enum DrawEvent
     { 
-        Idle, 
+        Idle,
         Tap,
+        Skim,
+        Drag,
+        TapEnd,
         CtrlTap,
         ShiftTap,
-        DoubleTap,
-        Context,
-        TapEnd, 
-        Skim, 
-        Drag,
         CtrlDrag,
         ShiftDrag,
+        DoubleTap,
+        ContextMenu,
         TopTap, 
         LeftTap, 
         RightTap, 
