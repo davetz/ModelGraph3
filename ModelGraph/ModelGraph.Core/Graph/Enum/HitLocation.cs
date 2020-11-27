@@ -5,12 +5,11 @@ namespace ModelGraph.Core
     [Flags]
     public enum HitLocation
     {
-        Void = 0x0000, // we hit a void (pointer is in an empty space)
+        Void = 0x0000, // we hit a void (pointer is on an empty space)
 
-        Open = 0x1000,
+        Pin = 0x1000,
         Node = 0x2000,
         Edge = 0x4000,
-        Region = 0x8000,
         Multiple = 0x10000,
 
         Top = 0x0010,

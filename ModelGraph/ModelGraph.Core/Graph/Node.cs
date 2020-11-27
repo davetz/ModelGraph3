@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class Node : NodeEdge
+    public class Node : NodeEdge, IHitTestable
     {
         internal Item Item;
         internal int OpenPathIndex = -1;
@@ -79,15 +79,20 @@ namespace ModelGraph.Core
         public Vector2 Center { get { return new Vector2(X, Y); } set { X = value.X; Y = value.Y; } }
         public Vector2 Radius => new Vector2(DX, DY);
         public (float X1, float Y1, float X2, float Y2) Extent => (X - DX, Y - DY, X + DX, Y + DY);
-        public (float X1, float Y1, float X2, float Y2, float DX, float DY, Node node) FullExtent(int ds)
+        #endregion
+
+        #region IHitTestable  =================================================
+        public void GetHitSegments(HashSet<long> hitSegments, uint mask, ushort size, byte margin)
         {
-            var x1 = X - DX - ds;
-            var y1 = Y - DY - ds;
-            var x2 = X + DX + ds;
-            var y2 = Y + DY + ds;
-            var dx = x2 - x1;
-            var dy = y2 - y1;
-            return (x1, y1, x2, y2, dx, dy, this);
+            hitSegments.Clear();
+            var x1 = ((uint)X - DX - margin) & mask;
+            var y1 = ((uint)Y - DY - margin) & mask;
+            var x2 = ((uint)X + DX + margin) & mask;
+            var y2 = ((uint)Y + DY + margin) & mask;
+            hitSegments.Add((long)x1 << 32 | y1);
+            hitSegments.Add((long)x1 << 32 | y2);
+            hitSegments.Add((long)x2 << 32 | y1);
+            hitSegments.Add((long)x2 << 32 | y2);
         }
         #endregion
 

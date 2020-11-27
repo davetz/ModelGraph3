@@ -409,7 +409,7 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
             SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
             SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-            if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
+            if (IsPasteActionEnabled) SetEventAction(DrawEvent.UIButton3, PasteAction);
             SetProperties();
         }
         private void PasteAction()
@@ -437,16 +437,16 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                SetEventAction(DrawEvent.Cut, CutAction);
-                SetEventAction(DrawEvent.Copy, CopyAction);
-                SetEventAction(DrawEvent.Recenter, CenterAction);
-                SetEventAction(DrawEvent.RotateLeft, RotateLeft);
-                SetEventAction(DrawEvent.RotateRight, RotateRight);
-                SetEventAction(DrawEvent.SetDegree22, SetDegree22);
-                SetEventAction(DrawEvent.SetDegree30, SetDegree30);
-                SetEventAction(DrawEvent.ShowPins, SetLinkMode);
-                SetEventAction(DrawEvent.VerticalFlip, VerticalFlip);
-                SetEventAction(DrawEvent.HorizontalFlip, HorizontalFlip);
+                SetEventAction(DrawEvent.UIButton1, CutAction);
+                SetEventAction(DrawEvent.UIButton2, CopyAction);
+                SetEventAction(DrawEvent.UIButton4, RotateLeft);
+                SetEventAction(DrawEvent.UIButton5, RotateRight);
+                SetEventAction(DrawEvent.UIButton6, SetDegree22);
+                SetEventAction(DrawEvent.UIButton7, SetDegree30);
+                SetEventAction(DrawEvent.UIButtonB, SetLinkMode);
+                SetEventAction(DrawEvent.UIButton8, VerticalFlip);
+                SetEventAction(DrawEvent.UIButton9, HorizontalFlip);
+                SetEventAction(DrawEvent.UIButtonA, CenterAction);
             }
         }
 
@@ -709,7 +709,7 @@ namespace ModelGraph.Core
             if (TrySetState(DrawState.LinkMode))
             {
                 ClearAllEventActions();
-                SetEventAction(DrawEvent.ShowPins, SetEditMode);
+                SetEventAction(DrawEvent.UIButtonB, SetEditMode);
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);

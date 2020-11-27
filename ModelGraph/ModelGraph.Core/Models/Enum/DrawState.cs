@@ -10,7 +10,6 @@ namespace ModelGraph.Core
         NowOnPin = 0x2,     //currently pointer is on a pin
         NowOnNode = 0x3,    //currently pointer is on a node
         NowOnEdge = 0x4,    //currently pointer is on an edge
-        NowOnRegion = 0x5,  //currently pointer is on a region
 
         NowMask = 0x7,      //issolate current location type
 
@@ -20,13 +19,12 @@ namespace ModelGraph.Core
         StartOnPin = 0x20,      //starting from a pin
         StartOnNode = 0x30,     //starting from a node
         StartOnEdge = 0x40,     //starting from an edge
-        StartOnRegion = 0x50,   //starting from a region
 
         StartOnMask = 0x70,     //issolate starting location type
 
         ViewMode = 0x100,       //enable viewing
         EditMode = 0x200,       //enable editing
-        MoveMode = 0x300,       //enable moving nodes and regions
+        MoveMode = 0x300,       //enable moving nodes
         LinkMode = 0x400,       //enable linking
         PinsMode = 0x500,       //enable movinge individual pins
         CutMode = 0x600,        //enable cutting

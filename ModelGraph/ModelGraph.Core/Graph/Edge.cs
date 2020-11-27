@@ -1,8 +1,9 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class Edge : NodeEdge
+    public class Edge : NodeEdge, IHitTestable
     {
         private readonly QueryX _queryX;
         public Vector2[] Points;
@@ -156,6 +157,59 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region IHitTestable  =================================================
+        public void GetHitSegments(HashSet<long> hitSegments, uint mask, ushort size, byte margin)
+        {
+            hitSegments.Clear();
+            if (Points is null) Refresh();
+            var DN = new Vector2();
+
+            var last = Points.Length - 1;
+            AddHitSegment(Points[0]);
+            AddHitSegment(Points[Tm1]);
+            AddHitSegment(Points[Tm2]);
+            AddHitSegment(Points[last]);
+
+            for (int i =  Tm1, j = i + 1; i < Tm2; i++, j++)
+            {
+                var p1 = Points[i];
+                var p2 = Points[j];
+                var ds = p2 - p1;
+                //number of hitSegments between p1 and p2
+                var N = 1 + (ds.X > ds.Y ? ds.X : ds.Y) / size;
+                if (ds.X < 0)
+                {
+                    if (ds.Y < 0)
+                        DN = new Vector2(-size, -size); //towards upper left                        
+                    else
+                        DN = new Vector2(-size, size); //towards lower left
+                }
+                else
+                {
+                    if (ds.Y < 0)
+                        DN = new Vector2(size, -size); //towards upper right
+                    else
+                        DN = new Vector2(size, size); //towards lower right
+                }
+
+                var p = p1 + DN;
+                for (int k = 0; k < N; k++, p += DN) { AddHitSegment(p); }
+            }
+
+            void AddHitSegment(Vector2 p)
+            {
+                var x1 = ((uint)p.X - margin) & mask;
+                var y1 = ((uint)p.Y - margin) & mask;
+                var x2 = ((uint)p.X + margin) & mask;
+                var y2 = ((uint)p.Y + margin) & mask;
+                hitSegments.Add((long)x1 << 32 | y1);
+                hitSegments.Add((long)x1 << 32 | y2);
+                hitSegments.Add((long)x2 << 32 | y1);
+                hitSegments.Add((long)x2 << 32 | y2);
+            }
+        }
+        #endregion
+
         #region HitTest  ======================================================
         // [node1]o----o-----o---edge----o-----o----o[node2] 
         //            Tm1   Bp1         Bp2   Tm2
@@ -294,7 +348,7 @@ namespace ModelGraph.Core
                 var e1 = new Extent(Points[Tm1], hitPoint);
                 var e2 = new Extent(Points[Tm2], hitPoint);
 
-                hit |=  (e1.IsLessThan(e2)) ? (HitLocation.Edge | HitLocation.End1) : (HitLocation.Edge | HitLocation.End2);
+                hit |= e1.IsLessThan(e2) ? (HitLocation.Edge | HitLocation.End1) : (HitLocation.Edge | HitLocation.End2);
 
                 return true;
             }

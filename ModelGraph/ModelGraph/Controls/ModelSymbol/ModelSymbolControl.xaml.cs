@@ -104,33 +104,33 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Events  =======================================================
-        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateLeft);
-        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateRight);
+        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton4);
+        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton5);
         private void RotateAngleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (_use30degreeDelta)
             {
                 _use30degreeDelta = false;
                 RotateAngleButton.Content = "22.5";
-                PostEvent(DrawEvent.SetDegree22);
+                PostEvent(DrawEvent.UIButton6);
             }
             else
             {
                 _use30degreeDelta = true;
                 RotateAngleButton.Content = "30.0";
-                PostEvent(DrawEvent.SetDegree30);
+                PostEvent(DrawEvent.UIButton7);
             }
         }
-        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.VerticalFlip);
-        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.HorizontalFlip);
+        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton8);
+        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton9);
 
-        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Cut);
+        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton1);
 
-        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Copy);
+        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton2);
 
-        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Paste);
+        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButton3);
 
-        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Recenter);
+        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.UIButtonA);
 
         private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.PinsMode);
         private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);

@@ -2,9 +2,9 @@
 
 namespace ModelGraph.Core
 {
-    public class Model_6DB_MoveNodeMenu : List1ModelOf<Graph>
+    public class Model_6DB_MoveNodeMenu : List1ModelOf<GraphModel>
     {
-        internal Model_6DB_MoveNodeMenu(TreeModel owner, Graph item) : base(owner, item) { }
+        internal Model_6DB_MoveNodeMenu(TreeModel owner, GraphModel item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6DB_MoveNodeMenu;
         public override string GetNameId() => Root.GetNameId(IdKey);
 

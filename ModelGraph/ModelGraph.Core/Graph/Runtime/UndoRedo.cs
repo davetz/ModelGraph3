@@ -23,9 +23,9 @@ namespace ModelGraph.Core
         private bool CanRedo { get { return _redoStack.Count > 0; } }
 
 
-        public (bool canUndo, bool canRedo, int undoCount, int redoCount) UndoRedoParms => (CanUndo, CanRedo, _undoStack.Count, _redoStack.Count);
+        internal (bool canUndo, bool canRedo, int undoCount, int redoCount) UndoRedoParms => (CanUndo, CanRedo, _undoStack.Count, _redoStack.Count);
 
-        public void TryUndo()
+        internal void TryUndo()
         {
             if (CanUndo)
             {
@@ -33,10 +33,11 @@ namespace ModelGraph.Core
 
                 _redoStack.Push(new Snapshot(prev));
                 prev.Restore();
+                UpdateModels();
             }
         }
 
-        public void TryRedo()
+        internal void TryRedo()
         {
             if (CanRedo)
             {
@@ -44,7 +45,18 @@ namespace ModelGraph.Core
 
                 _undoStack.Push(new Snapshot(prev));
                 prev.Restore();
+                UpdateModels();
             }
         }
+
+        private void UpdateModels()
+        {
+            var root = Owner.Owner.Owner;
+            foreach (var pm in root.Items)
+            {
+                if (pm.LeadModel is GraphModel gm && gm.Graph == this) gm.RefreshDrawData();
+            }
+        }
+
     }
 }

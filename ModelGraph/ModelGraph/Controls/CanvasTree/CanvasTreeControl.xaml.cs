@@ -364,7 +364,7 @@ namespace ModelGraph.Controls
 
         private void KeyLeft_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (Selected.CanExpandLeft)
+            if (Selected != null && Selected.CanExpandLeft)
             {
                 _ = RefreshViewListAsync(ChangeType.ToggleLeft);
             }
@@ -372,7 +372,7 @@ namespace ModelGraph.Controls
         }
         private void KeyCtrlLeft_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (Selected.CanExpandAll)
+            if (Selected != null && Selected.CanExpandAll)
             {
                 _ = RefreshViewListAsync(ChangeType.ExpandAllLeft);
             }
@@ -380,7 +380,7 @@ namespace ModelGraph.Controls
         }
         private void KeyRight_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (Selected.CanExpandRight)
+            if (Selected != null && Selected.CanExpandRight)
             {
                 _ = RefreshViewListAsync(ChangeType.ToggleRight);
             }
@@ -388,7 +388,7 @@ namespace ModelGraph.Controls
         }
         private void KeyCtrlRight_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
         {
-            if (Selected.CanExpandAll)
+            if (Selected != null && Selected.CanExpandAll)
             {
                 _ = RefreshViewListAsync(ChangeType.ExpandAllRight);
             }

@@ -52,8 +52,7 @@ namespace ModelGraph.Controls
         #endregion
 
         #region RadioButton_Events  ===========================================
-        private void ViewSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
-        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.MoveMode);
+        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.ViewMode);
         private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.LinkMode);
         private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.CopyMode);
         private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => DrawModel.TrySetState(DrawState.CreateMode);

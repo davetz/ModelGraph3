@@ -12,7 +12,7 @@ namespace ModelGraph.Core
         {/*
             Create a graphic snapshot for the nodes and edges specified in the callers selector
          */
-            if (selector.IsRegionHit)
+            if (selector.Nodes.Count > 1)
             {
                 if (selector.Nodes.Count > 0)
                 {

@@ -6,12 +6,6 @@ namespace ModelGraph.Core
     public static class UTL1
     {
         #region Rotation  =====================================================
-        static readonly float Radians45Degree = (float)(Math.PI / 4);
-        static readonly float Radians90Degree = (float)(Math.PI / 2);
-        static internal Matrix3x2 RotateLeft45Matrix(Vector2 cp) => Matrix3x2.CreateRotation(-Radians45Degree, cp);
-        static internal Matrix3x2 RotateLeft90Matrix(Vector2 cp) => Matrix3x2.CreateRotation(-Radians90Degree, cp);
-        static internal Matrix3x2 RotateRight45Matrix(Vector2 cp) => Matrix3x2.CreateRotation(Radians45Degree, cp);
-        static internal Matrix3x2 RotateRight90Matrix(Vector2 cp) =>Matrix3x2.CreateRotation(Radians90Degree, cp);
         #endregion
 
         #region SlopeSlice  ===================================================
@@ -136,7 +130,5 @@ namespace ModelGraph.Core
         internal static Vector2 ToVector((float x, float y) q) => new Vector2(q.x, q.y);
         internal static (float X, float Y) ToValues(Vector2 p) => (p.X, p.Y);
         #endregion  
-
-        public static float Diagonal((float dx, float dy) p) => ((p.dx * p.dx) + (p.dy * p.dy));
     }
 }

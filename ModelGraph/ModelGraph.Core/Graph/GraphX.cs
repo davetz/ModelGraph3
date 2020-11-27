@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         internal override string Description { get => _description; set => _description = value; }
         private string _description;
 
-        internal byte SymbolSize = 48;
+        internal byte SymbolSize = 32; 
         internal byte ThinBusSize = 6;
         internal byte WideBusSize = 10;
         internal byte ExtraBusSize = 20;

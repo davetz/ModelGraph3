@@ -40,8 +40,7 @@
             <Border x:Name="OverviewOnOffBoarder"  BorderBrush="Black" BorderThickness="1,1,1,1" Margin="4,2,8,0">
                 <TextBlock x:Name="OverviewOnOffTextBlock" Style="{StaticResource OverviewTextBlockStyle}" Text="&#xF0AE;" PointerPressed="OverviewOnOffTextBlock_PointerPressed"/>
             </Border>
-            <RadioButton x:Name="ViewSelect" Content="View" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Checked="ViewSelect_Checked"/>
-            <RadioButton x:Name="MoveSelect" Content="Move" Style="{StaticResource RadioButtonStyle}" Checked="MoveSelect_Checked"/>
+            <RadioButton x:Name="ViewSelect" Content="Move" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Checked="MoveSelect_Checked"/>
             <RadioButton x:Name="LinkSelect" Content="Link" Style="{StaticResource RadioButtonStyle}" Checked="LinkSelect_Checked"/>
             <RadioButton x:Name="CopySelect" Content="Copy" Style="{StaticResource RadioButtonStyle}" Checked="CopySelect_Checked"/>
             <RadioButton x:Name="CreateSelect" Content="Create" Style="{StaticResource RadioButtonStyle}" Checked="CreateSelect_Checked" />

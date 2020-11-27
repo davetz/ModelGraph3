@@ -7,12 +7,13 @@ namespace ModelGraph.Core
     public class GraphModel : DrawModel
     {
         internal readonly Graph Graph;
-        private Selector Selector => Graph.Selector;
+        internal readonly Selector Selector;
 
         #region Constructor  ==================================================
         internal GraphModel(PageModel owner, Graph graph) : base(owner)
         {
             Graph = graph;
+            Selector = new Selector(graph);
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
@@ -35,25 +36,23 @@ namespace ModelGraph.Core
 
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid, SelectorOnVoid);
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode, ViewOnNode);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Tapped, ViewOnNodeTapped);
             SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Tapped, ViewOnVoidTapped);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Dragging, ViewOnNodeDragging);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Ending, ViewOnNodeEnding);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid, MoveOnVoid);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode, MoveOnNode);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Tapped, MoveOnNodeTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Dragging, MoveOnNodeDragging);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Ending, MoveOnNodeEnding);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.UpArrow, MoveOnNodeUpArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.LeftArrow, MoveOnNodeLeftArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.DownArrow, MoveOnNodeDownArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.RightArrow, MoveOnNodeRightArrow);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Tapped, ViewOnNodeTapped);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.ContextMenu, MoveOnNodeContextMenu);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.UpArrow, ViewOnNodeUpArrow);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.LeftArrow, ViewOnNodeLeftArrow);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.DownArrow, ViewOnNodeDownArrow);
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.RightArrow, ViewOnNodeRightArrow);
+
+            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.ContextMenu, ViewOnNodeContextMenu);
 
             RefreshEditorData();
         }
@@ -103,7 +102,7 @@ namespace ModelGraph.Core
             {
                 var points = new Vector2[] { n.Center, n.Radius };
                 var k = n.Symbol - 2;
-                if (k < 0)
+                if (k < 0 || k >= Graph.Owner.SymbolCount)
                 {
                     if (n.IsNodePoint)
                     {
@@ -152,7 +151,7 @@ namespace ModelGraph.Core
         #region SkimHitTest  ==================================================
         private void SkimHitTest()
         {
-            Selector.HitTest(Editor.Point2);
+            Selector.HitTestPoint(Editor.Point2);
             if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
                 AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
             else if (Selector.IsVoidHit)
@@ -186,15 +185,11 @@ namespace ModelGraph.Core
             ShowDrawItems(DrawItem.Selector);
             PageModel.TriggerUIRefresh();
         }
-        private void SelectorOnVoidDraging()
-        {
-        }
         private void SelectorEnding()
         {
             if (_tracingSelector)
             {
                 _tracingSelector = false;
-                Selector.SetPoint2(Editor.Point2);
                 Selector.HitTestRegion(_selectToggleMode, Editor.Point1, Editor.Point2);
             }
             HideDrawItems(DrawItem.Selector);
@@ -205,6 +200,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region ViewMode  =====================================================
+        private void ViewOnNodeTapped()
+        {
+            Selector.SaveHitReference();
+            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
+            DrawCursor = DrawCursor.SizeAll;
+            RefreshDrawData();
+        }
         private void ViewOnNode()
         {
             ToolTip_Text1 = Selector.HitNode.GetNameId();
@@ -214,17 +216,29 @@ namespace ModelGraph.Core
             ShowDrawItems(DrawItem.ToolTip);
             PageModel.TriggerUIRefresh();
         }
-        private void ViewOnNodeTapped()
+        private void ViewOnNodeContextMenu()
         {
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
-            ShowDrawItems(DrawItem.FlyTree);
-            FlyOutPoint = Selector.HitNode.Center;
             if (FlyTreeModel is TreeModel tm)
             {
-                tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, Selector.HitNode); });
-                FlyOutSize = new Vector2(240, 200);
+                Selector.SaveHitReference();
+                DrawCursor = DrawCursor.Arrow;
+                HideDrawItems(DrawItem.ToolTip);
+                ShowDrawItems(DrawItem.FlyTree);
+                FlyOutPoint = Selector.HitNode.Center;
+                if (Selector.Nodes.Count > 1)
+                {
+                    tm.SetHeaderModel((m) => { new Model_6DB_MoveNodeMenu(m, this); });
+                    FlyOutSize = new Vector2(280, 200);
+                }
+                else
+                {
+                    tm.SetHeaderModel((m) => { new Model_6DA_HitNode(m, Selector.HitNode); });
+                    FlyOutSize = new Vector2(240, 200);
+                }
             }
+
             PageModel.TriggerUIRefresh();
         }
         private void ViewOnVoidTapped()
@@ -233,57 +247,26 @@ namespace ModelGraph.Core
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             PageModel.TriggerUIRefresh();
         }
-        #endregion
-
-        #region MoveMode  =====================================================
-        private void MoveOnVoid()
-        {
-            DrawCursor = DrawCursor.Arrow;
-            PageModel.TriggerUIRefresh();
-        }
-        private void MoveOnNode()
-        {
-            DrawCursor = DrawCursor.Hand;
-            PageModel.TriggerUIRefresh();
-        }
-        private void MoveOnNodeTapped()
-        {
-            DrawCursor = DrawCursor.SizeAll;
-            RefreshDrawData();
-        }
-        private void MoveOnNodeDragging()
+        private void ViewOnNodeDragging()
         {
             var v = Editor.PointDelta(true);
             Selector.Move(v);
             RefreshEditorData();
         }
 
-        private void MoveOnNodeEnding()
+        private void ViewOnNodeEnding()
         {
             DrawCursor = DrawCursor.Arrow;
             PageModel.TriggerUIRefresh();
         }
-        private void MoveOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
-        private void MoveOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
-        private void MoveOnNodeLeftArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(-1, 0));
-        private void MoveOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
+        private void ViewOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
+        private void ViewOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
+        private void ViewOnNodeLeftArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(-1, 0));
+        private void ViewOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
         private void MoveOnNodeDelta(Node node, Vector2 delta)
         {
             Selector.Move(delta);
             RefreshEditorData();
-            PageModel.TriggerUIRefresh();
-        }
-        private void MoveOnNodeContextMenu()
-        {
-            DrawCursor = DrawCursor.Arrow;
-            HideDrawItems(DrawItem.ToolTip);
-            ShowDrawItems(DrawItem.FlyTree);
-            FlyOutPoint = Selector.HitNode.Center;
-            if (FlyTreeModel is TreeModel tm)
-            {
-                tm.SetHeaderModel((m) => { new Model_6DB_MoveNodeMenu(m, Graph); });
-                FlyOutSize = new Vector2(280, 200);
-            }
             PageModel.TriggerUIRefresh();
         }
         #endregion

@@ -1,61 +1,65 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class Selector
+    internal class Selector
     {
-        public Graph Graph;   // reference the graphs Node and Edge lists
+        internal Graph Graph;   // reference the graphs Node and Edge lists
 
-        public Node PrevNode;
-        public Edge PrevEdge;
-        public HitLocation PrevLocation;
+        internal Node HitNode;
+        internal Node RefNode;  //saved referened
+        internal Node PrevNode;
 
-        public Node HitNode;
-        public Edge HitEdge;
-        public int HitBend;  // index of bend point (relative to edge.bends)
-        public int HitIndex; // index of start of the hit segment (relative to edge.point)
-        public Extent HitRegion;
-        public Vector2 HitPoint; // the refined hit point location
-        public HitLocation HitLocation; // hit location details
+        internal Edge HitEdge;
+        internal Edge RefEdge;  //saved referened
 
-        public Edge BendEdge;     // when bending an edge, remember which edge it is
-        public int BendIndex;     // when moving an bend point, remember which point it is
+        internal int HitBend;  // index of bend point (relative to edge.bends)
+        internal int HitIndex; // index of start of the hit segment (relative to edge.point)
 
-        public HashSet<Node> Nodes = new HashSet<Node>();   // interior nodes
-        public HashSet<Edge> Edges = new HashSet<Edge>();   // interior edges
-        public Dictionary<Edge, (int I1, int I2)> Points = new Dictionary<Edge, (int I1, int I2)>(); // chopped edge interior points
+        internal Vector2 HitPoint;  //refined hit point location
+        internal Vector2 RefPoint;  //saved referened
 
-        public Extent Extent = new Extent(); // selector rectangle
+        internal HitLocation HitLocation;  //hit location details
+        internal HitLocation RefLocation;  //saved referened
 
+        internal Edge BendEdge;     // when bending an edge, remember which edge it is
+        internal int BendIndex;     // when moving an bend point, remember which point it is
+
+        internal HashSet<Node> Nodes = new HashSet<Node>();   // interior nodes
+        internal HashSet<Edge> Edges = new HashSet<Edge>();   // interior edges
+        internal Dictionary<Edge, (int I1, int I2)> Points = new Dictionary<Edge, (int I1, int I2)>(); // chopped edge interior points
+
+
+        internal Extent Extent = new Extent(); // selector rectangle
         private bool _enableSnapshot = true;
 
         #region Constructor  ==================================================
-        public Selector(Graph graph)
+        internal Selector(Graph graph)
         {
             Graph = graph;
         }
         #endregion
 
         #region Properties  ===================================================
-        public bool IsVoidHit => (HitLocation == HitLocation.Void);
-        public bool IsNodeHit => ((HitLocation & HitLocation.Node) != 0);
-        public bool IsEdgeHit => ((HitLocation & HitLocation.Edge) != 0);
-        public bool IsRegionHit => ((HitLocation & HitLocation.Region) != 0);
+        internal bool IsVoidHit => (HitLocation == HitLocation.Void);
+        internal bool IsNodeHit => ((HitLocation & HitLocation.Node) != 0);
+        internal bool IsEdgeHit => ((HitLocation & HitLocation.Edge) != 0);
 
-        public bool IsChanged => (PrevNode != HitNode) || (PrevEdge != HitEdge) || (PrevLocation != HitLocation);
+        internal bool IsChanged => (RefNode != HitNode) || (RefEdge != HitEdge) || (RefLocation != HitLocation);
 
-        public bool IsTopHit => ((HitLocation & HitLocation.Top) != 0);
-        public bool IsLeftHit => ((HitLocation & HitLocation.Left) != 0);
-        public bool IsRightHit => ((HitLocation & HitLocation.Right) != 0);
-        public bool IsBottomHit => ((HitLocation & HitLocation.Bottom) != 0);
-        public bool IsCenterHit => ((HitLocation & HitLocation.Center) != 0);
-        public bool IsSideHit => ((HitLocation & HitLocation.SideOf) != 0);
+        internal bool IsTopHit => ((HitLocation & HitLocation.Top) != 0);
+        internal bool IsLeftHit => ((HitLocation & HitLocation.Left) != 0);
+        internal bool IsRightHit => ((HitLocation & HitLocation.Right) != 0);
+        internal bool IsBottomHit => ((HitLocation & HitLocation.Bottom) != 0);
+        internal bool IsCenterHit => ((HitLocation & HitLocation.Center) != 0);
+        internal bool IsSideHit => ((HitLocation & HitLocation.SideOf) != 0);
 
-        public bool IsEnd1Hit => ((HitLocation & HitLocation.End1) != 0);
-        public bool IsEnd2Hit => ((HitLocation & HitLocation.End2) != 0);
-        public bool IsBendHit => ((HitLocation & HitLocation.Bend) != 0);
-        public ResizerType Resizer => GetResizer();
+        internal bool IsEnd1Hit => ((HitLocation & HitLocation.End1) != 0);
+        internal bool IsEnd2Hit => ((HitLocation & HitLocation.End2) != 0);
+        internal bool IsBendHit => ((HitLocation & HitLocation.Bend) != 0);
+        internal ResizerType Resizer => GetResizer();
         ResizerType GetResizer()
         {
             if (IsNodeHit && HitNode.IsGraphNode && HitNode.Sizing == Sizing.Manual)
@@ -69,13 +73,60 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region SelectorRectangle  ============================================
-        public void SetPoint1(Vector2 p) => Extent.Point1 = Extent.Point2 = p;
-        public void SetPoint2(Vector2 p) => Extent.Point2 = p;
+        #region HitTestPoint  =================================================
+        internal void HitTestPoint(Vector2 p)
+        {
+            PrevNode = HitNode;
+
+            // clear previous results
+            HitNode = null;
+            HitEdge = null;
+            HitBend = -1;
+            HitIndex = -1;
+            HitPoint = p;
+            HitLocation = HitLocation.Void;
+
+            // test prev node
+            if (PrevNode != null && PrevNode.HitTest(p))
+            {
+                var (hit, pnt) = PrevNode.RefinedHit(p);
+                HitLocation |= hit;
+                HitPoint = pnt;
+
+                HitNode = PrevNode;
+                return;  // we're done;
+            }
+
+            foreach (var node in Graph.Nodes)
+            {
+                // eliminate unqualified nodes
+                if (!node.HitTest(p)) continue;
+                // now refine the hit test results
+                // node.RefineHitTest(p, ref HitLocation, ref HitPoint);
+                var (hit, pnt) = node.RefinedHit(p);
+                HitLocation |= hit;
+                HitPoint = pnt;
+
+                HitNode = node;
+                return;  // we are done;
+            }
+
+            foreach (var edge in Graph.Edges)
+            {
+                // eliminate unqualified edges
+                if (!edge.HitTest(p)) continue;
+
+                // now refine the hit test results
+                if (!edge.HitTest(p, ref HitLocation, ref HitBend, ref HitIndex, ref HitPoint)) continue;
+
+                HitEdge = edge;
+                return;  // we are done
+            }
+        }
         #endregion
 
-        #region TryAdd  =======================================================
-        public void HitTestRegion(bool toggleMode, Vector2 p1, Vector2 p2)
+        #region HitTestRegion  ================================================
+        internal void HitTestRegion(bool toggleMode, Vector2 p1, Vector2 p2)
         {
             Extent.Normalize(p1, p2);
             
@@ -149,72 +200,30 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region HitTest  ======================================================
-        public void HitTest(Vector2 p)
+        #region SaveHitReference  =============================================
+        internal void SaveHitReference()
         {
-            PrevNode = HitNode;
-            PrevEdge = HitEdge;
-            PrevLocation = HitLocation;
-
-            // clear previous results
-            HitNode = null;
-            HitEdge = null;
-            HitBend = -1;
-            HitIndex = -1;
-            HitPoint = p;
-            HitLocation = HitLocation.Void;
-
-            // test prev node
-            if (PrevNode != null && PrevNode.HitTest(p))
-            {
-                var (hit, pnt) = PrevNode.RefinedHit(p);
-                HitLocation |= hit;
-                HitPoint = pnt;
-
-                HitNode = PrevNode;
-                return;  // we're done;
-            }
-
-            foreach (var node in Graph.Nodes)
-            {
-                // eliminate unqualified nodes
-                if (!node.HitTest(p)) continue;
-
-                // now refine the hit test results
-                // node.RefineHitTest(p, ref HitLocation, ref HitPoint);
-                var (hit, pnt) = node.RefinedHit(p);
-                HitLocation |= hit;
-                HitPoint = pnt;
-
-                HitNode = node;
-                return;  // we are done;
-            }
-
-            foreach (var edge in Graph.Edges)
-            {
-                // eliminate unqualified edges
-                if (!edge.HitTest(p)) continue;
-
-                // now refine the hit test results
-                if (!edge.HitTest(p, ref HitLocation, ref HitBend, ref HitIndex, ref HitPoint)) continue;
-
-                HitEdge = edge;
-                return;  // we are done
-            }
+            RefNode = HitNode;
+            RefEdge = HitEdge;
+            RefPoint = HitPoint;
+            RefLocation = HitLocation;
+            EnableSnapshot();
         }
         #endregion
 
         #region Clear  ========================================================
-        public void Clear()
+        internal void Clear()
         {
             Nodes.Clear();
             Edges.Clear();
             Points.Clear();
+            RefNode = null;
+            RefEdge = null;
         }
         #endregion
 
         #region Resize  =======================================================
-        public void Resize(Vector2 delta, ResizerType resizer)
+        internal void Resize(Vector2 delta, ResizerType resizer)
         {
             if (resizer == ResizerType.None) return;
             HitNode.Resize(delta, resizer);
@@ -222,7 +231,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Move  =========================================================
-        public void Move(Vector2 delta)
+        internal void Move(Vector2 delta)
         {
             if (IsNodeHit)
             {
@@ -241,9 +250,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Gravity  ======================================================
-        public void GravityInside()
+        internal void GravityInside()
         {
-           if (IsNodeHit && IsRegionHit)
+           if (IsNodeHit)
            {
                 TakeSnapshot();
 
@@ -303,7 +312,7 @@ namespace ModelGraph.Core
                 }
             }
         }
-        public void GravityDisperse()
+        internal void GravityDisperse()
         {
         }
 
@@ -337,23 +346,14 @@ namespace ModelGraph.Core
         #endregion
 
         #region Rotate  =======================================================
-        public void RotateLeft45()
-        {
-            Rotate(UTL1.RotateLeft45Matrix(HitPoint));
-        }
-        public void RotateRight45()
-        {
-            Rotate(UTL1.RotateRight45Matrix(HitPoint));
-        }
-        public void RotateLeft90()
-        {
-            Rotate(UTL1.RotateLeft90Matrix(HitPoint));
-        }
-        public void RotateRight90()
-        {
-            Rotate(UTL1.RotateRight90Matrix(HitPoint));
-        }
-        public void Rotate(Matrix3x2 mx)
+        static readonly float Radians45Degree = (float)(Math.PI / 4);
+        static readonly float Radians90Degree = (float)(Math.PI / 2);
+
+        internal void RotateLeft45() =>  Rotate(Matrix3x2.CreateRotation(-Radians45Degree, HitPoint));
+        internal void RotateRight45() => Rotate(Matrix3x2.CreateRotation(Radians45Degree, HitPoint));
+        internal void RotateLeft90() => Rotate(Matrix3x2.CreateRotation(-Radians90Degree, HitPoint));
+        internal void RotateRight90() => Rotate(Matrix3x2.CreateRotation(Radians90Degree, HitPoint));
+        internal void Rotate(Matrix3x2 mx)
         {
             if (Nodes.Count < 2) return; // this is nonsense
 
@@ -374,11 +374,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region Align  ========================================================
-        public void AlignVert()
+        internal void AlignVert()
         {
-            if (Nodes.Count < 2) return; // this is nonsense
+            if (RefNode is null || Nodes.Count < 2) return; // this is nonsense
 
-            var x = HitPoint.X;
+            var x = RefNode.X;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -386,11 +386,11 @@ namespace ModelGraph.Core
             }
             UpdateModels();
         }
-        public void AlignHorz()
+        internal void AlignHorz()
         {
-            if (Nodes.Count < 2) return; // this is nonsense
+            if (RefNode is null || Nodes.Count < 2) return; // this is nonsense
 
-            var y = HitPoint.Y;
+            var y = RefNode.Y;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -401,9 +401,11 @@ namespace ModelGraph.Core
         #endregion
 
         #region Flip  =========================================================
-        public void FlipHorz()
+        internal void FlipHorz()
         {
-            var x = HitPoint.X;
+            if (RefNode is null || Nodes.Count < 2) return; // this is nonsense
+
+            var x = RefNode.X;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -411,9 +413,11 @@ namespace ModelGraph.Core
             }
             UpdateModels();
         }
-        public void FlipVert()
+        internal void FlipVert()
         {
-            var y = HitPoint.Y;
+            if (RefNode is null || Nodes.Count < 2) return; // this is nonsense
+
+            var y = RefNode.Y;
             TakeSnapshot();
             foreach (var node in Nodes)
             {
@@ -437,9 +441,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Snapshot  =====================================================
-        public void EnableSnapshot() => _enableSnapshot = true;
+        internal void EnableSnapshot() => _enableSnapshot = true;
 
-        public void TakeSnapshot()
+        internal void TakeSnapshot()
         {
             if (_enableSnapshot)
             {

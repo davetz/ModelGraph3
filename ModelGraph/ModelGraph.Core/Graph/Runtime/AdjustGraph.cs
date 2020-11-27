@@ -5,11 +5,11 @@ namespace ModelGraph.Core
 {
     public partial class Graph
     {
-        public void AdjustGraph()
+        internal void AdjustGraph()
         {
             AdjustNodes(Nodes);
         }
-        public void AdjustGraph(Selector selector)
+        internal void AdjustGraph(Selector selector)
         {
             var nodes = new HashSet<Node>();
 
