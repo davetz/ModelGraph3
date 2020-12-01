@@ -79,16 +79,14 @@ namespace ModelGraph.Core
         #region AddDrawParms  ================================================
         internal void AddDrawParms(DrawData data)
         {
-            var points = new Vector2[XY_HitSegment.Count * 2];
-            var ds = _hitSegmentSize;
-            var rv = new Vector2(ds, ds);
-            var i = 0;
+            var points = new Vector2[XY_HitSegment.Count + 1];
+            points[0] = new Vector2(_hitSegmentSize, _hitSegmentSize);
+            var i = 1;
             foreach (var (x,y) in XY_HitSegment.Keys)
             {
                 points[i++] = new Vector2(x, y);
-                points[i++] = rv;
             }        
-            data.AddParms((points, (ShapeType.CornerRect, StrokeType.Simple, 1), (200, 100, 100, 0)));
+            data.AddParms((points, (ShapeType.EqualRect, StrokeType.Simple, 1), (200, 100, 100, 0)));
         }
         #endregion
     }

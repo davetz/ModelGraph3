@@ -6,9 +6,10 @@
         Line = 0,
         Circle = 1,
         Ellipse = 2,
-        CenterRect = 3,
+        EqualRect = 3,
         CornerRect = 4,
-        RoundedRect = 5,
+        CenterRect = 5,
+        RoundedRect = 6,
         SimpleShapeMask = 0x07,
 
         //connected line segments

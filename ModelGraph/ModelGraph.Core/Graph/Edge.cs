@@ -172,24 +172,19 @@ namespace ModelGraph.Core
             for (int i =  Tm1, j = i + 1; i < Tm2; i++, j++)
             {
                 var p1 = Points[i];
-                var p2 = Points[j];
-                var N = GetDivisor(p1, p2);
-                var DN = (p2 - p1) / N;
+                var (N, DN) = GetDelta(Points[j] - p1);
                 var p = p1 + DN;
                 for (int k = 0; k < N; k++, p += DN) { AddHitSegment(p); }
             }
 
-            int GetDivisor(Vector2 a, Vector2 b)
+            (int,Vector2) GetDelta(Vector2 ds)
             {
-                var ax = (int)((int)a.X & mask);
-                var bx = (int)((int)b.X & mask);
-                var ay = (int)((int)a.Y & mask);
-                var by = (int)((int)b.Y & mask);
-                var dx = bx - ax;
-                var dy = by - ay;
+                var dx = (int)((int)ds.X & mask);
+                var dy = (int)((int)ds.Y & mask);
                 var cx = dx < 0 ? -dx : dx;
                 var cy = dy < 0 ? -dy : dy;
-                return cx > cy ? cx : cy;
+                var n = cx > cy ? cx : cy;
+                return (n, ds / n);
             }
 
             void AddHitSegment(Vector2 p)
