@@ -40,6 +40,15 @@ namespace ModelGraph.Core
         private const byte HitMargin = 2;
         #endregion
 
+        #region HitTest  ======================================================
+        internal bool HitTest(Vector2 p, out HashSet<IHitTestable> targets)
+        {
+            var x = (int)((int)p.X & _hitSegmentMask);
+            var y = (int)((int)p.Y & _hitSegmentMask);
+            return XY_HitSegment.TryGetValue((x, y), out targets);
+        }
+        #endregion
+
         #region Insert/Remove  ================================================
         internal void Insert(IEnumerable<IHitTestable> items)
         {
@@ -76,7 +85,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region AddDrawParms  ================================================
+        #region AddDrawParms  =================================================
         internal void AddDrawParms(DrawData data)
         {
             var points = new Vector2[XY_HitSegment.Count + 1];

@@ -98,31 +98,25 @@ namespace ModelGraph.Core
                 HitNode = PrevNode;
                 return;  // we're done;
             }
-
-            foreach (var node in Graph.Nodes)
+            if (Graph.HitTestMap.HitTest(p, out HashSet<IHitTestable> targets))
             {
-                // eliminate unqualified nodes
-                if (!node.HitTest(p)) continue;
-                // now refine the hit test results
-                // node.RefineHitTest(p, ref HitLocation, ref HitPoint);
-                var (hit, pnt) = node.RefinedHit(p);
-                HitLocation |= hit;
-                HitPoint = pnt;
+                foreach (var item in targets)
+                {
+                    if (item is Node n && n.HitTest(p))
+                    {
+                        var (hit, pnt) = n.RefinedHit(p);
+                        HitLocation |= hit;
+                        HitPoint = pnt;
 
-                HitNode = node;
-                return;  // we are done;
-            }
-
-            foreach (var edge in Graph.Edges)
-            {
-                // eliminate unqualified edges
-                if (!edge.HitTest(p)) continue;
-
-                // now refine the hit test results
-                if (!edge.HitTest(p, ref HitLocation, ref HitBend, ref HitIndex, ref HitPoint)) continue;
-
-                HitEdge = edge;
-                return;  // we are done
+                        HitNode = n;
+                        return;  // we are done;
+                    }
+                    else if (item is Edge e && e.HitTest(p) && e.HitTest(p, ref HitLocation, ref HitBend, ref HitIndex, ref HitPoint))
+                    {
+                        HitEdge = e;
+                        return;  // we are done
+                    }
+                }
             }
         }
         #endregion
