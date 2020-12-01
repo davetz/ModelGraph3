@@ -82,17 +82,21 @@ namespace ModelGraph.Core
         #endregion
 
         #region IHitTestable  =================================================
-        public void GetHitSegments(HashSet<long> hitSegments, uint mask, ushort size, byte margin)
+        public void GetHitSegments(HashSet<(int,int)> hitSegments, uint mask, ushort size, byte margin)
         {
             hitSegments.Clear();
-            var x1 = ((uint)X - DX - margin) & mask;
-            var y1 = ((uint)Y - DY - margin) & mask;
-            var x2 = ((uint)X + DX + margin) & mask;
-            var y2 = ((uint)Y + DY + margin) & mask;
-            hitSegments.Add((long)x1 << 32 | y1);
-            hitSegments.Add((long)x1 << 32 | y2);
-            hitSegments.Add((long)x2 << 32 | y1);
-            hitSegments.Add((long)x2 << 32 | y2);
+            var x = (int)X;
+            var y = (int)Y;
+            int mx = DX + margin;
+            int my = DY + margin;
+            var x1 = (int)((x - mx) & mask);
+            var x2 = (int)((x + mx) & mask);
+            var y1 = (int)((y - my) & mask);
+            var y2 = (int)((y + my) & mask);
+            hitSegments.Add((x1, y1));
+            hitSegments.Add((x1, y2));
+            hitSegments.Add((x2, y1));
+            hitSegments.Add((x2, y2));
         }
         #endregion
 

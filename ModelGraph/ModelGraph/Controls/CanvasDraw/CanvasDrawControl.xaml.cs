@@ -426,12 +426,14 @@ namespace ModelGraph.Controls
                     {
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
+                        var v = W * scale;
+                        if (v < 1) v = 1;
 
                         for (int i = 0; i < P.Length; i += 2)
                         {
                             var c = P[i] * scale + offset;
                             var d = P[i + 1] * scale;
-                            DrawShape(c, d, color, stroke, K, isFilled, W);
+                            DrawShape(c, d, color, stroke, K, isFilled, v);
                         }
                     }
                     else
@@ -479,10 +481,8 @@ namespace ModelGraph.Controls
                     ds.DrawText(T, p, Color.FromArgb(A, R, G, B));
                 }
 
-                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeType shape, bool isFilled, byte w)
+                void DrawShape(Vector2 a, Vector2 b, Color color, CanvasStrokeStyle stroke, ShapeType shape, bool isFilled, float v)
                 {
-                    var v = w * scale;
-                    if (v < 1) v = 1;
                     switch (shape)
                     {
                         case ShapeType.Line:
@@ -500,7 +500,7 @@ namespace ModelGraph.Controls
                             else
                                 ds.DrawEllipse(a, b.X, b.Y, color, v, stroke);
                             break;
-                        case ShapeType.Rectangle:
+                        case ShapeType.CenterRect:
                             var e = a - b;
                             var f = 2 * b;
                             if (isFilled)
@@ -508,7 +508,13 @@ namespace ModelGraph.Controls
                             else
                                 ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, v, stroke);
                             break;
-                        case ShapeType.RoundedRectangle:
+                        case ShapeType.CornerRect:
+                            if (isFilled)
+                                ds.FillRectangle(a.X, a.Y, b.X, b.Y, color);
+                            else
+                                ds.DrawRectangle(a.X, a.Y, b.X, b.Y, color, v, stroke);
+                            break;
+                        case ShapeType.RoundedRect:
                             e = a - b;
                             f = 2 * b;
                             var r = 8 * scale;

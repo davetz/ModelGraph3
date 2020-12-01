@@ -29,6 +29,8 @@ namespace ModelGraph.Core
 
         internal HashSet<Node> Nodes = new HashSet<Node>();   // interior nodes
         internal HashSet<Edge> Edges = new HashSet<Edge>();   // interior edges
+        internal HashSet<Edge> NodeEdges = new HashSet<Edge>();   // edges connected to Nodes
+
         internal Dictionary<Edge, (int I1, int I2)> Points = new Dictionary<Edge, (int I1, int I2)>(); // chopped edge interior points
 
 
@@ -154,6 +156,17 @@ namespace ModelGraph.Core
                         if (Extent.Contains(node.Center)) Nodes.Add(node);
                     }
                 }
+                NodeEdges.Clear();
+                foreach (var n in Nodes)
+                {
+                    if (Graph.Node_Edges.TryGetValue(n, out List<Edge> lst))
+                    {
+                        foreach (var ed in lst)
+                        {
+                            NodeEdges.Add(ed);
+                        }
+                    }
+                }
                 if (count != Nodes.Count)
                 {
                     Edges.Clear();
@@ -208,6 +221,21 @@ namespace ModelGraph.Core
             RefPoint = HitPoint;
             RefLocation = HitLocation;
             EnableSnapshot();
+        }
+        #endregion
+
+        #region HitTestMap  ===================================================
+        internal void RemoveHitSectors()
+        {
+            var map = Graph.HitTestMap;
+            map.Remove(Nodes);
+            map.Remove(NodeEdges);
+        }
+        internal void InsertHitSectors()
+        {
+            var map = Graph.HitTestMap;
+            map.Insert(Nodes);
+            map.Insert(NodeEdges);
         }
         #endregion
 

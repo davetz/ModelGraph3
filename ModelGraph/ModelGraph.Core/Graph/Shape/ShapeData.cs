@@ -251,7 +251,7 @@ namespace ModelGraph.Core
                         ReadData(new PolyWave(true));
                         break;
 
-                    case ShapeType.Rectangle:
+                    case ShapeType.CenterRect:
                         ReadData(new Rectangle(true));
                         break;
 
@@ -267,7 +267,7 @@ namespace ModelGraph.Core
                         ReadData(new PolySpring(true));
                         break;
 
-                    case ShapeType.RoundedRectangle:
+                    case ShapeType.RoundedRect:
                         ReadData(new RoundedRectangle(true));
                         break;
                     default:

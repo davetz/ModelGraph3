@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     internal class RoundedRectangle : Central
     {
-        protected override ShapeType ShapeType => ShapeType.RoundedRectangle;
+        protected override ShapeType ShapeType => ShapeType.RoundedRect;
         internal RoundedRectangle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data

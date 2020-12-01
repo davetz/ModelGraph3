@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     internal class Rectangle : Central
     {
-        protected override ShapeType ShapeType => ShapeType.Rectangle;
+        protected override ShapeType ShapeType => ShapeType.CenterRect;
         internal Rectangle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data

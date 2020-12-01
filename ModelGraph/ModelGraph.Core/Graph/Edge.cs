@@ -158,11 +158,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region IHitTestable  =================================================
-        public void GetHitSegments(HashSet<long> hitSegments, uint mask, ushort size, byte margin)
+        public void GetHitSegments(HashSet<(int,int)> hitSegments, uint mask, ushort size, byte margin)
         {
             hitSegments.Clear();
             if (Points is null) Refresh();
-            var DN = new Vector2();
 
             var last = Points.Length - 1;
             AddHitSegment(Points[0]);
@@ -174,38 +173,37 @@ namespace ModelGraph.Core
             {
                 var p1 = Points[i];
                 var p2 = Points[j];
-                var ds = p2 - p1;
-                //number of hitSegments between p1 and p2
-                var N = 1 + (ds.X > ds.Y ? ds.X : ds.Y) / size;
-                if (ds.X < 0)
-                {
-                    if (ds.Y < 0)
-                        DN = new Vector2(-size, -size); //towards upper left                        
-                    else
-                        DN = new Vector2(-size, size); //towards lower left
-                }
-                else
-                {
-                    if (ds.Y < 0)
-                        DN = new Vector2(size, -size); //towards upper right
-                    else
-                        DN = new Vector2(size, size); //towards lower right
-                }
-
+                var N = GetDivisor(p1, p2);
+                var DN = (p2 - p1) / N;
                 var p = p1 + DN;
                 for (int k = 0; k < N; k++, p += DN) { AddHitSegment(p); }
             }
 
+            int GetDivisor(Vector2 a, Vector2 b)
+            {
+                var ax = (int)((int)a.X & mask);
+                var bx = (int)((int)b.X & mask);
+                var ay = (int)((int)a.Y & mask);
+                var by = (int)((int)b.Y & mask);
+                var dx = bx - ax;
+                var dy = by - ay;
+                var cx = dx < 0 ? -dx : dx;
+                var cy = dy < 0 ? -dy : dy;
+                return cx > cy ? cx : cy;
+            }
+
             void AddHitSegment(Vector2 p)
             {
-                var x1 = ((uint)p.X - margin) & mask;
-                var y1 = ((uint)p.Y - margin) & mask;
-                var x2 = ((uint)p.X + margin) & mask;
-                var y2 = ((uint)p.Y + margin) & mask;
-                hitSegments.Add((long)x1 << 32 | y1);
-                hitSegments.Add((long)x1 << 32 | y2);
-                hitSegments.Add((long)x2 << 32 | y1);
-                hitSegments.Add((long)x2 << 32 | y2);
+                var x = (int)p.X;
+                var y = (int)p.Y;
+                var x1 = (int)((x - margin) & mask);
+                var x2 = (int)((x + margin) & mask);
+                var y1 = (int)((y - margin) & mask);
+                var y2 = (int)((y + margin) & mask);
+                hitSegments.Add((x1, y1));
+                hitSegments.Add((x1, y2));
+                hitSegments.Add((x2, y1));
+                hitSegments.Add((x2, y2));
             }
         }
         #endregion

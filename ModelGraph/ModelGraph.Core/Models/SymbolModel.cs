@@ -128,7 +128,7 @@ namespace ModelGraph.Core
                     if (SelectedShapes.Contains(s))
                     {
                         var points = new Vector2[] { c, new Vector2(r, r) };
-                        Picker1.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                        Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     }
                     c = new Vector2(0, c.Y + Picker1.Extent.Width);
                 }
@@ -146,7 +146,7 @@ namespace ModelGraph.Core
                     if (Picker2IsValid && s == _picker2Shapes[_picker2Index])
                     {
                         var points = new Vector2[] { c, new Vector2(r, r) };
-                        Picker2.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                        Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     }
                     c = new Vector2(0, c.Y + Picker2.Extent.Width);
                 }
@@ -178,7 +178,7 @@ namespace ModelGraph.Core
             }
             else if (DrawState == DrawState.EditMode && _hitSelecteShapes)
             {
-                Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.Rectangle, StrokeType.Filled, 0), (80, 255, 200, 255)));
+                Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.CenterRect, StrokeType.Filled, 0), (80, 255, 200, 255)));
             }
         }
         #endregion

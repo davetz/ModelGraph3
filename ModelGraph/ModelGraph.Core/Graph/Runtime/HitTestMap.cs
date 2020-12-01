@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
     internal class HitTestMap
     {
-        private readonly Dictionary<long, HashSet<IHitTestable>> XY_HitSegment;
+        private readonly Dictionary<(int,int), HashSet<IHitTestable>> XY_HitSegment;
         private readonly uint _hitSegmentMask;   // size of hit testable segment
         private readonly ushort _hitSegmentSize;   // size of hit testable segment
 
@@ -30,19 +31,19 @@ namespace ModelGraph.Core
                 _hitSegmentSize = MinSegmentSize; //smallest hit testable segment
                 _hitSegmentMask = MinSegmentMask; //smallest hit testable segment
             }
-            XY_HitSegment = new Dictionary<long, HashSet<IHitTestable>>();
+            XY_HitSegment = new Dictionary<(int,int), HashSet<IHitTestable>>();
         }
         private const int MaxPowerOfTwo = 12; //for MaxSegmentSize of 2048
         private const int MinPowerOfTwo = 5;
         private const int MinSegmentSize = 32;
         private const uint MinSegmentMask = 0xFFFFFFFF << MinPowerOfTwo;
-        private const byte HitMargin = 4;
+        private const byte HitMargin = 2;
         #endregion
 
         #region Insert/Remove  ================================================
         internal void Insert(IEnumerable<IHitTestable> items)
         {
-            var xyHash = new HashSet<long>();
+            var xyHash = new HashSet<(int,int)>();
             foreach (var item in items)
             {
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
@@ -59,7 +60,7 @@ namespace ModelGraph.Core
         }
         internal void Remove(IEnumerable<IHitTestable> items)
         {
-            var xyHash = new HashSet<long>();
+            var xyHash = new HashSet<(int,int)>();
             foreach (var item in items)
             {
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
@@ -72,6 +73,22 @@ namespace ModelGraph.Core
                     }
                 }
             }
+        }
+        #endregion
+
+        #region AddDrawParms  ================================================
+        internal void AddDrawParms(DrawData data)
+        {
+            var points = new Vector2[XY_HitSegment.Count * 2];
+            var ds = _hitSegmentSize;
+            var rv = new Vector2(ds, ds);
+            var i = 0;
+            foreach (var (x,y) in XY_HitSegment.Keys)
+            {
+                points[i++] = new Vector2(x, y);
+                points[i++] = rv;
+            }        
+            data.AddParms((points, (ShapeType.CornerRect, StrokeType.Simple, 1), (200, 100, 100, 0)));
         }
         #endregion
     }

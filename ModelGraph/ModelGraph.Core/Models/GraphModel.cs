@@ -110,7 +110,7 @@ namespace ModelGraph.Core
                     }
                     else
                     {
-                        Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (255, 255, 0, 255)));
+                        Editor.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 1), (255, 255, 0, 255)));
                     }
                 }
                 else
@@ -130,8 +130,12 @@ namespace ModelGraph.Core
             foreach (var n in Selector.Nodes)
             {
                 var points = new Vector2[] { n.Center, new Vector2(n.DX + m, n.DY + m) };
-                Editor.AddParms((points, (ShapeType.Rectangle, StrokeType.Filled, 1), (100, 255, 200, 200)));
+                Editor.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 1), (100, 255, 200, 200)));
             }
+            #endregion
+
+            #region AddHitMapTarges  ==========================================
+            Graph.HitTestMap.AddDrawParms(Editor);
             #endregion
         }
         #endregion
@@ -144,7 +148,7 @@ namespace ModelGraph.Core
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
-            Picker2.AddParms((new Vector2[] { new Vector2(x, z), new Vector2(x, x) }, (ShapeType.Rectangle, StrokeType.Filled, 0), (63, 255, 255, 255)));
+            Picker2.AddParms((new Vector2[] { new Vector2(x, z), new Vector2(x, x) }, (ShapeType.CenterRect, StrokeType.Filled, 0), (63, 255, 255, 255)));
         }
         #endregion
 
@@ -203,6 +207,7 @@ namespace ModelGraph.Core
         private void ViewOnNodeTapped()
         {
             Selector.SaveHitReference();
+            Selector.RemoveHitSectors();
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             DrawCursor = DrawCursor.SizeAll;
             RefreshDrawData();
@@ -257,7 +262,8 @@ namespace ModelGraph.Core
         private void ViewOnNodeEnding()
         {
             DrawCursor = DrawCursor.Arrow;
-            PageModel.TriggerUIRefresh();
+            Selector.InsertHitSectors();
+            RefreshEditorData();
         }
         private void ViewOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
         private void ViewOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
