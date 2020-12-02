@@ -5,7 +5,7 @@ namespace ModelGraph.Core
 {
     internal class HitTestMap
     {
-        private readonly Dictionary<(int,int), HashSet<IHitTestable>> XY_HitSegment;
+        private readonly Dictionary<(int,int), List<IHitTestable>> XY_HitSegment;
         private readonly uint _hitSegmentMask;   // size of hit testable segment
         private readonly ushort _hitSegmentSize;   // size of hit testable segment
 
@@ -31,7 +31,7 @@ namespace ModelGraph.Core
                 _hitSegmentSize = MinSegmentSize; //smallest hit testable segment
                 _hitSegmentMask = MinSegmentMask; //smallest hit testable segment
             }
-            XY_HitSegment = new Dictionary<(int,int), HashSet<IHitTestable>>();
+            XY_HitSegment = new Dictionary<(int,int), List<IHitTestable>>();
         }
         private const int MaxPowerOfTwo = 12; //for MaxSegmentSize of 2048
         private const int MinPowerOfTwo = 5;
@@ -41,7 +41,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region HitTest  ======================================================
-        internal bool HitTest(Vector2 p, out HashSet<IHitTestable> targets)
+        internal bool HitTest(Vector2 p, out List<IHitTestable> targets)
         {
             var x = (int)((int)p.X & _hitSegmentMask);
             var y = (int)((int)p.Y & _hitSegmentMask);
@@ -58,12 +58,12 @@ namespace ModelGraph.Core
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
                 foreach (var seg in xyHash)
                 {
-                    if (!XY_HitSegment.TryGetValue(seg, out HashSet<IHitTestable> targets))
+                    if (!XY_HitSegment.TryGetValue(seg, out List<IHitTestable> targets))
                     {
-                        targets = new HashSet<IHitTestable>();
+                        targets = new List<IHitTestable>(2);
                         XY_HitSegment.Add(seg, targets);
                     }
-                    targets.Add(item);
+                    if (targets.IndexOf(item) < 0) targets.Add(item);
                 }
             }
         }
@@ -75,7 +75,7 @@ namespace ModelGraph.Core
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
                 foreach (var seg in xyHash)
                 {
-                    if (XY_HitSegment.TryGetValue(seg, out HashSet<IHitTestable> targets))
+                    if (XY_HitSegment.TryGetValue(seg, out List<IHitTestable> targets))
                     {
                         targets.Remove(item);
                         if (targets.Count == 0) XY_HitSegment.Remove(seg);

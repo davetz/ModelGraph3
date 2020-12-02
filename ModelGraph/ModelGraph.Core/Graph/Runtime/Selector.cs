@@ -98,7 +98,7 @@ namespace ModelGraph.Core
                 HitNode = PrevNode;
                 return;  // we're done;
             }
-            if (Graph.HitTestMap.HitTest(p, out HashSet<IHitTestable> targets))
+            if (Graph.HitTestMap.HitTest(p, out List<IHitTestable> targets))
             {
                 foreach (var item in targets)
                 {
