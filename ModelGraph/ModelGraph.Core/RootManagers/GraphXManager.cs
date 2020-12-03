@@ -643,7 +643,7 @@ namespace ModelGraph.Core
 
             if (anyChange) g.CheckLayout();
             g.AdjustGraph();
-            g.BuildHitTestMap();
+            g.CreateHitTestMap();
         }
         #endregion
 

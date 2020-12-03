@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace ModelGraph.Core
@@ -106,9 +107,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region HitTestMap  ===================================================
-        internal void BuildHitTestMap()
+        internal void CreateHitTestMap()
         {
             HitTestMap = new HitTestMap(Owner.SymbolSize * 4);
+            RebuildHitTestMap();
+        }
+        internal void RebuildHitTestMap()
+        {
+            Debug.WriteLine("============Rebuilding HitTestMap===========");
+            HitTestMap.Clear();
             HitTestMap.Insert(Nodes);
             HitTestMap.Insert(Edges);
         }

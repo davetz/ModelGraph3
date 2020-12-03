@@ -160,7 +160,6 @@ namespace ModelGraph.Core
         #region IHitTestable  =================================================
         public void GetHitSegments(HashSet<(int,int)> hitSegments, uint mask, ushort size, byte margin)
         {
-            hitSegments.Clear();
             if (Points is null) Refresh();
 
             var last = Points.Length - 1;

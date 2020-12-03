@@ -51,10 +51,11 @@ namespace ModelGraph.Core
 
         private void UpdateModels()
         {
+            ModelDelta++;
             var root = Owner.Owner.Owner;
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == this) gm.RefreshDrawData();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == this) gm.FullRefresh();
             }
         }
 

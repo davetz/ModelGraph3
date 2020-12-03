@@ -50,20 +50,22 @@ namespace ModelGraph.Core
         #endregion
 
         #region Insert/Remove  ================================================
+        internal void Clear() => XY_HitSegment.Clear();
         internal void Insert(IEnumerable<IHitTestable> items)
         {
             var xyHash = new HashSet<(int,int)>();
             foreach (var item in items)
             {
+                xyHash.Clear();
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
                 foreach (var seg in xyHash)
                 {
                     if (!XY_HitSegment.TryGetValue(seg, out List<IHitTestable> targets))
                     {
-                        targets = new List<IHitTestable>(2);
+                        targets = new List<IHitTestable>(2); //most hit sectors will only have one or two HitTestable items
                         XY_HitSegment.Add(seg, targets);
                     }
-                    if (targets.IndexOf(item) < 0) targets.Add(item);
+                    if (!targets.Contains(item)) targets.Add(item);
                 }
             }
         }
@@ -72,6 +74,7 @@ namespace ModelGraph.Core
             var xyHash = new HashSet<(int,int)>();
             foreach (var item in items)
             {
+                xyHash.Clear();
                 item.GetHitSegments(xyHash, _hitSegmentMask, _hitSegmentSize, HitMargin);
                 foreach (var seg in xyHash)
                 {

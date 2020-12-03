@@ -48,6 +48,7 @@ namespace ModelGraph.Controls
             CanvasScaleOffset[OverCanvas] = (0.5f, new Vector2());
             CanvasScaleOffset[Pick1Canvas] = (0.5f, new Vector2());
             CanvasScaleOffset[Pick2Canvas] = (0.5f, new Vector2());
+            ChedkDrawItems();
         }
         #endregion
 

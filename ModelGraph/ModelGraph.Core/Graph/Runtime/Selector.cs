@@ -9,30 +9,28 @@ namespace ModelGraph.Core
         internal Graph Graph;   // reference the graphs Node and Edge lists
 
         internal Node HitNode;
-        internal Node RefNode;  //saved referened
+        internal Node RefNode;  //saved node reference
         internal Node PrevNode;
 
         internal Edge HitEdge;
-        internal Edge RefEdge;  //saved referened
+        internal Edge RefEdge;  //saved edge reference
 
         internal int HitBend;  // index of bend point (relative to edge.bends)
         internal int HitIndex; // index of start of the hit segment (relative to edge.point)
 
         internal Vector2 HitPoint;  //refined hit point location
-        internal Vector2 RefPoint;  //saved referened
+        internal Vector2 RefPoint;  //saved point reference
 
         internal HitLocation HitLocation;  //hit location details
-        internal HitLocation RefLocation;  //saved referened
+        internal HitLocation RefLocation;  //saved hit reference
 
         internal Edge BendEdge;     // when bending an edge, remember which edge it is
         internal int BendIndex;     // when moving an bend point, remember which point it is
 
         internal HashSet<Node> Nodes = new HashSet<Node>();   // interior nodes
         internal HashSet<Edge> Edges = new HashSet<Edge>();   // interior edges
-        internal HashSet<Edge> NodeEdges = new HashSet<Edge>();   // edges connected to Nodes
 
         internal Dictionary<Edge, (int I1, int I2)> Points = new Dictionary<Edge, (int I1, int I2)>(); // chopped edge interior points
-
 
         internal Extent Extent = new Extent(); // selector rectangle
         private bool _enableSnapshot = true;
@@ -150,17 +148,6 @@ namespace ModelGraph.Core
                         if (Extent.Contains(node.Center)) Nodes.Add(node);
                     }
                 }
-                NodeEdges.Clear();
-                foreach (var n in Nodes)
-                {
-                    if (Graph.Node_Edges.TryGetValue(n, out List<Edge> lst))
-                    {
-                        foreach (var ed in lst)
-                        {
-                            NodeEdges.Add(ed);
-                        }
-                    }
-                }
                 if (count != Nodes.Count)
                 {
                     Edges.Clear();
@@ -218,23 +205,8 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region HitTestMap  ===================================================
-        internal void RemoveHitSectors()
-        {
-            var map = Graph.HitTestMap;
-            map.Remove(Nodes);
-            map.Remove(NodeEdges);
-        }
-        internal void InsertHitSectors()
-        {
-            var map = Graph.HitTestMap;
-            map.Insert(Nodes);
-            map.Insert(NodeEdges);
-        }
-        #endregion
-
         #region Clear  ========================================================
-        internal void Clear()
+            internal void Clear()
         {
             Nodes.Clear();
             Edges.Clear();
@@ -450,13 +422,13 @@ namespace ModelGraph.Core
         #endregion
 
         #region UpdateModels  =================================================
-        private void UpdateModels()
+        internal void UpdateModels()
         {
             var root = Graph.Owner.Owner.Owner;
             Graph.AdjustGraph(this);
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.RefreshDrawData();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.FullRefresh();
             }
         }
 
@@ -469,6 +441,7 @@ namespace ModelGraph.Core
         {
             if (_enableSnapshot)
             {
+                Graph.ModelDelta++;
                 _enableSnapshot = false;
                 Graph.TakeSnapshot(this);
             }

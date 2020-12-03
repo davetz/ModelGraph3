@@ -84,7 +84,6 @@ namespace ModelGraph.Core
         #region IHitTestable  =================================================
         public void GetHitSegments(HashSet<(int,int)> hitSegments, uint mask, ushort size, byte margin)
         {
-            hitSegments.Clear();
             var x = (int)X;
             var y = (int)Y;
             int mx = DX + margin;
@@ -289,7 +288,7 @@ namespace ModelGraph.Core
             var root = graph.Owner.Owner.Owner;
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == graph) gm.RefreshDrawData();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == graph) gm.FullRefresh();
             }
         }
         #endregion
