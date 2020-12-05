@@ -30,8 +30,6 @@ namespace ModelGraph.Core
             RefreshHelperData();
             SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
 
-            SetDrawStateAction(DrawState.Apply, ApplyChange);
-            SetDrawStateAction(DrawState.Revert, Revert);
             SetDrawStateAction(DrawState.PinsMode, SetPinsMode);
             SetDrawStateAction(DrawState.ViewMode, SetViewMode);
 
@@ -409,7 +407,9 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
             SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
             SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-            if (IsPasteActionEnabled) SetEventAction(DrawEvent.UIButton3, PasteAction);
+            SetEventAction(DrawEvent.Apply, ApplyChange);
+            SetEventAction(DrawEvent.Revert, Revert);
+            if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
             SetProperties();
         }
         private void PasteAction()
@@ -437,16 +437,17 @@ namespace ModelGraph.Core
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
                 SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                SetEventAction(DrawEvent.UIButton1, CutAction);
-                SetEventAction(DrawEvent.UIButton2, CopyAction);
-                SetEventAction(DrawEvent.UIButton4, RotateLeft);
-                SetEventAction(DrawEvent.UIButton5, RotateRight);
-                SetEventAction(DrawEvent.UIButton6, SetDegree22);
-                SetEventAction(DrawEvent.UIButton7, SetDegree30);
-                SetEventAction(DrawEvent.UIButtonB, SetLinkMode);
-                SetEventAction(DrawEvent.UIButton8, VerticalFlip);
-                SetEventAction(DrawEvent.UIButton9, HorizontalFlip);
-                SetEventAction(DrawEvent.UIButtonA, CenterAction);
+                SetEventAction(DrawEvent.Cut, CutAction);
+                SetEventAction(DrawEvent.Copy, CopyAction);
+                SetEventAction(DrawEvent.RotateLeft, RotateLeft);
+                SetEventAction(DrawEvent.RotateRight, RotateRight);
+                SetEventAction(DrawEvent.Angle22, SetDegree22);
+                SetEventAction(DrawEvent.Angle30, SetDegree30);
+                SetEventAction(DrawEvent.FlipVertical, VerticalFlip);
+                SetEventAction(DrawEvent.FlipHorizontal, HorizontalFlip);
+                SetEventAction(DrawEvent.Recenter, CenterAction);
+                SetEventAction(DrawEvent.Apply, ApplyChange);
+                SetEventAction(DrawEvent.Revert, Revert);
             }
         }
 
@@ -709,7 +710,6 @@ namespace ModelGraph.Core
             if (TrySetState(DrawState.LinkMode))
             {
                 ClearAllEventActions();
-                SetEventAction(DrawEvent.UIButtonB, SetEditMode);
                 SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
                 SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
                 SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);

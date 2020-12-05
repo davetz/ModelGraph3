@@ -114,10 +114,14 @@ namespace ModelGraph.Core
         }
         internal void RebuildHitTestMap()
         {
-            Debug.WriteLine("============Rebuilding HitTestMap===========");
-            HitTestMap.Clear();
-            HitTestMap.Insert(Nodes);
-            HitTestMap.Insert(Edges);
+            if (ModelDelta != HitTestMap.ModelDelta)
+            {
+                HitTestMap.ModelDelta = ModelDelta;
+                Debug.WriteLine("============Rebuilding HitTestMap===========");
+                HitTestMap.Clear();
+                HitTestMap.Insert(Nodes);
+                HitTestMap.Insert(Edges);
+            }
         }
         #endregion
     }

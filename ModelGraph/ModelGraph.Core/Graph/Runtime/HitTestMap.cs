@@ -8,6 +8,7 @@ namespace ModelGraph.Core
         private readonly Dictionary<(int,int), List<IHitTestable>> XY_HitSegment;
         private readonly uint _hitSegmentMask;   // size of hit testable segment
         private readonly ushort _hitSegmentSize;   // size of hit testable segment
+        internal byte ModelDelta = 252;            //used to keep hitTestMap aligned with the graph
 
         #region Constructor  ==================================================
         internal HitTestMap(int segmentSize)

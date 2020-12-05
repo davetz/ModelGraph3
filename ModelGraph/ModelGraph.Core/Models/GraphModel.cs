@@ -33,25 +33,25 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.ContextMenu, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
 
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode, ViewOnNode);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Tapped, ViewOnVoidTapped);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Dragging, ViewOnNodeDragging);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Ending, ViewOnNodeEnding);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid, SelectorOnVoid);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode, EditOnNode);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, EditOnVoidTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Dragging, EditOnNodeDragging);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Ending, EditOnNodeEnding);
 
 
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
 
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.Tapped, ViewOnNodeTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Tapped, EditOnNodeTapped);
 
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.UpArrow, ViewOnNodeUpArrow);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.LeftArrow, ViewOnNodeLeftArrow);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.DownArrow, ViewOnNodeDownArrow);
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.RightArrow, ViewOnNodeRightArrow);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.UpArrow, EditOnNodeUpArrow);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.LeftArrow, EditOnNodeLeftArrow);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.DownArrow, EditOnNodeDownArrow);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.RightArrow, EditOnNodeRightArrow);
 
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnNode | DrawState.ContextMenu, ViewOnNodeContextMenu);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.ContextMenu, EditOnNodeContextMenu);
 
             RefreshEditorData();
         }
@@ -138,8 +138,8 @@ namespace ModelGraph.Core
             }
             #endregion
 
-            #region AddHitMapTarges  ==========================================
-            Graph.HitTestMap.AddDrawParms(Editor);
+            #region AddHitTestMapSectors  =====================================
+            //Graph.HitTestMap.AddDrawParms(Editor);  //debug HitTestMap
             #endregion
         }
         #endregion
@@ -210,15 +210,15 @@ namespace ModelGraph.Core
         private bool _selectToggleMode;
         #endregion
 
-        #region ViewMode  =====================================================
-        private void ViewOnNodeTapped()
+        #region EditMode  =====================================================
+        private void EditOnNodeTapped()
         {
             Selector.SaveHitReference();
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             DrawCursor = DrawCursor.SizeAll;
             FullRefresh();
         }
-        private void ViewOnNode()
+        private void EditOnNode()
         {
             ToolTip_Text1 = Selector.HitNode.GetNameId();
             ToolTip_Text2 = Selector.HitNode.GetSummaryId();
@@ -227,7 +227,7 @@ namespace ModelGraph.Core
             ShowDrawItems(DrawItem.ToolTip);
             PageModel.TriggerUIRefresh();
         }
-        private void ViewOnNodeContextMenu()
+        private void EditOnNodeContextMenu()
         {
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
@@ -252,28 +252,28 @@ namespace ModelGraph.Core
 
             PageModel.TriggerUIRefresh();
         }
-        private void ViewOnVoidTapped()
+        private void EditOnVoidTapped()
         {
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             PageModel.TriggerUIRefresh();
         }
-        private void ViewOnNodeDragging()
+        private void EditOnNodeDragging()
         {
             var v = Editor.PointDelta(true);
             Selector.Move(v);
             RefreshEditorData();
         }
 
-        private void ViewOnNodeEnding()
+        private void EditOnNodeEnding()
         {
             DrawCursor = DrawCursor.Hand;
             PageModel.TriggerUIRefresh();
         }
-        private void ViewOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
-        private void ViewOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
-        private void ViewOnNodeLeftArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(-1, 0));
-        private void ViewOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
+        private void EditOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));
+        private void EditOnNodeDownArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, 1));
+        private void EditOnNodeLeftArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(-1, 0));
+        private void EditOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
         private void MoveOnNodeDelta(Node node, Vector2 delta)
         {
             ModelDelta++;

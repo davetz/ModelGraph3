@@ -27,13 +27,9 @@ namespace ModelGraph.Core
         MoveMode = 0x300,       //enable moving nodes
         LinkMode = 0x400,       //enable linking
         PinsMode = 0x500,       //enable movinge individual pins
-        CutMode = 0x600,        //enable cutting
         CopyMode = 0x700,       //enable copying
-        PasteMode = 0x800,      //enable pasting
         CreateMode = 0x900,     //enable createing
         OperateMode = 0xA00,    //enable operating
-        Apply = 0xD00,          //apply changes to model
-        Revert = 0xE00,         //revert to previous version
 
         ModeMask = 0xF00,       //issolage current mode
 

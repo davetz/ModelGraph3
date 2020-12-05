@@ -43,7 +43,7 @@ namespace ModelGraph.Core
             PreviousDrawState = DrawState;
             DrawState = state;
             if (PreviousDrawState != DrawState)
-            {
+            {//-----------------------------------write drawState debug message only when state changes
                 var e = "";
                 var u = "Unknown";
                 var nowOn = state & DrawState.NowMask;
