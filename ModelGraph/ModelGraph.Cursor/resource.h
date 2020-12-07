@@ -2,16 +2,15 @@
 // Microsoft Visual C++ generated include file.
 // Used by Resource.rc
 //
-#define IDC_POINTER                     104
-#define IDC_POINTER1                    105
-#define IDC_POINTER2                    106
-#define IDC_POINTER3                    107
-#define IDC_POINTER4                    108
-#define IDC_POINTER5                    109
-#define IDC_POINTER6                    110
-#define IDC_POINTER7                    111
-#define IDC_POINTER8                    112
-#define IDC_POINTER9                    113
+#define IDC_POINTER1                    101
+#define IDC_POINTER2                    102
+#define IDC_POINTER3                    103
+#define IDC_POINTER4                    104
+#define IDC_POINTER5                    105
+#define IDC_POINTER6                    106
+#define IDC_POINTER7                    107
+#define IDC_POINTER8                    108
+#define IDC_POINTER9                    109
 
 // Next default values for new objects
 // 

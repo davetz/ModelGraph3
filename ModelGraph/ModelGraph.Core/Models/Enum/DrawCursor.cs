@@ -23,14 +23,14 @@ namespace ModelGraph.Core
 
         //Custom Cursors have id value {101, 102, 103, 104, ...}
         CustomCursorTrigger = 100, //any id value > 100 triggers custom cursor loading
-        Custom101 = 101,
-        Custom102 = 102,
-        Custom103 = 103,
-        Custom104 = 104,
-        Custom105 = 105,
-        Custom106 = 106,
-        Custom107 = 107,
-        Custom108 = 108,
-        Custom109 = 109,
+        Copy = 101,
+        View = 102,
+        Move = 103,
+        Link = 104,
+        Cur105 = 105,
+        Cur106 = 106,
+        Cur107 = 107,
+        Cur108 = 108,
+        Cur109 = 109,
     }
 }

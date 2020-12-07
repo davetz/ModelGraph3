@@ -10,24 +10,24 @@ namespace ModelGraph.Controls
         private void TrySetNewCursor(CoreCursorType cursorType, int id = 0)
         {
             if (_currentCusorType == cursorType) return;
-            if (cursorType == CoreCursorType.Custom && _customCursor.TryGetValue(id, out CoreCursor newCustomCursor))
+            if (cursorType == CoreCursorType.Custom && _customCursor.TryGetValue(id, out CoreCursor customCursor))
             {
                 _currentCusorType = CoreCursorType.Custom;
-                Window.Current.CoreWindow.PointerCursor = newCustomCursor;
+                Window.Current.CoreWindow.PointerCursor = customCursor;
             }
-            else if (_cursors.TryGetValue(cursorType, out CoreCursor newCursor))
+            else if (_standardCursors.TryGetValue(cursorType, out CoreCursor standardCursor))
             {
                 _currentCusorType = cursorType;
-                Window.Current.CoreWindow.PointerCursor = newCursor;
+                Window.Current.CoreWindow.PointerCursor = standardCursor;
             }
-            else if (_cursors.TryGetValue(CoreCursorType.Arrow, out CoreCursor arrowCursor))
+            else if (_standardCursors.TryGetValue(CoreCursorType.Arrow, out CoreCursor arrowCursor))
             {
                 _currentCusorType = cursorType;
                 Window.Current.CoreWindow.PointerCursor = arrowCursor;
             }
         }
         private CoreCursorType _currentCusorType;
-        readonly Dictionary<CoreCursorType, CoreCursor> _cursors = new Dictionary<CoreCursorType, CoreCursor>()
+        readonly Dictionary<CoreCursorType, CoreCursor> _standardCursors = new Dictionary<CoreCursorType, CoreCursor>()
         {
             [CoreCursorType.Pin] = new CoreCursor(CoreCursorType.Pin, 0),
             [CoreCursorType.Hand] = new CoreCursor(CoreCursorType.Hand, 0),
@@ -47,10 +47,15 @@ namespace ModelGraph.Controls
         };
         readonly Dictionary<int, CoreCursor> _customCursor = new Dictionary<int, CoreCursor>()
         {
+            [101] = new CoreCursor(CoreCursorType.Custom, 101),
+            [102] = new CoreCursor(CoreCursorType.Custom, 102),
+            [103] = new CoreCursor(CoreCursorType.Custom, 103),
             [104] = new CoreCursor(CoreCursorType.Custom, 104),
             [105] = new CoreCursor(CoreCursorType.Custom, 105),
             [106] = new CoreCursor(CoreCursorType.Custom, 106),
             [107] = new CoreCursor(CoreCursorType.Custom, 107),
+            [108] = new CoreCursor(CoreCursorType.Custom, 108),
+            [109] = new CoreCursor(CoreCursorType.Custom, 109),
         };
     }
 }

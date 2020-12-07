@@ -50,8 +50,6 @@ END
 // Cursor
 //
 
-IDC_POINTER             CURSOR                  "arrow.cur"
-
 IDC_POINTER1            CURSOR                  "pointer1.cur"
 
 IDC_POINTER2            CURSOR                  "pointer2.cur"

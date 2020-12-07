@@ -266,7 +266,7 @@ namespace ModelGraph.Core
         private void EditOnNodeEnding()
         {
             //DrawCursor = DrawCursor.Hand;
-            DrawCursor = DrawCursor.Custom105;
+            DrawCursor = DrawCursor.View;
             PageModel.TriggerUIRefresh();
         }
         private void EditOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));

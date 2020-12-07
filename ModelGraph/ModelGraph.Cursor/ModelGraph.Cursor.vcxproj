@@ -148,7 +148,6 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="arrow.cur" />
     <None Include="pointer1.cur" />
     <None Include="pointer2.cur" />
     <None Include="pointer3.cur" />
