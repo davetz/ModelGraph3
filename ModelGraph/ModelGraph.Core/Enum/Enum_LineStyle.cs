@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.LineStyleEnum;
 
         #region Constructor  ==================================================
-        internal Enum_LineStyle(EnumManager owner) : base(owner)
+        internal Enum_LineStyle(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

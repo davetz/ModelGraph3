@@ -7,9 +7,9 @@ namespace ModelGraph.Core
     internal abstract class LinkSerializer 
     {
         static byte _formatVersion = 1;
-        protected IRelationManager _relationRoot;
+        protected IRelationRoot _relationRoot;
 
-        internal LinkSerializer(IRelationManager relRoot)
+        internal LinkSerializer(IRelationRoot relRoot)
         {
             _relationRoot = relRoot;
         }

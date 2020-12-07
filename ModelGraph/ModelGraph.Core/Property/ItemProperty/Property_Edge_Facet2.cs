@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.EdgeFace2Property;
 
-        internal Property_Edge_Facet2(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_Facet>()) { }
+        internal Property_Edge_Facet2(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_Facet>()) { }
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).Facet2;
 

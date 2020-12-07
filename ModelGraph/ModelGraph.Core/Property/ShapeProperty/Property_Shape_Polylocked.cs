@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ShapePolylockedProperty;
 
-        internal Property_Shape_Polylocked(PropertyManager owner) : base(owner)
+        internal Property_Shape_Polylocked(PropertyRoot owner) : base(owner)
         {
             Value = new BoolValue(this);
         }

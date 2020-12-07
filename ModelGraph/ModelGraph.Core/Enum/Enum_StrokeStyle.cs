@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.StrokeStyleEnum;
 
         #region Constructor  ==================================================
-        internal Enum_StrokeStyle(EnumManager owner) : base(owner)
+        internal Enum_StrokeStyle(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

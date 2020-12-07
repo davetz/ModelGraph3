@@ -69,21 +69,21 @@ namespace ModelGraph.Core
         #region Store ================================================(0E0-0FF)
         // root level containers for the hierarchal item trees
 
-        EnumXManager = 0x0E1 | Is_Reference,
-        ViewXManager = 0x0E2 | Is_Reference,
-        TableXManager = 0x0E3 | Is_Reference,
-        GraphXManager = 0x0E4 | Is_Reference,
-        QueryXManager = 0x0E5 | Is_Reference,
-        SymbolXManager = 0x0E7 | Is_Reference,
-        ColumnXManager = 0x0E8 | Is_Reference,
-        ComputeXManager = 0x0E9 | Is_Reference,
-        RelationXManager = 0x0EA | Is_Reference,
+        EnumXRoot = 0x0E1 | Is_Reference,
+        ViewXRoot = 0x0E2 | Is_Reference,
+        TableXRoot = 0x0E3 | Is_Reference,
+        GraphXRoot = 0x0E4 | Is_Reference,
+        QueryXRoot = 0x0E5 | Is_Reference,
+        SymbolXRoot = 0x0E7 | Is_Reference,
+        ColumnXRoot = 0x0E8 | Is_Reference,
+        ComputeXRoot = 0x0E9 | Is_Reference,
+        RelationXRoot = 0x0EA | Is_Reference,
 
-        EnumManager = 0x0F1,
-        ErrorManager = 0x0F2,
-        GroupManager = 0x0F3,
-        PropertyManager = 0x0F4 | Is_Reference,
-        RelationManager = 0x0F5 | Is_Reference,
+        EnumRoot = 0x0F1,
+        ErrorRoot = 0x0F2,
+        GroupRoot = 0x0F3,
+        PropertyRoot = 0x0F4 | Is_Reference,
+        RelationRoot = 0x0F5 | Is_Reference,
 
         #endregion
 

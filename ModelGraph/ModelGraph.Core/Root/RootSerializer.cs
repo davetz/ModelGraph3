@@ -77,8 +77,8 @@ namespace ModelGraph.Core
             }
             return itemIndex;
         }
-        public void AddRepositorReadError(string msg) => Get<ErrorManager>().TryAddErrorOne(this, IdKey.Error_201_ImportFailed, msg);
-        public void AddRepositorWriteError(string msg) => Get<ErrorManager>().TryAddErrorOne(this, IdKey.Error_200_ExportFailed, msg);
+        public void AddRepositorReadError(string msg) => Get<ErrorRoot>().TryAddErrorOne(this, IdKey.Error_201_ImportFailed, msg);
+        public void AddRepositorWriteError(string msg) => Get<ErrorRoot>().TryAddErrorOne(this, IdKey.Error_200_ExportFailed, msg);
         #endregion
 
         #region ISerializer  ==================================================

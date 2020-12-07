@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.RelationPairingProperty;
 
-        internal Property_Relation_Pairing(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_Pairing>()) { }
+        internal Property_Relation_Pairing(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_Pairing>()) { }
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).Pairing;
 

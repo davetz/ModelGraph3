@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ShapeHorzAxisProperty;
 
-        internal Property_Shape_HorzAxis(PropertyManager owner) : base(owner)
+        internal Property_Shape_HorzAxis(PropertyRoot owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

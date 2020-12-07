@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class RelationManager : InternalManager<Root, Relation>, IManager, IRelationManager
+    public class RelationRoot : InternalRoot<Root, Relation>, IRootDomain, IRelationRoot
     {
-        internal RelationManager(Root root)
+        internal RelationRoot(Root root)
         {
             Owner = root;
             SetCapacity(30);
@@ -65,7 +65,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.RelationManager;
+        internal override IdKey IdKey => IdKey.RelationRoot;
         #endregion
 
         #region RelationMethods  ==============================================

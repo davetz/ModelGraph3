@@ -1,9 +1,9 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class PropertyManager : InternalManager<Root, Property>, IManager
+    public class PropertyRoot : InternalRoot<Root, Property>, IRootDomain
     {
-        internal PropertyManager(Root root)
+        internal PropertyRoot(Root root)
         {
             Owner = root;
             SetCapacity(100);
@@ -27,7 +27,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.PropertyManager;
+        internal override IdKey IdKey => IdKey.PropertyRoot;
         #endregion
 
     }

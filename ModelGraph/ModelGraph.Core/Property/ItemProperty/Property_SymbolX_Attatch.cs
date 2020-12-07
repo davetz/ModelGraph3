@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.SymbolXAttatchProperty;
 
-        internal Property_SymbolX_Attatch(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_Attach>()) { }
+        internal Property_SymbolX_Attatch(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_Attach>()) { }
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).Attach;
         internal override void SetItemPropertyValue(Item item, int key) => Cast(item).Attach = (Attach)key;

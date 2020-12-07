@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ShapeDimensionProperty;
 
-        internal Property_Shape_Dimension(PropertyManager owner) : base(owner)
+        internal Property_Shape_Dimension(PropertyRoot owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

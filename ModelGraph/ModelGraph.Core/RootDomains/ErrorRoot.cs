@@ -2,10 +2,10 @@
 
 namespace ModelGraph.Core
 {
-    public class ErrorManager : ChildOfStoreOf<Root, Error>
+    public class ErrorRoot : ChildOfStoreOf<Root, Error>
     {
         #region Constructors  =================================================
-        internal ErrorManager(Root root)
+        internal ErrorRoot(Root root)
         {
             Owner = root;
             SetCapacity(20);
@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Identity  =====================================================
-        internal override IdKey IdKey => IdKey.ErrorManager;
+        internal override IdKey IdKey => IdKey.ErrorRoot;
         #endregion
 
         #region ErrorMethods  =================================================

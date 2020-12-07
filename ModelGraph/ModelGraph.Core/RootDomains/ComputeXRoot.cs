@@ -6,12 +6,12 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class ComputeXManager : ExternalManager<Root, ComputeX>, ISerializer, IManager
+    public class ComputeXRoot : ExternalRoot<Root, ComputeX>, ISerializer, IRootDomain
     {
         static Guid _serializerGuid = new Guid("35522B27-A925-4CE0-8D65-EDEF451097F2");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.ComputeXManager;
-        internal ComputeXManager(Root root)
+        internal override IdKey IdKey => IdKey.ComputeXRoot;
+        internal ComputeXRoot(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -20,7 +20,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyManager>();
+            var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_ComputeX_CompuType(sto));
             root.RegisterReferenceItem(new Property_ComputeX_Where(sto));
@@ -122,7 +122,7 @@ namespace ModelGraph.Core
 
         #region DomainMethods  ================================================
         //========================================== frequently used references
-        private QueryXManager _queryXManager;
+        private QueryXRoot _queryXManager;
         private ChangeManager _changeManager;
 
         private Relation_QueryX_QueryX _relation_QueryX_QueryX;
@@ -133,7 +133,7 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXManager = root.Get<QueryXManager>();
+            _queryXManager = root.Get<QueryXRoot>();
             _changeManager = root.Get<ChangeManager>();
 
             _relation_QueryX_QueryX = root.Get<Relation_QueryX_QueryX>();

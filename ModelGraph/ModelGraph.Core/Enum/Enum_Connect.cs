@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ConnectEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Connect(EnumManager owner) : base(owner)
+        internal Enum_Connect(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

@@ -32,7 +32,7 @@ namespace ModelGraph.Core
         }
         private void AddNewChildRelation(Root root)
         {
-            var rx = new RelationX_RowX_RowX(root.Get<RelationXManager>(), true);
+            var rx = new RelationX_RowX_RowX(root.Get<RelationXRoot>(), true);
 
             // the data root implements undo/redo functionality
             ItemCreated.Record(root, rx);

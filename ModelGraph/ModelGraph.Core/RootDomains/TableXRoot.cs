@@ -4,13 +4,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class TableXManager : ExternalManager<Root, TableX>, ISerializer, IManager
+    public class TableXRoot : ExternalRoot<Root, TableX>, ISerializer, IRootDomain
     {
         static Guid _serializerGuid = new Guid("93EC136C-6C38-474D-844B-6B8326526CB5");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.TableXManager;
+        internal override IdKey IdKey => IdKey.TableXRoot;
 
-        internal TableXManager(Root root)
+        internal TableXRoot(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -123,8 +123,8 @@ namespace ModelGraph.Core
 
         #region DomainMethods  ================================================
         //========================================== frequently used references
-        private QueryXManager _queryXManager;
-        private ComputeXManager _computeXManager;
+        private QueryXRoot _queryXManager;
+        private ComputeXRoot _computeXManager;
 
         private Relation_Store_QueryX _relation_Store_QueryX;
         private Relation_Store_ColumnX _relation_Store_ColumnX;
@@ -136,8 +136,8 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXManager = root.Get<QueryXManager>();
-            _computeXManager = root.Get<ComputeXManager>();
+            _queryXManager = root.Get<QueryXRoot>();
+            _computeXManager = root.Get<ComputeXRoot>();
 
             _relation_Store_QueryX = root.Get<Relation_Store_QueryX>();
             _relation_Store_ColumnX = root.Get<Relation_Store_ColumnX>();

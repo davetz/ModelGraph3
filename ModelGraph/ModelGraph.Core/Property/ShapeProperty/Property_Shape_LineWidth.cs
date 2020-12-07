@@ -7,7 +7,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ShapeLineWidthProperty;
 
-        internal Property_Shape_LineWidth(PropertyManager owner) : base(owner)
+        internal Property_Shape_LineWidth(PropertyRoot owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

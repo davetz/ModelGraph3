@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         internal CompuType CompuType; // type of computation
 
         #region Constructors  =================================================
-        internal ComputeX(ComputeXManager owner, bool autoExpand = false)
+        internal ComputeX(ComputeXRoot owner, bool autoExpand = false)
         {
             Owner = owner;
 
@@ -29,7 +29,7 @@ namespace ModelGraph.Core
 
             owner.Add(this);
         }
-        internal ComputeXManager Owner;
+        internal ComputeXRoot Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 

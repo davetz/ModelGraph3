@@ -17,10 +17,10 @@ namespace ModelGraph.Core
             if (IsExpandedLeft) return false;
             IsExpandedLeft = true;
 
-            new Model_631_ViewList(this, root.Get<ViewXManager>());
-            new Model_642_EnumList(this, root.Get<EnumXManager>());
-            new Model_643_TableList(this, root.Get<TableXManager>());
-            new Model_644_GraphList(this, root.Get<GraphXManager>());
+            new Model_631_ViewList(this, root.Get<ViewXRoot>());
+            new Model_642_EnumList(this, root.Get<EnumXRoot>());
+            new Model_643_TableList(this, root.Get<TableXRoot>());
+            new Model_644_GraphList(this, root.Get<GraphXRoot>());
             new Model_7F0_Root(this, root);
 
             return true;

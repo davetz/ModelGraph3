@@ -4,14 +4,14 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class RelationXManager : ExternalManager<Root, Relation>, ISerializer, IManager, IRelationManager
+    public class RelationXRoot : ExternalRoot<Root, Relation>, ISerializer, IRootDomain, IRelationRoot
     {
         static Guid _serializerGuid = new Guid("D950F508-B774-4838-B81A-757EFDC40518");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.RelationXManager;
+        internal override IdKey IdKey => IdKey.RelationXRoot;
 
         #region Constructor  ==================================================
-        internal RelationXManager(Root root)
+        internal RelationXRoot(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -22,7 +22,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyManager>();
+            var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_Relation_Pairing(sto));
             root.RegisterReferenceItem(new Property_Relation_IsRequired(sto));

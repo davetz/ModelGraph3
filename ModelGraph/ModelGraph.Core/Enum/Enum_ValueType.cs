@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ValueTypeEnum;
 
         #region Constructor  ==================================================
-        internal Enum_ValueType(EnumManager owner) : base(owner)
+        internal Enum_ValueType(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

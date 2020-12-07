@@ -5,7 +5,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.NodeBarWidthProperty;
 
-        internal Property_Node_BarWidth(PropertyManager owner) : base(owner)
+        internal Property_Node_BarWidth(PropertyRoot owner) : base(owner)
         {
             Value = new StringValue(this);
         }

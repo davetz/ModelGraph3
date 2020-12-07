@@ -1,11 +1,11 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_GraphX_ColorProperty : RelationOf<RelationManager, GraphX,Property>
+    public class Relation_GraphX_ColorProperty : RelationOf<RelationRoot, GraphX,Property>
     {
         internal override IdKey IdKey => IdKey.Relation_GraphX_ColorProperty;
 
-        internal Relation_GraphX_ColorProperty(RelationManager owner)
+        internal Relation_GraphX_ColorProperty(RelationRoot owner)
         {
             Owner = owner;
             Pairing = Pairing.ManyToMany;

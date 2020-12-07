@@ -4,13 +4,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class GraphXManager : ExternalManager<Root, GraphX>, ISerializer, IManager
+    public class GraphXRoot : ExternalRoot<Root, GraphX>, ISerializer, IRootDomain
     {
         static Guid _serializerGuid = new Guid("48C7FA8C-88F1-4203-8E54-3255C1F8C528");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.GraphXManager;
+        internal override IdKey IdKey => IdKey.GraphXRoot;
 
-        internal GraphXManager(Root root) 
+        internal GraphXRoot(Root root) 
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -20,7 +20,7 @@ namespace ModelGraph.Core
         #region IPrimeRoot  ===================================================
         public void CreateSecondaryHierarchy(Root root)
         {
-            var sto = root.Get<PropertyManager>();
+            var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_GraphX_TerminalLength(sto));
             root.RegisterReferenceItem(new Property_GraphX_TerminalSpacing(sto));
@@ -135,8 +135,8 @@ namespace ModelGraph.Core
 
         #region DomainMethods  ================================================
         //========================================== frequently used references
-        private QueryXManager _queryXManager;
-        private SymbolXManager _sybolXManager;
+        private QueryXRoot _queryXManager;
+        private SymbolXRoot _sybolXManager;
         private DummyItem _dummyItem;
         private DummyQueryX _dummyQueryX;
 
@@ -154,8 +154,8 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _queryXManager = root.Get<QueryXManager>();
-            _sybolXManager = root.Get<SymbolXManager>();
+            _queryXManager = root.Get<QueryXRoot>();
+            _sybolXManager = root.Get<SymbolXRoot>();
             _dummyItem = root.Get<DummyItem>();
             _dummyQueryX = root.Get<DummyQueryX>();
 

@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ColumnValueTypeProperty;
 
-        internal Property_ColumnX_ValueType(PropertyManager owner) : base(owner, owner.GetRoot().Get<Enum_ValueType>()) { }
+        internal Property_ColumnX_ValueType(PropertyRoot owner) : base(owner, owner.GetRoot().Get<Enum_ValueType>()) { }
 
         internal override int GetItemPropertyValue(Item item) => (int)Cast(item).Value.ValType;
 

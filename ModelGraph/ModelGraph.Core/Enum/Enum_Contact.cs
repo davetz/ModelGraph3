@@ -7,7 +7,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.ContactEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Contact(EnumManager owner) : base(owner)
+        internal Enum_Contact(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

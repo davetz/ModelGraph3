@@ -6,7 +6,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.FacetEnum;
 
         #region Constructor  ==================================================
-        internal Enum_Facet(EnumManager owner) : base(owner)
+        internal Enum_Facet(EnumRoot owner) : base(owner)
         {
             CreateChildren();
         }

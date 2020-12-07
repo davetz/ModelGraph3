@@ -6,7 +6,7 @@ namespace ModelGraph.Core
     {
         internal override IdKey IdKey => IdKey.ShapeMinorAxisProperty;
 
-        internal Property_Shape_MinorAxis(PropertyManager owner) : base(owner)
+        internal Property_Shape_MinorAxis(PropertyRoot owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

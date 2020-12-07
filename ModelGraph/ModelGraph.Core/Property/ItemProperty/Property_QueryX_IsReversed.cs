@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         internal override IdKey IdKey => IdKey.QueryXIsReversedProperty;
         protected override Type PropetyModelType => typeof(Model_618_CheckProperty);
 
-        internal Property_QueryX_IsReversed(PropertyManager owner) : base(owner)
+        internal Property_QueryX_IsReversed(PropertyRoot owner) : base(owner)
         {
             Value = new BoolValue(this);
         }

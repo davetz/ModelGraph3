@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    internal interface IRelationManager
+    internal interface IRelationRoot
     {
         Relation[] GetRelationArray();
         (Store, Store) GetHeadTail(Relation rx);

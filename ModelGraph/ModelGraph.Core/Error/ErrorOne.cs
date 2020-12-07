@@ -5,7 +5,7 @@
         private string _text;
 
         #region Constructor  ==================================================
-        internal ErrorOne(ErrorManager owner, Item item, IdKey idKe, string text = null)
+        internal ErrorOne(ErrorRoot owner, Item item, IdKey idKe, string text = null)
         {
             Owner = owner;
             Item = item;
@@ -14,7 +14,7 @@
             owner.Add(this);
 
         }
-        internal ErrorManager Owner;
+        internal ErrorRoot Owner;
         internal override Item GetOwner() => Owner;
         #endregion
 

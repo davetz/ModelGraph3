@@ -1,11 +1,11 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Relation_GraphX_QueryX : RelationOf<RelationManager, GraphX, QueryX>
+    public class Relation_GraphX_QueryX : RelationOf<RelationRoot, GraphX, QueryX>
     {
         internal override IdKey IdKey => IdKey.Relation_GraphX_QueryX;
 
-        internal Relation_GraphX_QueryX(RelationManager owner)
+        internal Relation_GraphX_QueryX(RelationRoot owner)
         {
             Owner = owner;
             Pairing = Pairing.OneToMany;

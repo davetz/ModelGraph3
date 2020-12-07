@@ -5,13 +5,13 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class QueryXManager : ExternalManager<Root, QueryX>, ISerializer, IManager
+    public class QueryXRoot : ExternalRoot<Root, QueryX>, ISerializer, IRootDomain
     {
         static Guid _serializerGuid = new Guid("33B9B8A4-9332-4902-A3C1-37C5F971B6FF");
         static byte _formatVersion = 1;
-        internal override IdKey IdKey => IdKey.QueryXManager;
+        internal override IdKey IdKey => IdKey.QueryXRoot;
 
-        internal QueryXManager(Root root)
+        internal QueryXRoot(Root root)
         {
             Owner = root;
             root.RegisterItemSerializer((_serializerGuid, this));
@@ -22,7 +22,7 @@ namespace ModelGraph.Core
         {
             root.RegisterReferenceItem(new DummyQueryX(this));
 
-            var sto = root.Get<PropertyManager>();
+            var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_QueryX_Where(sto));
             root.RegisterReferenceItem(new Property_QueryX_Select(sto));
@@ -177,9 +177,9 @@ namespace ModelGraph.Core
 
         #region QueryXHelpers  ================================================
         //========================================== frequently used references
-        private ErrorManager _errorManager;
-        private GraphXManager _graphXManager;
-        private ComputeXManager _computeXManager;
+        private ErrorRoot _errorManager;
+        private GraphXRoot _graphXManager;
+        private ComputeXRoot _computeXManager;
 
         private Property_QueryX_Where _property_QueryX_Where;
         private Property_QueryX_Select _property_QueryX_Select;
@@ -198,9 +198,9 @@ namespace ModelGraph.Core
         #region InitializeLocalReferences  ====================================
         private void InitializeLocalReferences(Root root)
         {
-            _errorManager = root.Get<ErrorManager>();
-            _graphXManager = root.Get<GraphXManager>();
-            _computeXManager = root.Get<ComputeXManager>();
+            _errorManager = root.Get<ErrorRoot>();
+            _graphXManager = root.Get<GraphXRoot>();
+            _computeXManager = root.Get<ComputeXRoot>();
 
             _property_QueryX_Where = root.Get<Property_QueryX_Where>();
             _property_QueryX_Select = root.Get<Property_QueryX_Select>();
