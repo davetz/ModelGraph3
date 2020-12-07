@@ -19,6 +19,11 @@ namespace ModelGraph.Core
         UpArrow = 12,
         Wait = 13,
         Pin = 14,
-        Person = 15
+        Person = 15,
+
+        //Custom Cursors have id value {101, 102, 103, 104, ...}
+        CustomCursorTrigger = 100, //any id value > 100 triggers custom cursor loading
+        Custom101 = 101,
+        Custom102 = 102,
     }
 }

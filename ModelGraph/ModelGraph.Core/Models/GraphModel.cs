@@ -68,7 +68,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Refresh/RefreshEditorData  ================================
+        #region Refresh/UpdateEditorData  =====================================
         internal void Refresh()
         {
             UpdateEditorData();
@@ -265,7 +265,8 @@ namespace ModelGraph.Core
 
         private void EditOnNodeEnding()
         {
-            DrawCursor = DrawCursor.Hand;
+            //DrawCursor = DrawCursor.Hand;
+            DrawCursor = DrawCursor.Custom102;
             PageModel.TriggerUIRefresh();
         }
         private void EditOnNodeUpArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(0, -1));

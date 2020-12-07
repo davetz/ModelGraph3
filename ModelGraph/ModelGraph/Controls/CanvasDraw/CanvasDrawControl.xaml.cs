@@ -375,7 +375,13 @@ namespace ModelGraph.Controls
                 if (Model.DrawCursor != _drawCursor)
                 {
                     _drawCursor = Model.DrawCursor;
-                    TrySetNewCursor((CoreCursorType)_drawCursor);
+                    if (_drawCursor > DrawCursor.CustomCursorTrigger)
+                    {
+                        var id = (int)_drawCursor;
+                        TrySetNewCursor(CoreCursorType.Custom, id);
+                    }
+                    else
+                        TrySetNewCursor((CoreCursorType)_drawCursor);
                 }
                 if (_currentCusorType == CoreCursorType.Hand)
                     RootFocusButton.Focus(FocusState.Programmatic);
