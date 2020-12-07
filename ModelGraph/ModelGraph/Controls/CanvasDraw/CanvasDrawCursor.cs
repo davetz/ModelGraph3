@@ -47,8 +47,10 @@ namespace ModelGraph.Controls
         };
         readonly Dictionary<int, CoreCursor> _customCursor = new Dictionary<int, CoreCursor>()
         {
-            [101] = new CoreCursor(CoreCursorType.Custom, 101),
-            [102] = new CoreCursor(CoreCursorType.Custom, 102),
+            [104] = new CoreCursor(CoreCursorType.Custom, 104),
+            [105] = new CoreCursor(CoreCursorType.Custom, 105),
+            [106] = new CoreCursor(CoreCursorType.Custom, 106),
+            [107] = new CoreCursor(CoreCursorType.Custom, 107),
         };
     }
 }
