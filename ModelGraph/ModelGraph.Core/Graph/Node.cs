@@ -288,7 +288,7 @@ namespace ModelGraph.Core
             var root = graph.Owner.Owner.Owner;
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == graph) gm.FullRefresh();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == graph) gm.Refresh();
             }
         }
         #endregion

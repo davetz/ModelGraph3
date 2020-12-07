@@ -55,7 +55,7 @@ namespace ModelGraph.Core
             var root = Owner.Owner.Owner;
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == this) gm.FullRefresh();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == this) gm.Refresh();
             }
         }
 

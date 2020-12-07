@@ -53,7 +53,7 @@ namespace ModelGraph.Core
 
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.ContextMenu, EditOnNodeContextMenu);
 
-            RefreshEditorData();
+            UpdateEditorData();
         }
         public override void Release()
         {
@@ -68,19 +68,14 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region FullRefresh/RefreshEditorData  ================================
-        internal void FullRefresh()
+        #region Refresh/RefreshEditorData  ================================
+        internal void Refresh()
         {
-            if (ModelDelta != Graph.ModelDelta)
-            {
-                ModelDelta = Graph.ModelDelta;
-                Graph.RebuildHitTestMap();
-            }
-            RefreshEditorData();
+            UpdateEditorData();
             PageModel.TriggerUIRefresh();
         }
 
-        private void RefreshEditorData()
+        private void UpdateEditorData()
         {
             Editor.Clear();
 
@@ -173,9 +168,12 @@ namespace ModelGraph.Core
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
             if (ModelDelta != Graph.ModelDelta)
+            {
+                ModelDelta = Graph.ModelDelta;
+                Graph.RebuildHitTestMap();
                 Selector.UpdateModels();
-            else
-                PageModel.TriggerUIRefresh();
+            }
+            PageModel.TriggerUIRefresh();
         }
         private void SelectorTapped()
         {
@@ -204,7 +202,7 @@ namespace ModelGraph.Core
                 Selector.HitTestRegion(_selectToggleMode, Editor.Point1, Editor.Point2);
             }
             HideDrawItems(DrawItem.Selector);
-            FullRefresh();
+            Refresh();
         }
         private bool _tracingSelector;
         private bool _selectToggleMode;
@@ -216,7 +214,7 @@ namespace ModelGraph.Core
             Selector.SaveHitReference();
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             DrawCursor = DrawCursor.SizeAll;
-            FullRefresh();
+            Refresh();
         }
         private void EditOnNode()
         {
@@ -262,7 +260,7 @@ namespace ModelGraph.Core
         {
             var v = Editor.PointDelta(true);
             Selector.Move(v);
-            RefreshEditorData();
+            UpdateEditorData();
         }
 
         private void EditOnNodeEnding()
@@ -276,9 +274,8 @@ namespace ModelGraph.Core
         private void EditOnNodeRightArrow() => MoveOnNodeDelta(Selector.HitNode, new Vector2(1, 0));
         private void MoveOnNodeDelta(Node node, Vector2 delta)
         {
-            ModelDelta++;
             Selector.Move(delta);
-            RefreshEditorData();
+            UpdateEditorData();
             PageModel.TriggerUIRefresh();
         }
         #endregion

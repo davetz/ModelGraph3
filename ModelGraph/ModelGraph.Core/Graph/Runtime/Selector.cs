@@ -428,8 +428,9 @@ namespace ModelGraph.Core
             Graph.AdjustGraph(this);
             foreach (var pm in root.Items)
             {
-                if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.FullRefresh();
+                if (pm.LeadModel is GraphModel gm && gm.Graph == Graph) gm.Refresh();
             }
+            EnableSnapshot();
         }
 
         #endregion
