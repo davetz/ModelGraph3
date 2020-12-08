@@ -50,5 +50,14 @@ namespace ModelGraph.Core
         RotateRight,
         FlipVertical,
         FlipHorizontal,
+
+        SetViewMode,
+        SetEditMode,
+        SetMoveMode,
+        SetPinsMode,
+        SetCopyMode,
+        SetLinkMode,
+        SetCreateMode,
+        SetOperateMode,
     };
 }

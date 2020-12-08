@@ -11,7 +11,6 @@ namespace ModelGraph.Core
         DrawItem VisibleDrawItems { get; set; }
 
         void Release(); //user has closed this standalone view
-        bool TrySetState(DrawState state);
         void SetEventAction(DrawEvent evt, Action act);
         bool TryGetDrawEventAction(DrawEvent evt, out Action act);
 

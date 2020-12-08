@@ -914,6 +914,11 @@ namespace ModelGraph.Controls
         private void KeyboardAccelerator_DownArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyDownArrow);
         private void KeyboardAccelerator_LeftArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyLeftArrow);
         private void KeyboardAccelerator_RightArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyRightArrow);
+        private void KeyboardAccelerator_VKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetViewMode);
+        private void KeyboardAccelerator_EKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetEditMode);
+        private void KeyboardAccelerator_MKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetMoveMode);
+        private void KeyboardAccelerator_CKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetCopyMode);
+        private void KeyboardAccelerator_LKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetLinkMode);
 
         private void TestDrawEvent(DrawEvent evt)
         {

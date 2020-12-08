@@ -5,7 +5,7 @@
     xmlns:canvas="using:Microsoft.Graphics.Canvas.UI.Xaml"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:l="using:ModelGraph.Controls"
+    xmlns:controls="using:ModelGraph.Controls"
     mc:Ignorable="d"
     d:DesignHeight="500"
     d:DesignWidth="800">
@@ -132,6 +132,11 @@
                         <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
                         <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>
                         <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_RightArrow_Invoked"/>
+                        <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_VKey_Invoked"/>
+                        <KeyboardAccelerator Key="E" Invoked="KeyboardAccelerator_EKey_Invoked"/>
+                        <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_MKey_Invoked"/>
+                        <KeyboardAccelerator Key="C" Invoked="KeyboardAccelerator_CKey_Invoked"/>
+                        <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_LKey_Invoked"/>
                     </Button.KeyboardAccelerators>
                 </Button>
 
@@ -189,7 +194,7 @@
                     </Grid>
 
                     <Grid x:Name="FlyTreeGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
-                        <l:CanvasTreeControl x:Name="FlyTreeCanvas"/>
+                        <controls:CanvasTreeControl x:Name="FlyTreeCanvas"/>
                     </Grid>
                 </Canvas>
             </Grid>
@@ -198,7 +203,7 @@
                 <canvas:CanvasControl x:Name="Pick2Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick2Canvas_PointerPressed"/>
             </Grid>
             <Grid Grid.Column="3" x:Name="SideTreeGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
-                <l:CanvasTreeControl x:Name="SideTreeCanvas" />
+                <controls:CanvasTreeControl x:Name="SideTreeCanvas" />
             </Grid>
         </Grid>
     </Grid>
