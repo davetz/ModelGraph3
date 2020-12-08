@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class RelationRoot : InternalRoot<Root, Relation>, IRootDomain, IRelationRoot
+    public class RelationRoot : InternalRoot<Root, Relation>, IPrimeRoot, IRelationRoot
     {
         internal RelationRoot(Root root)
         {

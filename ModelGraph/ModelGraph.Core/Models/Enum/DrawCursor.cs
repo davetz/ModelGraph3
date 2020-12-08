@@ -22,15 +22,15 @@ namespace ModelGraph.Core
         Person = 15,
 
         //Custom Cursors have id value {101, 102, 103, 104, ...}
-        CustomCursorTrigger = 100, //any id value > 100 triggers custom cursor loading
-        Copy = 101,
+        CustomCursorsBegin = 100, //any id value > 100 triggers custom cursor loading
+        New = 101,
         View = 102,
         Move = 103,
         Link = 104,
-        Cur105 = 105,
-        Cur106 = 106,
-        Cur107 = 107,
-        Cur108 = 108,
-        Cur109 = 109,
+        Copy = 105,
+        Delete = 106,
+        UnLink = 107,
+        Operate = 108,
+        Gravity = 109,
     }
 }

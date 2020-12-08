@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class PropertyRoot : InternalRoot<Root, Property>, IRootDomain
+    public class PropertyRoot : InternalRoot<Root, Property>, IPrimeRoot
     {
         internal PropertyRoot(Root root)
         {

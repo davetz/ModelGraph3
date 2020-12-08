@@ -375,7 +375,7 @@ namespace ModelGraph.Controls
                 if (Model.DrawCursor != _drawCursor)
                 {
                     _drawCursor = Model.DrawCursor;
-                    if (_drawCursor > DrawCursor.CustomCursorTrigger)
+                    if (_drawCursor > DrawCursor.CustomCursorsBegin)
                     {
                         var id = (int)_drawCursor;
                         TrySetNewCursor(CoreCursorType.Custom, id);

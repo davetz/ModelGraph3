@@ -4,7 +4,7 @@ using Windows.Storage.Streams;
 
 namespace ModelGraph.Core
 {
-    public class GraphXRoot : ExternalRoot<Root, GraphX>, ISerializer, IRootDomain
+    public class GraphXRoot : ExternalRoot<Root, GraphX>, ISerializer, IPrimeRoot
     {
         static Guid _serializerGuid = new Guid("48C7FA8C-88F1-4203-8E54-3255C1F8C528");
         static byte _formatVersion = 1;

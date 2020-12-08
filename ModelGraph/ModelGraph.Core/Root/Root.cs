@@ -15,7 +15,7 @@ namespace ModelGraph.Core
 
         private readonly List<(Guid, ISerializer)> ItemSerializers = new List<(Guid, ISerializer)>(20); //serialized first
         private readonly List<(Guid, ISerializer)> LinkSerializers = new List<(Guid, ISerializer)>(10); //serialized last
-        private readonly List<IRootDomain> PrimeRootManagers = new List<IRootDomain>();
+        private readonly List<IPrimeRoot> PrimeRootManagers = new List<IPrimeRoot>();
 
         public IRepository Repository { get; set; }
         public static ItemModel DragDropSource; // source model at time of DragStart
@@ -77,7 +77,7 @@ namespace ModelGraph.Core
             RegisterReferenceItem(new ComputeXRoot(this));
             RegisterReferenceItem(new RelationXRoot(this));
 
-            foreach (var item in Type_InstanceOf.Values) { if (item is IRootDomain r) PrimeRootManagers.Add(r); }
+            foreach (var item in Type_InstanceOf.Values) { if (item is IPrimeRoot r) PrimeRootManagers.Add(r); }
 
             foreach (var pr in PrimeRootManagers) { pr.CreateSecondaryHierarchy(this); }
 
