@@ -28,8 +28,11 @@ namespace ModelGraph.Core
         LinkMode = 0x400,       //enable linking
         PinsMode = 0x500,       //enable movinge individual pins
         CopyMode = 0x700,       //enable copying
-        CreateMode = 0x900,     //enable createing
-        OperateMode = 0xA00,    //enable operating
+        UnlinkMode = 0x800,     //enable linking
+        CreateMode = 0xA00,     //enable createing
+        DeleteMode = 0xB00,     //enable operating
+        GravityMode = 0xC00,    //enable operating
+        OperateMode = 0xD00,    //enable operating
 
         ModeMask = 0xF00,       //issolage current mode
 

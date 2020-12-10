@@ -57,7 +57,10 @@ namespace ModelGraph.Core
         SetPinsMode,
         SetCopyMode,
         SetLinkMode,
+        SetUnlinkMode,
         SetCreateMode,
+        SetDeleteMode,
+        SetGravityMode,
         SetOperateMode,
     };
 }

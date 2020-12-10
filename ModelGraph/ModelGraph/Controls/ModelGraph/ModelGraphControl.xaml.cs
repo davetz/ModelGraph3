@@ -53,23 +53,31 @@ namespace ModelGraph.Controls
             switch (mode)
             {
                 case DrawState.ViewMode:
+                    ModeComboBox.SelectedItem = ViewMode; 
+                    break;
                 case DrawState.EditMode:
-                    EditSelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = EditMode;
                     break;
                 case DrawState.MoveMode:
-                    MoveSelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = MoveMode;
                     break;
                 case DrawState.CopyMode:
-                    CopySelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = CopyMode;
                     break;
                 case DrawState.LinkMode:
-                    LinkSelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = LinkMode;
+                    break;
+                case DrawState.UnlinkMode:
+                    ModeComboBox.SelectedItem = UnlinkMode;
                     break;
                 case DrawState.CreateMode:
-                    CreateSelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = CreateMode;
                     break;
                 case DrawState.OperateMode:
-                    OperateSelect.IsChecked = true;
+                    ModeComboBox.SelectedItem = OperateMode;
+                    break;
+                case DrawState.DeleteMode:
+                    ModeComboBox.SelectedItem = DeleteMode;
                     break;
             }
             GraphCanvas.Refresh();
@@ -80,12 +88,15 @@ namespace ModelGraph.Controls
         #endregion
 
         #region RadioButton_Events  ===========================================
-        private void EditSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetEditMode);
-        private void MoveSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetMoveMode);
-        private void LinkSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
-        private void CopySelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCopyMode);
-        private void CreateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
-        private void OperateSelect_Checked(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
+        private void ViewMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetViewMode);
+        private void EditMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetEditMode);
+        private void MoveMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetMoveMode);
+        private void CopyMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCopyMode);
+        private void LinkMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
+        private void UnlinkMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
+        private void CreateMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
+        private void OperateMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
+        private void DeleteMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetDeleteMode);
 
         internal void PostEvent(DrawEvent evt)
         {
