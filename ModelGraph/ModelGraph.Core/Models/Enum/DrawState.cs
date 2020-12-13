@@ -22,24 +22,25 @@ namespace ModelGraph.Core
 
         StartOnMask = 0x70,     //issolate starting location type
 
-        ViewMode = 0x100,       //enable viewing
-        EditMode = 0x200,       //enable editing
-        MoveMode = 0x300,       //enable moving nodes
-        LinkMode = 0x400,       //enable linking
+        AddMode = 0x100,        //enable adding
+        ViewMode = 0x200,       //enable viewing
+        EditMode = 0x300,       //enable editing
+        MoveMode = 0x400,       //enable moving nodes
         PinsMode = 0x500,       //enable movinge individual pins
-        CopyMode = 0x700,       //enable copying
+        CopyMode = 0x600,       //enable copying
+        LinkMode = 0x700,       //enable linking
         UnlinkMode = 0x800,     //enable linking
-        CreateMode = 0xA00,     //enable createing
-        DeleteMode = 0xB00,     //enable operating
-        GravityMode = 0xC00,    //enable operating
-        OperateMode = 0xD00,    //enable operating
+        CreateMode = 0x900,     //enable createing
+        DeleteMode = 0xA00,     //enable deleting
+        GravityMode = 0xB00,    //enable gravity
+        OperateMode = 0xC00,    //enable operating
 
-        ModeMask = 0xF00,       //issolage current mode
+        ModeMask = 0xF00,       //issolate current mode
 
-        Tapped       = 0x01000,   //a pointer tap has occured
-        CtrlTapped   = 0x02000,   //a pointer ctrl tap has occured
-        ShiftTapped  = 0x03000,   //a pointer shift tap has occured
-        Ending       = 0x04000,   //a pointer released has occured
+        TapStart      = 0x01000,   //a pointer tap has occured
+        CtrlTapStart  = 0x02000,   //a pointer ctrl tap has occured
+        ShiftTapStart = 0x03000,   //a pointer shift tap has occured
+        Ending        = 0x04000,   //a pointer released has occured
 
         Dragging     = 0x15000,   //currently dragging something
         CtrlDraging  = 0x16000,   //currently ctrl dragging something
@@ -50,7 +51,7 @@ namespace ModelGraph.Core
         RightArrow   = 0x1B000,
         ContextMenu  = 0x0C000,    //context menu visible
 
-        MayRepeat = 0x10000,
+        MayRepeat    = 0x10000,
         EventMask    = 0x1F000,   //issolate current event
 
         NoChange = 0xFFFFFFF,

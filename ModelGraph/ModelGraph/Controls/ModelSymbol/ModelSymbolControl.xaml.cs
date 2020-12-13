@@ -64,7 +64,7 @@ namespace ModelGraph.Controls
         {
         }
 
-        public async void Refresh()
+        public async void RefreshAsync()
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, SetButtons);
 

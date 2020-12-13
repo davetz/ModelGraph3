@@ -73,6 +73,6 @@ namespace ModelGraph.Core
             Owner = null;
         }
 
-        public void TriggerUIRefresh() => PageControl?.Refresh();
+        public void TriggerUIRefresh() => PageControl?.RefreshAsync();
     }
 }

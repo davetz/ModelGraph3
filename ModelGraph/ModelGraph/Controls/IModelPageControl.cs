@@ -11,7 +11,7 @@ namespace ModelGraph.Controls
         void Apply();
         void Revert();
         void Release();
-        void Refresh();
+        void RefreshAsync();
         void SetSize(double width, double height);
 
         CoreDispatcher Dispatcher { get; }

@@ -43,6 +43,7 @@ namespace ModelGraph.Core
         Paste,
         Apply,
         Revert,
+        Escape,
         Angle22,
         Angle30,
         Recenter,
@@ -51,6 +52,7 @@ namespace ModelGraph.Core
         FlipVertical,
         FlipHorizontal,
 
+        SetAddMode,
         SetViewMode,
         SetEditMode,
         SetMoveMode,

@@ -3,7 +3,7 @@ namespace ModelGraph.Core
 {
     public interface IPageControl
     {
-        void Refresh();
+        void RefreshAsync();
         void Reload();
         void SaveAs();
         void Save();

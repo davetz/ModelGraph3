@@ -43,7 +43,7 @@ namespace ModelGraph.Controls
             if (model is null) return;
             _ = ModelPageService.Current.CreateNewPageAsync(model);
         }
-        public void Refresh()
+        public void RefreshAsync()
         {
             if (PageModel is null) return;
             _ = Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { TreeCanvas.Refresh(); });
@@ -74,7 +74,7 @@ namespace ModelGraph.Controls
         private void Page_Loaded(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
                 Loaded -= Page_Loaded;
-                Refresh();
+                RefreshAsync();
         }
     }
 }

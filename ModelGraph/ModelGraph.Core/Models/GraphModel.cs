@@ -20,10 +20,12 @@ namespace ModelGraph.Core
 
             SetEventAction(DrawEvent.Skim, SkimHitTest);
 
-            SetEventAction(DrawEvent.Tap, () => { AugmentDrawState(DrawState.Tapped, DrawState.EventMask); });
-            SetEventAction(DrawEvent.CtrlTap, () => { AugmentDrawState(DrawState.CtrlTapped, DrawState.EventMask); });
-            SetEventAction(DrawEvent.ShiftTap, () => { AugmentDrawState(DrawState.ShiftTapped, DrawState.EventMask); });
-            SetEventAction(DrawEvent.TapEnd, () => { AugmentDrawState(DrawState.Ending, DrawState.EventMask); });
+            SetEventAction(DrawEvent.Tap, () => { TestSelectorTap(); });
+            SetEventAction(DrawEvent.CtrlTap, () => { TestSelectorCtrlTap(); });
+            SetEventAction(DrawEvent.ShiftTap, () => { AugmentDrawState(DrawState.ShiftTapStart, DrawState.EventMask); });
+            SetEventAction(DrawEvent.TapEnd, () => { TestSelectorTapEnd(); });
+
+
             SetEventAction(DrawEvent.Drag, () => { AugmentDrawState(DrawState.Dragging, DrawState.EventMask); });
             SetEventAction(DrawEvent.CtrlDrag, () => { AugmentDrawState(DrawState.CtrlDraging, DrawState.EventMask); });
             SetEventAction(DrawEvent.ShiftDrag, () => { AugmentDrawState(DrawState.ShiftDraging, DrawState.EventMask); });
@@ -33,6 +35,7 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
             SetEventAction(DrawEvent.ContextMenu, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
 
+            SetEventAction(DrawEvent.SetAddMode, () => { AugmentDrawState(DrawState.AddMode, DrawState.ModeMask); });
             SetEventAction(DrawEvent.SetViewMode, () => { AugmentDrawState(DrawState.ViewMode, DrawState.ModeMask); });
             SetEventAction(DrawEvent.SetEditMode, () => { AugmentDrawState(DrawState.EditMode, DrawState.ModeMask); });
             SetEventAction(DrawEvent.SetMoveMode, () => { AugmentDrawState(DrawState.MoveMode, DrawState.ModeMask); });
@@ -42,36 +45,19 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.SetCreateMode, () => { AugmentDrawState(DrawState.CreateMode, DrawState.ModeMask); });
             SetEventAction(DrawEvent.SetDeleteMode, () => { AugmentDrawState(DrawState.DeleteMode, DrawState.ModeMask); });
             SetEventAction(DrawEvent.SetGravityMode, () => { AugmentDrawState(DrawState.GravityMode, DrawState.ModeMask); });
-
-            SetDrawStateAction(DrawState.ViewMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.LinkMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.CopyMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.UnlinkMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.CreateMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.DeleteMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.GravityMode | DrawState.NowOnVoid, SelectorOnVoid);
-            SetDrawStateAction(DrawState.OperateMode | DrawState.NowOnVoid, SelectorOnVoid);
+            SetEventAction(DrawEvent.SetOperateMode, () => { AugmentDrawState(DrawState.OperateMode, DrawState.ModeMask); });
 
 
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode, EditOnNode);
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, EditOnVoidTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.TapStart, EditOnVoidTapped);
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Ending, EditOnNodeEnding);
 
-
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
-
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.Tapped, SelectorTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.CtrlTapped, SelectorCtrlTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.Ending, SelectorEnding);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.CtrlTapStart, SelectorOnVoidCtrlTapped);
+            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnVoid | DrawState.CtrlTapStart, SelectorOnVoidCtrlTapped);
 
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode, MoveOnNode);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Tapped, MoveOnNodeTapped);
+            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.TapStart, MoveOnNodeTapped);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Dragging, MoveOnNodeDragging);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Ending, MoveOnNodeEnding);
 
@@ -80,7 +66,7 @@ namespace ModelGraph.Core
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.DownArrow, MoveOnNodeDownArrow);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.RightArrow, MoveOnNodeRightArrow);
 
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Tapped, EditOnNodeTapped);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.TapStart, EditOnNodeTapped);
 
             UpdateEditorData();
         }
@@ -187,12 +173,34 @@ namespace ModelGraph.Core
             if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
                 AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
             else if (Selector.IsVoidHit)
-                AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
+                SelectorOnVoidSkim();
         }
         #endregion
 
         #region Selector  =====================================================
-        private void SelectorOnVoid()
+        private void TestSelectorTap()
+        {
+            if (Selector.IsVoidHit)
+                SelectorOnVoidTapped();
+            else
+                AugmentDrawState(DrawState.TapStart, DrawState.EventMask);
+        }
+        private void TestSelectorCtrlTap()
+        {
+            if (Selector.IsVoidHit)
+                SelectorOnVoidTapped();
+            else
+                AugmentDrawState(DrawState.CtrlTapStart, DrawState.EventMask);
+        }
+        private void TestSelectorTapEnd()
+        {
+            if (_tracingSelector)
+                SelectorOnVoidEnding();
+            else
+                AugmentDrawState(DrawState.Ending, DrawState.EventMask);
+        }
+
+        private void SelectorOnVoidSkim()
         {
             DrawCursor = DrawCursor.Arrow;
             HideDrawItems(DrawItem.ToolTip);
@@ -217,9 +225,10 @@ namespace ModelGraph.Core
                 case DrawState.GravityMode: DrawCursor = DrawCursor.Gravity; break;
                 case DrawState.OperateMode: DrawCursor = DrawCursor.Operate; break;
             }
+            AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
             PageModel.TriggerUIRefresh();
         }
-        private void SelectorTapped()
+        private void SelectorOnVoidTapped()
         {
             _tracingSelector = true;
             _selectToggleMode = false;
@@ -229,7 +238,7 @@ namespace ModelGraph.Core
             ShowDrawItems(DrawItem.Selector);
             PageModel.TriggerUIRefresh();
         }
-        private void SelectorCtrlTapped()
+        private void SelectorOnVoidCtrlTapped()
         {
             _tracingSelector = true;
             _selectToggleMode = true;
@@ -238,7 +247,7 @@ namespace ModelGraph.Core
             ShowDrawItems(DrawItem.Selector);
             PageModel.TriggerUIRefresh();
         }
-        private void SelectorEnding()
+        private void SelectorOnVoidEnding()
         {
             if (_tracingSelector)
             {

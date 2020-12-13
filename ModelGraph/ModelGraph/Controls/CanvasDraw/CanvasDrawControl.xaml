@@ -128,15 +128,21 @@
             <Grid Grid.Column="1" x:Name="RootGrid" Background="DarkSlateGray">
                 <Button x:Name="RootFocusButton" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" Margin="0" Content="">
                     <Button.KeyboardAccelerators>
-                        <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_UpArrow_Invoked"/>
-                        <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
-                        <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>
-                        <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_RightArrow_Invoked"/>
+                        <KeyboardAccelerator Key="A" Invoked="KeyboardAccelerator_AKey_Invoked"/>
                         <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_VKey_Invoked"/>
                         <KeyboardAccelerator Key="E" Invoked="KeyboardAccelerator_EKey_Invoked"/>
                         <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_MKey_Invoked"/>
                         <KeyboardAccelerator Key="C" Invoked="KeyboardAccelerator_CKey_Invoked"/>
                         <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_LKey_Invoked"/>
+                        <KeyboardAccelerator Key="U" Invoked="KeyboardAccelerator_UKey_Invoked"/>
+                        <KeyboardAccelerator Key="D" Invoked="KeyboardAccelerator_DKey_Invoked"/>
+                        <KeyboardAccelerator Key="O" Invoked="KeyboardAccelerator_OKey_Invoked"/>
+                        <KeyboardAccelerator Key="G" Invoked="KeyboardAccelerator_GKey_Invoked"/>
+                        <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_UpArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_RightArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Escape" Invoked="KeyboardAccelerator_Escape_Invoked"/>
                     </Button.KeyboardAccelerators>
                 </Button>
 

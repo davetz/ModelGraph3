@@ -2,6 +2,7 @@
 using System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
+using Windows.UI.Xaml.Input;
 
 namespace ModelGraph.Controls
 {
@@ -47,39 +48,52 @@ namespace ModelGraph.Controls
         {
         }
         public void Release() => DrawModel.Release();
-        public void Refresh()
+        public async void RefreshAsync()
         {
-            var mode = DrawModel.DrawState & DrawState.ModeMask;
-            switch (mode)
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, RefreshAll);
+
+            void RefreshAll()
             {
-                case DrawState.ViewMode:
-                    ModeComboBox.SelectedItem = ViewMode; 
-                    break;
-                case DrawState.EditMode:
-                    ModeComboBox.SelectedItem = EditMode;
-                    break;
-                case DrawState.MoveMode:
-                    ModeComboBox.SelectedItem = MoveMode;
-                    break;
-                case DrawState.CopyMode:
-                    ModeComboBox.SelectedItem = CopyMode;
-                    break;
-                case DrawState.LinkMode:
-                    ModeComboBox.SelectedItem = LinkMode;
-                    break;
-                case DrawState.UnlinkMode:
-                    ModeComboBox.SelectedItem = UnlinkMode;
-                    break;
-                case DrawState.CreateMode:
-                    ModeComboBox.SelectedItem = CreateMode;
-                    break;
-                case DrawState.OperateMode:
-                    ModeComboBox.SelectedItem = OperateMode;
-                    break;
-                case DrawState.DeleteMode:
-                    ModeComboBox.SelectedItem = DeleteMode;
-                    break;
+                var mode = DrawModel.DrawState & DrawState.ModeMask;
+                switch (mode)
+                {
+                    case DrawState.AddMode:
+                        ModeComboBox.SelectedItem = AddMode;
+                        break;
+                    case DrawState.ViewMode:
+                        ModeComboBox.SelectedItem = ViewMode;
+                        break;
+                    case DrawState.EditMode:
+                        ModeComboBox.SelectedItem = EditMode;
+                        break;
+                    case DrawState.MoveMode:
+                        ModeComboBox.SelectedItem = MoveMode;
+                        break;
+                    case DrawState.CopyMode:
+                        ModeComboBox.SelectedItem = CopyMode;
+                        break;
+                    case DrawState.LinkMode:
+                        ModeComboBox.SelectedItem = LinkMode;
+                        break;
+                    case DrawState.UnlinkMode:
+                        ModeComboBox.SelectedItem = UnlinkMode;
+                        break;
+                    case DrawState.CreateMode:
+                        ModeComboBox.SelectedItem = CreateMode;
+                        break;
+                    case DrawState.DeleteMode:
+                        ModeComboBox.SelectedItem = DeleteMode;
+                        break;
+                    case DrawState.OperateMode:
+                        ModeComboBox.SelectedItem = OperateMode;
+                        break;
+                    case DrawState.GravityMode:
+                        ModeComboBox.SelectedItem = GravityMode;
+                        break;
+                }
+                GraphCanvas.Focus(Windows.UI.Xaml.FocusState.Programmatic);
             }
+
             GraphCanvas.Refresh();
         }
         public void SetSize(double width, double height)
