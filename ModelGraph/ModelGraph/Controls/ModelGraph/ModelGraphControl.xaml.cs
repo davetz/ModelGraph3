@@ -50,72 +50,85 @@ namespace ModelGraph.Controls
         public void Release() => DrawModel.Release();
         public async void RefreshAsync()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, RefreshAll);
-
-            void RefreshAll()
-            {
-                var mode = DrawModel.DrawState & DrawState.ModeMask;
-                switch (mode)
-                {
-                    case DrawState.AddMode:
-                        ModeComboBox.SelectedItem = AddMode;
-                        break;
-                    case DrawState.ViewMode:
-                        ModeComboBox.SelectedItem = ViewMode;
-                        break;
-                    case DrawState.EditMode:
-                        ModeComboBox.SelectedItem = EditMode;
-                        break;
-                    case DrawState.MoveMode:
-                        ModeComboBox.SelectedItem = MoveMode;
-                        break;
-                    case DrawState.CopyMode:
-                        ModeComboBox.SelectedItem = CopyMode;
-                        break;
-                    case DrawState.LinkMode:
-                        ModeComboBox.SelectedItem = LinkMode;
-                        break;
-                    case DrawState.UnlinkMode:
-                        ModeComboBox.SelectedItem = UnlinkMode;
-                        break;
-                    case DrawState.CreateMode:
-                        ModeComboBox.SelectedItem = CreateMode;
-                        break;
-                    case DrawState.DeleteMode:
-                        ModeComboBox.SelectedItem = DeleteMode;
-                        break;
-                    case DrawState.OperateMode:
-                        ModeComboBox.SelectedItem = OperateMode;
-                        break;
-                    case DrawState.GravityMode:
-                        ModeComboBox.SelectedItem = GravityMode;
-                        break;
-                }
-                GraphCanvas.Focus(Windows.UI.Xaml.FocusState.Programmatic);
-            }
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ForceSelectedItem);
 
             GraphCanvas.Refresh();
         }
+        private object _forcedSelectedItem;
+        private object _previousSelectedItem;
         public void SetSize(double width, double height)
         {
         }
         #endregion
 
-        #region RadioButton_Events  ===========================================
-        private void ViewMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetViewMode);
-        private void EditMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetEditMode);
-        private void MoveMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetMoveMode);
-        private void CopyMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCopyMode);
-        private void LinkMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
-        private void UnlinkMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
-        private void CreateMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
-        private void OperateMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetCreateMode);
-        private void DeleteMode_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetDeleteMode);
-
+        #region ModeComboBox_SelectionChanged  ================================
+        private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            var itm = ModeComboBox.SelectedItem;
+            if (itm != _forcedSelectedItem)
+            {
+                if (itm == AddMode) PostEvent(DrawEvent.SetAddMode);
+                else if (itm == ViewMode) PostEvent(DrawEvent.SetViewMode);
+                else if (itm == EditMode) PostEvent(DrawEvent.SetEditMode);
+                else if (itm == MoveMode) PostEvent(DrawEvent.SetMoveMode);
+                else if (itm == CopyMode) PostEvent(DrawEvent.SetCopyMode);
+                else if (itm == LinkMode) PostEvent(DrawEvent.SetLinkMode);
+                else if (itm == UnlinkMode) PostEvent(DrawEvent.SetUnlinkMode);
+                else if (itm == CreateMode) PostEvent(DrawEvent.SetCreateMode);
+                else if (itm == DeleteMode) PostEvent(DrawEvent.SetDeleteMode);
+                else if (itm == OperateMode) PostEvent(DrawEvent.SetOperateMode);
+                else if (itm == GravityMode) PostEvent(DrawEvent.SetGravityMode);
+            }
+        }
         internal void PostEvent(DrawEvent evt)
         {
             if (DrawModel.TryGetDrawEventAction(evt, out Action action))
                 _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+        }
+        void ForceSelectedItem()
+        {
+            _forcedSelectedItem = _previousSelectedItem = ModeComboBox.SelectedItem;
+            var mode = DrawModel.DrawState & DrawState.ModeMask;
+            switch (mode)
+            {
+                case DrawState.AddMode:
+                    _forcedSelectedItem = AddMode;
+                    break;
+                case DrawState.ViewMode:
+                    _forcedSelectedItem = ViewMode;
+                    break;
+                case DrawState.EditMode:
+                    _forcedSelectedItem = EditMode;
+                    break;
+                case DrawState.MoveMode:
+                    _forcedSelectedItem = MoveMode;
+                    break;
+                case DrawState.CopyMode:
+                    _forcedSelectedItem = CopyMode;
+                    break;
+                case DrawState.LinkMode:
+                    _forcedSelectedItem = LinkMode;
+                    break;
+                case DrawState.UnlinkMode:
+                    _forcedSelectedItem = UnlinkMode;
+                    break;
+                case DrawState.CreateMode:
+                    _forcedSelectedItem = CreateMode;
+                    break;
+                case DrawState.DeleteMode:
+                    _forcedSelectedItem = DeleteMode;
+                    break;
+                case DrawState.OperateMode:
+                    _forcedSelectedItem = OperateMode;
+                    break;
+                case DrawState.GravityMode:
+                    _forcedSelectedItem = GravityMode;
+                    break;
+            }
+            if (_forcedSelectedItem != _previousSelectedItem)
+                ModeComboBox.SelectedItem = _forcedSelectedItem;
+
+            GraphCanvas.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
         #endregion
 
@@ -131,6 +144,22 @@ namespace ModelGraph.Controls
             {
                 OverviewOnOffTextBlock.Text = "\uF0AE";
                 DrawModel.VisibleDrawItems &= ~DrawItem.Overview;
+                GraphCanvas.Refresh();
+            }
+        }
+
+        private void PalletOnOffTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
+        {
+            if ((DrawModel.VisibleDrawItems & DrawItem.Picker2) == 0)
+            {
+                PalletOnOffTextBlock.Text = "\uF0AD";
+                DrawModel.VisibleDrawItems |= DrawItem.Picker2;
+                GraphCanvas.Refresh();
+            }
+            else
+            {
+                PalletOnOffTextBlock.Text = "\uF0AE";
+                DrawModel.VisibleDrawItems &= ~DrawItem.Picker2;
                 GraphCanvas.Refresh();
             }
         }

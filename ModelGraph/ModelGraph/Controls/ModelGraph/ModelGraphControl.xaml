@@ -10,12 +10,17 @@
     d:DesignWidth="400">
 
     <Page.Resources>
-        <Style x:Key="OverviewTextBlockStyle" TargetType="TextBlock" >
+        <Style x:Key="ToggleBorderStyle" TargetType="Border">
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="BorderThickness" Value="1,1,1,1"/>
+            <Setter Property="Height" Value="28"/>
+        </Style>
+        <Style x:Key="ToggleTextBlockStyle" TargetType="TextBlock" >
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
             <Setter Property="FontWeight" Value="ExtraBlack"/>
             <Setter Property="FontSize" Value="16"/>
             <Setter Property="MinWidth" Value="24"/>
-            <Setter Property="MinHeight" Value="24"/>
+            <Setter Property="Height" Value="28"/>
             <Setter Property="TextAlignment" Value="Center"/>
             <Setter Property="Margin" Value="0,4,0,0"/>
             <Setter Property="Padding" Value="0"/>
@@ -28,23 +33,27 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <StackPanel Orientation="Horizontal" Margin="0,0,0 4">
-            <Border x:Name="OverviewOnOffBoarder"  BorderBrush="Black" BorderThickness="1,1,1,1" Margin="4,2,8,0">
-                <TextBlock x:Name="OverviewOnOffTextBlock" Style="{StaticResource OverviewTextBlockStyle}" Text="&#xF0AE;" PointerPressed="OverviewOnOffTextBlock_PointerPressed"/>
+            <Border x:Name="OverviewOnOffBorder"  Style="{StaticResource ToggleBorderStyle}" Margin="4,2,8,0">
+                <TextBlock x:Name="OverviewOnOffTextBlock" Style="{StaticResource ToggleTextBlockStyle}" Text="&#xF0AE;" PointerPressed="OverviewOnOffTextBlock_PointerPressed"/>
             </Border>
-            <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top" ToolTipService.ToolTip="Change mode using keys:  A, V, E, M, C, L, U, N, D, O, G">
+            <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top" ToolTipService.ToolTip="Change mode using keys:  A, V, E, M, C, L, U, N, D, O, G" SelectionChanged="ModeComboBox_SelectionChanged">
                 <ComboBoxItem x:Name="AddMode" Content="A=Add, select an item on the pallet"/>
                 <ComboBoxItem x:Name="ViewMode" Content="V=View, without changing anything" IsSelected="True"/>
                 <ComboBoxItem x:Name="EditMode" Content="E=Edit, tap to edit properties or to align items"/>
                 <ComboBoxItem x:Name="MoveMode" Content="M=Move, drag items or nudge using arrow keys"/>
-                <ComboBoxItem x:Name="CopyMode" Content="C=Copy, tap to copy or drag to copy->paste"/>
+                <ComboBoxItem x:Name="CopyMode" Content="C=Copy, tap on item to copy"/>
                 <ComboBoxItem x:Name="LinkMode" Content="L=Link, tap-drag to create relational links"/>
-                <ComboBoxItem x:Name="UnlinkMode" Content="U=Unlink, tap on connection to disconnect at path break point"/>
-                <ComboBoxItem x:Name="CreateMode" Content="A=Add, tap on drawing to create"/>
-                <ComboBoxItem x:Name="DeleteMode" Content="D=Delete, tap to delete items"/>
+                <ComboBoxItem x:Name="UnlinkMode" Content="U=Unlink, tap to unlink (at path break point)"/>
+                <ComboBoxItem x:Name="CreateMode" Content="P=Paste, tap on drawing to pastec item"/>
+                <ComboBoxItem x:Name="DeleteMode" Content="D=Delete, tap to delete (can paste a deleted item)"/>
                 <ComboBoxItem x:Name="OperateMode" Content="O=Operate, tap to operate an item"/>
-                <ComboBoxItem x:Name="GravityMode" Content="G=Gravity, tap a connection to minimize its length"/>
+                <ComboBoxItem x:Name="GravityMode" Content="G=Gravity, tap item to minimize connection lengths"/>
             </ComboBox>
         </StackPanel>
+        <Border x:Name="PalletOnOffBorder"  Style="{StaticResource ToggleBorderStyle}" Margin="0,2,4,0" HorizontalAlignment="Right">
+            <TextBlock x:Name="PalletOnOffTextBlock" Style="{StaticResource ToggleTextBlockStyle}" Text="&#xF0AE;" PointerPressed="PalletOnOffTextBlock_PointerPressed" />
+        </Border>
+
 
         <Grid Grid.Row="1">
             <controls:CanvasDrawControl x:Name="GraphCanvas"/>
