@@ -59,6 +59,21 @@ namespace ModelGraph.Controls
             [107] = new CoreCursor(CoreCursorType.Custom, 107),
             [108] = new CoreCursor(CoreCursorType.Custom, 108),
             [109] = new CoreCursor(CoreCursorType.Custom, 109),
+            [110] = new CoreCursor(CoreCursorType.Custom, 110),
+            [111] = new CoreCursor(CoreCursorType.Custom, 111),
+            [112] = new CoreCursor(CoreCursorType.Custom, 112),
+            [113] = new CoreCursor(CoreCursorType.Custom, 113),
+            [114] = new CoreCursor(CoreCursorType.Custom, 114),
+            [114] = new CoreCursor(CoreCursorType.Custom, 115),
+            [116] = new CoreCursor(CoreCursorType.Custom, 116),
+            [117] = new CoreCursor(CoreCursorType.Custom, 117),
+            [118] = new CoreCursor(CoreCursorType.Custom, 118),
+            [119] = new CoreCursor(CoreCursorType.Custom, 119),
+            [120] = new CoreCursor(CoreCursorType.Custom, 120),
+            [121] = new CoreCursor(CoreCursorType.Custom, 121),
+            [122] = new CoreCursor(CoreCursorType.Custom, 122),
+            [123] = new CoreCursor(CoreCursorType.Custom, 123),
+            [124] = new CoreCursor(CoreCursorType.Custom, 124),
         };
     }
 }

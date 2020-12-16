@@ -372,28 +372,37 @@ namespace ModelGraph.Controls
                 if (Pick1Canvas.IsEnabled && Pick1Canvas.Visibility == Visibility.Visible) Pick1Canvas.Invalidate();
                 if (Pick2Canvas.IsEnabled && Pick2Canvas.Visibility == Visibility.Visible) Pick2Canvas.Invalidate();
 
-                if (Model.DrawCursor != _drawCursor)
-                    SetNewCursor(Model.DrawCursor);
+                CheckDrawCursor();
                 if (_currentCusorType == CoreCursorType.Hand)
                     RootFocusButton.Focus(FocusState.Programmatic);
             }
         }
-        internal void SetNewCursor(DrawCursor cursor)
+        internal void CheckDrawCursor()
         {
-            if (cursor > DrawCursor.CustomCursorsBegin)
+            var state = Model.DrawState & DrawState.EventMask;
+            if (state == DrawState.Dragging)
+            {
+                var s = state;
+            }
+            var cursor = Model.GetDrawStateCursor();
+            if (cursor != _drawCursor)
             {
                 _drawCursor = cursor;
-                var id = (int)_drawCursor;
-                TrySetNewCursor(CoreCursorType.Custom, id);
+                if (cursor > DrawCursor.CustomCursorsBegin)
+                {
+                    var id = (int)_drawCursor;
+                    TrySetNewCursor(CoreCursorType.Custom, id);
+                }
+                else
+                    TrySetNewCursor((CoreCursorType)_drawCursor);
             }
-            else
-                TrySetNewCursor((CoreCursorType)_drawCursor);
         }
         DrawCursor _drawCursor;
-        internal void PostEvent(DrawEvent evt)
+        internal async void PostEvent(DrawEvent evt)
         {
             if (Model.TryGetDrawEventAction(evt, out Action action))
-                _ = _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+                await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
+            CheckDrawCursor();
         }
         internal void ExecuteAction(DrawEvent evt)
         {
@@ -401,6 +410,7 @@ namespace ModelGraph.Controls
             {
                 action(); //imediately execute the drag event
                 EditCanvas.Invalidate(); //and then trigger editCanvas refresh
+                CheckDrawCursor();
             }
         }
         #endregion
@@ -781,24 +791,22 @@ namespace ModelGraph.Controls
         private void KeyboardAccelerator_DownArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyDownArrow);
         private void KeyboardAccelerator_LeftArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyLeftArrow);
         private void KeyboardAccelerator_RightArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KeyRightArrow);
-        private void KeyboardAccelerator_VKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetViewMode, DrawCursor.Arrow);
-        private void KeyboardAccelerator_EKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetEditMode, DrawCursor.Edit);
-        private void KeyboardAccelerator_MKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetMoveMode, DrawCursor.Move);
-        private void KeyboardAccelerator_CKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetCopyMode, DrawCursor.Copy);
-        private void KeyboardAccelerator_LKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetLinkMode, DrawCursor.Link);
+        private void KeyboardAccelerator_VKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetViewMode);
+        private void KeyboardAccelerator_EKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetEditMode);
+        private void KeyboardAccelerator_MKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetMoveMode);
+        private void KeyboardAccelerator_CKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetCopyMode);
+        private void KeyboardAccelerator_LKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetLinkMode);
 
-        private void KeyboardAccelerator_AKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetAddMode, DrawCursor.Arrow);
-        private void KeyboardAccelerator_DKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetDeleteMode, DrawCursor.Delete);
-        private void KeyboardAccelerator_UKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetUnlinkMode, DrawCursor.UnLink);
-        private void KeyboardAccelerator_OKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetOperateMode, DrawCursor.Operate);
-        private void KeyboardAccelerator_GKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetGravityMode, DrawCursor.Gravity);
+        private void KeyboardAccelerator_AKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetAddMode);
+        private void KeyboardAccelerator_DKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetDeleteMode);
+        private void KeyboardAccelerator_UKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetUnlinkMode);
+        private void KeyboardAccelerator_OKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetOperateMode);
+        private void KeyboardAccelerator_GKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SetGravityMode);
 
-        private void TestDrawEvent(DrawEvent evt, DrawCursor cur = DrawCursor.CustomCursorsBegin)
+        private void TestDrawEvent(DrawEvent evt)
         {
             if (Model.TryGetDrawEventAction(evt, out _))
             {
-                if (cur != DrawCursor.CustomCursorsBegin)
-                    SetNewCursor(cur);
                 PostEvent(evt);
             }
         }

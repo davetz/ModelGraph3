@@ -57,5 +57,50 @@
     <None Include="pointer9.cur">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="pointerA.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerB.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerC.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerD.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerE.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerF.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerG.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerH.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerI.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerJ.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerK.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerL.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerM.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerN.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointerO.cur">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>

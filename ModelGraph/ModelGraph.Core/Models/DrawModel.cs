@@ -19,11 +19,16 @@ namespace ModelGraph.Core
         public virtual void Release() { }
         #endregion
 
+        #region DrawCursor  ===================================================
+        private Dictionary<DrawState, DrawCursor> _drawState_Cursor = new Dictionary<DrawState, DrawCursor>();
+        public DrawCursor GetDrawStateCursor() => _drawState_Cursor.TryGetValue(DrawState, out DrawCursor cur) ? cur : DrawCursor.Arrow;
+        protected void ClearDrawStateCursors() => _drawState_Cursor.Clear();
+        protected void SetDrawStateCursors(DrawState state, DrawCursor cursor) => _drawState_Cursor[state] = cursor;
+        #endregion
+
         #region DrawState  ====================================================
         public DrawState DrawState { get; private set; } = DrawState.Unknown;
         protected DrawState PreviousDrawState;
-        public DrawCursor DrawCursor { get; protected set; } = DrawCursor.Arrow;
-
         internal void AugmentDrawState(DrawState state, DrawState mask)
         {
             var mayNotRepeat = (state & DrawState.MayRepeat) == 0;

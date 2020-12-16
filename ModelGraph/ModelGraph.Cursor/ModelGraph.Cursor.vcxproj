@@ -149,7 +149,22 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="pointer1.cur" />
+    <None Include="pointerA.cur" />
+    <None Include="pointerB.cur" />
+    <None Include="pointerC.cur" />
+    <None Include="pointerD.cur" />
+    <None Include="pointerE.cur" />
+    <None Include="pointerF.cur" />
+    <None Include="pointerG.cur" />
+    <None Include="pointerH.cur" />
+    <None Include="pointerI.cur" />
+    <None Include="pointerJ.cur" />
     <None Include="pointer2.cur" />
+    <None Include="pointerK.cur" />
+    <None Include="pointerL.cur" />
+    <None Include="pointerM.cur" />
+    <None Include="pointerN.cur" />
+    <None Include="pointerO.cur" />
     <None Include="pointer3.cur" />
     <None Include="pointer4.cur" />
     <None Include="pointer5.cur" />

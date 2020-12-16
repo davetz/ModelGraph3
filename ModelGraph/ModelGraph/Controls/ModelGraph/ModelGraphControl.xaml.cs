@@ -50,12 +50,13 @@ namespace ModelGraph.Controls
         public void Release() => DrawModel.Release();
         public async void RefreshAsync()
         {
-            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, ForceSelectedItem);
+            await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, SetSelectedMode);
 
             GraphCanvas.Refresh();
         }
-        private object _forcedSelectedItem;
-        private object _previousSelectedItem;
+        private DrawCursor _onVoidCursor;
+        private object _forcedSelectedMode;
+        private object _previousSelectedMode;
         public void SetSize(double width, double height)
         {
         }
@@ -65,7 +66,7 @@ namespace ModelGraph.Controls
         private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var itm = ModeComboBox.SelectedItem;
-            if (itm != _forcedSelectedItem)
+            if (itm != _forcedSelectedMode)
             {
                 if (itm == AddMode) PostEvent(DrawEvent.SetAddMode);
                 else if (itm == ViewMode) PostEvent(DrawEvent.SetViewMode);
@@ -85,48 +86,48 @@ namespace ModelGraph.Controls
             if (DrawModel.TryGetDrawEventAction(evt, out Action action))
                 _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
-        void ForceSelectedItem()
+        void SetSelectedMode()
         {
-            _forcedSelectedItem = _previousSelectedItem = ModeComboBox.SelectedItem;
+            _forcedSelectedMode = _previousSelectedMode = ModeComboBox.SelectedItem;
             var mode = DrawModel.DrawState & DrawState.ModeMask;
             switch (mode)
             {
                 case DrawState.AddMode:
-                    _forcedSelectedItem = AddMode;
+                    _forcedSelectedMode = AddMode;
                     break;
                 case DrawState.ViewMode:
-                    _forcedSelectedItem = ViewMode;
+                    _forcedSelectedMode = ViewMode;
                     break;
                 case DrawState.EditMode:
-                    _forcedSelectedItem = EditMode;
+                    _forcedSelectedMode = EditMode;
                     break;
                 case DrawState.MoveMode:
-                    _forcedSelectedItem = MoveMode;
+                    _forcedSelectedMode = MoveMode;
                     break;
                 case DrawState.CopyMode:
-                    _forcedSelectedItem = CopyMode;
+                    _forcedSelectedMode = CopyMode;
                     break;
                 case DrawState.LinkMode:
-                    _forcedSelectedItem = LinkMode;
+                    _forcedSelectedMode = LinkMode;
                     break;
                 case DrawState.UnlinkMode:
-                    _forcedSelectedItem = UnlinkMode;
+                    _forcedSelectedMode = UnlinkMode;
                     break;
                 case DrawState.CreateMode:
-                    _forcedSelectedItem = CreateMode;
+                    _forcedSelectedMode = CreateMode;
                     break;
                 case DrawState.DeleteMode:
-                    _forcedSelectedItem = DeleteMode;
+                    _forcedSelectedMode = DeleteMode;
                     break;
                 case DrawState.OperateMode:
-                    _forcedSelectedItem = OperateMode;
+                    _forcedSelectedMode = OperateMode;
                     break;
                 case DrawState.GravityMode:
-                    _forcedSelectedItem = GravityMode;
+                    _forcedSelectedMode = GravityMode;
                     break;
             }
-            if (_forcedSelectedItem != _previousSelectedItem)
-                ModeComboBox.SelectedItem = _forcedSelectedItem;
+            if (_forcedSelectedMode != _previousSelectedMode)
+                ModeComboBox.SelectedItem = _forcedSelectedMode;
 
             GraphCanvas.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }

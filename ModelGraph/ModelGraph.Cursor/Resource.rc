@@ -68,6 +68,36 @@ IDC_POINTER8            CURSOR                  "pointer8.cur"
 
 IDC_POINTER9            CURSOR                  "pointer9.cur"
 
+IDC_POINTERA           CURSOR                  "pointerA.cur"
+
+IDC_POINTERB           CURSOR                  "pointerB.cur"
+
+IDC_POINTERC           CURSOR                  "pointerC.cur"
+
+IDC_POINTERD           CURSOR                  "pointerD.cur"
+
+IDC_POINTERE           CURSOR                  "pointerE.cur"
+
+IDC_POINTERF           CURSOR                  "pointerF.cur"
+
+IDC_POINTERG           CURSOR                  "pointerG.cur"
+
+IDC_POINTERH           CURSOR                  "pointerH.cur"
+
+IDC_POINTERI           CURSOR                  "pointerI.cur"
+
+IDC_POINTERJ           CURSOR                  "pointerJ.cur"
+
+IDC_POINTERK           CURSOR                  "pointerK.cur"
+
+IDC_POINTERL           CURSOR                  "pointerL.cur"
+
+IDC_POINTERM           CURSOR                  "pointerM.cur"
+
+IDC_POINTERN           CURSOR                  "pointerN.cur"
+
+IDC_POINTERO           CURSOR                  "pointerO.cur"
+
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////
 

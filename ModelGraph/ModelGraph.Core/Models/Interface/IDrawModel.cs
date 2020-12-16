@@ -7,12 +7,12 @@ namespace ModelGraph.Core
     public interface IDrawModel
     {
         DrawState DrawState { get; }
-        DrawCursor DrawCursor { get; }
         DrawItem VisibleDrawItems { get; set; }
 
         void Release(); //user has closed this standalone view
         void SetEventAction(DrawEvent evt, Action act);
         bool TryGetDrawEventAction(DrawEvent evt, out Action act);
+        DrawCursor GetDrawStateCursor();
 
         bool IsPasteActionEnabled { get; }
 

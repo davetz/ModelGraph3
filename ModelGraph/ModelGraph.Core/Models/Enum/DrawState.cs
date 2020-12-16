@@ -37,14 +37,14 @@ namespace ModelGraph.Core
 
         ModeMask = 0xF00,       //issolate current mode
 
-        TapStart      = 0x01000,   //a pointer tap has occured
-        CtrlTapStart  = 0x02000,   //a pointer ctrl tap has occured
-        ShiftTapStart = 0x03000,   //a pointer shift tap has occured
-        Ending        = 0x04000,   //a pointer released has occured
+        Tapped      = 0x01000,   //a pointer pressed has occured
+        CtrlTapped  = 0x02000,   //a pointer ctrl pressed has occured
+        ShiftTapped = 0x03000,   //a pointer shift pressed has occured
+        TapDragEnd  = 0x04000,   //a pointer released has occured
 
-        Dragging     = 0x15000,   //currently dragging something
-        CtrlDraging  = 0x16000,   //currently ctrl dragging something
-        ShiftDraging = 0x17000,   //currently shift dragging something
+        Dragging     = 0x15000,  //currently dragging something
+        CtrlDraging  = 0x16000,  //currently ctrl dragging something
+        ShiftDraging = 0x17000,  //currently shift dragging something
         UpArrow      = 0x18000,
         DownArrow    = 0x19000,
         LeftArrow    = 0x1A000,

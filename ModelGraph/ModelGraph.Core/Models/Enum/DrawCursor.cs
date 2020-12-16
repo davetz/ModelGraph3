@@ -23,14 +23,22 @@ namespace ModelGraph.Core
 
         //Custom Cursors have id value {101, 102, 103, 104, ...}
         CustomCursorsBegin = 100, //any id value > 100 triggers custom cursor loading
-        New = 101,
-        Edit = 102,
-        Move = 103,
-        Link = 104,
-        Copy = 105,
-        Delete = 106,
-        UnLink = 107,
-        Operate = 108,
-        Gravity = 109,
+        New = 101,        //pointer1
+        Edit = 102,       //pointer2
+        Move = 103,       //pointer3
+        Link = 104,       //pointer4
+        Copy = 105,       //pointer5
+        Delete = 106,     //pointer6
+        UnLink = 107,     //pointer7
+        Operate = 108,    //pointer8
+        Gravity = 109,    //pointer9
+        EditHit = 110,    //pointerA 
+        MoveHit = 111,    //pointerB
+        LinkHit = 112,    //pointerC
+        CopyHit = 113,    //pointerD
+        DeleteHit = 114,  //pointerE
+        UnLinkHit = 115,  //pointerF
+        OperateHit = 116, //pointerG
+        GravityHit = 117, //pointerH
     }
 }

@@ -461,7 +461,6 @@ namespace ModelGraph.Core
                 if (hit == _hitSelecteShapes) return;
 
                 _hitSelecteShapes = hit;
-                DrawCursor = hit ? DrawCursor.Hand : DrawCursor.Arrow;
                 if (hit)
                 {
                     SetEventAction(DrawEvent.KeyUpArrow, NudgeUp);
@@ -563,7 +562,6 @@ namespace ModelGraph.Core
         {
             if (TrySetState(DrawState.MoveMode))
             {
-                DrawCursor = DrawCursor.SizeAll;
                 ClearAllEventActions();
                 SetEventAction(DrawEvent.TapEnd, EndDragAction);
                 SetEventAction(DrawEvent.Drag, DragShapeAction);
@@ -578,7 +576,6 @@ namespace ModelGraph.Core
         }
         private void EndDragAction()
         {
-            DrawCursor = DrawCursor.Arrow;
             RefreshDrawData();
             SetEditMode();
         }
@@ -593,7 +590,6 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.Skim, SkimPinAction);
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(false); });
-            DrawCursor = DrawCursor.Arrow;
             RefreshDrawData();
         }
         int _pinIndex;
@@ -608,7 +604,6 @@ namespace ModelGraph.Core
                 if (ex.Contains(p))
                 {
                     _pinIndex = i;
-                    DrawCursor = DrawCursor.Hand;
                     SetEventAction(DrawEvent.Tap, TapPinAction);
                     SetEventAction(DrawEvent.KeyUpArrow, NudgePinUp);
                     SetEventAction(DrawEvent.KeyDownArrow, NudgePinDown);
@@ -618,7 +613,6 @@ namespace ModelGraph.Core
                     return;
                 }
             }
-            DrawCursor = DrawCursor.Arrow;
             ClearEventAction(DrawEvent.Tap);
             ClearEventAction(DrawEvent.KeyUpArrow);
             ClearEventAction(DrawEvent.KeyDownArrow);
@@ -630,7 +624,6 @@ namespace ModelGraph.Core
         }
         private void TapPinAction()
         {
-            DrawCursor = DrawCursor.SizeAll;
             ClearEventAction(DrawEvent.Tap);
             SetEventAction(DrawEvent.Drag, DragPinAction);
             SetEventAction(DrawEvent.TapEnd, EndPinAction);
@@ -643,7 +636,6 @@ namespace ModelGraph.Core
         }
         private void EndPinAction()
         {
-            DrawCursor = DrawCursor.Arrow;
             ClearEventAction(DrawEvent.Tap);
             ClearEventAction(DrawEvent.Drag);
             ClearEventAction(DrawEvent.TapEnd);
