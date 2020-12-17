@@ -54,7 +54,6 @@ namespace ModelGraph.Controls
 
             GraphCanvas.Refresh();
         }
-        private DrawCursor _onVoidCursor;
         private object _forcedSelectedMode;
         private object _previousSelectedMode;
         public void SetSize(double width, double height)

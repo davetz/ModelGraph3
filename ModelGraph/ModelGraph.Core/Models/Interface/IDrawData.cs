@@ -5,6 +5,7 @@ namespace ModelGraph.Core
 {
     public interface IDrawData
     {
+        uint DataDelta { get; }
         Extent Extent { get; }
         Vector2 Point1 { get; set; }
         Vector2 Point2 { get; set; }

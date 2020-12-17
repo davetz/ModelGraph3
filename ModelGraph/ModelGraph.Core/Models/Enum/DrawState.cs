@@ -22,37 +22,40 @@ namespace ModelGraph.Core
 
         StartOnMask = 0x70,     //issolate starting location type
 
-        AddMode = 0x100,        //enable adding
-        ViewMode = 0x200,       //enable viewing
-        EditMode = 0x300,       //enable editing
-        MoveMode = 0x400,       //enable moving nodes
-        PinsMode = 0x500,       //enable movinge individual pins
-        CopyMode = 0x600,       //enable copying
-        LinkMode = 0x700,       //enable linking
-        UnlinkMode = 0x800,     //enable linking
-        CreateMode = 0x900,     //enable createing
-        DeleteMode = 0xA00,     //enable deleting
-        GravityMode = 0xB00,    //enable gravity
-        OperateMode = 0xC00,    //enable operating
+        AddMode     = 0x100,                //enable adding
+        ViewMode    = 0x200,                //enable viewing
+        EditMode    = 0x300 | HasSelector,  //enable editing
+        MoveMode    = 0x400 | HasSelector,  //enable moving nodes
+        PinsMode    = 0x500 | HasSelector,  //enable movinge individual pins
+        CopyMode    = 0x600 | HasSelector,  //enable copying
+        LinkMode    = 0x700,                //enable linking
+        UnlinkMode  = 0x800,                //enable linking
+        CreateMode  = 0x900,                //enable createing
+        DeleteMode  = 0xA00 | HasSelector,  //enable deleting
+        GravityMode = 0xB00 | HasSelector,  //enable gravity
+        OperateMode = 0xC00,                //enable operating
 
-        ModeMask = 0xF00,       //issolate current mode
+        ModeMask    = 0xF00 | HasSelector,  //issolate current mode
 
         Tapped      = 0x01000,   //a pointer pressed has occured
         CtrlTapped  = 0x02000,   //a pointer ctrl pressed has occured
         ShiftTapped = 0x03000,   //a pointer shift pressed has occured
         TapDragEnd  = 0x04000,   //a pointer released has occured
 
-        Dragging     = 0x15000,  //currently dragging something
-        CtrlDraging  = 0x16000,  //currently ctrl dragging something
-        ShiftDraging = 0x17000,  //currently shift dragging something
-        UpArrow      = 0x18000,
-        DownArrow    = 0x19000,
-        LeftArrow    = 0x1A000,
-        RightArrow   = 0x1B000,
+        Dragging     = 0x05000 | MayRepeat,  //currently dragging something
+        CtrlDraging  = 0x06000 | MayRepeat,  //currently ctrl dragging something
+        ShiftDraging = 0x07000 | MayRepeat,  //currently shift dragging something
+        UpArrow      = 0x08000 | MayRepeat,
+        DownArrow    = 0x09000 | MayRepeat,
+        LeftArrow    = 0x0A000 | MayRepeat,
+        RightArrow   = 0x0B000 | MayRepeat,
+
         ContextMenu  = 0x0C000,    //context menu visible
 
-        MayRepeat    = 0x10000,
-        EventMask    = 0x1F000,   //issolate current event
+        EventMask    = 0x0F000 | MayRepeat,    //issolate current event
+
+        MayRepeat   = 0x10000, //flag bit enable repeat action
+        HasSelector = 0x20000, //flag bit enable select by range
 
         NoChange = 0xFFFFFFF,
     };

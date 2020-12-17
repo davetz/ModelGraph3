@@ -3,6 +3,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using ModelGraph.Core;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -355,28 +356,103 @@ namespace ModelGraph.Controls
         private CanvasStrokeStyle _strokeStyle = new CanvasStrokeStyle();
         #endregion
 
+        #region CheckCanvasDataDelta  =========================================
+        private bool UpdateEditCanvas()
+        {
+            if (EditCanvas.IsEnabled)
+            {
+                if (Model.EditorData.DataDelta != _editCanvasDelta)
+                {
+                    _editCanvasDelta = Model.EditorData.DataDelta;
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool UpdateOverCanvas()
+        {
+            if (OverCanvas.IsEnabled && OverviewBorder.Visibility == Visibility.Visible)
+            {
+                if (Model.EditorData.DataDelta != _overCanvasDelta)
+                {
+                    _overCanvasDelta = Model.EditorData.DataDelta;
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool UpdatePick1Canvas()
+        {
+            if (Pick1Canvas.IsEnabled && Pick1Canvas.Visibility == Visibility.Visible)
+            {
+                if (Model.Picker1Data.DataDelta != _pick1CanvasDelta)
+                {
+                    _pick1CanvasDelta = Model.Picker1Data.DataDelta;
+                    return true;
+                }
+            }
+            return false;
+        }
+        private bool UpdatePick2Canvas()
+        {
+            if (Pick2Canvas.IsEnabled && Pick2Canvas.Visibility == Visibility.Visible)
+            {
+                if (Model.Picker2Data.DataDelta != _pick2CanvasDelta)
+                {
+                    _pick2CanvasDelta = Model.Picker2Data.DataDelta;
+                    return true;
+                }
+            }
+            return false;
+        }
+        private uint _editCanvasDelta;
+        private uint _overCanvasDelta;
+        private uint _pick1CanvasDelta;
+        private uint _pick2CanvasDelta;
+        #endregion
+
+        #region CheckTreeModelDelta  ==========================================
+        private bool UpdateFlyTree()
+        {
+            if (FlyTreeCanvas.IsEnabled && FlyTreeGrid.Visibility == Visibility.Visible)
+            {
+                return true;
+            }
+            return false;
+        }
+        private byte _flyTreeModeDelta;
+        private bool UpdateSideTree()
+        {
+            if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible)
+            {
+                return true;
+            }
+            return false;
+        }
+        #endregion
+
         #region Refresh  ======================================================
         internal async void Refresh()
         {
             await _dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, RefreshAll);
-
-            void RefreshAll()
-            {
-                ChedkDrawItems();
-                CheckColorChange();
-                if (FlyTreeCanvas.IsEnabled && FlyTreeGrid.Visibility == Visibility.Visible) FlyTreeCanvas.Refresh();
-                if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible) SideTreeCanvas.Refresh();
-
-                if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
-                if (OverCanvas.IsEnabled && OverviewBorder.Visibility == Visibility.Visible) OverCanvas.Invalidate();
-                if (Pick1Canvas.IsEnabled && Pick1Canvas.Visibility == Visibility.Visible) Pick1Canvas.Invalidate();
-                if (Pick2Canvas.IsEnabled && Pick2Canvas.Visibility == Visibility.Visible) Pick2Canvas.Invalidate();
-
-                CheckDrawCursor();
-                if (_currentCusorType == CoreCursorType.Hand)
-                    RootFocusButton.Focus(FocusState.Programmatic);
-            }
         }
+        private void RefreshAll()
+        {
+            ChedkDrawItems();
+            CheckColorChange();
+
+            if (UpdateFlyTree()) FlyTreeCanvas.Refresh();
+            if (UpdateSideTree()) SideTreeCanvas.Refresh();
+
+            if (UpdateEditCanvas()) EditCanvas.Invalidate();
+            if (UpdateOverCanvas()) OverCanvas.Invalidate();
+            if (UpdatePick1Canvas()) Pick1Canvas.Invalidate();
+            if (UpdatePick2Canvas()) Pick2Canvas.Invalidate();
+
+            CheckDrawCursor();
+            RootFocusButton.Focus(FocusState.Programmatic);
+        }
+
         internal void CheckDrawCursor()
         {
             var state = Model.DrawState & DrawState.EventMask;
@@ -402,7 +478,7 @@ namespace ModelGraph.Controls
         {
             if (Model.TryGetDrawEventAction(evt, out Action action))
                 await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
-            CheckDrawCursor();
+            RefreshAll();
         }
         internal void ExecuteAction(DrawEvent evt)
         {
@@ -410,7 +486,7 @@ namespace ModelGraph.Controls
             {
                 action(); //imediately execute the drag event
                 EditCanvas.Invalidate(); //and then trigger editCanvas refresh
-                CheckDrawCursor();
+                RefreshAll();
             }
         }
         #endregion
