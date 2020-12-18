@@ -64,6 +64,7 @@ namespace ModelGraph.Core
             var tailName = Node2.Item.GetFullNameId();
             return $"{headName} --> {tailName}  ({LineColor})";
         }
+        public override string GetNameId() => ToString();
         #endregion
 
         #region Snapshot  =====================================================

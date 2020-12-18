@@ -31,8 +31,9 @@ namespace ModelGraph.Core
             SetDrawStateCursors(DrawState.LinkMode | DrawState.NowOnNode, DrawCursor.LinkHit);
             SetDrawStateCursors(DrawState.LinkMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.LinkHit);
             SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnVoid, DrawCursor.UnLink);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode, DrawCursor.UnLinkHit);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode| DrawState.TapDragEnd, DrawCursor.UnLinkHit);
+            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode, DrawCursor.UnlinkHit);
+            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnEdge, DrawCursor.UnlinkHit);
+            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode| DrawState.TapDragEnd, DrawCursor.UnlinkHit);
             SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
             SetDrawStateCursors(DrawState.DeleteMode | DrawState.NowOnVoid, DrawCursor.Delete);
             SetDrawStateCursors(DrawState.DeleteMode | DrawState.NowOnNode, DrawCursor.DeleteHit);
@@ -76,15 +77,12 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.SetOperateMode, () => { AugmentDrawState(DrawState.OperateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
 
 
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode, EditOnNode);
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, EditOnVoidTapped);
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Tapped, EditOnNodeTapped);
 
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode, MoveOnNode);
 
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Tapped, MoveOnNodeTapped);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Dragging, MoveOnNodeDragging);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.TapDragEnd, MoveOnNodeEnding);
 
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.UpArrow, MoveOnNodeUpArrow);
             SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.LeftArrow, MoveOnNodeLeftArrow);
@@ -193,10 +191,33 @@ namespace ModelGraph.Core
         private void SkimHitTest()
         {
             Selector.HitTestPoint(Editor.Point2);
-            if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
+            if (Selector.IsVoidHit)
+            {
+                HideDrawItems(DrawItem.ToolTip);
+                if (ModelDelta != Graph.ModelDelta)
+                {
+                    ModelDelta = Graph.ModelDelta;
+                    Graph.RebuildHitTestMap();
+                    Selector.UpdateModels();
+                }
+                AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
+            }
+            else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
+            {
+                ToolTip_Text1 = Selector.HitNode.GetNameId();
+                ToolTip_Text2 = Selector.HitNode.GetSummaryId();
+                FlyOutPoint = Selector.HitNode.Center;
+                ShowDrawItems(DrawItem.ToolTip);
                 AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
-            else if (Selector.IsVoidHit)
-                SelectorOnVoidSkim();
+            }
+            else if (Selector.IsEdgeHit && Selector.HitEdge != Selector.PrevEdge)
+            {
+                ToolTip_Text1 = Selector.HitEdge.GetNameId();
+                ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
+                FlyOutPoint = Editor.Point2;
+                ShowDrawItems(DrawItem.ToolTip);
+                AugmentDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask);
+            }
         }
         #endregion
 
@@ -237,19 +258,7 @@ namespace ModelGraph.Core
                 _selectToggleMode = false;
                 Selector.Clear();
                 HideDrawItems(DrawItem.Selector | DrawItem.ToolTip | DrawItem.FlyTree);
-                Refresh();
             }
-        }
-        private void SelectorOnVoidSkim()
-        {
-            HideDrawItems(DrawItem.ToolTip);
-            if (ModelDelta != Graph.ModelDelta)
-            {
-                ModelDelta = Graph.ModelDelta;
-                Graph.RebuildHitTestMap();
-                Selector.UpdateModels();
-            }
-            AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
         }
         private void SelectorOnVoidTapped()
         {
@@ -274,20 +283,13 @@ namespace ModelGraph.Core
                 Selector.HitTestRegion(_selectToggleMode, Editor.Point1, Editor.Point2);
             }
             HideDrawItems(DrawItem.Selector);
-            Refresh();
+            UpdateEditorData();
         }
         private bool _tracingSelector;
         private bool _selectToggleMode;
         #endregion
 
         #region EditMode  =====================================================
-        private void EditOnNode()
-        {
-            ToolTip_Text1 = Selector.HitNode.GetNameId();
-            ToolTip_Text2 = Selector.HitNode.GetSummaryId();
-            FlyOutPoint = Selector.HitNode.Center;
-            ShowDrawItems(DrawItem.ToolTip);
-        }
         private void EditOnNodeTapped()
         {
             HideDrawItems(DrawItem.ToolTip);
@@ -316,13 +318,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region MoveMode  =====================================================
-        private void MoveOnNode()
-        {
-            ToolTip_Text1 = Selector.HitNode.GetNameId();
-            ToolTip_Text2 = Selector.HitNode.GetSummaryId();
-            FlyOutPoint = Selector.HitNode.Center;
-            ShowDrawItems(DrawItem.ToolTip);
-        }
         private void MoveOnNodeTapped()
         {
             Selector.SaveHitReference();
@@ -343,9 +338,6 @@ namespace ModelGraph.Core
         {
             Selector.Move(delta);
             UpdateEditorData();
-        }
-        private void MoveOnNodeEnding()
-        {
         }
         #endregion
 

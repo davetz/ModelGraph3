@@ -14,6 +14,7 @@ namespace ModelGraph.Core
 
         internal Edge HitEdge;
         internal Edge RefEdge;  //saved edge reference
+        internal Edge PrevEdge;
 
         internal int HitBend;  // index of bend point (relative to edge.bends)
         internal int HitIndex; // index of start of the hit segment (relative to edge.point)

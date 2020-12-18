@@ -37,7 +37,7 @@ namespace ModelGraph.Core
         LinkHit = 112,    //pointerC
         CopyHit = 113,    //pointerD
         DeleteHit = 114,  //pointerE
-        UnLinkHit = 115,  //pointerF
+        UnlinkHit = 115,  //pointerF
         OperateHit = 116, //pointerG
         GravityHit = 117, //pointerH
     }
