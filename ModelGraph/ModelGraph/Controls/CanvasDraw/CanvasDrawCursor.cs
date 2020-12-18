@@ -64,7 +64,7 @@ namespace ModelGraph.Controls
             [112] = new CoreCursor(CoreCursorType.Custom, 112),
             [113] = new CoreCursor(CoreCursorType.Custom, 113),
             [114] = new CoreCursor(CoreCursorType.Custom, 114),
-            [114] = new CoreCursor(CoreCursorType.Custom, 115),
+            [115] = new CoreCursor(CoreCursorType.Custom, 115),
             [116] = new CoreCursor(CoreCursorType.Custom, 116),
             [117] = new CoreCursor(CoreCursorType.Custom, 117),
             [118] = new CoreCursor(CoreCursorType.Custom, 118),

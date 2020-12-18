@@ -455,8 +455,8 @@ namespace ModelGraph.Controls
 
         internal void CheckDrawCursor()
         {
-            var state = Model.DrawState & DrawState.EventMask;
-            if (state == DrawState.Dragging)
+            var state = Model.DrawState & DrawState.NowMask;
+            if (state == DrawState.NowOnEdge)
             {
                 var s = state;
             }
