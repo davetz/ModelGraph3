@@ -208,6 +208,7 @@
             <Grid Grid.Column="2" x:Name="Picker2Grid" Background="DarkSlateGray" Margin="2,0,2,0" >
                 <canvas:CanvasControl x:Name="Pick2Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick2Canvas_PointerPressed"/>
             </Grid>
+            
             <Grid Grid.Column="3" x:Name="SideTreeGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
                 <controls:CanvasTreeControl x:Name="SideTreeCanvas" />
             </Grid>

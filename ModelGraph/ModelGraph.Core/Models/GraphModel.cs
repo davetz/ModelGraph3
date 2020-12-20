@@ -200,7 +200,7 @@ namespace ModelGraph.Core
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
+                AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask); //need both masks!
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
@@ -208,7 +208,7 @@ namespace ModelGraph.Core
                 ToolTip_Text2 = Selector.HitNode.GetSummaryId();
                 FlyOutPoint = Selector.HitNode.Center;
                 ShowDrawItems(DrawItem.ToolTip);
-                AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
+                AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask); //need both masks!
             }
             else if (Selector.IsEdgeHit && Selector.HitEdge != Selector.PrevEdge)
             {
@@ -216,7 +216,7 @@ namespace ModelGraph.Core
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
                 FlyOutPoint = Editor.Point2;
                 ShowDrawItems(DrawItem.ToolTip);
-                AugmentDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask);
+                AugmentDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask); //need both masks!
             }
         }
         #endregion

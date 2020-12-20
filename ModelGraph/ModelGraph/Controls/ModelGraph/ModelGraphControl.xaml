@@ -41,7 +41,7 @@
                 <ComboBoxItem x:Name="ViewMode" Content="V=View, without changing anything" IsSelected="True"/>
                 <ComboBoxItem x:Name="EditMode" Content="E=Edit, tap to edit properties or to align items"/>
                 <ComboBoxItem x:Name="MoveMode" Content="M=Move, drag items or nudge using arrow keys"/>
-                <ComboBoxItem x:Name="CopyMode" Content="C=Copy, tap on items to copy"/>
+                <ComboBoxItem x:Name="CopyMode" Content="C=Copy, tap to copy items"/>
                 <ComboBoxItem x:Name="LinkMode" Content="L=Link, tap-drag to create relational links"/>
                 <ComboBoxItem x:Name="UnlinkMode" Content="U=Unlink, tap to unlink a connection (at path break point)"/>
                 <ComboBoxItem x:Name="CreateMode" Content="P=Paste, tap on drawing to create the item"/>

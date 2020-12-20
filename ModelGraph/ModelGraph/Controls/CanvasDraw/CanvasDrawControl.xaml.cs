@@ -420,7 +420,6 @@ namespace ModelGraph.Controls
             }
             return false;
         }
-        private byte _flyTreeModeDelta;
         private bool UpdateSideTree()
         {
             if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible)
@@ -438,6 +437,8 @@ namespace ModelGraph.Controls
         }
         private void RefreshAll()
         {
+            var color = Picker1Grid.Background;
+
             ChedkDrawItems();
             CheckColorChange();
 
