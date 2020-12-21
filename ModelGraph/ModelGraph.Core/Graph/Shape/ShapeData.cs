@@ -13,7 +13,7 @@ namespace ModelGraph.Core
         private byte R = 0xFF; // of color(A, R, G, B)
         private byte G = 0xFF; // of color(A, R, G, B)
         private byte B = 0xFF; // of color(A, R, G, B)
-        protected byte SW = 2;  // stroke width
+        protected byte SW = 1;  // stroke width
         private byte ST = 4;  // stroke type
         private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
         private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)

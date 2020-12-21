@@ -238,16 +238,16 @@ namespace ModelGraph.Controls
 
         private void OverviewResize_PointerEntered(object sender, PointerRoutedEventArgs e)
         {
-            if (!_pointerIsPressed) TrySetNewCursor(CoreCursorType.SizeAll);
+            if (!_editPointerIsPressed) TrySetNewCursor(CoreCursorType.SizeAll);
         }
         private void OverviewResize_PointerExited(object sender, PointerRoutedEventArgs e)
         {
-            if (!_pointerIsPressed) RestorePointerCursor();
+            if (!_editPointerIsPressed) RestorePointerCursor();
         }
 
         private void OverviewResize_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _pointerIsPressed = true;
+            _editPointerIsPressed = true;
             GridPoint1 = new Vector2(0, 0);
             GridPoint2 = GridPoint(e);
             OverridePointerMoved(ResizingOverview);
@@ -451,18 +451,12 @@ namespace ModelGraph.Controls
             if (UpdatePick2Canvas()) Pick2Canvas.Invalidate();
 
             CheckDrawCursor();
-            RootFocusButton.Focus(FocusState.Programmatic);
         }
-
-        internal void CheckDrawCursor()
+        private void RestoreDrawCursor() => CheckDrawCursor(true);
+        private void CheckDrawCursor(bool restore = false)
         {
-            var state = Model.DrawState & DrawState.NowMask;
-            if (state == DrawState.NowOnEdge)
-            {
-                var s = state;
-            }
             var cursor = Model.GetDrawStateCursor();
-            if (cursor != _drawCursor)
+            if (restore || cursor != _drawCursor)
             {
                 _drawCursor = cursor;
                 if (cursor > DrawCursor.CustomCursorsBegin)
@@ -472,6 +466,7 @@ namespace ModelGraph.Controls
                 }
                 else
                     TrySetNewCursor((CoreCursorType)_drawCursor);
+                RootFocusButton.Focus(FocusState.Programmatic);
             }
         }
         DrawCursor _drawCursor;
@@ -741,11 +736,11 @@ namespace ModelGraph.Controls
 
                 if (_overridePointerMoved is null)
                 {
-                    if (_pointerIsPressed)
+                    if (_editPointerIsPressed)
                     {
-                        if (_ctrlPointerPressed)
+                        if (_editCtrlPointerPressed)
                             ExecuteAction(DrawEvent.CtrlDrag); // we want a fast responce
-                        else if (_shiftPointerPressed)
+                        else if (_editShiftPointerPressed)
                             ExecuteAction(DrawEvent.ShiftDrag); // we want a fast responce
                         else
                             ExecuteAction(DrawEvent.Drag);      // we want a fast responce
@@ -760,45 +755,43 @@ namespace ModelGraph.Controls
         private void Pick1Canvas_PointerMoved(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
             e.Handled = true;
-            if (_pointerIsPressed)
+            if (_pickPointerIsPressed)
             {
                 SetDrawPoint2(Pick1Canvas, Model.Picker1Data, e);
                 PostEvent(DrawEvent.Picker1Drag);
             }
         }
-        private bool _pointerIsPressed;
-        private bool _ctrlPointerPressed;
-        private bool _shiftPointerPressed;
+        private bool _pickPointerIsPressed;
+        private bool _editPointerIsPressed;
+        private bool _editCtrlPointerPressed;
+        private bool _editShiftPointerPressed;
         #endregion
 
         #region PointerPressed  ===============================================
         private void RootCanvas_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (_isRootCanvasLoaded)
-            {
-                _pointerIsPressed = true;
-                _ctrlPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control);
-                _shiftPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift);
-                SetGridPoint1(e);
-                SetDrawPoint1(EditCanvas, Model.EditorData, e);
-                e.Handled = true;
+            _editPointerIsPressed = true;
+            _editCtrlPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control);
+            _editShiftPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift);
+            SetGridPoint1(e);
+            SetDrawPoint1(EditCanvas, Model.EditorData, e);
+            e.Handled = true;
 
-                if (_overridePointerPressed is null)
-                {
-                    if (_ctrlPointerPressed)
-                        PostEvent(DrawEvent.CtrlTap);
-                    else if (_shiftPointerPressed)
-                        PostEvent(DrawEvent.ShiftTap);
-                    else
-                        PostEvent(DrawEvent.Tap);
-                }
+            if (_overridePointerPressed is null)
+            {
+                if (_editCtrlPointerPressed)
+                    PostEvent(DrawEvent.CtrlTap);
+                else if (_editShiftPointerPressed)
+                    PostEvent(DrawEvent.ShiftTap);
                 else
-                    _overridePointerPressed();
+                    PostEvent(DrawEvent.Tap);
             }
+            else
+                _overridePointerPressed();
         }
         private void Pick1Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _pointerIsPressed = true;
+            _pickPointerIsPressed = true;
             SetDrawPoint1(Pick1Canvas, Model.Picker1Data, e);
             e.Handled = true;
 
@@ -809,17 +802,13 @@ namespace ModelGraph.Controls
         }
         private void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _pointerIsPressed = true;
             SetDrawPoint1(Pick2Canvas, Model.Picker2Data, e);
             e.Handled = true;
-
             PostEvent(DrawEvent.Picker2Tap);
         }
         private void OverCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            _pointerIsPressed = true;
             e.Handled = true;
-
             PostEvent(DrawEvent.OverviewTap);
         }
         #endregion
@@ -827,22 +816,19 @@ namespace ModelGraph.Controls
         #region PointerReleased  ==============================================
         private void RootCanvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            if (_isRootCanvasLoaded)
-            {
-                _pointerIsPressed = false;
-                SetGridPoint2(e);
-                SetDrawPoint2(EditCanvas, Model.EditorData, e);
-                e.Handled = true;
+            _editPointerIsPressed = false;
+            SetGridPoint2(e);
+            SetDrawPoint2(EditCanvas, Model.EditorData, e);
+            e.Handled = true;
 
-                if (_overridePointerReleased is null)
-                    PostEvent(DrawEvent.TapEnd);
-                else
-                    _overridePointerReleased();
-            }
+            if (_overridePointerReleased is null)
+                PostEvent(DrawEvent.TapEnd);
+            else
+                _overridePointerReleased();
         }
-        private void Canvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        private void Pick1Canvas_PointerReleased(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
         {
-            _pointerIsPressed = false;
+            _pickPointerIsPressed = false;
             e.Handled = true;
         }
         #endregion
@@ -889,7 +875,12 @@ namespace ModelGraph.Controls
         }
         private void RootCanvas_PointerExited(object sender, PointerRoutedEventArgs e)
         {
+            RestorePointerCursor();
             SideTreeCanvas.Focus(FocusState.Programmatic);
+        }
+        private void RootCanvas_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            RestoreDrawCursor();
         }
         #endregion
 
@@ -1029,5 +1020,6 @@ namespace ModelGraph.Controls
         private Color _pickerColor;
         private Color _originalColor;
         #endregion
+
     }
 }

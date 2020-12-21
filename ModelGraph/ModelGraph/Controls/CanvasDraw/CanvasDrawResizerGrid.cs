@@ -43,7 +43,7 @@ namespace ModelGraph.Controls
         private void SizerBottomLeft_PointerEntered(object sender, PointerRoutedEventArgs e) => ConditionalySetNewCursor(CoreCursorType.SizeNortheastSouthwest);
         private void SizerBottomRight_PointerEntered(object sender, PointerRoutedEventArgs e) => ConditionalySetNewCursor(CoreCursorType.SizeNorthwestSoutheast);
 
-        void ConditionalySetNewCursor(CoreCursorType cursorType) { if (_pointerIsPressed) return; TrySetNewCursor(cursorType); }
+        void ConditionalySetNewCursor(CoreCursorType cursorType) { if (_editPointerIsPressed) return; TrySetNewCursor(cursorType); }
 
         private void SizerTop_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.TryGetDrawEventAction(DrawEvent.TopTap, out Action action)) ExecuteSizerHit(e, action); }
         private void SizerLeft_PointerPressed(object sender, PointerRoutedEventArgs e) { if (Model.TryGetDrawEventAction(DrawEvent.LeftTap, out Action action)) ExecuteSizerHit(e, action); }
@@ -57,7 +57,7 @@ namespace ModelGraph.Controls
         private void ExecuteSizerHit(PointerRoutedEventArgs e, Action action)
         {
             e.Handled = true;
-            _pointerIsPressed = true;
+            _editPointerIsPressed = true;
             HideToolTip();
             action();
         }

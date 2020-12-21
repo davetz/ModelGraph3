@@ -15,6 +15,28 @@ namespace ModelGraph.Core
         {
             Owner = owner;
             owner.Add(this);
+
+            SetEventAction(DrawEvent.Drag, () => { AugmentDrawState(DrawState.Dragging, DrawState.EventMask); });
+            SetEventAction(DrawEvent.CtrlDrag, () => { AugmentDrawState(DrawState.CtrlDraging, DrawState.EventMask); });
+            SetEventAction(DrawEvent.ShiftDrag, () => { AugmentDrawState(DrawState.ShiftDraging, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyUpArrow, () => { AugmentDrawState(DrawState.UpArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyLeftArrow, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyDownArrow, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.ContextMenu, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
+
+            SetEventAction(DrawEvent.SetAddMode, () => { AugmentDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetViewMode, () => { AugmentDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetEditMode, () => { AugmentDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetMoveMode, () => { AugmentDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetCopyMode, () => { AugmentDrawState(DrawState.CopyMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetPinsMode, () => { AugmentDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetLinkMode, () => { AugmentDrawState(DrawState.LinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetUnlinkMode, () => { AugmentDrawState(DrawState.UnlinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetCreateMode, () => { AugmentDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetDeleteMode, () => { AugmentDrawState(DrawState.DeleteMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetGravityMode, () => { AugmentDrawState(DrawState.GravityMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetOperateMode, () => { AugmentDrawState(DrawState.OperateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
         }
         public virtual void Release() { }
         #endregion
@@ -29,7 +51,7 @@ namespace ModelGraph.Core
         #region DrawState  ====================================================
         public DrawState DrawState { get; private set; } = DrawState.Unknown;
         protected DrawState PreviousDrawState;
-        internal void AugmentDrawState(DrawState state, DrawState mask)
+        protected void AugmentDrawState(DrawState state, DrawState mask)
         {
             var mayNotRepeat = (state & DrawState.MayRepeat) == 0;
 
@@ -37,13 +59,7 @@ namespace ModelGraph.Core
             if (state == DrawState && mayNotRepeat) return;   //no change, so nothing to do
             SetDrawState(state);
         }
-        public bool TrySetState(DrawState state)
-        {
-            if (state == DrawState.NoChange || state == DrawState) return false;   //no change, so nothing to do
-            SetDrawState(state);
-            return true;    // let the caller know that we have changed state
-        }
-        private void SetDrawState(DrawState state)
+        protected void SetDrawState(DrawState state)
         {
             PreviousDrawState = DrawState;
             DrawState = state;
@@ -66,11 +82,7 @@ namespace ModelGraph.Core
             if (_drawState_Action.TryGetValue(state, out Action action)) action();
         }
         protected void SetDrawStateAction(DrawState state, Action action) => _drawState_Action[state] = action;
-        protected void ClearDrawStateAction(DrawState state) => _drawState_Action.Remove(state);
-
-        public void SetEventAction(DrawEvent evt, Action act) => _drawEvent_Action[evt] = act;
-        public void ClearEventAction(DrawEvent evt) => _drawEvent_Action.Remove(evt);
-        protected void ClearAllEventActions() => _drawEvent_Action.Clear();
+        protected void SetEventAction(DrawEvent evt, Action act) => _drawEvent_Action[evt] = act;
 
         public bool TryGetDrawEventAction(DrawEvent evt, out Action act) => _drawEvent_Action.TryGetValue(evt, out act);
 

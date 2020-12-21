@@ -19,26 +19,61 @@ namespace ModelGraph.Core
         #region Constructor  ==================================================
         internal SymbolModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
         {
-
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
             Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
 
-            RefreshDrawData();
-            RefreshHelperData();
-            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
+            SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
 
-            SetDrawStateAction(DrawState.PinsMode, SetPinsMode);
-            SetDrawStateAction(DrawState.ViewMode, SetViewMode);
+            SetEventAction(DrawEvent.Skim, SkimHitTest);
+            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
+            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
+            SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
+            SetEventAction(DrawEvent.OverviewTap, OverviewTap);
+            SetEventAction(DrawEvent.Cut, CutAction);
+            SetEventAction(DrawEvent.Copy, CopyAction);
+            SetEventAction(DrawEvent.RotateLeft, RotateLeft);
+            SetEventAction(DrawEvent.RotateRight, RotateRight);
+            SetEventAction(DrawEvent.Angle22, SetDegree22);
+            SetEventAction(DrawEvent.Angle30, SetDegree30);
+            SetEventAction(DrawEvent.FlipVertical, VerticalFlip);
+            SetEventAction(DrawEvent.FlipHorizontal, HorizontalFlip);
+            SetEventAction(DrawEvent.Recenter, CenterAction);
+            SetEventAction(DrawEvent.Apply, ApplyChange);
+            SetEventAction(DrawEvent.Revert, Revert);
+
+            SetEventAction(DrawEvent.Tap, () => { AugmentDrawState(DrawState.Tapped, DrawState.EventMask); });
+            SetEventAction(DrawEvent.TapEnd, () => { AugmentDrawState(DrawState.TapDragEnd, DrawState.EventMask); });
+
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.UpArrow, NudgeUp);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.DownArrow, NudgeDown);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.LeftArrow, NudgeLeft);
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.RightArrow, NudgeRight);
+
+            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Dragging, DragShapeAction);
+
+            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnPin | DrawState.UpArrow, NudgePinUp);
+            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnPin | DrawState.DownArrow, NudgePinDown);
+            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnPin | DrawState.LeftArrow, NudgePinLeft);
+            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnPin | DrawState.RightArrow, NudgePinRight);
+
+            SetDrawStateAction(DrawState.PinsMode | DrawState.NowOnPin | DrawState.Dragging, DragPinAction);
+
+
+            SetDrawStateAction(DrawState.CreateMode | DrawState.NowOnVoid | DrawState.Tapped, CloneAction);
+
+
+            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
             VisibleDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
 
             SetViewMode();
-            RefreshDrawData();
+            RefreshHelperData();
+            Refresh();
         }
         #endregion
 
@@ -50,7 +85,7 @@ namespace ModelGraph.Core
             Shape.GetSizerProperty(SelectedShapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
 
             (SideTreeModel as TreeModel).Validate();
-            RefreshDrawData();
+            Refresh();
         }
         private byte _min;
         private byte _max;
@@ -105,8 +140,8 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region RefreshDrawData  ==================================================
-        private void RefreshDrawData(bool triggerUIRefresh = true)
+        #region Refresh  ======================================================
+        private void Refresh(bool triggerUIRefresh = true)
         {
             RefreshEditorData();
             RefreshPicker1Data();
@@ -306,7 +341,7 @@ namespace ModelGraph.Core
             SetProperties();
             if (DrawState == DrawState.PinsMode) return;
             if (SelectedShapes.Count == 0) SetViewMode();
-            SetEditMode();
+            SetDrawState(DrawState.EditMode);
         }
         private void OverviewTap()
         {
@@ -317,7 +352,7 @@ namespace ModelGraph.Core
             SelectedShapes.Clear();
             SelectedShapes.AddRange(shapes);
             SetProperties();
-            SetEditMode();
+            SetDrawState(DrawState.EditMode);
         }
 
         private void Picker2Tap()
@@ -333,9 +368,9 @@ namespace ModelGraph.Core
             SetProperties();
 
             if (Picker2IsValid)
-                SetCreateMode();
+                SetDrawState(DrawState.CreateMode);
             else
-                SetViewMode();
+               SetViewMode();
         }
         private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
         private bool Picker2IsValid => _picker2Index > -1 && _picker2Index < _picker2Shapes.Length;
@@ -369,7 +404,7 @@ namespace ModelGraph.Core
                 {
                     s.SetColor(ColorARGB);
                 }
-                RefreshDrawData(false);
+                Refresh(false);
             }
         }
         private void ApplyChange()
@@ -380,7 +415,7 @@ namespace ModelGraph.Core
         private void Revert()
         {
             Symbol.ReloadShapes();
-            RefreshDrawData();
+            Refresh();
             RestoreDrawState();
             PageModel.TriggerUIRefresh();
         }
@@ -392,23 +427,46 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region DrawStateControl  =============================================
+        #region SkimHitTest  ==================================================
+        private void SkimHitTest()
+        {
+            var dp = Editor.Point2;
+            var mode = DrawState & DrawState.ModeMask;
+            if (mode == DrawState.PinsMode)
+            {
+                var ds = 4; //hit zone
+                var ex = new Extent(dp.X - ds, dp.Y - ds, dp.X + ds, dp.Y + ds);
+                for (int i = 0; i < _pinTargets.Count; i++)
+                {
+                    var p = _pinTargets[i];
+                    if (ex.Contains(p))
+                    {
+                        _pinIndex = i;
+                        AugmentDrawState(DrawState.NowOnPin, DrawState.NowMask | DrawState.EventMask);
+                        return;
+                    }
+                }
+            }
+            else if (Picker1IsValid)
+            {
+                var r = EditRadius;
+                var c = new Vector2();
+                _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
+                if (_hitSelecteShapes)
+                {
+                    AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
+                }
+            }
+            AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
+        }
+        #endregion
 
         #region ViewMode == ViewSymbol  =======================================
         public void SetViewMode()
         {
-            TrySetState(DrawState.ViewMode);
-
+            SetDrawState(DrawState.ViewMode);
             _picker1Index = _picker2Index = -1;
             SelectedShapes.Clear();
-
-            ClearAllEventActions();
-            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
-            SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
-            SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-            SetEventAction(DrawEvent.Apply, ApplyChange);
-            SetEventAction(DrawEvent.Revert, Revert);
             if (IsPasteActionEnabled) SetEventAction(DrawEvent.Paste, PasteAction);
             SetProperties();
         }
@@ -420,68 +478,12 @@ namespace ModelGraph.Core
                 var ns = s.Clone();
 
                 shapes.Add(ns);
-                RefreshDrawData();
+                Refresh();
             }
         }
         #endregion
 
         #region EditMode == ModifySymbol  =====================================
-        public void SetEditMode()
-        {
-            if (TrySetState(DrawState.EditMode))
-            {
-                ClearAllEventActions();
-                SetEventAction(DrawEvent.Tap, SetViewMode);
-                SetEventAction(DrawEvent.Skim, SkimAction);
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
-                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                SetEventAction(DrawEvent.Cut, CutAction);
-                SetEventAction(DrawEvent.Copy, CopyAction);
-                SetEventAction(DrawEvent.RotateLeft, RotateLeft);
-                SetEventAction(DrawEvent.RotateRight, RotateRight);
-                SetEventAction(DrawEvent.Angle22, SetDegree22);
-                SetEventAction(DrawEvent.Angle30, SetDegree30);
-                SetEventAction(DrawEvent.FlipVertical, VerticalFlip);
-                SetEventAction(DrawEvent.FlipHorizontal, HorizontalFlip);
-                SetEventAction(DrawEvent.Recenter, CenterAction);
-                SetEventAction(DrawEvent.Apply, ApplyChange);
-                SetEventAction(DrawEvent.Revert, Revert);
-            }
-        }
-
-        private void SkimAction()
-        {
-            if (Picker1IsValid)
-            {
-                var r = EditRadius;
-                var c = new Vector2();
-                var hit = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
-                if (hit == _hitSelecteShapes) return;
-
-                _hitSelecteShapes = hit;
-                if (hit)
-                {
-                    SetEventAction(DrawEvent.KeyUpArrow, NudgeUp);
-                    SetEventAction(DrawEvent.KeyDownArrow, NudgeDown);
-                    SetEventAction(DrawEvent.KeyLeftArrow, NudgeLeft);
-                    SetEventAction(DrawEvent.KeyRightArrow, NudgeRight);
-                    SetEventAction(DrawEvent.Tap, SetMoveMode);
-                }
-                else
-                {
-                    ClearEventAction(DrawEvent.KeyUpArrow);
-                    ClearEventAction(DrawEvent.KeyDownArrow);
-                    ClearEventAction(DrawEvent.KeyLeftArrow);
-                    ClearEventAction(DrawEvent.KeyRightArrow);
-                    SetEventAction(DrawEvent.Tap, SetViewMode);
-                }
-                RefreshDrawData();
-            }
-            else
-                _hitSelecteShapes = false;
-        }
         private void NudgeUp()
         {
             Shape.MoveCenter(SelectedShapes, new Vector2(0, -0.01f));
@@ -530,27 +532,27 @@ namespace ModelGraph.Core
         private void CenterAction()
         {
             Shape.SetCenter(SelectedShapes, new Vector2());
-            RefreshDrawData();
+            Refresh();
         }
         private void RotateLeft()
         {
             Shape.RotateLeft(SelectedShapes, _useAlternate);
-            RefreshDrawData();
+            Refresh();
         }
         private void RotateRight()
         {
             Shape.RotateRight(SelectedShapes, _useAlternate);
-            RefreshDrawData();
+            Refresh();
         }
         private void VerticalFlip()
         {
             Shape.VerticalFlip(SelectedShapes);
-            RefreshDrawData();
+            Refresh();
         }
         private void HorizontalFlip()
         {
             Shape.HorizontalFlip(SelectedShapes);
-            RefreshDrawData();
+            Refresh();
         }
         private void SetDegree22() => _useAlternate = false;
         private void SetDegree30() => _useAlternate = true;
@@ -558,16 +560,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region MoveMode  =====================================================
-        internal void SetMoveMode()
-        {
-            if (TrySetState(DrawState.MoveMode))
-            {
-                ClearAllEventActions();
-                SetEventAction(DrawEvent.TapEnd, EndDragAction);
-                SetEventAction(DrawEvent.Drag, DragShapeAction);
-                RefreshDrawData();
-            }
-        }
         private void DragShapeAction()
         {
             var delta = Editor.PointDelta(true) / EditRadius;
@@ -576,70 +568,16 @@ namespace ModelGraph.Core
         }
         private void EndDragAction()
         {
-            RefreshDrawData();
-            SetEditMode();
+            Refresh();
         }
         #endregion
 
         #region PinsMode  =====================================================
-        internal void SetPinsMode()
-        {
-            TrySetState(DrawState.PinsMode); //should already be in pinsMode
-
-            ClearAllEventActions();
-            SetEventAction(DrawEvent.Skim, SkimPinAction);
-            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(false); });
-            RefreshDrawData();
-        }
-        int _pinIndex;
-        private void SkimPinAction()
-        {
-            var dp = Editor.Point2;
-            var ds = 4; //hit zone
-            var ex = new Extent(dp.X - ds, dp.Y - ds, dp.X + ds, dp.Y + ds);
-            for (int i = 0; i < _pinTargets.Count; i++)
-            {
-                var p = _pinTargets[i];
-                if (ex.Contains(p))
-                {
-                    _pinIndex = i;
-                    SetEventAction(DrawEvent.Tap, TapPinAction);
-                    SetEventAction(DrawEvent.KeyUpArrow, NudgePinUp);
-                    SetEventAction(DrawEvent.KeyDownArrow, NudgePinDown);
-                    SetEventAction(DrawEvent.KeyLeftArrow, NudgePinLeft);
-                    SetEventAction(DrawEvent.KeyRightArrow, NudgePinRight);
-                    PageModel.TriggerUIRefresh();
-                    return;
-                }
-            }
-            ClearEventAction(DrawEvent.Tap);
-            ClearEventAction(DrawEvent.KeyUpArrow);
-            ClearEventAction(DrawEvent.KeyDownArrow);
-            ClearEventAction(DrawEvent.KeyLeftArrow);
-            ClearEventAction(DrawEvent.KeyRightArrow);
-            ClearEventAction(DrawEvent.Drag);
-            ClearEventAction(DrawEvent.TapEnd);
-            PageModel.TriggerUIRefresh();
-        }
-        private void TapPinAction()
-        {
-            ClearEventAction(DrawEvent.Tap);
-            SetEventAction(DrawEvent.Drag, DragPinAction);
-            SetEventAction(DrawEvent.TapEnd, EndPinAction);
-        }
         private void DragPinAction()
         {
             var delta = Editor.PointDelta(true) / EditRadius;
             Shape.MovePoint(SelectedShapes[0], _pinIndex, delta, EditRadius);
             RefreshEditorData(); //fast responce
-        }
-        private void EndPinAction()
-        {
-            ClearEventAction(DrawEvent.Tap);
-            ClearEventAction(DrawEvent.Drag);
-            ClearEventAction(DrawEvent.TapEnd);
-            RefreshEditorData(); 
         }
         private void NudgePinUp()
         {
@@ -665,23 +603,10 @@ namespace ModelGraph.Core
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
+        int _pinIndex;
         #endregion
 
         #region CreateMode == AddSymbolShape  =================================
-        public void SetCreateMode()
-        {
-            if (TrySetState(DrawState.CreateMode))
-            {
-                ClearAllEventActions();
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
-                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
-                SetEventAction(DrawEvent.Tap, CloneAction);
-                SetProperties();
-                RefreshDrawData();
-            }
-        }
         private void CloneAction()
         {
             if (Picker2IsValid)
@@ -689,7 +614,7 @@ namespace ModelGraph.Core
                 var cp = Editor.Point1 / EditRadius;
                 var ns = _templateShapes[_picker2Index].Clone(cp);
                 Symbol.GetShapes().Add(ns);
-                RefreshDrawData();
+                Refresh();
             }
             else
                 SetViewMode();
@@ -697,31 +622,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region LinkMode == DefineTerminals  ==================================
-        public void SetLinkMode()
-        {
-            if (TrySetState(DrawState.LinkMode))
-            {
-                ClearAllEventActions();
-                SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
-                SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
-                SetEventAction(DrawEvent.Picker2Tap, Picker2Tap);
-                SetEventAction(DrawEvent.OverviewTap, OverviewTap);
-            }
-            RefreshDrawData();
-        }
         List<Vector2> _pinTargets = new List<Vector2>();
         #endregion
 
         #region OperateMode == AutoFlipRotate  ================================
-        public void SetOperateMode()
-        {
-            if (TrySetState(DrawState.OperateMode))
-            {
-                ClearAllEventActions();
-            }
-        }
-        #endregion
-
         #endregion
     }
 }
