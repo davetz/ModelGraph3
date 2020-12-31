@@ -25,7 +25,18 @@ namespace ModelGraph.Core
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
             Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
 
-            SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
+            SetEventAction(DrawEvent.Drag, () => { AugmentDrawState(DrawState.Dragging, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyUpArrow, () => { AugmentDrawState(DrawState.UpArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyLeftArrow, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyDownArrow, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
+
+            SetEventAction(DrawEvent.SetAddMode, () => { AugmentDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetViewMode, () => { AugmentDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetEditMode, () => { AugmentDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetMoveMode, () => { AugmentDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetPinsMode, () => { AugmentDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.SetCreateMode, () => { AugmentDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
 
             SetEventAction(DrawEvent.Skim, SkimHitTest);
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
@@ -46,6 +57,8 @@ namespace ModelGraph.Core
 
             SetEventAction(DrawEvent.Tap, () => { AugmentDrawState(DrawState.Tapped, DrawState.EventMask); });
             SetEventAction(DrawEvent.TapEnd, () => { AugmentDrawState(DrawState.TapDragEnd, DrawState.EventMask); });
+
+            SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
 
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.UpArrow, NudgeUp);
             SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.DownArrow, NudgeDown);

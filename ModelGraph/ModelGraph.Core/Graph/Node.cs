@@ -233,6 +233,55 @@ namespace ModelGraph.Core
             if (y > (Y + DY + _ds)) return false;
             return true;
         }
+        internal bool HitTest(Selector selector, Vector2 p)
+        {
+            var x = p.X + 1;
+            if (x < (X - DX - _ds)) return false;
+            if (x > (X + DX + _ds)) return false;
+
+            var y = p.Y + 1;
+            if (y < (Y - DY - _ds)) return false;
+            if (y > (Y + DY + _ds)) return false;
+
+            selector.HitNode = this;
+            selector.HitPoint = Center;
+            selector.HitLocation |= HitLocation.Node;
+
+            float ds;
+            if (DX >= _ds)
+            {
+                if (x < X)
+                {
+                    ds = X - DX - x;
+                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Left;
+                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Left;
+                }
+                else
+                {
+                    ds = X + DX - x;
+                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Right;
+                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Right;
+                }
+            }
+
+            if (DY >= _ds)
+            {
+                if (y < Y)
+                {
+                    ds = Y - DY - y;
+                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Top;
+                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Top;
+                }
+                else
+                {
+                    ds = Y + DY - y;
+                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Bottom;
+                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Bottom;
+                }
+            }
+            return true;
+        }
+
 
         public (HitLocation hit, Vector2 pnt) RefinedHit(Vector2 p)
         {

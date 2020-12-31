@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace ModelGraph.Core
@@ -10,11 +11,11 @@ namespace ModelGraph.Core
 
         internal Node HitNode;
         internal Node RefNode;  //saved node reference
-        internal Node PrevNode;
+        internal Node PrevNode;  //saved node reference
 
         internal Edge HitEdge;
         internal Edge RefEdge;  //saved edge reference
-        internal Edge PrevEdge;
+        internal Edge PrevEdge;  //saved edge reference
 
         internal int HitBend;  // index of bend point (relative to edge.bends)
         internal int HitIndex; // index of start of the hit segment (relative to edge.point)
@@ -78,7 +79,7 @@ namespace ModelGraph.Core
         internal void HitTestPoint(Vector2 p)
         {
             PrevNode = HitNode;
-
+            PrevEdge = HitEdge;
             // clear previous results
             HitNode = null;
             HitEdge = null;
@@ -87,33 +88,17 @@ namespace ModelGraph.Core
             HitPoint = p;
             HitLocation = HitLocation.Void;
 
-            // test prev node
-            if (PrevNode != null && PrevNode.HitTest(p))
-            {
-                var (hit, pnt) = PrevNode.RefinedHit(p);
-                HitLocation |= hit;
-                HitPoint = pnt;
-
-                HitNode = PrevNode;
-                return;  // we're done;
-            }
             if (Graph.HitTestMap.HitTest(p, out List<IHitTestable> targets))
             {
                 foreach (var item in targets)
                 {
-                    if (item is Node n && n.HitTest(p))
+                    if (item is Node n)
                     {
-                        var (hit, pnt) = n.RefinedHit(p);
-                        HitLocation |= hit;
-                        HitPoint = pnt;
-
-                        HitNode = n;
-                        return;  // we are done;
+                        if (n.HitTest(this, p)) return;
                     }
-                    else if (item is Edge e && e.HitTest(p) && e.HitTest(p, ref HitLocation, ref HitBend, ref HitIndex, ref HitPoint))
+                    else if (item is Edge e)
                     {
-                        HitEdge = e;
-                        return;  // we are done
+                        if (e.HitTest(this, p)) return;
                     }
                 }
             }

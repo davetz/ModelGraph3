@@ -15,28 +15,6 @@ namespace ModelGraph.Core
         {
             Owner = owner;
             owner.Add(this);
-
-            SetEventAction(DrawEvent.Drag, () => { AugmentDrawState(DrawState.Dragging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.CtrlDrag, () => { AugmentDrawState(DrawState.CtrlDraging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.ShiftDrag, () => { AugmentDrawState(DrawState.ShiftDraging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.KeyUpArrow, () => { AugmentDrawState(DrawState.UpArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.KeyLeftArrow, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.KeyDownArrow, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.KeyRightArrow, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.ContextMenu, () => { AugmentDrawState(DrawState.ContextMenu, DrawState.EventMask); });
-
-            SetEventAction(DrawEvent.SetAddMode, () => { AugmentDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetViewMode, () => { AugmentDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetEditMode, () => { AugmentDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetMoveMode, () => { AugmentDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetCopyMode, () => { AugmentDrawState(DrawState.CopyMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetPinsMode, () => { AugmentDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetLinkMode, () => { AugmentDrawState(DrawState.LinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetUnlinkMode, () => { AugmentDrawState(DrawState.UnlinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetCreateMode, () => { AugmentDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetDeleteMode, () => { AugmentDrawState(DrawState.DeleteMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetGravityMode, () => { AugmentDrawState(DrawState.GravityMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.SetOperateMode, () => { AugmentDrawState(DrawState.OperateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
         }
         public virtual void Release() { }
         #endregion

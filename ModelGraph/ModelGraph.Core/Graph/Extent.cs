@@ -577,13 +577,8 @@ namespace ModelGraph.Core
             var denom = a1 * b2 - a2 * b1;
             if (denom == 0) return (false, zz); //line segments are collinear, not usefull
 
-//            var offset = denom < 0 ? -denom / 2 : denom / 2;
-
             var vx = b1 * c2 - b2 * c1;
-//          var xi = (v1 < 0 ? v1 - offset : v1 + offset) / denom;
-
             var vy = a2 * c1 - a1 * c2;
-//            var yi = (v2 < 0 ? v2 - offset : v2 + offset) / denom;
 
             return (true, new Vector2(vx, vy));
         }
