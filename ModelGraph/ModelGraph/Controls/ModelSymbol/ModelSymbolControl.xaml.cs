@@ -135,10 +135,10 @@ namespace ModelGraph.Controls
 
         private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Recenter);
 
-        private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetPinsMode);
-        private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetViewMode);
-        private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetLinkMode);
-        private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.SetOperateMode);
+        private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.PKey);
+        private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.VKey);
+        private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.LKey);
+        private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.OKey);
 
 
         private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();
@@ -152,5 +152,10 @@ namespace ModelGraph.Controls
         }
 
         #endregion
+
+        private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+        }
     }
 }

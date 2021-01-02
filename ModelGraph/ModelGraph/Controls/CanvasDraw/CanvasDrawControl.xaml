@@ -129,15 +129,24 @@
                 <Button x:Name="RootFocusButton" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" Margin="0" Content="">
                     <Button.KeyboardAccelerators>
                         <KeyboardAccelerator Key="A" Invoked="KeyboardAccelerator_AKey_Invoked"/>
-                        <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_VKey_Invoked"/>
-                        <KeyboardAccelerator Key="E" Invoked="KeyboardAccelerator_EKey_Invoked"/>
-                        <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_MKey_Invoked"/>
+                        <KeyboardAccelerator Key="B" Invoked="KeyboardAccelerator_BKey_Invoked"/>
                         <KeyboardAccelerator Key="C" Invoked="KeyboardAccelerator_CKey_Invoked"/>
-                        <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_LKey_Invoked"/>
-                        <KeyboardAccelerator Key="U" Invoked="KeyboardAccelerator_UKey_Invoked"/>
                         <KeyboardAccelerator Key="D" Invoked="KeyboardAccelerator_DKey_Invoked"/>
-                        <KeyboardAccelerator Key="O" Invoked="KeyboardAccelerator_OKey_Invoked"/>
+                        <KeyboardAccelerator Key="E" Invoked="KeyboardAccelerator_EKey_Invoked"/>
+                        <KeyboardAccelerator Key="F" Invoked="KeyboardAccelerator_FKey_Invoked"/>
                         <KeyboardAccelerator Key="G" Invoked="KeyboardAccelerator_GKey_Invoked"/>
+                        <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_LKey_Invoked"/>
+                        <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_MKey_Invoked"/>
+                        <KeyboardAccelerator Key="N" Invoked="KeyboardAccelerator_NKey_Invoked"/>
+                        <KeyboardAccelerator Key="O" Invoked="KeyboardAccelerator_OKey_Invoked"/>
+                        <KeyboardAccelerator Key="P" Invoked="KeyboardAccelerator_PKey_Invoked"/>
+                        <KeyboardAccelerator Key="Q" Invoked="KeyboardAccelerator_QKey_Invoked"/>
+                        <KeyboardAccelerator Key="R" Invoked="KeyboardAccelerator_RKey_Invoked"/>
+                        <KeyboardAccelerator Key="S" Invoked="KeyboardAccelerator_SKey_Invoked"/>
+                        <KeyboardAccelerator Key="T" Invoked="KeyboardAccelerator_TKey_Invoked"/>
+                        <KeyboardAccelerator Key="U" Invoked="KeyboardAccelerator_UKey_Invoked"/>
+                        <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_VKey_Invoked"/>
+                        <KeyboardAccelerator Key="W" Invoked="KeyboardAccelerator_WKey_Invoked"/>
                         <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_UpArrow_Invoked"/>
                         <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
                         <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>

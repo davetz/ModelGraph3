@@ -67,17 +67,17 @@ namespace ModelGraph.Controls
             var itm = ModeComboBox.SelectedItem;
             if (itm != _forcedSelectedMode)
             {
-                if (itm == AddMode) PostEvent(DrawEvent.SetAddMode);
-                else if (itm == ViewMode) PostEvent(DrawEvent.SetViewMode);
-                else if (itm == EditMode) PostEvent(DrawEvent.SetEditMode);
-                else if (itm == MoveMode) PostEvent(DrawEvent.SetMoveMode);
-                else if (itm == CopyMode) PostEvent(DrawEvent.SetCopyMode);
-                else if (itm == LinkMode) PostEvent(DrawEvent.SetLinkMode);
-                else if (itm == UnlinkMode) PostEvent(DrawEvent.SetUnlinkMode);
-                else if (itm == CreateMode) PostEvent(DrawEvent.SetCreateMode);
-                else if (itm == DeleteMode) PostEvent(DrawEvent.SetDeleteMode);
-                else if (itm == OperateMode) PostEvent(DrawEvent.SetOperateMode);
-                else if (itm == GravityMode) PostEvent(DrawEvent.SetGravityMode);
+                if (itm == AddMode) PostEvent(DrawEvent.AKey);
+                else if (itm == ViewMode) PostEvent(DrawEvent.VKey);
+                else if (itm == EditMode) PostEvent(DrawEvent.EKey);
+                else if (itm == MoveMode) PostEvent(DrawEvent.MKey);
+                else if (itm == CopyMode) PostEvent(DrawEvent.CKey);
+                else if (itm == LinkMode) PostEvent(DrawEvent.LKey);
+                else if (itm == UnlinkMode) PostEvent(DrawEvent.UKey);
+                else if (itm == CreateMode) PostEvent(DrawEvent.NKey);
+                else if (itm == DeleteMode) PostEvent(DrawEvent.DKey);
+                else if (itm == OperateMode) PostEvent(DrawEvent.OKey);
+                else if (itm == GravityMode) PostEvent(DrawEvent.GKey);
             }
         }
         internal void PostEvent(DrawEvent evt)

@@ -10,25 +10,24 @@ namespace TestIntersection
         {
             for (float i = 0; i < 100; i++)
             {
-                var pointsF = new List<Vector2>(new Vector2[] { new Vector2(2, -7), new Vector2(2.01f, -7), new Vector2(2, -7), new Vector2(15, 2), new Vector2(8, 13), new Vector2(-6, 4), });
+                var points = new List<Vector2>(new Vector2[] { new Vector2(2, -7), new Vector2(2.01f, -7), new Vector2(2, -7), new Vector2(15, 2), new Vector2(8, 13), new Vector2(-6, 4), });
                 var p = new Vector2(15.1f, 1.9f);
-                var (isHit, isInflectionPoint, index, point) = TT.HitTestHit(p, 0.6f, pointsF.ToArray());
-                var kk = 1;
-                //var t = TT.PointIsInsidePolygon(p, pointsF.ToArray());
-                //pointsF.Reverse();
-                //var s = TT.PointIsInsidePolygon(p, pointsF.ToArray());
-                //if (t != s)
-                //{
-                //    var kkk = 1;
-                //}
+                var (isHit, isInflectionPoint, index, point) = PolyLine.HitTes(p, 0.6f, points.ToArray());
+                var t = PolyLine.PointIsInside(p, points.ToArray());
+                points.Reverse();
+                var s = PolyLine.PointIsInside(p, points.ToArray());
+                if (t != s)
+                {
+                    var kkk = 1;
+                }
             }
         }
     }
-    static class TT
+    static class PolyLine
     {
 
         /// <summary>The point hit the polyline</summary>
-        static public (bool, bool, int, Vector2) HitTestHit(Vector2 p, float hitMargin, Vector2[] points)
+        static public (bool, bool, int, Vector2) HitTes(Vector2 p, float hitMargin, Vector2[] points)
         {
             var xmin = p.X - hitMargin;
             var xmax = p.X + hitMargin;
@@ -69,7 +68,7 @@ namespace TestIntersection
             return (false, false, 0, Vector2.Zero);
         }
         /// <summary>The point is inside of the polygon</summary>
-        static public bool PointIsInsidePolygon(Vector2 p, Vector2[] points)
+        static public bool PointIsInside(Vector2 p, Vector2[] points)
         {
             var count = 0;
             var N = points.Length;

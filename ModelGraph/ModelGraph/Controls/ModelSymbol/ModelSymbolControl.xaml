@@ -106,14 +106,15 @@
             <Button x:Name="RecenterButton" x:Uid="SymbolModel_Center_Btn" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
                 <FontIcon  Glyph="&#xEA38;" />
             </Button>
-            <StackPanel Orientation="Horizontal" Margin="8,0,0 4">
-                <RadioButton x:Name="MovePins" Content="MovePins" Style="{StaticResource RadioButtonStyle}"  Click="MovePins_Click"/>
-                <RadioButton x:Name="EditSelect" Content="DefineSymbol" Style="{StaticResource RadioButtonStyle}" IsChecked="True" Click="EditSelect_Click"/>
-                <RadioButton x:Name="TermSelect" Content="AssignTerminals" Style="{StaticResource RadioButtonStyle}" Click="TermSelect_Click"/>
-                <RadioButton x:Name="FlipSelect" Content="AutoFlipRotate" Style="{StaticResource RadioButtonStyle}" Click="FlipSelect_Click"/>
-            </StackPanel>
-            <Button x:Name="ApplyButton"  x:Uid="SymbolModel_Apply" Style="{StaticResource RightButtonStyle}" Click="ApplyButton_Click" Margin="60,0,10,0" />
-            <Button x:Name="ReloadButton" x:Uid="SymbolModel_Reload" Style="{StaticResource RightButtonStyle}" Click="ReloadButton_Click" />
+        <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top" ToolTipService.ToolTip="Change mode using keys:  P, M, E, S, T, F" SelectionChanged="ModeComboBox_SelectionChanged">
+            <ComboBoxItem x:Name="AddPoint" Content="(P)=>Add Point /Remove Point"/>
+            <ComboBoxItem x:Name="MovePoint" Content="(M)=>Move Points"/>
+            <ComboBoxItem x:Name="NewShape" Content="Add New Shape"/>
+            <ComboBoxItem x:Name="EditProperty" Content="Edit Shape Properties"/>
+            <ComboBoxItem x:Name="DefineSymbol" Content="(S)=>Define Symbol"/>
+            <ComboBoxItem x:Name="DefineTerminal" Content="(T)=>Define Terminal Connectoins"/>
+            <ComboBoxItem x:Name="DefineAutoFlip" Content="(F)=>Define Auto Flip/Rotate"/>
+         </ComboBox>
         </StackPanel>
         <controls:CanvasDrawControl Grid.Row="1" x:Name="SymbolCanvas"  Style="{StaticResource SymbolCanvasStyle}" />
     </Grid>
