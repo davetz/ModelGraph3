@@ -96,7 +96,7 @@ namespace ModelGraph.Core
         {
             Shape.GetStrokeProperty(SelectedShapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
             Shape.GetSizerProperty(SelectedShapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
-
+            SideTreeDelta++;
             (SideTreeModel as TreeModel).Validate();
             Refresh();
         }

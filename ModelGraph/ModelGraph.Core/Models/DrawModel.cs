@@ -112,6 +112,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region ITreeModel  ===================================================
+        public uint FlyTreeDelta { get; protected set; } = 1;
+        public uint SideTreeDelta { get; protected set; } = 1;
         public ITreeModel FlyTreeModel { get; protected set; }
         public ITreeModel SideTreeModel { get; protected set; }
         #endregion

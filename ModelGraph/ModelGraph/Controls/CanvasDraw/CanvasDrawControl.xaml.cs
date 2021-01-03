@@ -416,7 +416,11 @@ namespace ModelGraph.Controls
         {
             if (FlyTreeCanvas.IsEnabled && FlyTreeGrid.Visibility == Visibility.Visible)
             {
-                return true;
+                if (Model.FlyTreeDelta != _flyTreeDelta)
+                {
+                    _flyTreeDelta = Model.FlyTreeDelta;
+                    return true;
+                }
             }
             return false;
         }
@@ -424,10 +428,16 @@ namespace ModelGraph.Controls
         {
             if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible)
             {
-                return true;
+                if (Model.SideTreeDelta != _sideTreeDelta)
+                {
+                    _sideTreeDelta = Model.SideTreeDelta;
+                    return true;
+                }
             }
             return false;
         }
+        uint _flyTreeDelta = 9;
+        uint _sideTreeDelta =9;
         #endregion
 
         #region Refresh  ======================================================

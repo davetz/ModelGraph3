@@ -31,5 +31,7 @@ namespace ModelGraph.Core
 
         ITreeModel FlyTreeModel { get; }
         ITreeModel SideTreeModel { get; }
+        uint FlyTreeDelta { get; }
+        uint SideTreeDelta { get; }
     }
 }

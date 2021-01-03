@@ -108,6 +108,7 @@ namespace ModelGraph.Core
         internal void Refresh()
         {
             UpdateEditorData();
+            if ((VisibleDrawItems & DrawItem.FlyTree) != 0) FlyTreeDelta++;
             PageModel.TriggerUIRefresh();
         }
 
@@ -292,6 +293,7 @@ namespace ModelGraph.Core
         #region EditMode  =====================================================
         private void EditOnNodeTapped()
         {
+            FlyTreeDelta++;
             HideDrawItems(DrawItem.ToolTip);
             if (FlyTreeModel is TreeModel tm)
             {

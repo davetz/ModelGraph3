@@ -106,15 +106,18 @@
             <Button x:Name="RecenterButton" x:Uid="SymbolModel_Center_Btn" Style="{StaticResource LeftButtonStyle}" Click="RecenterButton_Click">
                 <FontIcon  Glyph="&#xEA38;" />
             </Button>
-        <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top" ToolTipService.ToolTip="Change mode using keys:  P, M, E, S, T, F" SelectionChanged="ModeComboBox_SelectionChanged">
-            <ComboBoxItem x:Name="AddPoint" Content="(P)=>Add Point /Remove Point"/>
-            <ComboBoxItem x:Name="MovePoint" Content="(M)=>Move Points"/>
-            <ComboBoxItem x:Name="NewShape" Content="Add New Shape"/>
-            <ComboBoxItem x:Name="EditProperty" Content="Edit Shape Properties"/>
-            <ComboBoxItem x:Name="DefineSymbol" Content="(S)=>Define Symbol"/>
-            <ComboBoxItem x:Name="DefineTerminal" Content="(T)=>Define Terminal Connectoins"/>
-            <ComboBoxItem x:Name="DefineAutoFlip" Content="(F)=>Define Auto Flip/Rotate"/>
-         </ComboBox>
+            <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top" ToolTipService.ToolTip="Change mode using keys:  P, M, E, S, T, F" SelectionChanged="ModeComboBox_SelectionChanged">
+                <ComboBoxItem IsEnabled="False" Content="Accelerator Key: P, M, S, T, F"/>
+                <ComboBoxItem x:Name="AddPoint" Content="P= Add Point /Remove Point"/>
+                <ComboBoxItem x:Name="MovePoint" Content="M= Move Points"/>
+                <ComboBoxItem x:Name="NewShape" Content="Add New Shape"/>
+                <ComboBoxItem x:Name="EditProperty" Content="Edit Shape Properties"/>
+                <ComboBoxItem x:Name="DefineSymbol" Content="S= Define Symbol" IsSelected="True"/>
+                <ComboBoxItem x:Name="DefineTerminal" Content="T= Define Terminal Connectoins"/>
+                <ComboBoxItem x:Name="DefineAutoFlip" Content="F= Define Auto Flip/Rotate"/>
+            </ComboBox>
+            <Button x:Name="ApplyButton"  x:Uid="SymbolModel_Apply" Style="{StaticResource RightButtonStyle}" Click="ApplyButton_Click" Margin="60,0,10,0" />
+            <Button x:Name="ReloadButton" x:Uid="SymbolModel_Reload" Style="{StaticResource RightButtonStyle}" Click="ReloadButton_Click" />
         </StackPanel>
         <controls:CanvasDrawControl Grid.Row="1" x:Name="SymbolCanvas"  Style="{StaticResource SymbolCanvasStyle}" />
     </Grid>
