@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Numerics;
-using System.Runtime.CompilerServices;
-using Windows.Security.Cryptography.Core;
-using Windows.UI.Xaml.Controls;
-using Windows.UI.Xaml.Shapes;
 
 namespace ModelGraph.Core
 {
@@ -25,18 +21,18 @@ namespace ModelGraph.Core
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
             Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
 
-            SetEventAction(DrawEvent.Drag, () => { AugmentDrawState(DrawState.Dragging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.UpArrowKey, () => { AugmentDrawState(DrawState.UpArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.LeftArrowKey, () => { AugmentDrawState(DrawState.LeftArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.DownArrowKey, () => { AugmentDrawState(DrawState.DownArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.RightArrowKey, () => { AugmentDrawState(DrawState.RightArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.Drag, () => { ModifyDrawState(DrawState.Dragging, DrawState.EventMask); });
+            SetEventAction(DrawEvent.UpArrowKey, () => { ModifyDrawState(DrawState.UpArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.LeftArrowKey, () => { ModifyDrawState(DrawState.LeftArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.DownArrowKey, () => { ModifyDrawState(DrawState.DownArrow, DrawState.EventMask); });
+            SetEventAction(DrawEvent.RightArrowKey, () => { ModifyDrawState(DrawState.RightArrow, DrawState.EventMask); });
 
-            SetEventAction(DrawEvent.AKey, () => { AugmentDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.VKey, () => { AugmentDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.EKey, () => { AugmentDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.MKey, () => { AugmentDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.PKey, () => { AugmentDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.NKey, () => { AugmentDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.AKey, () => { ModifyDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.VKey, () => { ModifyDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.EKey, () => { ModifyDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.MKey, () => { ModifyDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.PKey, () => { ModifyDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
+            SetEventAction(DrawEvent.NKey, () => { ModifyDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
 
             SetEventAction(DrawEvent.Skim, SkimHitTest);
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(false); });
@@ -55,8 +51,8 @@ namespace ModelGraph.Core
             SetEventAction(DrawEvent.Apply, ApplyChange);
             SetEventAction(DrawEvent.Revert, Revert);
 
-            SetEventAction(DrawEvent.Tap, () => { AugmentDrawState(DrawState.Tapped, DrawState.EventMask); });
-            SetEventAction(DrawEvent.TapEnd, () => { AugmentDrawState(DrawState.TapDragEnd, DrawState.EventMask); });
+            SetEventAction(DrawEvent.Tap, () => { ModifyDrawState(DrawState.Tapped, DrawState.EventMask); });
+            SetEventAction(DrawEvent.TapEnd, () => { ModifyDrawState(DrawState.TapDragEnd, DrawState.EventMask); });
 
             SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
 
@@ -455,7 +451,7 @@ namespace ModelGraph.Core
                     if (ex.Contains(p))
                     {
                         _pinIndex = i;
-                        AugmentDrawState(DrawState.NowOnPin, DrawState.NowMask | DrawState.EventMask);
+                        ModifyDrawState(DrawState.NowOnPin, DrawState.NowMask | DrawState.EventMask);
                         return;
                     }
                 }
@@ -467,10 +463,10 @@ namespace ModelGraph.Core
                 _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
                 if (_hitSelecteShapes)
                 {
-                    AugmentDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
+                    ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
                 }
             }
-            AugmentDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
+            ModifyDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask);
         }
         #endregion
 

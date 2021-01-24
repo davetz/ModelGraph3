@@ -101,14 +101,12 @@ namespace ModelGraph.Core
             {
                 for (int i = 0; i < Bends.Length; i++)
                 {
-                    Bends[i].X = Bends[i].X + delta.X;
-                    Bends[i].Y = Bends[i].Y + delta.Y;
+                    Bends[i] = Bends[i] + delta;
                 }
             }
             for (int i = 0; i < Points.Length; i++)
             {
-                Points[i].X = Points[i].X + delta.X;
-                Points[i].Y = Points[i].Y + delta.Y;
+                Points[i] = Points[i] + delta;
             }
         }
         internal void Move(Vector2 delta, int index1, int index2)
@@ -120,15 +118,13 @@ namespace ModelGraph.Core
                     var j = i - Tm1 - 1;
                     if (j >= 0 && j < Bends.Length)
                     {
-                        Bends[j].X = Bends[j].X + delta.X;
-                        Bends[j].Y = Bends[j].Y + delta.Y;
+                        Bends[j] = Bends[j] + delta;
                     }
                 }
             }
             for (int i = index1; i < index2; i++)
             {
-                Points[i].X = Points[i].X + delta.X;
-                Points[i].Y = Points[i].Y + delta.Y;
+                Points[i] = Points[i] + delta;
             }
         }
         #endregion
@@ -206,91 +202,64 @@ namespace ModelGraph.Core
         #region HitTest  ======================================================
         // [node1]o----o-----o---edge----o-----o----o[node2] 
         //            Tm1   Bp1         Bp2   Tm2
-        static readonly int _ds = GraphDefault.HitMargin;
-
-        internal void SetExtent(Vector2[] points, int margin)
+        internal bool HitTest(Selector selector, Vector2 p, Extent e)
         {
-            Extent = Extent.SetExtent(points, margin);
-        }
-
-
-        // quickly eliminate edges that don't qaulify
-        internal bool HitTest(Vector2 p)
-        {
-            return Extent.Contains(p);
-        }
-
-        internal bool HitTest(Selector selector, Vector2 p)
-        {
-            var xmin = p.X - _ds;
-            var xmax = p.X + _ds;
-            var ymin = p.Y - _ds;
-            var ymax = p.Y + _ds;
             var len = Points.Length;
             if (len == 0) return false;
 
-            for (int i = 0; i < len; i++)
-            {
-                if (IsInHitZone(Points[i]))
-                {
-                    if (i <= Tm1) 
-                        return GotHit(Points[i], i, HitLocation.Term | HitLocation.End1);
-                    else if (i >= Tm2)
-                        return GotHit(Points[i], i, HitLocation.Term | HitLocation.End2);
-                    else
-                        return GotHit(Points[i], i, HitLocation.Bend);
-                }
-            }
-            for (int i = Tm1; i < Tm2;)
-            {
-                var t1 = Points[i++];
-                var t2 = Points[i];
-                var d = t2 - t1;
-                if (d.X < -0.001 || d.X > 0.001)
-                {
-                    if (d.Y < -0.001 || d.Y > 0.001)
-                    {
-                        if ((d.X > 0 ? d.X : -d.X) > (d.Y > 0 ? d.Y : -d.Y))
-                        {//- - - - - - - - - - - - - - - - - - - - - - - - - - - - -use p.Y to calculate x intercept
-                            var x = (d.X * p.Y + t1.X * t2.Y - t2.X * t1.Y) / d.Y;
-                            if (IsInHitZoneX(x)) return GotHit(new Vector2(x, p.Y), i);
-                        }
-                        else
-                        {//- - - - - - - - - - - - - - - - - - - - - - - - - - - - -use p.X to calculate y intercept
-                            var y = (d.Y * p.X + t2.X * t1.Y - t1.X * t2.Y) / d.X;
-                            if (IsInHitZoneY(y)) return GotHit(new Vector2(p.X, y), i);
-                        }
-                    }
-                    else if (IsInHitZoneY(t1.Y)) return GotHit(new Vector2(p.X, t1.Y), i); //is horizontal line
-                }
-                else if (IsInHitZoneX(t1.X)) return GotHit(new Vector2(t1.X, p.Y), i);//is vertival line
-            }
-            return false;
-
-            bool IsInHitZone(Vector2 q) => IsInHitZoneX(q.X) && IsInHitZoneY(q.Y);
-            bool IsInHitZoneX(float v) => !(v < xmin || v > xmax);
-            bool IsInHitZoneY(float v) => !(v < ymin || v > ymax);
-            bool GotHit(Vector2 point, int index, HitLocation hitLoc = HitLocation.Void)
+            e.LineSegmentStart(Points[0]);
+            e.LineSegmentNext(Points[Tm1]);
+            if (e.LineSegmentHit(p, out selector.HitPoint))
             {
                 selector.HitEdge = this;
-                selector.HitPoint = point;
-                selector.HitIndex = index;
-                selector.HitLocation |= HitLocation.Edge | hitLoc;
-
-                if ((hitLoc & HitLocation.Bend) != 0)
-                {
-                    selector.BendEdge = this;
-                    selector.BendIndex = index;
-                }
-
-                if ((hitLoc & (HitLocation.End1 | HitLocation.End2)) == 0)
-                {
-                    var d1 = (Points[Tm1] - point);
-                    var d2 = (Points[Tm2] - point);
-                    selector.HitLocation |= d1.Length() < d2.Length() ? HitLocation.End1 : HitLocation.End2;
-                }
+                selector.HitIndex = Tm1;
+                selector.HitLocation |= HitLocation.Edge | HitLocation.Term | HitLocation.End1;
                 return true;
             }
+
+            e.LineSegmentStart(Points[Tm2]);
+            e.LineSegmentNext(Points[len - 1]);
+            if (e.LineSegmentHit(p, out selector.HitPoint))
+            {
+                selector.HitEdge = this;
+                selector.HitIndex = Tm2;
+                selector.HitLocation |= HitLocation.Edge | HitLocation.Term | HitLocation.End2;
+                return true;
+            }
+
+            for (int i = Tm1 + 1; i < Tm2; i++)
+            {
+                if (p.Contains(Points[i]))
+                {
+                    selector.HitEdge = this;
+                    selector.HitPoint = Points[i];
+                    selector.HitIndex = i;
+                    selector.HitLocation |= HitLocation.Edge | HitLocation.Bend;
+                    return SetWhichEnd();
+                }
+            }
+
+            e.LineSegmentStart(Points[Tm1]);
+            for (int i = Tm1 + 1; i <= Tm2; i++)
+            {
+                e.LineSegmentNext(Points[i]);
+                if (e.LineSegmentHit(p, out selector.HitPoint)) 
+                {
+                    selector.HitEdge = this;
+                    selector.HitIndex = i;
+                    selector.HitLocation |= HitLocation.Edge;
+                    return SetWhichEnd();
+                }
+            }
+
+            bool SetWhichEnd()
+            {
+                var d1 = (Points[Tm1] - selector.HitPoint);
+                var d2 = (Points[Tm2] - selector.HitPoint);
+                selector.HitLocation |= d1.LengthSquared() < d2.LengthSquared() ? HitLocation.End1 : HitLocation.End2;
+                return true;
+            }
+            return false;
         }
         #endregion
 

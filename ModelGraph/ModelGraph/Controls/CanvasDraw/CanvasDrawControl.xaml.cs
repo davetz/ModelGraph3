@@ -61,8 +61,6 @@ namespace ModelGraph.Controls
             var visibleItems = Model.VisibleDrawItems;
             if (visibleItems != _prevVisible)
             {
-                _prevVisible = visibleItems;
-
                 if ((visibleItems & DrawItem.Selector) == 0 && SelectorGrid.Visibility != Visibility.Collapsed)
                     HideSelectorGrid();
                 if ((visibleItems & DrawItem.Selector) != 0 && SelectorGrid.Visibility != Visibility.Visible)
@@ -71,6 +69,8 @@ namespace ModelGraph.Controls
                 if ((visibleItems & DrawItem.ToolTip) == 0 && ToolTipBorder.Visibility != Visibility.Collapsed)
                     HideToolTip();
                 if ((visibleItems & DrawItem.ToolTip) != 0 && ToolTipBorder.Visibility != Visibility.Visible)
+                    ShowToolTip();
+                if ((visibleItems & DrawItem.ToolTip) != 0 && (visibleItems & DrawItem.ToolTipChange) != (_prevVisible & DrawItem.ToolTipChange))
                     ShowToolTip();
 
                 if ((visibleItems & DrawItem.Resizer) == 0 && ResizerGrid.Visibility != Visibility.Collapsed)
@@ -107,6 +107,8 @@ namespace ModelGraph.Controls
                     ColorPickerBorder.Visibility = Visibility.Collapsed;
                 if ((visibleItems & DrawItem.ColorPicker) != 0 && ColorPickerBorder.Visibility != Visibility.Visible)
                     ColorPickerBorder.Visibility = Visibility.Visible;
+
+                _prevVisible = visibleItems;
             }
         }
         private DrawItem _prevVisible;

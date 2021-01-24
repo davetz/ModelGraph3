@@ -29,7 +29,7 @@ namespace ModelGraph.Core
         #region DrawState  ====================================================
         public DrawState DrawState { get; private set; } = DrawState.Unknown;
         protected DrawState PreviousDrawState;
-        protected void AugmentDrawState(DrawState state, DrawState mask)
+        protected void ModifyDrawState(DrawState state, DrawState mask)
         {
             var mayNotRepeat = (state & DrawState.MayRepeat) == 0;
 
@@ -79,6 +79,13 @@ namespace ModelGraph.Core
 
         protected void HideDrawItems(DrawItem flags) => VisibleDrawItems &= ~flags;
         protected void ShowDrawItems(DrawItem flags) => VisibleDrawItems |= flags;
+        protected void ToolTipChanged()
+        {
+            if ((VisibleDrawItems & DrawItem.ToolTipChange) == 0)
+                VisibleDrawItems |= DrawItem.ToolTipChange;
+            else
+                VisibleDrawItems &= ~DrawItem.ToolTipChange;
+        }
         #endregion
 
         #region HitTest  ======================================================

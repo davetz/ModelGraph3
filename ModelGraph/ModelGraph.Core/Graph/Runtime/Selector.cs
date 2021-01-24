@@ -90,6 +90,7 @@ namespace ModelGraph.Core
 
             if (Graph.HitTestMap.HitTest(p, out List<IHitTestable> targets))
             {
+                var s = new Extent();   //for hit testing line segements
                 foreach (var item in targets)
                 {
                     if (item is Node n)
@@ -98,7 +99,7 @@ namespace ModelGraph.Core
                     }
                     else if (item is Edge e)
                     {
-                        if (e.HitTest(this, p)) return;
+                        if (e.HitTest(this, p, s)) return;
                     }
                 }
             }

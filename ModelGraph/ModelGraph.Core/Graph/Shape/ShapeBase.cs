@@ -15,7 +15,11 @@ namespace ModelGraph.Core
         #region Abstract/Virtual  =============================================
         internal abstract Shape Clone();
         internal abstract Shape Clone(Vector2 Center);
-
+        internal virtual bool HitTest(Vector2 point)
+        {
+            var ds = Vector2.Abs(point - GetCenter());
+            return (ds.X < Radius1 && ds.Y < Radius1);
+        }
         internal abstract void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring coloring = Coloring.Normal);
         internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 offset, FlipState flip);
 
@@ -46,7 +50,6 @@ namespace ModelGraph.Core
             foreach (var shape in shapes) { shape.HorizontalFlip(); }
         }
         #endregion
-
 
         #region GetCenter  ====================================================
         protected virtual Vector2 GetCenter() => Vector2.Zero;

@@ -212,73 +212,26 @@ namespace ModelGraph.Core
         #region Minimize, HitTest  ============================================
         static readonly int _ds = GraphDefault.HitMargin;
 
-        public void Minimize(Extent e)
-        {
-            var t = e;
-            var p = Center;
-            t.Point2 = p;
-            if (t.Diagonal < e.Diagonal) e.Point2 = p;
-        }
-
-
-        // quickly eliminate nodes that don't qaulify
-        public bool HitTest(Vector2 p)
-        {
-            var x = p.X + 1;
-            if (x < (X - DX - _ds)) return false;
-            if (x > (X + DX + _ds)) return false;
-
-            var y = p.Y + 1;
-            if (y < (Y - DY - _ds)) return false;
-            if (y > (Y + DY + _ds)) return false;
-            return true;
-        }
         internal bool HitTest(Selector selector, Vector2 p)
         {
-            var x = p.X + 1;
-            if (x < (X - DX - _ds)) return false;
-            if (x > (X + DX + _ds)) return false;
-
-            var y = p.Y + 1;
-            if (y < (Y - DY - _ds)) return false;
-            if (y > (Y + DY + _ds)) return false;
+            var xmin = X - DX;
+            if (p.X < xmin) return false;
+            var xmax = X + DX;
+            if (p.X > xmax) return false;
+            var ymin = Y - DY;
+            if (p.Y < ymin) return false;
+            var ymax = Y + DX;
+            if (p.Y > ymax) return false;
 
             selector.HitNode = this;
             selector.HitPoint = Center;
             selector.HitLocation |= HitLocation.Node;
 
-            float ds;
-            if (DX >= _ds)
-            {
-                if (x < X)
-                {
-                    ds = X - DX - x;
-                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Left;
-                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Left;
-                }
-                else
-                {
-                    ds = X + DX - x;
-                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Right;
-                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Right;
-                }
-            }
+            if (p.ContainsY(ymin)) selector.HitLocation |= HitLocation.Top;
+            if (p.ContainsX(xmin)) selector.HitLocation |= HitLocation.Left;
+            if (p.ContainsX(xmax)) selector.HitLocation |= HitLocation.Right;
+            if (p.ContainsY(ymin)) selector.HitLocation |= HitLocation.Bottom;
 
-            if (DY >= _ds)
-            {
-                if (y < Y)
-                {
-                    ds = Y - DY - y;
-                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Top;
-                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Top;
-                }
-                else
-                {
-                    ds = Y + DY - y;
-                    if (ds < 0 && ds + _ds >= 0) selector.HitLocation |= HitLocation.Bottom;
-                    else if (ds > 0 && ds - _ds <= 0) selector.HitLocation |= HitLocation.Bottom;
-                }
-            }
             return true;
         }
 

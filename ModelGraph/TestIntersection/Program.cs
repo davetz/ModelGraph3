@@ -10,8 +10,8 @@ namespace TestIntersection
         {
             for (float i = 0; i < 100; i++)
             {
-                var points = new List<Vector2>(new Vector2[] { new Vector2(2, -7), new Vector2(2.01f, -7), new Vector2(2, -7), new Vector2(15, 2), new Vector2(8, 13), new Vector2(-6, 4), });
-                var p = new Vector2(15.1f, 1.9f);
+                var points = new List<Vector2>(new Vector2[] { new Vector2(0,16), new Vector2(0,0), new Vector2(16,0), new Vector2(4,4), new Vector2(0, 16)});
+                var p = new Vector2(8,8);
                 var (isHit, isInflectionPoint, index, point) = PolyLine.HitTes(p, 0.6f, points.ToArray());
                 var t = PolyLine.PointIsInside(p, points.ToArray());
                 points.Reverse();

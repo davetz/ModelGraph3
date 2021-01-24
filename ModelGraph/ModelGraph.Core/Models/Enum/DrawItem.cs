@@ -12,5 +12,6 @@ namespace ModelGraph.Core
         Overview = 0x40,
         Selector = 0X80,
         ColorPicker = 0x100,
+        ToolTipChange = 0x1000,
     };
 }
