@@ -10,6 +10,21 @@ namespace ModelGraph.Core
         internal void Clear() { Text.Clear(); Parms.Clear(); DataDelta++; }
         internal void AddText(((Vector2, string), (byte, byte, byte, byte)) data) => Text.Add(data);
         internal void AddParms((Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte)) data) => Parms.Add(data);
+        internal void AddTargets(Vector2[] points, TargetType ttype) => Parms.Add((points, TargetParm[ttype], TargetColor));
+
+        private static readonly (byte, byte, byte, byte) TargetColor = (255, 255, 255, 255);
+        private static readonly Dictionary<TargetType, (ShapeType, StrokeType, byte)> TargetParm = new Dictionary<TargetType, (ShapeType, StrokeType, byte)>()
+        {
+            [TargetType.SolidPin2] = (ShapeType.Pin2, StrokeType.Filled, 1),
+            [TargetType.SolidPin4] = (ShapeType.Pin4, StrokeType.Filled, 1),
+            [TargetType.HollowPin2] = (ShapeType.Pin2, StrokeType.Simple, 1),
+            [TargetType.HollowPin4] = (ShapeType.Pin4, StrokeType.Simple, 1),
+            [TargetType.SolidGrip2] = (ShapeType.Grip2, StrokeType.Filled, 1),
+            [TargetType.SolidGrip4] = (ShapeType.Grip4, StrokeType.Filled, 1),
+            [TargetType.HollowGrip2] = (ShapeType.Grip2, StrokeType.Simple, 1),
+            [TargetType.HollowGrip4] = (ShapeType.Grip4, StrokeType.Simple, 1),
+        };
+
 
         public uint DataDelta { get; private set; }
 

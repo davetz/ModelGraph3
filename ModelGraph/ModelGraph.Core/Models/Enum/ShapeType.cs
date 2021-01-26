@@ -4,13 +4,17 @@
     {
         //simple shapes 
         Line = 0,
-        Circle = 1,
-        Ellipse = 2,
-        EqualRect = 3,
-        CornerRect = 4,
-        CenterRect = 5,
-        RoundedRect = 6,
-        SimpleShapeMask = 0x07,
+        Pin2 = 1,
+        Pin4 = 2,
+        Grip2 = 3,
+        Grip4 = 4,
+        Circle = 5,
+        Ellipse = 6,
+        EqualRect = 7,
+        CornerRect = 8,
+        CenterRect = 9,
+        RoundedRect = 10,
+        SimpleShapeMask = 0x0F,
 
         //connected line segments
         ClosedLines = 0x20,

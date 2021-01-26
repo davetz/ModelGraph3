@@ -525,12 +525,12 @@ namespace ModelGraph.Controls
                 foreach (var (P, (K, S, W), (A, R, G, B)) in data.Parms)
                 {
                     var isFilled = S == StrokeType.Filled;
+                    var V = W * scale;
+                    if (V < 1) V = 1;
                     if (K < ShapeType.SimpleShapeMask)
                     {
                         var color = Color.FromArgb(A, R, G, B);
                         var stroke = StrokeStyle(S);
-                        var v = W * scale;
-                        if (v < 1) v = 1;
                         switch (K)
                         {
                             case ShapeType.Line:
@@ -538,7 +538,7 @@ namespace ModelGraph.Controls
                                 {
                                     var a = P[i] * scale + offset;
                                     var b = P[i + 1] * scale;
-                                    ds.DrawLine(a, b + offset, color, v, stroke);
+                                    ds.DrawLine(a, b + offset, color, V, stroke);
                                 }
                                 break;
                             case ShapeType.Circle:
@@ -554,7 +554,7 @@ namespace ModelGraph.Controls
                                     {
                                         var a = P[i] * scale + offset;
                                         var b = P[i + 1] * scale;
-                                        ds.DrawCircle(a, b.X, color, v, stroke);
+                                        ds.DrawCircle(a, b.X, color, V, stroke);
                                     }
                                 break;
                             case ShapeType.Ellipse:
@@ -570,7 +570,7 @@ namespace ModelGraph.Controls
                                     {
                                         var a = P[i] * scale + offset;
                                         var b = P[i + 1] * scale;
-                                        ds.DrawEllipse(a, b.X, b.Y, color, v, stroke);
+                                        ds.DrawEllipse(a, b.X, b.Y, color, V, stroke);
                                     }
                                 break;
                             case ShapeType.EqualRect:
@@ -585,7 +585,7 @@ namespace ModelGraph.Controls
                                     for (int i = 1; i < P.Length; i++)
                                     {
                                         var a = P[i] * scale + offset;
-                                        ds.DrawRectangle(a.X, a.Y, d.X, d.Y, color, v, stroke);
+                                        ds.DrawRectangle(a.X, a.Y, d.X, d.Y, color, V, stroke);
                                     }
                                 break;
                             case ShapeType.CornerRect:
@@ -601,7 +601,7 @@ namespace ModelGraph.Controls
                                     {
                                         var a = P[i] * scale + offset;
                                         var b = P[i + 1] * scale;
-                                        ds.DrawRectangle(a.X, a.Y, b.X, b.Y, color, v, stroke);
+                                        ds.DrawRectangle(a.X, a.Y, b.X, b.Y, color, V, stroke);
                                     }
                                 break;
                             case ShapeType.CenterRect:
@@ -621,7 +621,7 @@ namespace ModelGraph.Controls
                                         var b = P[i + 1] * scale;
                                         var e = a - b;
                                         var f = 2 * b;
-                                        ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, v, stroke);
+                                        ds.DrawRectangle(e.X, e.Y, f.X, f.Y, color, V, stroke);
                                     }
                                 break;
                             case ShapeType.RoundedRect:
@@ -642,16 +642,89 @@ namespace ModelGraph.Controls
                                         var b = P[i + 1] * scale;
                                         var e = a - b;
                                         var f = 2 * b;
-                                        ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, r, r, color, v, stroke);
+                                        ds.DrawRoundedRectangle(e.X, e.Y, f.X, f.Y, r, r, color, V, stroke);
                                     }
+                                break;
+                            case ShapeType.Pin2:
+                                {
+                                    var b = 2 * scale;
+                                    if (isFilled)
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.FillCircle(a, b, color);
+                                            ds.DrawCircle(a, b + V, Colors.Black, V, stroke);
+                                        }
+                                    else
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.DrawCircle(a, b - V, Colors.Black, V, stroke);
+                                            ds.DrawCircle(a, b, color, V, stroke);
+                                            ds.DrawCircle(a, b + V, Colors.Black, V, stroke);
+                                        }
+                                }
+                                break;
+                            case ShapeType.Pin4:
+                                {
+                                    var b = 4 * scale;
+                                    if (isFilled)
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.FillCircle(a, b, color);
+                                            ds.DrawCircle(a, b + V, Colors.Black, V, stroke);
+                                        }
+                                    else
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.DrawCircle(a, b - V, Colors.Black, V, stroke);
+                                            ds.DrawCircle(a, b, color, V, stroke);
+                                            ds.DrawCircle(a, b + V, Colors.Black, V, stroke);
+                                        }
+                                }
+                                break;
+                            case ShapeType.Grip2:
+                                {
+                                    var e = 2 * scale;
+                                    var f = 2 * e;
+                                    if (isFilled)
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.FillRectangle(a.X - e, a.Y - e, f, f, color);
+                                        }
+                                    else
+                                        for (int i = 0; i < P.Length; i += 2)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.DrawRectangle(a.X - e, a.Y - e, f, f, color, V, stroke);
+                                        }
+                                }
+                                break;
+                            case ShapeType.Grip4:
+                                {
+                                    var e = 4 * scale;
+                                    var f = 2 * e;
+                                    if (isFilled)
+                                        for (int i = 0; i < P.Length; i++)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.FillRectangle(a.X - e, a.Y - e, f, f, color);
+                                        }
+                                    else
+                                        for (int i = 0; i < P.Length; i += 2)
+                                        {
+                                            var a = P[i] * scale + offset;
+                                            ds.DrawRectangle(a.X - e, a.Y - e, f, f, color, V, stroke);
+                                        }
+                                }
                                 break;
                         }
                     }
                     else
                     {
-                        var V = W * scale;
-                        if (V < 1) V = 1;
-
                         using (var pb = new CanvasPathBuilder(ds))
                         {
                             pb.BeginFigure(P[0] * scale + offset);                          

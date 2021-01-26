@@ -229,7 +229,7 @@ namespace ModelGraph.Core
 
             for (int i = Tm1 + 1; i < Tm2; i++)
             {
-                if (p.Contains(Points[i]))
+                if (p.IsClose2P(Points[i]))
                 {
                     selector.HitEdge = this;
                     selector.HitPoint = Points[i];

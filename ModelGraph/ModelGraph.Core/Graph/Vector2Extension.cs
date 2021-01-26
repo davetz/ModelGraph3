@@ -4,10 +4,11 @@ namespace ModelGraph.Core
 {
     internal static class Vector2Extension
     {
-        private const float ds = 1.5f; //hit test margin
-
-        internal static bool ContainsX(this Vector2 v, float x) => x >= (v.X - ds) && x <= (v.X + ds);
-        internal static bool ContainsY(this Vector2 v, float y) => y >= (v.Y - ds) && y <= (v.Y + ds);
-        internal static bool Contains(this Vector2 v, Vector2 xy) => xy.X >= (v.X - ds) && xy.X <= (v.X + ds) && xy.Y >= (v.Y - ds) && xy.Y <= (v.Y + ds);
-    }   
+        internal static bool IsClose2X(this Vector2 v, float x) => x >= (v.X - 2) && x <= (v.X + 2);
+        internal static bool IsClose2Y(this Vector2 v, float y) => y >= (v.Y - 2) && y <= (v.Y + 2);
+        internal static bool IsClose2P(this Vector2 v, Vector2 p) => p.X >= (v.X - 2) && p.X <= (v.X + 2) && p.Y >= (v.Y - 2) && p.Y <= (v.Y + 2);
+        internal static bool IsClose4X(this Vector2 v, float x) => x >= (v.X - 4) && x <= (v.X + 4);
+        internal static bool IsClose4Y(this Vector2 v, float y) => y >= (v.Y - 4) && y <= (v.Y + 4);
+        internal static bool IsClose4P(this Vector2 v, Vector2 p) => p.X >= (v.X - 4) && p.X <= (v.X + 4) && p.Y >= (v.Y - 4) && p.Y <= (v.Y + 4);
+    }
 }

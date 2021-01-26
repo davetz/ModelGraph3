@@ -198,7 +198,7 @@ namespace ModelGraph.Core
                         if (mdx > mdy)// is the bounding rectangle wider than it is tall ?
                         {//- - - - - - - - - - - - - - - - - - - - - - - - - - - - -wider, so use p.Y to calculate x intercept
                             var x = (dx * p.Y + X1 * Y2 - X2 * Y1) / dy;
-                            if (p.ContainsX(x))
+                            if (p.IsClose2X(x))
                             {
                                 var y = (dy * x + X2 * Y1 - X1 * Y2) / dx;
                                 intersect = new Vector2(x, y);
@@ -208,7 +208,7 @@ namespace ModelGraph.Core
                         else
                         {//- - - - - - - - - - - - - - - - - - - - - - - - - - - - -taller, so use p.X to calculate y intercept
                             var y = (dy * p.X + X2 * Y1 - X1 * Y2) / dx;
-                            if (p.ContainsY(y))
+                            if (p.IsClose2Y(y))
                             {
                                 var x = (dx * y + X1 * Y2 - X2 * Y1) / dy;
                                 intersect = new Vector2(x, y);
@@ -216,13 +216,13 @@ namespace ModelGraph.Core
                             }
                         }
                     }
-                    else if (p.ContainsY(Y1))
+                    else if (p.IsClose2Y(Y1))
                     {//- - - - - - - - - - - - - - - - - - - - - - - - the line segment is or is very close to being horizontal
                         intersect = new Vector2(p.X, Y1);
                         return true;
                     }
                 }
-                else if (p.ContainsX(X1))
+                else if (p.IsClose2X(X1))
                 {//- - - - - - - - - - - - - - - - - - - - - - - - - - the line segment is or is very close to being vertival 
                     intersect = new Vector2(X1, p.Y);
                     return true;

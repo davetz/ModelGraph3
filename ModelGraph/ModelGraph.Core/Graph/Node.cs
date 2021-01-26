@@ -227,10 +227,10 @@ namespace ModelGraph.Core
             selector.HitPoint = Center;
             selector.HitLocation |= HitLocation.Node;
 
-            if (p.ContainsY(ymin)) selector.HitLocation |= HitLocation.Top;
-            if (p.ContainsX(xmin)) selector.HitLocation |= HitLocation.Left;
-            if (p.ContainsX(xmax)) selector.HitLocation |= HitLocation.Right;
-            if (p.ContainsY(ymin)) selector.HitLocation |= HitLocation.Bottom;
+            if (p.IsClose2Y(ymin)) selector.HitLocation |= HitLocation.Top;
+            if (p.IsClose2X(xmin)) selector.HitLocation |= HitLocation.Left;
+            if (p.IsClose2X(xmax)) selector.HitLocation |= HitLocation.Right;
+            if (p.IsClose2Y(ymin)) selector.HitLocation |= HitLocation.Bottom;
 
             return true;
         }
