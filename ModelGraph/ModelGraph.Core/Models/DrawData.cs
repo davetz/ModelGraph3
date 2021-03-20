@@ -10,7 +10,8 @@ namespace ModelGraph.Core
         internal void Clear() { Text.Clear(); Parms.Clear(); DataDelta++; }
         internal void AddText(((Vector2, string), (byte, byte, byte, byte)) data) => Text.Add(data);
         internal void AddParms((Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte)) data) => Parms.Add(data);
-        internal void AddTargets(Vector2[] points, TargetType ttype) => Parms.Add((points, TargetParm[ttype], TargetColor));
+        internal void AddTargets(Vector2[] points, TargetType targtype) => Parms.Add((points, TargetParm[targtype], TargetColor));
+        internal void AddTargets(Vector2[] points, TargetType targtype, (byte, byte, byte, byte) targColor) => Parms.Add((points, TargetParm[targtype], targColor));
 
         private static readonly (byte, byte, byte, byte) TargetColor = (255, 255, 255, 255);
         private static readonly Dictionary<TargetType, (ShapeType, StrokeType, byte)> TargetParm = new Dictionary<TargetType, (ShapeType, StrokeType, byte)>()

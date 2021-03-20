@@ -82,49 +82,49 @@ namespace ModelGraph.Controls
         }
         internal void PostEvent(DrawEvent evt)
         {
-            if (DrawModel.TryGetDrawEventAction(evt, out Action action))
+            if (DrawModel.TryGetEventAction(evt, out Action action))
                 _ = Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
         void SetSelectedMode()
         {
-            _forcedSelectedMode = _previousSelectedMode = ModeComboBox.SelectedItem;
-            var mode = DrawModel.DrawState & DrawState.ModeMask;
-            switch (mode)
-            {
-                case DrawState.AddMode:
-                    _forcedSelectedMode = AddMode;
-                    break;
-                case DrawState.ViewMode:
-                    _forcedSelectedMode = ViewMode;
-                    break;
-                case DrawState.EditMode:
-                    _forcedSelectedMode = EditMode;
-                    break;
-                case DrawState.MoveMode:
-                    _forcedSelectedMode = MoveMode;
-                    break;
-                case DrawState.CopyMode:
-                    _forcedSelectedMode = CopyMode;
-                    break;
-                case DrawState.LinkMode:
-                    _forcedSelectedMode = LinkMode;
-                    break;
-                case DrawState.UnlinkMode:
-                    _forcedSelectedMode = UnlinkMode;
-                    break;
-                case DrawState.CreateMode:
-                    _forcedSelectedMode = CreateMode;
-                    break;
-                case DrawState.DeleteMode:
-                    _forcedSelectedMode = DeleteMode;
-                    break;
-                case DrawState.OperateMode:
-                    _forcedSelectedMode = OperateMode;
-                    break;
-                case DrawState.GravityMode:
-                    _forcedSelectedMode = GravityMode;
-                    break;
-            }
+            //_forcedSelectedMode = _previousSelectedMode = ModeComboBox.SelectedItem;
+            //var mode = DrawModel.DrawState & DrawState.ModeMask;
+            //switch (mode)
+            //{
+            //    case DrawState.AddMode:
+            //        _forcedSelectedMode = AddMode;
+            //        break;
+            //    case DrawState.ViewMode:
+            //        _forcedSelectedMode = ViewMode;
+            //        break;
+            //    case DrawState.EditMode:
+            //        _forcedSelectedMode = EditMode;
+            //        break;
+            //    case DrawState.MoveMode:
+            //        _forcedSelectedMode = MoveMode;
+            //        break;
+            //    case DrawState.CopyMode:
+            //        _forcedSelectedMode = CopyMode;
+            //        break;
+            //    case DrawState.LinkMode:
+            //        _forcedSelectedMode = LinkMode;
+            //        break;
+            //    case DrawState.UnlinkMode:
+            //        _forcedSelectedMode = UnlinkMode;
+            //        break;
+            //    case DrawState.CreateMode:
+            //        _forcedSelectedMode = CreateMode;
+            //        break;
+            //    case DrawState.DeleteMode:
+            //        _forcedSelectedMode = DeleteMode;
+            //        break;
+            //    case DrawState.OperateMode:
+            //        _forcedSelectedMode = OperateMode;
+            //        break;
+            //    case DrawState.GravityMode:
+            //        _forcedSelectedMode = GravityMode;
+            //        break;
+            //}
             if (_forcedSelectedMode != _previousSelectedMode)
                 ModeComboBox.SelectedItem = _forcedSelectedMode;
 

@@ -7,16 +7,18 @@ namespace ModelGraph.Core
     {
         Void = 0x0000, // we hit a void (pointer is on an empty space)
 
-        Pin = 0x1000,
-        Node = 0x2000,
-        Edge = 0x4000,
-        Multiple = 0x10000,
+        Pin      = 0x1000,
+        Grip     = 0x2000,
+        Node     = 0x3000,
+        Edge     = 0x4000,
+        Shape    = 0x5000,
+        Multiple = 0x70000,
 
-        Top = 0x0010,
-        Left = 0x0001,
-        Right = 0x0002,
+        Top    = 0x0010,
+        Left   = 0x0001,
+        Right  = 0x0002,
         Bottom = 0x0020,
-        Center = 0x0040,
+        Center  = 0x0040,
         SideOf = Top | Left | Right | Bottom,
 
         End1 = 0x0100,
@@ -32,7 +34,7 @@ namespace ModelGraph.Core
         NodeTopLeft = Node | Top | Left,
         NodeTopRight = Node | Top | Right,
         NodeBottomLeft = Node | Bottom | Left,
-        NodeBotemRight = Node | Bottom | Right,
+        NodeBottomRight = Node | Bottom | Right,
 
         EdgeEnd1 = Edge | End1,
         EdgeEnd2 = Edge | End2,

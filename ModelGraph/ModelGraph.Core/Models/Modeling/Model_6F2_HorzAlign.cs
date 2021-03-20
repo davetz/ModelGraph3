@@ -13,7 +13,7 @@ namespace ModelGraph.Core
             var pageModel = GetPageModel();
             list.Clear();
             list.Add(new DrawCommand(this, IdKey.AlignLeftCommand, Noop));
-            list.Add(new DrawCommand(this, IdKey.AlignCenterCommand, Item.Selector.AlignVert));
+            list.Add(new DrawCommand(this, IdKey.AlignCenterCommand, Item.Selector.AlignVertCenter));
             list.Add(new DrawCommand(this, IdKey.AlignRightCommand, Noop));
         }
         private void Noop() { }

@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         private readonly List<(Edge edge, (Vector2[], Facet, Facet) snapshot)> _edges;
         private readonly List<(Node node, (float, float, byte, byte, byte, byte, Labeling, Sizing, BarWidth, FlipState, Aspect) snapshot)> _nodes;
 
-        internal Snapshot(Selector selector)
+        internal Snapshot(GraphSelector selector)
         {/*
             Create a graphic snapshot for the nodes and edges specified in the callers selector
          */

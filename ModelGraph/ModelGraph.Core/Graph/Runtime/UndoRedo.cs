@@ -8,7 +8,7 @@ namespace ModelGraph.Core
         private Stack<Snapshot> _undoStack = new Stack<Snapshot>();
         private Stack<Snapshot> _redoStack = new Stack<Snapshot>();
 
-        internal void TakeSnapshot(Selector selector)
+        internal void TakeSnapshot(GraphSelector selector)
         {
             _undoStack.Push(new Snapshot(selector));
         }

@@ -1,8 +1,7 @@
-﻿using System.Numerics;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System;
 using System.Diagnostics;
-using Windows.UI.ApplicationSettings;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
@@ -19,53 +18,47 @@ namespace ModelGraph.Core
         public virtual void Release() { }
         #endregion
 
-        #region DrawCursor  ===================================================
-        private Dictionary<DrawState, DrawCursor> _drawState_Cursor = new Dictionary<DrawState, DrawCursor>();
-        public DrawCursor GetDrawStateCursor() => _drawState_Cursor.TryGetValue(DrawState, out DrawCursor cur) ? cur : DrawCursor.Arrow;
-        protected void ClearDrawStateCursors() => _drawState_Cursor.Clear();
-        protected void SetDrawStateCursors(DrawState state, DrawCursor cursor) => _drawState_Cursor[state] = cursor;
+        #region DrawStateCursor  ==============================================
+        private Dictionary<byte, DrawCursor> _state_Cursor = new Dictionary<byte, DrawCursor>();
+        public DrawCursor GetDrawStateCursor() => _state_Cursor.TryGetValue(_drawState, out DrawCursor cur) ? cur : DrawCursor.Arrow;
+        protected void SetDrawStateCursors(byte state, DrawCursor cursor) => _state_Cursor[state] = cursor;
         #endregion
 
-        #region DrawState  ====================================================
-        public DrawState DrawState { get; private set; } = DrawState.Unknown;
-        protected DrawState PreviousDrawState;
-        protected void ModifyDrawState(DrawState state, DrawState mask)
-        {
-            var mayNotRepeat = (state & DrawState.MayRepeat) == 0;
+        #region DrawStateAction  ==============================================
+        private byte _drawState = 0; //byte value of the current state, depends on model
+        private Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
+        private Dictionary<(byte, DrawEvent), Action> _drawStateEvent_Action = new Dictionary<(byte, DrawEvent), Action>();
+        public bool TryGetEventAction(DrawEvent evt, out Action act) => _drawStateEvent_Action.TryGetValue((_drawState, evt), out act);
 
-            state = (DrawState & ~mask) | (state & mask);
-            if (state == DrawState && mayNotRepeat) return;   //no change, so nothing to do
-            SetDrawState(state);
-        }
-        protected void SetDrawState(DrawState state)
+        protected void SetDrawStateValue(byte stateValue, bool execute = false)
         {
-            PreviousDrawState = DrawState;
-            DrawState = state;
-            if (PreviousDrawState != DrawState)
-            {//-----------------------------------write drawState debug message only when state changes
-                var e = "";
-                var u = "Unknown";
-                var nowOn = state & DrawState.NowMask;
-                var nowOnStr = nowOn == 0 ? e : nowOn.ToString();
-                var isTarg = state & DrawState.IsTarget;
-                var isTartStr = isTarg == 0 ? e : isTarg.ToString();
-                var startOn = state & DrawState.StartOnMask;
-                var startOnStr = startOn == 0 ? e : startOn.ToString();
-                var mode = state & DrawState.ModeMask;
-                var modeStr = mode == 0 ? u : mode.ToString().Replace("Mode", ""); 
-                var evnt = state & DrawState.EventMask;
-                var evntStr = evnt == 0 ? e : evnt.ToString();
-                Debug.WriteLine($"New DrawState: {modeStr} {startOnStr} {nowOnStr} {evntStr} {isTartStr}");
+            if (stateValue != _drawState)
+            {
+                _drawState = stateValue;
+                if (!_drawStateNames.TryGetValue(stateValue, out string stateName)) stateName = $"#{_drawState}";
+                Debug.WriteLine($"New DrawState: {stateName}");
+                if (execute && TryGetEventAction((DrawEvent.ExecuteAction), out Action action))
+                {
+                    Debug.WriteLine("Executing DrawState:");
+                    action();
+                }
             }
-            if (_drawState_Action.TryGetValue(state, out Action action)) action();
         }
-        protected void SetDrawStateAction(DrawState state, Action action) => _drawState_Action[state] = action;
-        protected void SetEventAction(DrawEvent evt, Action act) => _drawEvent_Action[evt] = act;
 
-        public bool TryGetDrawEventAction(DrawEvent evt, out Action act) => _drawEvent_Action.TryGetValue(evt, out act);
+        protected void InitDrawStateName(Type drawStateEnum)
+        {
+            foreach(int key in Enum.GetValues(drawStateEnum))
+            {
+                _drawStateNames[(byte)key] = Enum.GetName(drawStateEnum, key);
+            }
+        }
+        #endregion
 
-        private Dictionary<DrawEvent, Action> _drawEvent_Action = new Dictionary<DrawEvent, Action>();
-        private Dictionary<DrawState, Action> _drawState_Action = new Dictionary<DrawState, Action>();
+        #region DrawEventControl  =============================================
+        private Dictionary<DrawEvent, string> _drawControlText = new Dictionary<DrawEvent, string>();
+        public bool TryGetDrawControlText(DrawEvent key, out string text) => _drawControlText.TryGetValue(key, out text);
+        public bool IsDrawControEnabled(DrawEvent key) => _drawStateEvent_Action.ContainsKey((_drawState, key));
+        protected void AddDrawControlText(DrawEvent key, string text) => _drawControlText[key] = text;
         #endregion
 
         #region Layout  =======================================================
@@ -73,9 +66,7 @@ namespace ModelGraph.Core
         public string ToolTip_Text2 { get; protected set; }
         public Vector2 FlyOutSize { get; protected set; }
         public Vector2 FlyOutPoint { get; protected set; }
-        public Extent ResizerExtent { get; protected set; } //in drawPoint coordinates
         public DrawItem VisibleDrawItems { get; set; }
-        public bool IsPasteActionEnabled { get; protected set; }
 
         protected void HideDrawItems(DrawItem flags) => VisibleDrawItems &= ~flags;
         protected void ShowDrawItems(DrawItem flags) => VisibleDrawItems |= flags;
@@ -86,20 +77,6 @@ namespace ModelGraph.Core
             else
                 VisibleDrawItems &= ~DrawItem.ToolTipChange;
         }
-        #endregion
-
-        #region HitTest  ======================================================
-
-        protected void ClearHit()
-        {
-            ToolTip_Text1 = ToolTip_Text2 = string.Empty;
-            _hit = Hit.ZZZ;
-        }
-        private Hit _hit;
-        protected void SetHitPin() => _hit |= Hit.Pin;
-        protected void SetHitNode() => _hit |= Hit.Node;
-        protected void SetHitEdge() => _hit |= Hit.Edge;
-        protected void SetHitRegion() => _hit |= Hit.Region;
         #endregion
 
         #region IDrawData  ====================================================

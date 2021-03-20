@@ -9,7 +9,7 @@ namespace ModelGraph.Core
         {
             AdjustNodes(Nodes);
         }
-        internal void AdjustGraph(Selector selector)
+        internal void AdjustGraph(GraphSelector selector)
         {
             var nodes = new HashSet<Node>();
 

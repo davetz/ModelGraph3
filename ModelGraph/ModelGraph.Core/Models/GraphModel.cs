@@ -1,92 +1,20 @@
-﻿using System.Collections.Generic;
-using System.Numerics;
-using Windows.Storage;
+﻿using System.Numerics;
 
 namespace ModelGraph.Core
 {
     public class GraphModel : DrawModel
     {
         internal readonly Graph Graph;
-        internal readonly Selector Selector;
+        internal readonly GraphSelector Selector;
 
         #region Constructor  ==================================================
         internal GraphModel(PageModel owner, Graph graph) : base(owner)
         {
             Graph = graph;
-            Selector = new Selector(graph);
+            Selector = new GraphSelector(graph);
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
-
-            SetEventAction(DrawEvent.Skim, SkimHitTest);
-
-            SetEventAction(DrawEvent.Tap, () => { TestSelectorTap(); });
-            SetEventAction(DrawEvent.CtrlTap, () => { TestSelectorCtrlTap(); });
-            SetEventAction(DrawEvent.ShiftTap, () => { ModifyDrawState(DrawState.ShiftTapped, DrawState.EventMask); });
-            SetEventAction(DrawEvent.TapEnd, () => { TestSelectorTapEnd(); });
-
-            SetEventAction(DrawEvent.Drag, () => { ModifyDrawState(DrawState.Dragging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.CtrlDrag, () => { ModifyDrawState(DrawState.CtrlDraging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.ShiftDrag, () => { ModifyDrawState(DrawState.ShiftDraging, DrawState.EventMask); });
-            SetEventAction(DrawEvent.UpArrowKey, () => { ModifyDrawState(DrawState.UpArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.LeftArrowKey, () => { ModifyDrawState(DrawState.LeftArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.DownArrowKey, () => { ModifyDrawState(DrawState.DownArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.RightArrowKey, () => { ModifyDrawState(DrawState.RightArrow, DrawState.EventMask); });
-            SetEventAction(DrawEvent.ContextMenu, () => { ModifyDrawState(DrawState.ContextMenu, DrawState.EventMask); });
-
-            SetEventAction(DrawEvent.AKey, () => { ModifyDrawState(DrawState.AddMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.VKey, () => { ModifyDrawState(DrawState.ViewMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.EKey, () => { ModifyDrawState(DrawState.EditMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.MKey, () => { ModifyDrawState(DrawState.MoveMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.CKey, () => { ModifyDrawState(DrawState.CopyMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.PKey, () => { ModifyDrawState(DrawState.PinsMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.LKey, () => { ModifyDrawState(DrawState.LinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.UKey, () => { ModifyDrawState(DrawState.UnlinkMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.NKey, () => { ModifyDrawState(DrawState.CreateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.DKey, () => { ModifyDrawState(DrawState.DeleteMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.GKey, () => { ModifyDrawState(DrawState.GravityMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-            SetEventAction(DrawEvent.OKey, () => { ModifyDrawState(DrawState.OperateMode, DrawState.ModeMask); PageModel.TriggerUIRefresh(); });
-
-            SetDrawStateCursors(DrawState.EditMode | DrawState.NowOnVoid, DrawCursor.Edit);
-            SetDrawStateCursors(DrawState.EditMode | DrawState.NowOnNode, DrawCursor.EditHit);
-            SetDrawStateCursors(DrawState.MoveMode | DrawState.NowOnVoid, DrawCursor.Move);
-            SetDrawStateCursors(DrawState.MoveMode | DrawState.NowOnNode, DrawCursor.MoveHit);
-            SetDrawStateCursors(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Tapped, DrawCursor.SizeAll);
-            SetDrawStateCursors(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Dragging, DrawCursor.SizeAll);
-            SetDrawStateCursors(DrawState.MoveMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.MoveHit);
-            SetDrawStateCursors(DrawState.CopyMode | DrawState.NowOnVoid, DrawCursor.Copy);
-            SetDrawStateCursors(DrawState.CopyMode | DrawState.NowOnNode, DrawCursor.CopyHit);
-            SetDrawStateCursors(DrawState.LinkMode | DrawState.NowOnVoid, DrawCursor.Link);
-            SetDrawStateCursors(DrawState.LinkMode | DrawState.NowOnNode, DrawCursor.LinkHit);
-            SetDrawStateCursors(DrawState.LinkMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.LinkHit);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnVoid, DrawCursor.UnLink);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode, DrawCursor.UnlinkHit);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnEdge, DrawCursor.UnlinkHit);
-            SetDrawStateCursors(DrawState.UnlinkMode | DrawState.NowOnNode| DrawState.TapDragEnd, DrawCursor.UnlinkHit);
-            SetDrawStateCursors(DrawState.CreateMode | DrawState.NowOnVoid, DrawCursor.New);
-            SetDrawStateCursors(DrawState.DeleteMode | DrawState.NowOnVoid, DrawCursor.Delete);
-            SetDrawStateCursors(DrawState.DeleteMode | DrawState.NowOnNode, DrawCursor.DeleteHit);
-            SetDrawStateCursors(DrawState.DeleteMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.DeleteHit);
-            SetDrawStateCursors(DrawState.OperateMode | DrawState.NowOnVoid, DrawCursor.Operate);
-            SetDrawStateCursors(DrawState.OperateMode | DrawState.NowOnNode, DrawCursor.OperateHit);
-            SetDrawStateCursors(DrawState.OperateMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.OperateHit);
-            SetDrawStateCursors(DrawState.GravityMode | DrawState.NowOnVoid, DrawCursor.Gravity);
-            SetDrawStateCursors(DrawState.GravityMode | DrawState.NowOnNode, DrawCursor.GravityHit);
-            SetDrawStateCursors(DrawState.GravityMode | DrawState.NowOnEdge, DrawCursor.GravityHit);
-            SetDrawStateCursors(DrawState.GravityMode | DrawState.NowOnNode | DrawState.TapDragEnd, DrawCursor.GravityHit);
-
-
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnVoid | DrawState.Tapped, EditOnVoidTapped);
-            SetDrawStateAction(DrawState.EditMode | DrawState.NowOnNode | DrawState.Tapped, EditOnNodeTapped);
-
-
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Tapped, MoveOnNodeTapped);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.Dragging, MoveOnNodeDragging);
-
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.UpArrow, MoveOnNodeUpArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.LeftArrow, MoveOnNodeLeftArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.DownArrow, MoveOnNodeDownArrow);
-            SetDrawStateAction(DrawState.MoveMode | DrawState.NowOnNode | DrawState.RightArrow, MoveOnNodeRightArrow);
 
             UpdateEditorData();
         }
@@ -102,6 +30,7 @@ namespace ModelGraph.Core
             root.PostRefresh();
         }
         #endregion
+
 
         #region Refresh/UpdateEditorData  =====================================
         internal void Refresh()
@@ -200,7 +129,7 @@ namespace ModelGraph.Core
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                ModifyDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask); //need both masks!
+                //ModifyDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask); //need both masks!
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
@@ -209,7 +138,7 @@ namespace ModelGraph.Core
                 FlyOutPoint = Selector.HitNode.Center;
                 ShowDrawItems(DrawItem.ToolTip);
                 ToolTipChanged();
-                ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask); //need both masks!
+                //ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask); //need both masks!
                 PageModel.TriggerUIRefresh();
 
             }
@@ -220,21 +149,21 @@ namespace ModelGraph.Core
                 FlyOutPoint = Editor.Point2;
                 ShowDrawItems(DrawItem.ToolTip);
                 ToolTipChanged();
-                ModifyDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask); //need both masks!                
+                //ModifyDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask); //need both masks!                
                 PageModel.TriggerUIRefresh();
             }
         }
         #endregion
 
         #region Selector  =====================================================
-        private bool HasSelector => (DrawState & DrawState.HasSelector) != 0;
+        private bool HasSelector => false; // (DrawState & DrawState.HasSelector) != 0;
         private void TestSelectorTap()
         {
             if (Selector.IsVoidHit && HasSelector)
                 SelectorOnVoidTapped();
             else
             {
-                ModifyDrawState(DrawState.Tapped, DrawState.EventMask);
+                //ModifyDrawState(DrawState.Tapped, DrawState.EventMask);
                 SelectorClear();
             }
         }
@@ -244,7 +173,7 @@ namespace ModelGraph.Core
                 SelectorOnVoidCtrlTapped();
             else
             {
-                ModifyDrawState(DrawState.CtrlTapped, DrawState.EventMask);
+                //ModifyDrawState(DrawState.CtrlTapped, DrawState.EventMask);
                 SelectorClear();
             }
         }
@@ -252,8 +181,8 @@ namespace ModelGraph.Core
         {
             if (_tracingSelector)
                 SelectorOnVoidEnding();
-            else
-                ModifyDrawState(DrawState.TapDragEnd, DrawState.EventMask);
+            //else
+                //ModifyDrawState(DrawState.TapDragEnd, DrawState.EventMask);
         }
         private void SelectorClear()
         {

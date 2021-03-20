@@ -8,8 +8,9 @@ namespace ModelGraph.Core
     internal class ShapeSelector
     {
         internal Shape HitShape;
-        internal Shape RefShape;
         internal Shape PrevShape;
+
+        internal Shape RefShape;
         internal int HitPin;
 
         internal List<Shape> Shapes = new List<Shape>();
@@ -22,6 +23,13 @@ namespace ModelGraph.Core
         }
         private readonly SymbolModel _model;
         #endregion
+
+        internal void Clear()
+        {
+            HitShape = PrevShape = RefShape = null;
+            Shapes.Clear();
+            Pins.Clear();
+        }
 
         #region HitTestPoint  =================================================
         internal bool HitTestPoint(Vector2 p)

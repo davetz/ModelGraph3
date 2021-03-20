@@ -6,18 +6,16 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
-        DrawState DrawState { get; }
         DrawItem VisibleDrawItems { get; set; }
 
         void Release(); //user has closed this standalone view
-        bool TryGetDrawEventAction(DrawEvent evt, out Action act);
         DrawCursor GetDrawStateCursor();
-
-        bool IsPasteActionEnabled { get; }
+        bool TryGetEventAction(DrawEvent evt, out Action act);
+        bool TryGetDrawControlText(DrawEvent evt, out string text);
+        bool IsDrawControEnabled(DrawEvent evt);
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
 
-        Extent ResizerExtent { get; } //in drawPoint coordinates
 
         Vector2 FlyOutSize { get; } // flyoutTree size widht, height
         Vector2 FlyOutPoint { get; } //flyoutTree drawPoint coordinates

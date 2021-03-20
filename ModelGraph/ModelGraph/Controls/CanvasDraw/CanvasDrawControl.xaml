@@ -135,6 +135,10 @@
                         <KeyboardAccelerator Key="E" Invoked="KeyboardAccelerator_EKey_Invoked"/>
                         <KeyboardAccelerator Key="F" Invoked="KeyboardAccelerator_FKey_Invoked"/>
                         <KeyboardAccelerator Key="G" Invoked="KeyboardAccelerator_GKey_Invoked"/>
+                        <KeyboardAccelerator Key="H" Invoked="KeyboardAccelerator_HKey_Invoked"/>
+                        <KeyboardAccelerator Key="I" Invoked="KeyboardAccelerator_IKey_Invoked"/>
+                        <KeyboardAccelerator Key="J" Invoked="KeyboardAccelerator_JKey_Invoked"/>
+                        <KeyboardAccelerator Key="K" Invoked="KeyboardAccelerator_KKey_Invoked"/>
                         <KeyboardAccelerator Key="L" Invoked="KeyboardAccelerator_LKey_Invoked"/>
                         <KeyboardAccelerator Key="M" Invoked="KeyboardAccelerator_MKey_Invoked"/>
                         <KeyboardAccelerator Key="N" Invoked="KeyboardAccelerator_NKey_Invoked"/>
@@ -147,10 +151,14 @@
                         <KeyboardAccelerator Key="U" Invoked="KeyboardAccelerator_UKey_Invoked"/>
                         <KeyboardAccelerator Key="V" Invoked="KeyboardAccelerator_VKey_Invoked"/>
                         <KeyboardAccelerator Key="W" Invoked="KeyboardAccelerator_WKey_Invoked"/>
+                        <KeyboardAccelerator Key="X" Invoked="KeyboardAccelerator_XKey_Invoked"/>
+                        <KeyboardAccelerator Key="Y" Invoked="KeyboardAccelerator_YKey_Invoked"/>
+                        <KeyboardAccelerator Key="Z" Invoked="KeyboardAccelerator_ZKey_Invoked"/>
                         <KeyboardAccelerator Key="Up" Invoked="KeyboardAccelerator_UpArrow_Invoked"/>
                         <KeyboardAccelerator Key="Down" Invoked="KeyboardAccelerator_DownArrow_Invoked"/>
                         <KeyboardAccelerator Key="Left" Invoked="KeyboardAccelerator_LeftArrow_Invoked"/>
                         <KeyboardAccelerator Key="Right" Invoked="KeyboardAccelerator_RightArrow_Invoked"/>
+                        <KeyboardAccelerator Key="Enter" Invoked="KeyboardAccelerator_Enter_Invoked"/>
                         <KeyboardAccelerator Key="Escape" Invoked="KeyboardAccelerator_Escape_Invoked"/>
                     </Button.KeyboardAccelerators>
                 </Button>
@@ -195,18 +203,6 @@
                         </Button>
 
                         <Border x:Name="SelectorBorder" BorderThickness="3" Background="#60606060" BorderBrush="Blue" Margin="0,0,12,0" />
-                    </Grid>
-
-                    <Grid x:Name="ResizerGrid" Margin="0" Padding="0" Background="Transparent" Width="100" Height="100" Canvas.Left="400" Canvas.Top="100" Visibility="Collapsed">
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Center" PointerEntered="SizerTop_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTop_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Left" PointerEntered="SizerLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerLeft_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Center" HorizontalAlignment="Right" PointerEntered="SizerRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerRight_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Center" PointerEntered="SizerBottom_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottom_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Left" PointerEntered="SizerTopLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopLeft_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Top" HorizontalAlignment="Right" PointerEntered="SizerTopRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerTopRight_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Left" PointerEntered="SizerBottomLeft_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomLeft_PointerPressed" />
-                        <Border Style="{StaticResource ResizeHandelStyle}" VerticalAlignment="Bottom" HorizontalAlignment="Right" PointerEntered="SizerBottomRight_PointerEntered" PointerExited="Sizer_PointerExited" PointerPressed="SizerBottomRight_PointerPressed" />
-                        <Border x:Name="ResizerBorder" BorderThickness="2" Background="Transparent" BorderBrush="White" Margin="8,8,8,8" />
                     </Grid>
 
                     <Grid x:Name="FlyTreeGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">

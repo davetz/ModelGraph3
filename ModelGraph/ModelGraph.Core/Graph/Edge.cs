@@ -202,7 +202,7 @@ namespace ModelGraph.Core
         #region HitTest  ======================================================
         // [node1]o----o-----o---edge----o-----o----o[node2] 
         //            Tm1   Bp1         Bp2   Tm2
-        internal bool HitTest(Selector selector, Vector2 p, Extent e)
+        internal bool HitTest(GraphSelector selector, Vector2 p, Extent e)
         {
             var len = Points.Length;
             if (len == 0) return false;

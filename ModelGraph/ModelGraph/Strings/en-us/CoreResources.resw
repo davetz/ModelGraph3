@@ -1240,42 +1240,42 @@ NEC – NWC – SEC - SWC</value>
     <value>Line end cap for all selected shapes</value>
   </data>
   <data name="4C5N" xml:space="preserve">
-    <value>Auxilary %</value>
+    <value>%Auxilary </value>
   </data>
   <data name="4C5S" xml:space="preserve">
     <value>Auxilary factor % (1 to 100)  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C6N" xml:space="preserve">
-    <value>Size %</value>
+    <value>%Size </value>
   </data>
   <data name="4C6S" xml:space="preserve">
     <value>Shape Size (1 to 100) %  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C7N" xml:space="preserve">
-    <value>Height %</value>
+    <value>%Height </value>
   </data>
   <data name="4C7S" xml:space="preserve">
     <value>Shape height (1 to 100) %  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C8N" xml:space="preserve">
-    <value>Width %</value>
+    <value>%Width </value>
   </data>
   <data name="4C8S" xml:space="preserve">
     <value>Shape Width (1 to 100) %  for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C9N" xml:space="preserve">
-    <value>Scale 1 %</value>
+    <value>%Scale 1 </value>
   </data>
   <data name="4C9S" xml:space="preserve">
     <value>Shape Scale 1 (1 to 100) % for all selected shapes
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4CAN" xml:space="preserve">
-    <value>Scale 2 %</value>
+    <value>%Scale 2 </value>
   </data>
   <data name="4CAS" xml:space="preserve">
     <value>Shape Scale 2  (1 to 100) % for all selected shapes
@@ -1629,13 +1629,13 @@ NEC – NWC – SEC - SWC</value>
     <value>PathCount</value>
   </data>
   <data name="6F1N" xml:space="preserve">
-    <value>AlignTB</value>
+    <value>Align Vert</value>
   </data>
   <data name="6F2K" xml:space="preserve">
     <value>PathCheck</value>
   </data>
   <data name="6F2N" xml:space="preserve">
-    <value>AlignLR</value>
+    <value>Align Horz</value>
   </data>
   <data name="6F3K" xml:space="preserve">
     <value>PathComposite</value>

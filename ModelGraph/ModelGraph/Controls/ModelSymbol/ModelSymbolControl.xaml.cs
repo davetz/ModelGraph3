@@ -72,17 +72,16 @@ namespace ModelGraph.Controls
 
             void SetButtons()
             {
-                var enb1 = DrawModel.DrawState == DrawState.EditMode;
-                var enb2 = DrawModel.DrawState == DrawState.ViewMode && DrawModel.IsPasteActionEnabled;
-                CutButton.IsEnabled = enb1;
-                CopyButton.IsEnabled = enb1;
-                PasteButton.IsEnabled = enb2;
-                RecenterButton.IsEnabled = enb1;
-                RotateLeftButton.IsEnabled = enb1;
-                RotateRightButton.IsEnabled = enb1;
-                RotateAngleButton.IsEnabled = enb1;
-                FlipVerticalButton.IsEnabled = enb1;
-                FlipHorizontalButton.IsEnabled = enb1;
+                //var enb1 = DrawModel.DrawState == DrawState.EditMode;
+                //CutButton.IsEnabled = enb1;
+                //CopyButton.IsEnabled = enb1;
+                //PasteButton.IsEnabled = enb1;
+                //RecenterButton.IsEnabled = enb1;
+                //RotateLeftButton.IsEnabled = enb1;
+                //RotateRightButton.IsEnabled = enb1;
+                //RotateAngleButton.IsEnabled = enb1;
+                //FlipVerticalButton.IsEnabled = enb1;
+                //FlipHorizontalButton.IsEnabled = enb1;
             }
         }
 
@@ -104,36 +103,36 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Events  =======================================================
-        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateLeft);
-        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.RotateRight);
+        private void RotateLeftButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn9);
+        private void RotateRightButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnA);
         private void RotateAngleButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e)
         {
             if (_use30degreeDelta)
             {
                 _use30degreeDelta = false;
                 RotateAngleButton.Content = "22.5";
-                PostEvent(DrawEvent.Angle22);
+                PostEvent(DrawEvent.Btn6);
             }
             else
             {
                 _use30degreeDelta = true;
                 RotateAngleButton.Content = "30.0";
-                PostEvent(DrawEvent.Angle30);
+                PostEvent(DrawEvent.Btn7);
             }
         }
-        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.FlipVertical);
-        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.FlipHorizontal);
+        private void FlipVerticalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnB);
+        private void FlipHorizontalButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnC);
 
-        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Cut);
+        private void CutButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn1);
 
-        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Copy);
+        private void CopyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn2);
 
-        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Paste);
+        private void PasteButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn3);
 
-        private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Apply);
-        private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Revert);
+        private void ApplyButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn4);
+        private void ReloadButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn5);
 
-        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Recenter);
+        private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn8);
 
         private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.PKey);
         private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.VKey);
@@ -147,7 +146,7 @@ namespace ModelGraph.Controls
 
         internal async void PostEvent(DrawEvent evt)
         {
-            if (DrawModel.TryGetDrawEventAction(evt, out Action action))
+            if (DrawModel.TryGetEventAction(evt, out Action action))
                 await Dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
         }
 

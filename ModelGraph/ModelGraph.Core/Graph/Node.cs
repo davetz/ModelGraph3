@@ -212,7 +212,7 @@ namespace ModelGraph.Core
         #region Minimize, HitTest  ============================================
         static readonly int _ds = GraphDefault.HitMargin;
 
-        internal bool HitTest(Selector selector, Vector2 p)
+        internal bool HitTest(GraphSelector selector, Vector2 p)
         {
             var xmin = X - DX;
             if (p.X < xmin) return false;

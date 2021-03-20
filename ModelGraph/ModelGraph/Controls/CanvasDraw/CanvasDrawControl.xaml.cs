@@ -3,7 +3,6 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 using ModelGraph.Core;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Numerics;
 using Windows.Foundation;
 using Windows.UI;
@@ -72,11 +71,6 @@ namespace ModelGraph.Controls
                     ShowToolTip();
                 if ((visibleItems & DrawItem.ToolTip) != 0 && (visibleItems & DrawItem.ToolTipChange) != (_prevVisible & DrawItem.ToolTipChange))
                     ShowToolTip();
-
-                if ((visibleItems & DrawItem.Resizer) == 0 && ResizerGrid.Visibility != Visibility.Collapsed)
-                    ResizerGrid.Visibility = Visibility.Collapsed;
-                if ((visibleItems & DrawItem.Resizer) != 0 && ResizerGrid.Visibility != Visibility.Visible)
-                    ResizerGrid.Visibility = Visibility.Visible;
 
                 if ((visibleItems & DrawItem.FlyTree) == 0 && FlyTreeGrid.Visibility != Visibility.Collapsed)
                     HideFlyTree();
@@ -484,13 +478,13 @@ namespace ModelGraph.Controls
         DrawCursor _drawCursor;
         internal async void PostEvent(DrawEvent evt)
         {
-            if (Model.TryGetDrawEventAction(evt, out Action action))
+            if (Model.TryGetEventAction(evt, out Action action))
                 await _dispatcher.RunAsync(CoreDispatcherPriority.Normal, () => { action(); });
             RefreshAll();
         }
         internal void ExecuteAction(DrawEvent evt)
         {
-            if (Model.TryGetDrawEventAction(evt, out Action action))
+            if (Model.TryGetEventAction(evt, out Action action))
             {
                 action(); //imediately execute the drag event
                 EditCanvas.Invalidate(); //and then trigger editCanvas refresh
@@ -941,6 +935,10 @@ namespace ModelGraph.Controls
         private void KeyboardAccelerator_EKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EKey);
         private void KeyboardAccelerator_FKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.FKey);
         private void KeyboardAccelerator_GKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.GKey);
+        private void KeyboardAccelerator_HKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.HKey);
+        private void KeyboardAccelerator_IKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.IKey);
+        private void KeyboardAccelerator_JKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.JKey);
+        private void KeyboardAccelerator_KKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KKey);
         private void KeyboardAccelerator_LKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.LKey);
         private void KeyboardAccelerator_MKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.MKey);
         private void KeyboardAccelerator_NKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.NKey);
@@ -953,8 +951,12 @@ namespace ModelGraph.Controls
         private void KeyboardAccelerator_UKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.UKey);
         private void KeyboardAccelerator_VKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.VKey);
         private void KeyboardAccelerator_WKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.WKey);
+        private void KeyboardAccelerator_XKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.XKey);
+        private void KeyboardAccelerator_YKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.YKey);
+        private void KeyboardAccelerator_ZKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.ZKey);
 
-        private void KeyboardAccelerator_Escape_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.Escape);
+        private void KeyboardAccelerator_Enter_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EnterKey);
+        private void KeyboardAccelerator_Escape_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EscapeKey);
         private void KeyboardAccelerator_UpArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.UpArrowKey);
         private void KeyboardAccelerator_DownArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.DownArrowKey);
         private void KeyboardAccelerator_LeftArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.LeftArrowKey);
@@ -962,7 +964,7 @@ namespace ModelGraph.Controls
 
         private void TestDrawEvent(DrawEvent evt)
         {
-            if (Model.TryGetDrawEventAction(evt, out _))
+            if (Model.TryGetEventAction(evt, out _))
             {
                 PostEvent(evt);
             }
@@ -997,22 +999,7 @@ namespace ModelGraph.Controls
             var y = (p.Y - offset.Y) / scale;
             return new Vector2((float)x, (float)y);
         }
-        private (float top, float left, float width, float height) GetResizerParams()
-        {
-            var (scale, offset) = CanvasScaleOffset[EditCanvas];
-            var (x1, y1, x2, y2) = Model.ResizerExtent.GetFloat();
 
-            var dx = x2 - x1;
-            var dy = y2 - y1;
-
-            var width = dx * scale;
-            var height = dy * scale;
-
-            var top = y1 * scale + offset.X;
-            var left = x1 * scale + offset.Y;
-
-            return (top, left, width, height);
-        }
         private (float,float) GetFlyoutPoint()
         {
             var (scale, offset) = CanvasScaleOffset[EditCanvas];
