@@ -15,7 +15,6 @@ namespace ModelGraph.Core
      */
         #region Flags  ========================================================
         Empty = 0,
-        Item = 1,
         //=====================================================================
         Is_Covert = 0x8000, // Don't include this item in the model change log
         Is_External = 0x4000, // This item is serialized/deserialize to/from a repository
@@ -28,42 +27,57 @@ namespace ModelGraph.Core
 
         #endregion
 
-        #region Command  =============================================(020-07F)
+        #region Command  =============================================(01-0DF)
+        SaveCommand = 0x1,
+        ApplyCommand = 0x2,
+        CloseCommand = 0x3,
+        RevertCommand = 0x4,
+        SaveAsCommand = 0x5,
+        ReloadCommand = 0x6,
 
-        NewCommand = 0x21,
-        SaveCommand = 0x23,
-        SaveAsCommand = 0x24,
-        ReloadCommand = 0x25,
-        CloseCommand = 0x26,
+        EditCommand = 0x7,
+        ViewCommand = 0x8,
+        UndoCommand = 0x9,
+        RedoCommand = 0xA,
+        MergeCommand = 0xB,
+        InsertCommand = 0xC,
+        RemoveCommand = 0xD,
+        CreateCommand = 0xE,
+        RefreshCommand = 0xF,
+        ValidateCommand = 0x10,
+        MakeGraphLinkCommand = 0x11,
+        MakePathHeadCommand = 0x12,
+        MakeGroupHeadCommand = 0x13,
+        MakeEgressHeadCommand = 0x14,
+        AlignTopCommand = 0x15,
+        AlignLeftCommand = 0x16,
+        AlignRightCommand = 0x17,
+        AlignBottomCommand = 0x18,
+        AlignCenterCommand = 0x19,
+        GraphUndoCommand = 0x1A,
+        GraphRedoCommand = 0x1B,
+        FlipVertCommand = 0x1C,
+        FlipHorzCommand = 0x1D,
+        Rotate90LeftCommand = 0x1E,
+        Rotate90RightCommand = 0x1F,
+        Rotate45LeftCommand = 0x20,
+        Rotate45RightCommand = 0x21,
+        Rotate30LeftCommand = 0x22,
+        Rotate30RightCommand = 0x23,
+        Rotate22LeftCommand = 0x24,
+        Rotate22RightCommand = 0x25,
 
-        EditCommand = 0x30,
-        ViewCommand = 0x31,
-        UndoCommand = 0x32,
-        RedoCommand = 0x33,
-        MergeCommand = 0x34,
-        InsertCommand = 0x35,
-        RemoveCommand = 0x36,
-        CreateCommand = 0x37,
-        RefreshCommand = 0x38,
-        ValidateCommand = 0x39,
-        MakeGraphLinkCommand = 0x3A,
-        MakePathHeadCommand = 0x3B,
-        MakeGroupHeadCommand = 0x3C,
-        MakeEgressHeadCommand = 0x3D,
-        AlignTopCommand = 0x3E,
-        AlignLeftCommand = 0x3F,
-        AlignRightCommand = 0x40,
-        AlignBottomCommand = 0x41,
-        AlignCenterCommand = 0x42,
-        GraphUndoCommand = 0x43,
-        GraphRedoCommand = 0x44,
-        FlipVertCommand = 0x45,
-        FlipHorzCommand = 0x46,
-        Rotate90LeftCommand = 0x47,
-        Rotate90RightCommand = 0x48,
-        Rotate45LeftCommand = 0x49,
-        Rotate45RightCommand = 0x50,
-
+        OperateMode = 0xD5,
+        GravityMode = 0xD6,
+        DeleteMode = 0xD7,
+        UnlinkMode = 0xD8,
+        PasteMode = 0xD9,
+        LinkMode = 0xDA,
+        CopyMode = 0xDB,
+        MoveMode = 0xDC,
+        EditMode = 0xDD,
+        ViewMode = 0xDE,
+        AddMode = 0xDF,
         #endregion
 
         #region Store ================================================(0E0-0FF)
@@ -93,7 +107,7 @@ namespace ModelGraph.Core
         DummyItem = 0x100 | Is_Reference,
         DummyQueryX = 0x101 | Is_Reference,
 
-        DataRoot = 0x112,
+        DataRoot = 0x102, //112
 
         //=========================================
         ChangeRoot = 0x131,

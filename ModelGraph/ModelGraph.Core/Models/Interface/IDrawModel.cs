@@ -9,9 +9,9 @@ namespace ModelGraph.Core
         DrawItem VisibleDrawItems { get; set; }
 
         void Release(); //user has closed this standalone view
+        List<ItemCommand> GetModeCommands();
         DrawCursor GetDrawStateCursor();
         bool TryGetEventAction(DrawEvent evt, out Action act);
-        bool TryGetDrawControlText(DrawEvent evt, out string text);
         bool IsDrawControEnabled(DrawEvent evt);
 
         (byte,byte,byte,byte) ColorARGB { get; set; }

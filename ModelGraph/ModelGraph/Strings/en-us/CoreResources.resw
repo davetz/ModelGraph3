@@ -118,211 +118,214 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="001N" xml:space="preserve">
-    <value>Item</value>
-  </data>
-  <data name="021N" xml:space="preserve">
-    <value>New</value>
-  </data>
-  <data name="021S" xml:space="preserve">
-    <value>Create a new model</value>
-  </data>
-  <data name="022N" xml:space="preserve">
-    <value>Open</value>
-  </data>
-  <data name="022S" xml:space="preserve">
-    <value>Open an existing model</value>
-  </data>
-  <data name="023N" xml:space="preserve">
     <value>Save</value>
   </data>
-  <data name="023S" xml:space="preserve">
+  <data name="001S" xml:space="preserve">
     <value>Save changes</value>
   </data>
-  <data name="024N" xml:space="preserve">
-    <value>SaveAs</value>
+  <data name="002N" xml:space="preserve">
+    <value>Apply</value>
   </data>
-  <data name="024S" xml:space="preserve">
-    <value>Save changes in a new file</value>
+  <data name="002S" xml:space="preserve">
+    <value>Apply changes </value>
   </data>
-  <data name="025N" xml:space="preserve">
-    <value>Relaod</value>
-  </data>
-  <data name="025S" xml:space="preserve">
-    <value>Reload previously saved version</value>
-  </data>
-  <data name="026N" xml:space="preserve">
+  <data name="003N" xml:space="preserve">
     <value>Close</value>
   </data>
-  <data name="026S" xml:space="preserve">
+  <data name="003S" xml:space="preserve">
     <value>Close without saving changes</value>
   </data>
-  <data name="030N" xml:space="preserve">
+  <data name="004N" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="004S" xml:space="preserve">
+    <value>Revert to previously version</value>
+  </data>
+  <data name="005N" xml:space="preserve">
+    <value>SaveAs</value>
+  </data>
+  <data name="005S" xml:space="preserve">
+    <value>Save changes in a new file</value>
+  </data>
+  <data name="006N" xml:space="preserve">
+    <value>Relaod</value>
+  </data>
+  <data name="006S" xml:space="preserve">
+    <value>Reload previously saved version</value>
+  </data>
+  <data name="007N" xml:space="preserve">
     <value>Edit</value>
   </data>
-  <data name="030S" xml:space="preserve">
+  <data name="007S" xml:space="preserve">
     <value>Edit this item</value>
   </data>
-  <data name="031N" xml:space="preserve">
+  <data name="008N" xml:space="preserve">
     <value>View</value>
   </data>
-  <data name="031S" xml:space="preserve">
+  <data name="008S" xml:space="preserve">
     <value>Open this item in secondary view</value>
   </data>
-  <data name="032A" xml:space="preserve">
+  <data name="009A" xml:space="preserve">
     <value>U</value>
   </data>
-  <data name="032N" xml:space="preserve">
+  <data name="009N" xml:space="preserve">
     <value>Undo</value>
   </data>
-  <data name="032S" xml:space="preserve">
+  <data name="009S" xml:space="preserve">
     <value>Undo the changes listed in this change set. </value>
   </data>
-  <data name="033A" xml:space="preserve">
+  <data name="00AA" xml:space="preserve">
     <value>R</value>
   </data>
-  <data name="033N" xml:space="preserve">
+  <data name="00AN" xml:space="preserve">
     <value>Redo</value>
   </data>
-  <data name="033S" xml:space="preserve">
+  <data name="00AS" xml:space="preserve">
     <value>Redo the changes listed in this change set. </value>
   </data>
-  <data name="034N" xml:space="preserve">
+  <data name="00BN" xml:space="preserve">
     <value>Merge</value>
   </data>
-  <data name="034S" xml:space="preserve">
+  <data name="00BS" xml:space="preserve">
     <value>Merge the changes listed with the next change set.</value>
   </data>
-  <data name="035N" xml:space="preserve">
+  <data name="00CN" xml:space="preserve">
     <value>Insert</value>
   </data>
-  <data name="035S" xml:space="preserve">
+  <data name="00CS" xml:space="preserve">
     <value>Insert/Add an item</value>
   </data>
-  <data name="036N" xml:space="preserve">
+  <data name="00DN" xml:space="preserve">
     <value>Remove</value>
   </data>
-  <data name="036S" xml:space="preserve">
+  <data name="00DS" xml:space="preserve">
     <value>Remove this item</value>
   </data>
-  <data name="037N" xml:space="preserve">
+  <data name="00EN" xml:space="preserve">
     <value>Create</value>
   </data>
-  <data name="037S" xml:space="preserve">
+  <data name="00ES" xml:space="preserve">
     <value>Create/Refresh this graph</value>
   </data>
-  <data name="038N" xml:space="preserve">
+  <data name="00FN" xml:space="preserve">
     <value>Refresh</value>
   </data>
-  <data name="038S" xml:space="preserve">
+  <data name="00FS" xml:space="preserve">
     <value>Refresh this view</value>
   </data>
-  <data name="039N" xml:space="preserve">
+  <data name="010N" xml:space="preserve">
     <value>Validate</value>
   </data>
-  <data name="039S" xml:space="preserve">
+  <data name="010S" xml:space="preserve">
     <value>Revalidate the metadata for this item</value>
   </data>
-  <data name="03AN" xml:space="preserve">
+  <data name="011N" xml:space="preserve">
     <value>Make Link Sequence</value>
   </data>
-  <data name="03AS" xml:space="preserve">
+  <data name="011S" xml:space="preserve">
     <value>Make this a link sequence</value>
   </data>
-  <data name="03BN" xml:space="preserve">
+  <data name="012N" xml:space="preserve">
     <value>Make Path Sequence</value>
   </data>
-  <data name="03BS" xml:space="preserve">
+  <data name="012S" xml:space="preserve">
     <value>Make this a path sequence</value>
   </data>
-  <data name="03CN" xml:space="preserve">
+  <data name="013N" xml:space="preserve">
     <value>Make Group Sequence</value>
   </data>
-  <data name="03CS" xml:space="preserve">
+  <data name="013S" xml:space="preserve">
     <value>Make this a group sequence</value>
   </data>
-  <data name="03DN" xml:space="preserve">
+  <data name="014N" xml:space="preserve">
     <value>Make Egress Sequence</value>
   </data>
-  <data name="03DS" xml:space="preserve">
+  <data name="014S" xml:space="preserve">
     <value>Make this an egress sequence</value>
   </data>
-  <data name="03EN" xml:space="preserve">
+  <data name="015N" xml:space="preserve">
     <value>Top</value>
   </data>
-  <data name="03ES" xml:space="preserve">
+  <data name="015S" xml:space="preserve">
     <value>Align tops</value>
   </data>
-  <data name="03FN" xml:space="preserve">
+  <data name="016N" xml:space="preserve">
     <value>Left</value>
   </data>
-  <data name="03FS" xml:space="preserve">
+  <data name="016S" xml:space="preserve">
     <value>Align left sides</value>
   </data>
-  <data name="040N" xml:space="preserve">
+  <data name="017N" xml:space="preserve">
     <value>Right</value>
   </data>
-  <data name="040S" xml:space="preserve">
+  <data name="017S" xml:space="preserve">
     <value>Align right sides </value>
   </data>
-  <data name="041N" xml:space="preserve">
+  <data name="018N" xml:space="preserve">
     <value>Bottom</value>
   </data>
-  <data name="041S" xml:space="preserve">
+  <data name="018S" xml:space="preserve">
     <value>Align bottoms</value>
   </data>
-  <data name="042N" xml:space="preserve">
+  <data name="019N" xml:space="preserve">
     <value>Center</value>
   </data>
-  <data name="042S" xml:space="preserve">
+  <data name="019S" xml:space="preserve">
     <value>Align centers</value>
   </data>
-  <data name="043N" xml:space="preserve">
+  <data name="01AN" xml:space="preserve">
     <value>Undo</value>
   </data>
-  <data name="043S" xml:space="preserve">
+  <data name="01AS" xml:space="preserve">
     <value>Undo the privious action</value>
   </data>
-  <data name="044N" xml:space="preserve">
+  <data name="01BN" xml:space="preserve">
     <value>Redo</value>
   </data>
-  <data name="044S" xml:space="preserve">
+  <data name="01BS" xml:space="preserve">
     <value>Redo the previous action</value>
   </data>
-  <data name="045N" xml:space="preserve">
+  <data name="01CN" xml:space="preserve">
     <value>Vertical</value>
   </data>
-  <data name="045S" xml:space="preserve">
+  <data name="01CS" xml:space="preserve">
     <value>Vertically flip</value>
   </data>
-  <data name="046N" xml:space="preserve">
+  <data name="01DN" xml:space="preserve">
     <value>Horizontal</value>
   </data>
-  <data name="046S" xml:space="preserve">
+  <data name="01DS" xml:space="preserve">
     <value>Horizontally flip </value>
   </data>
-  <data name="047N" xml:space="preserve">
+  <data name="01EN" xml:space="preserve">
     <value>L-90</value>
   </data>
-  <data name="047S" xml:space="preserve">
+  <data name="01ES" xml:space="preserve">
     <value>Rotate left 90 degrees</value>
   </data>
-  <data name="048N" xml:space="preserve">
+  <data name="01FN" xml:space="preserve">
     <value>R-90</value>
   </data>
-  <data name="048S" xml:space="preserve">
+  <data name="01FS" xml:space="preserve">
     <value>Rotate right 90 degrees</value>
   </data>
-  <data name="049N" xml:space="preserve">
+  <data name="020N" xml:space="preserve">
     <value>L-45</value>
   </data>
-  <data name="049S" xml:space="preserve">
+  <data name="020S" xml:space="preserve">
     <value>Rotate left 45 degrees</value>
   </data>
-  <data name="050N" xml:space="preserve">
+  <data name="021N" xml:space="preserve">
     <value>R-45</value>
   </data>
-  <data name="050S" xml:space="preserve">
+  <data name="021S" xml:space="preserve">
     <value>Rotate right 45 degrees</value>
+  </data>
+  <data name="0DFA" xml:space="preserve">
+    <value>V</value>
+  </data>
+  <data name="0DFN" xml:space="preserve">
+    <value>V = View without changing anything</value>
   </data>
   <data name="0E1K" xml:space="preserve">
     <value>Enum</value>

@@ -55,10 +55,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region DrawEventControl  =============================================
-        private Dictionary<DrawEvent, string> _drawControlText = new Dictionary<DrawEvent, string>();
-        public bool TryGetDrawControlText(DrawEvent key, out string text) => _drawControlText.TryGetValue(key, out text);
         public bool IsDrawControEnabled(DrawEvent key) => _drawStateEvent_Action.ContainsKey((_drawState, key));
-        protected void AddDrawControlText(DrawEvent key, string text) => _drawControlText[key] = text;
+        virtual public List<ItemCommand> GetModeCommands() => new List<ItemCommand>(0);
         #endregion
 
         #region Layout  =======================================================

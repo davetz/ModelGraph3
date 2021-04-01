@@ -17,14 +17,6 @@ namespace ModelGraph.Core
         BtnA,
         BtnB,
         BtnC,
-        BtnD,
-        BtnE,
-        BtnF,
-        BtnG,
-        BtnH,
-        BtnI,
-        BtnJ,
-        BtnK,
 
         AKey,
         BKey,
@@ -53,6 +45,15 @@ namespace ModelGraph.Core
         YKey,
         ZKey,
 
+
+        TabKey,
+        EnterKey,
+        EscapeKey,
+        UpArrowKey,
+        DownArrowKey,
+        LeftArrowKey,
+        RightArrowKey,
+
         Tap,
         Skim,
         Drag,
@@ -69,13 +70,6 @@ namespace ModelGraph.Core
         Picker1CtrlTap,
         Picker1ShiftTap,
         Picker1Drag,
-
-        EnterKey,
-        EscapeKey,
-        UpArrowKey,
-        DownArrowKey,
-        LeftArrowKey,
-        RightArrowKey,
 
         ExecuteAction, //pseudo event initiated by the model to envoke an action
     };

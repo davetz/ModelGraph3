@@ -148,6 +148,9 @@
     <Compile Include="Controls\CanvasDraw\CanvasDrawSelectorGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawToolTipGrid.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawControl.xaml.cs">
+      <DependentUpon>ModelDrawControl.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Controls\ModelSymbol\ModelSymbolControl.xaml.cs">
       <DependentUpon>ModelSymbolControl.xaml</DependentUpon>
     </Compile>
@@ -214,6 +217,10 @@
   </ItemGroup>
   <ItemGroup>
     <Page Include="Controls\CanvasDraw\CanvasDrawControl.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\ModelDraw\ModelDrawControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
