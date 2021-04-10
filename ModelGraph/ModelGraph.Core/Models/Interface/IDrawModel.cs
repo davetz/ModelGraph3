@@ -6,13 +6,14 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
+        byte ModeIndex { get; set; }
         DrawItem VisibleDrawItems { get; set; }
 
+        void PostRefresh(); //UI controls are loaded and ready for data 
         void Release(); //user has closed this standalone view
-        List<ItemCommand> GetModeCommands();
-        DrawCursor GetDrawStateCursor();
+        List<IdKey> GetModeIdKeys();
+        DrawCursor GetModeStateCursor();
         bool TryGetEventAction(DrawEvent evt, out Action act);
-        bool IsDrawControEnabled(DrawEvent evt);
 
         (byte,byte,byte,byte) ColorARGB { get; set; }
 

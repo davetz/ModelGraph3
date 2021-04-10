@@ -1,61 +1,118 @@
 ﻿using ModelGraph.Core;
 using System;
+using System.Collections.Generic;
+using Windows.System;
 using Windows.UI.Core;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 
-// The Blank Page item template is documented at https://go.microsoft.com/fwlink/?LinkId=234238
-
 namespace ModelGraph.Controls
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
-    public sealed partial class ModelDrawControl : Page, IPageControl
+    /// <summary>UI shel for CanvasDrawControl</summary>
+    public sealed partial class ModelDrawControl : Page, IPageControl, IModelPageControl
     {
         public IPageModel PageModel { get; }
         IDrawModel DrawModel => PageModel.LeadModel as IDrawModel;
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
-        public ModelDrawControl()
+        public ModelDrawControl(IPageModel model)
         {
-            this.InitializeComponent();
+            PageModel = model;
+            InitializeComponent();
+            InitializeModeSelector();
+            DrawCanvas.Initialize(DrawModel);
         }
 
         #region IPageControl  =================================================
-        public void Reload()
-        {
-        }
-        public void SaveAs()
-        {
-        }
-        public void Save()
-        {
-        }
-        public void Close()
-        {
-        }
-        public void NewView(IPageModel model)
-        {
-        }
+        public void Reload() { }
+        public void SaveAs() { }
+        public void Save() { }
+        public void Close() { }
+        public void NewView(IPageModel model) { }
         public async void RefreshAsync()
         {
             await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, SetSelectedMode);
 
             DrawCanvas.Refresh();
         }
+        public void Release() => DrawModel.Release();
+        public void SetSize(double width, double height) { }
         #endregion
 
+        #region InitializeModeSelector  =======================================
+        private void InitializeModeSelector()
+        {
+            var idKeys = DrawModel.GetModeIdKeys();
+            for (byte modeIndex = 0; modeIndex < idKeys.Count; modeIndex++)
+            {
+                var key = idKeys[modeIndex];
+                var accKey = Root.GetAcceleratorId(key);
+                var name = Root.GetNameId(key);
+                var summary = Root.GetSummaryId(key);
+                var itm = new ComboBoxItem();
+                itm.Content = TrySetKeyboardAccelerator(modeIndex, accKey) ? $"{accKey} = {name}" : $"{name}";
+                ModeComboBox.Items.Add(itm);
+                ToolTipService.SetToolTip(itm, summary);
+            }
+        }
+        private void ControlGridKeyboardAccelerator_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args)
+        {
+            if (_acceleratorKey_ModeIndex.TryGetValue(sender, out byte index) && DrawModel.ModeIndex != index)
+                DrawModel.ModeIndex = index;
+        }
+        private readonly Dictionary<KeyboardAccelerator, byte> _acceleratorKey_ModeIndex = new Dictionary<KeyboardAccelerator, byte>();
+
+        #region TrySetKeyboardAccelerator  ====================================
+        bool TrySetKeyboardAccelerator(byte modeIndex, string key)
+        {
+            if (!string.IsNullOrEmpty(key) && _virtualKeyDictionary.TryGetValue(key, out VirtualKey vkey))
+            {
+                var acc = new KeyboardAccelerator();
+                acc.Key = vkey;
+                acc.Invoked += ControlGridKeyboardAccelerator_Invoked;
+                _acceleratorKey_ModeIndex[acc] = modeIndex;
+                ControlGrid.KeyboardAccelerators.Add(acc);
+                return true;
+            }
+            return false;
+        }
+        static Dictionary<string, VirtualKey> _virtualKeyDictionary = new Dictionary<string, VirtualKey>
+        {
+            ["A"] = VirtualKey.A,
+            ["B"] = VirtualKey.B,
+            ["C"] = VirtualKey.C,
+            ["D"] = VirtualKey.D,
+            ["E"] = VirtualKey.E,
+            ["F"] = VirtualKey.F,
+            ["G"] = VirtualKey.G,
+            ["H"] = VirtualKey.H,
+            ["I"] = VirtualKey.I,
+            ["J"] = VirtualKey.J,
+            ["K"] = VirtualKey.K,
+            ["L"] = VirtualKey.L,
+            ["M"] = VirtualKey.M,
+            ["N"] = VirtualKey.N,
+            ["O"] = VirtualKey.O,
+            ["P"] = VirtualKey.P,
+            ["Q"] = VirtualKey.Q,
+            ["R"] = VirtualKey.R,
+            ["S"] = VirtualKey.S,
+            ["T"] = VirtualKey.T,
+            ["U"] = VirtualKey.U,
+            ["V"] = VirtualKey.V,
+            ["W"] = VirtualKey.W,
+            ["X"] = VirtualKey.X,
+            ["Y"] = VirtualKey.Y,
+            ["Z"] = VirtualKey.Z,
+        };
+        #endregion
+        #endregion
 
         #region ModeComboBox_SelectionChanged  ================================
-        private object _forcedSelectedMode;
-        private object _previousSelectedMode;
         private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var itm = ModeComboBox.SelectedItem;
-            if (itm != _forcedSelectedMode)
-            {
-            }
+            if (DrawModel.ModeIndex != (byte)ModeComboBox.SelectedIndex)            
+                DrawModel.ModeIndex = (byte)ModeComboBox.SelectedIndex;
         }
         internal void PostEvent(DrawEvent evt)
         {
@@ -64,13 +121,11 @@ namespace ModelGraph.Controls
         }
         void SetSelectedMode()
         {
-            if (_forcedSelectedMode != _previousSelectedMode)
-                ModeComboBox.SelectedItem = _forcedSelectedMode;
-
+            if (ModeComboBox.SelectedIndex != DrawModel.ModeIndex)
+                ModeComboBox.SelectedIndex = DrawModel.ModeIndex;
             DrawCanvas.Focus(Windows.UI.Xaml.FocusState.Programmatic);
         }
         #endregion
-
 
         #region HideShowOverview  =============================================
         private void OverviewOnOffTextBlock_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)

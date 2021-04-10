@@ -29,7 +29,7 @@ namespace ModelGraph.Views
         #region NavigatedTo/From  =============================================
         protected override void OnNavigatedTo(NavigationEventArgs e)
         {
-            NavigatedToAsync(e.Parameter);
+            _ = NavigatedToAsync(e.Parameter);
         }
 
         internal async System.Threading.Tasks.Task NavigatedToAsync(object parm)
@@ -61,9 +61,7 @@ namespace ModelGraph.Views
                             m.PageControl = treeControl;
                             break;
 
-                        case ControlType.SymbolEditor: m.PageControl = new ModelSymbolControl(m); break;
-
-                        case ControlType.GraphDisplay: m.PageControl = new ModelGraphControl(m); break;
+                        case ControlType.ComplexDraw: m.PageControl = new ModelDrawControl(m); break;
 
                         default:
                             throw new ArgumentException("Unknown ControlType");

@@ -48,11 +48,11 @@ namespace ModelGraph.Core
         public override string GetSummaryId() => TitleSummary;
 
         internal static string GetKindId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}K");
-        internal static string GetNameId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}N");
+        public static string GetNameId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}N");
+        public static string GetSummaryId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}S");
         internal static string GetDoubleNameId(IdKey idKe1, IdKey idKe2) => $"{GetNameId(idKe1)} : {GetNameId(idKe2)}";
-        internal static string GetSummaryId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}S");
         internal static string GetDescriptionId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}V");
-        internal static string GetAcceleratorId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}A".ToUpper());
+        public static string GetAcceleratorId(IdKey idKe) => _localize($"{(int)(idKe & IdKey.KeyMask):X3}A".ToUpper());
         internal static string GetText(int key) => _localize($"T{key:X3}");
         #endregion
 

@@ -52,13 +52,6 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IModelPageControl  ============================================
-        public void Apply()
-        {
-        }
-
-        public void Revert()
-        {
-        }
 
         public void Release()
         {

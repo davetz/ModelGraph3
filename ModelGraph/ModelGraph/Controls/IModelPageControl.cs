@@ -8,8 +8,6 @@ namespace ModelGraph.Controls
     public interface IModelPageControl
     {
         (int Width, int Height) PreferredSize { get; }
-        void Apply();
-        void Revert();
         void Release();
         void RefreshAsync();
         void SetSize(double width, double height);

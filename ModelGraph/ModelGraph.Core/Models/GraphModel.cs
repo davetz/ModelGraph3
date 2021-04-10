@@ -1,4 +1,5 @@
-﻿using System.Numerics;
+﻿using System.Collections.Generic;
+using System.Numerics;
 
 namespace ModelGraph.Core
 {
@@ -7,11 +8,43 @@ namespace ModelGraph.Core
         internal readonly Graph Graph;
         internal readonly GraphSelector Selector;
 
+        #region DrawMode, DrawState  ==========================================
+        // Name the drawing modes and states for this model
+        public override List<IdKey> GetModeIdKeys() => new List<IdKey>()
+        {
+            IdKey.ViewMode,
+            IdKey.EditMode
+        };
+        private enum DrawMode : byte
+        {
+            View = 0,
+            Edit = 1,
+        }
+        private enum DrawState : byte
+        {
+            Idle = 0,
+        }
+        #endregion
+
+        #region InitModeStateActions  =========================================
+        private void InitModeStateEventActions()
+        {
+            DefineModeStateEventAction((byte)DrawMode.View, (byte)DrawState.Idle, DrawEvent.ExecuteAction, PageModel.TriggerUIRefresh);
+            DefineModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.Idle, DrawEvent.ExecuteAction, PageModel.TriggerUIRefresh);
+
+        }
+        #endregion
+
         #region Constructor  ==================================================
         internal GraphModel(PageModel owner, Graph graph) : base(owner)
         {
             Graph = graph;
             Selector = new GraphSelector(graph);
+
+            InitModeNames(typeof(DrawMode));
+            InitStateNames(typeof(DrawState));
+            InitModeStateEventActions();
+            ShowDrawItems(DrawItem.Overview);
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;

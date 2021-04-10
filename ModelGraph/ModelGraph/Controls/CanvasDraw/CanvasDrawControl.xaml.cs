@@ -461,7 +461,7 @@ namespace ModelGraph.Controls
         private void RestoreDrawCursor() => CheckDrawCursor(true);
         private void CheckDrawCursor(bool restore = false)
         {
-            var cursor = Model.GetDrawStateCursor();
+            var cursor = Model.GetModeStateCursor();
             if (restore || cursor != _drawCursor)
             {
                 _drawCursor = cursor;
@@ -772,6 +772,7 @@ namespace ModelGraph.Controls
             {
                 PanZoomReset();
             }
+            Model.PostRefresh();
         }
         bool _isDrawCanvasLoaded;
 
@@ -928,33 +929,6 @@ namespace ModelGraph.Controls
         #endregion
 
         #region KeyboardAccelerators  =========================================
-        private void KeyboardAccelerator_AKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.AKey);
-        private void KeyboardAccelerator_BKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.BKey);
-        private void KeyboardAccelerator_CKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.CKey);
-        private void KeyboardAccelerator_DKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.DKey);
-        private void KeyboardAccelerator_EKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EKey);
-        private void KeyboardAccelerator_FKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.FKey);
-        private void KeyboardAccelerator_GKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.GKey);
-        private void KeyboardAccelerator_HKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.HKey);
-        private void KeyboardAccelerator_IKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.IKey);
-        private void KeyboardAccelerator_JKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.JKey);
-        private void KeyboardAccelerator_KKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.KKey);
-        private void KeyboardAccelerator_LKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.LKey);
-        private void KeyboardAccelerator_MKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.MKey);
-        private void KeyboardAccelerator_NKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.NKey);
-        private void KeyboardAccelerator_OKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.OKey);
-        private void KeyboardAccelerator_PKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.PKey);
-        private void KeyboardAccelerator_QKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.QKey);
-        private void KeyboardAccelerator_RKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.RKey);
-        private void KeyboardAccelerator_SKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.SKey);
-        private void KeyboardAccelerator_TKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.TKey);
-        private void KeyboardAccelerator_UKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.UKey);
-        private void KeyboardAccelerator_VKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.VKey);
-        private void KeyboardAccelerator_WKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.WKey);
-        private void KeyboardAccelerator_XKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.XKey);
-        private void KeyboardAccelerator_YKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.YKey);
-        private void KeyboardAccelerator_ZKey_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.ZKey);
-
         private void KeyboardAccelerator_Enter_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EnterKey);
         private void KeyboardAccelerator_Escape_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.EscapeKey);
         private void KeyboardAccelerator_UpArrow_Invoked(KeyboardAccelerator sender, KeyboardAcceleratorInvokedEventArgs args) => TestDrawEvent(DrawEvent.UpArrowKey);
@@ -1102,5 +1076,9 @@ namespace ModelGraph.Controls
         private Color _originalColor;
         #endregion
 
+        private void Pick2Canvas_Loaded(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

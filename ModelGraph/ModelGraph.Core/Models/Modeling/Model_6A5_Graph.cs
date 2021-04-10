@@ -19,7 +19,7 @@ namespace ModelGraph.Core
         {
             var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new NewViewCommand(this, () => { pageModel.NewView( (p) => { new GraphModel(p, Item); }, ControlType.GraphDisplay); }));
+            list.Add(new NewViewCommand(this, () => { pageModel.NewView( (p) => { new GraphModel(p, Item); }, ControlType.ComplexDraw); }));
         }
         
         public override bool CanExpandLeft => true;

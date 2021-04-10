@@ -41,12 +41,6 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IModelPageControl  ============================================
-        public void Apply()
-        {
-        }
-        public void Revert()
-        {
-        }
         public void Release() => DrawModel.Release();
         public async void RefreshAsync()
         {
@@ -65,20 +59,20 @@ namespace ModelGraph.Controls
         private void ModeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             var itm = ModeComboBox.SelectedItem;
-            if (itm != _forcedSelectedMode)
-            {
-                if (itm == AddMode) PostEvent(DrawEvent.AKey);
-                else if (itm == ViewMode) PostEvent(DrawEvent.VKey);
-                else if (itm == EditMode) PostEvent(DrawEvent.EKey);
-                else if (itm == MoveMode) PostEvent(DrawEvent.MKey);
-                else if (itm == CopyMode) PostEvent(DrawEvent.CKey);
-                else if (itm == LinkMode) PostEvent(DrawEvent.LKey);
-                else if (itm == UnlinkMode) PostEvent(DrawEvent.UKey);
-                else if (itm == CreateMode) PostEvent(DrawEvent.NKey);
-                else if (itm == DeleteMode) PostEvent(DrawEvent.DKey);
-                else if (itm == OperateMode) PostEvent(DrawEvent.OKey);
-                else if (itm == GravityMode) PostEvent(DrawEvent.GKey);
-            }
+            //if (itm != _forcedSelectedMode)
+            //{
+            //    if (itm == AddMode) PostEvent(DrawEvent.AKey);
+            //    else if (itm == ViewMode) PostEvent(DrawEvent.VKey);
+            //    else if (itm == EditMode) PostEvent(DrawEvent.EKey);
+            //    else if (itm == MoveMode) PostEvent(DrawEvent.MKey);
+            //    else if (itm == CopyMode) PostEvent(DrawEvent.CKey);
+            //    else if (itm == LinkMode) PostEvent(DrawEvent.LKey);
+            //    else if (itm == UnlinkMode) PostEvent(DrawEvent.UKey);
+            //    else if (itm == CreateMode) PostEvent(DrawEvent.NKey);
+            //    else if (itm == DeleteMode) PostEvent(DrawEvent.DKey);
+            //    else if (itm == OperateMode) PostEvent(DrawEvent.OKey);
+            //    else if (itm == GravityMode) PostEvent(DrawEvent.GKey);
+            //}
         }
         internal void PostEvent(DrawEvent evt)
         {

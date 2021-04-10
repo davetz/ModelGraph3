@@ -19,47 +19,61 @@ namespace ModelGraph.Core
         #endregion
 
         #region DrawStateCursor  ==============================================
-        private Dictionary<byte, DrawCursor> _state_Cursor = new Dictionary<byte, DrawCursor>();
-        public DrawCursor GetDrawStateCursor() => _state_Cursor.TryGetValue(_drawState, out DrawCursor cur) ? cur : DrawCursor.Arrow;
-        protected void SetDrawStateCursors(byte state, DrawCursor cursor) => _state_Cursor[state] = cursor;
+        private Dictionary<(byte,byte), DrawCursor> _modeState_Cursor = new Dictionary<(byte, byte), DrawCursor>();
+        public DrawCursor GetModeStateCursor() => _modeState_Cursor.TryGetValue((_drawMode, _drawState), out DrawCursor cur) ? cur : DrawCursor.Arrow;
+        protected void SetDrawModeStateCursors(byte mode, byte state, DrawCursor cursor) => _modeState_Cursor[(mode, state)] = cursor;
         #endregion
 
         #region DrawStateAction  ==============================================
-        private byte _drawState = 0; //byte value of the current state, depends on model
+        private byte _drawMode = 0; //byte value of the current draw mode, model dependant
+        private byte _drawState = 0; //byte value of the current draw state, model dependant
+        private Dictionary<byte, string> _drawModeNames = new Dictionary<byte, string>();
         private Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
-        private Dictionary<(byte, DrawEvent), Action> _drawStateEvent_Action = new Dictionary<(byte, DrawEvent), Action>();
-        public bool TryGetEventAction(DrawEvent evt, out Action act) => _drawStateEvent_Action.TryGetValue((_drawState, evt), out act);
+        private Dictionary<(byte,byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
 
-        protected void SetDrawStateValue(byte stateValue, bool execute = false)
+        public byte ModeIndex { get=>_drawMode; set=>SetModeState(value, 0, true); }
+        public bool TryGetEventAction(DrawEvent evt, out Action act) => _modeStateEvent_Action.TryGetValue((_drawMode, _drawState, evt), out act);
+        virtual public List<IdKey> GetModeIdKeys() => new List<IdKey>(0);
+        protected void SetDrawState(byte state) => SetModeState(_drawMode, state, true);
+
+        private void SetModeState(byte mode, byte state, bool execute = false)
         {
-            if (stateValue != _drawState)
+            if (mode != _drawMode || state != _drawState)
             {
-                _drawState = stateValue;
-                if (!_drawStateNames.TryGetValue(stateValue, out string stateName)) stateName = $"#{_drawState}";
-                Debug.WriteLine($"New DrawState: {stateName}");
+                _drawMode = mode;
+                _drawState = state;
+                var modeName = _drawModeNames.TryGetValue(mode, out string vMode) ? vMode : $"#{_drawMode}";
+                var stateName = _drawStateNames.TryGetValue(state, out string vState) ? vState : $"#{_drawState}";
+                var executing = "no action";
                 if (execute && TryGetEventAction((DrawEvent.ExecuteAction), out Action action))
                 {
-                    Debug.WriteLine("Executing DrawState:");
+                    executing = "executing action";
                     action();
                 }
+                Debug.WriteLine($"Drawing  Mode:{modeName}  State:{stateName} - {executing}");
             }
         }
 
-        protected void InitDrawStateName(Type drawStateEnum)
+        protected void DefineModeStateEventAction(byte mode, byte state, DrawEvent evt, Action act) => _modeStateEvent_Action[(mode, state, evt)] = act;
+
+        protected void InitModeNames(Type drawModeEnum)
         {
-            foreach(int key in Enum.GetValues(drawStateEnum))
+            foreach(byte key in Enum.GetValues(drawModeEnum))
             {
-                _drawStateNames[(byte)key] = Enum.GetName(drawStateEnum, key);
+                _drawModeNames[key] = Enum.GetName(drawModeEnum, key);
             }
         }
-        #endregion
-
-        #region DrawEventControl  =============================================
-        public bool IsDrawControEnabled(DrawEvent key) => _drawStateEvent_Action.ContainsKey((_drawState, key));
-        virtual public List<ItemCommand> GetModeCommands() => new List<ItemCommand>(0);
+        protected void InitStateNames(Type drawStateEnum)
+        {
+            foreach (byte key in Enum.GetValues(drawStateEnum))
+            {
+                _drawStateNames[key] = Enum.GetName(drawStateEnum, key);
+            }
+        }
         #endregion
 
         #region Layout  =======================================================
+        public void PostRefresh() => PageModel.Root.PostRefresh();
         public string ToolTip_Text1 { get; protected set; }
         public string ToolTip_Text2 { get; protected set; }
         public Vector2 FlyOutSize { get; protected set; }

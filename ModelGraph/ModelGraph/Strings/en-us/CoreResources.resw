@@ -321,11 +321,23 @@
   <data name="021S" xml:space="preserve">
     <value>Rotate right 45 degrees</value>
   </data>
-  <data name="0DFA" xml:space="preserve">
+  <data name="0DDA" xml:space="preserve">
+    <value>E</value>
+  </data>
+  <data name="0DDN" xml:space="preserve">
+    <value>Edit item properties or align items</value>
+  </data>
+  <data name="0DEA" xml:space="preserve">
     <value>V</value>
   </data>
+  <data name="0DEN" xml:space="preserve">
+    <value>View without changing anything</value>
+  </data>
+  <data name="0DFA" xml:space="preserve">
+    <value>A</value>
+  </data>
   <data name="0DFN" xml:space="preserve">
-    <value>V = View without changing anything</value>
+    <value>Add new items from palatte</value>
   </data>
   <data name="0E1K" xml:space="preserve">
     <value>Enum</value>

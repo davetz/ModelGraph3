@@ -67,17 +67,20 @@ namespace ModelGraph.Core
         Rotate22LeftCommand = 0x24,
         Rotate22RightCommand = 0x25,
 
-        OperateMode = 0xD5,
-        GravityMode = 0xD6,
-        DeleteMode = 0xD7,
-        UnlinkMode = 0xD8,
+        FlipRotateMode = 0xD2, //configure auto flip rotate
+        TerminalMode = 0xD3, //add terminals to symbol
+        OperateMode = 0xD4,
+        GravityMode = 0xD5,
+        DeleteMode = 0xD6,
+        UnlinkMode = 0xD7,
+        ShapeMode = 0xD8, //adjust the shape of an object (add,move,remove) inflection points
         PasteMode = 0xD9,
         LinkMode = 0xDA,
         CopyMode = 0xDB,
         MoveMode = 0xDC,
         EditMode = 0xDD,
         ViewMode = 0xDE,
-        AddMode = 0xDF,
+        NewMode = 0xDF, //select from the palette and add a copy of selected the object to the drawing
         #endregion
 
         #region Store ================================================(0E0-0FF)

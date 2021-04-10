@@ -1,7 +1,6 @@
-﻿namespace ModelGraph.Core
-{/*
-    
- */
+﻿
+namespace ModelGraph.Core
+{
     public enum DropAction
     {
         None,

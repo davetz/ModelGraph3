@@ -52,13 +52,6 @@ namespace ModelGraph.Controls
         #endregion
 
         #region IModelPageControl  ============================================
-        public void Apply()
-        {
-        }
-
-        public void Revert()
-        {
-        }
 
         public void Release()
         {
@@ -134,10 +127,10 @@ namespace ModelGraph.Controls
 
         private void RecenterButton_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.Btn8);
 
-        private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.PKey);
-        private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.VKey);
-        private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.LKey);
-        private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.OKey);
+        private void MovePins_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnC);
+        private void EditSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnC);
+        private void TermSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnC);
+        private void FlipSelect_Click(object sender, Windows.UI.Xaml.RoutedEventArgs e) => PostEvent(DrawEvent.BtnC);
 
 
         private List<(float dx, float dy)> _getList = new List<(float dx, float dy)>();

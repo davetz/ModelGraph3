@@ -11,7 +11,7 @@ namespace ModelGraph.Core
         {
             var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new CreateCommand(this, () => { IsExpandedLeft = true; pageModel.NewView((p) => { new GraphModel(p, Item.CreateGraph()); }, ControlType.GraphDisplay); } ));
+            list.Add(new CreateCommand(this, () => { IsExpandedLeft = true; pageModel.NewView((p) => { new GraphModel(p, Item.CreateGraph()); }, ControlType.ComplexDraw); } ));
         }
 
         protected override int GetTotalCount() => Item.Count;
