@@ -43,6 +43,6 @@ namespace ModelGraph.Core
         LeftArrowKey,
         RightArrowKey,
 
-        ExecuteAction, //pseudo event initiated by the model to envoke an action
+        Pseudo, //pseudo event initiated by the model to envoke an action
     };
 }

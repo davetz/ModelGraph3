@@ -50,53 +50,111 @@ END
 // Cursor
 //
 
-IDC_POINTER1            CURSOR                  "pointer1.cur"
+IDC_POINTER01           CURSOR                  "pointer01.cur"
 
-IDC_POINTER2            CURSOR                  "pointer2.cur"
+IDC_POINTER02           CURSOR                  "pointer02.cur"
 
-IDC_POINTER3            CURSOR                  "pointer3.cur"
+IDC_POINTER03           CURSOR                  "pointer03.cur"
 
-IDC_POINTER4            CURSOR                  "pointer4.cur"
+IDC_POINTER04           CURSOR                  "pointer04.cur"
 
-IDC_POINTER5            CURSOR                  "pointer5.cur"
+IDC_POINTER05           CURSOR                  "pointer05.cur"
 
-IDC_POINTER6            CURSOR                  "pointer6.cur"
+IDC_POINTER06           CURSOR                  "pointer06.cur"
 
-IDC_POINTER7            CURSOR                  "pointer7.cur"
+IDC_POINTER07           CURSOR                  "pointer07.cur"
 
-IDC_POINTER8            CURSOR                  "pointer8.cur"
+IDC_POINTER08           CURSOR                  "pointer08.cur"
 
-IDC_POINTER9            CURSOR                  "pointer9.cur"
+IDC_POINTER09           CURSOR                  "pointer09.cur"
 
-IDC_POINTERA           CURSOR                  "pointerA.cur"
+IDC_POINTER10           CURSOR                  "pointer10.cur"
 
-IDC_POINTERB           CURSOR                  "pointerB.cur"
+IDC_POINTER11           CURSOR                  "pointer11.cur"
 
-IDC_POINTERC           CURSOR                  "pointerC.cur"
+IDC_POINTER12           CURSOR                  "pointer12.cur"
 
-IDC_POINTERD           CURSOR                  "pointerD.cur"
+IDC_POINTER13           CURSOR                  "pointer13.cur"
 
-IDC_POINTERE           CURSOR                  "pointerE.cur"
+IDC_POINTER14           CURSOR                  "pointer14.cur"
 
-IDC_POINTERF           CURSOR                  "pointerF.cur"
+IDC_POINTER15           CURSOR                  "pointer15.cur"
 
-IDC_POINTERG           CURSOR                  "pointerG.cur"
+IDC_POINTER16           CURSOR                  "pointer16.cur"
 
-IDC_POINTERH           CURSOR                  "pointerH.cur"
+IDC_POINTER17           CURSOR                  "pointer17.cur"
 
-IDC_POINTERI           CURSOR                  "pointerI.cur"
+IDC_POINTER18           CURSOR                  "pointer18.cur"
 
-IDC_POINTERJ           CURSOR                  "pointerJ.cur"
+IDC_POINTER19           CURSOR                  "pointer19.cur"
 
-IDC_POINTERK           CURSOR                  "pointerK.cur"
+IDC_POINTER20           CURSOR                  "pointer20.cur"
 
-IDC_POINTERL           CURSOR                  "pointerL.cur"
+IDC_POINTER21           CURSOR                  "pointer21.cur"
 
-IDC_POINTERM           CURSOR                  "pointerM.cur"
+IDC_POINTER22           CURSOR                  "pointer22.cur"
 
-IDC_POINTERN           CURSOR                  "pointerN.cur"
+IDC_POINTER23           CURSOR                  "pointer23.cur"
 
-IDC_POINTERO           CURSOR                  "pointerO.cur"
+IDC_POINTER24           CURSOR                  "pointer24.cur"
+
+IDC_POINTER25           CURSOR                  "pointer25.cur"
+
+IDC_POINTER26           CURSOR                  "pointer26.cur"
+
+IDC_POINTER27           CURSOR                  "pointer27.cur"
+
+IDC_POINTER28           CURSOR                  "pointer28.cur"
+
+IDC_POINTER29           CURSOR                  "pointer29.cur"
+
+IDC_POINTER30           CURSOR                  "pointer30.cur"
+
+IDC_POINTER31           CURSOR                  "pointer31.cur"
+
+IDC_POINTER32           CURSOR                  "pointer32.cur"
+
+IDC_POINTER33           CURSOR                  "pointer33.cur"
+
+IDC_POINTER34           CURSOR                  "pointer34.cur"
+
+IDC_POINTER35           CURSOR                  "pointer35.cur"
+
+IDC_POINTER36           CURSOR                  "pointer36.cur"
+
+IDC_POINTER37           CURSOR                  "pointer37.cur"
+
+IDC_POINTER38           CURSOR                  "pointer38.cur"
+
+IDC_POINTER39           CURSOR                  "pointer39.cur"
+
+IDC_POINTER40           CURSOR                  "pointer40.cur"
+
+IDC_POINTER41           CURSOR                  "pointer41.cur"
+
+IDC_POINTER42           CURSOR                  "pointer42.cur"
+
+IDC_POINTER43           CURSOR                  "pointer43.cur"
+
+IDC_POINTER44           CURSOR                  "pointer44.cur"
+
+IDC_POINTER45           CURSOR                  "pointer45.cur"
+
+IDC_POINTER46           CURSOR                  "pointer46.cur"
+
+IDC_POINTER47           CURSOR                  "pointer47.cur"
+
+IDC_POINTER48           CURSOR                  "pointer48.cur"
+
+IDC_POINTER49           CURSOR                  "pointer49.cur"
+
+IDC_POINTER50           CURSOR                  "pointer50.cur"
+
+IDC_POINTER51           CURSOR                  "pointer51.cur"
+
+IDC_POINTER52           CURSOR                  "pointer52.cur"
+
+IDC_POINTER53           CURSOR                  "pointer53.cur"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

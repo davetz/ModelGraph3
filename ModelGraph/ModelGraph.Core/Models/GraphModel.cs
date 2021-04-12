@@ -13,25 +13,67 @@ namespace ModelGraph.Core
         public override List<IdKey> GetModeIdKeys() => new List<IdKey>()
         {
             IdKey.ViewMode,
-            IdKey.EditMode
+            IdKey.EditMode,
+            IdKey.MoveMode,
+            IdKey.CopyMode,
+            IdKey.PasteMode,
+            IdKey.DeleteMode,
+            IdKey.GravityMode,
+            IdKey.OperateMode,
         };
         private enum DrawMode : byte
         {
-            View = 0,
-            Edit = 1,
+            View,
+            Edit,
+            Move,
+            Copy,
+            Paste,
+            Delete,
+            Gravity,
+            Operate,
         }
         private enum DrawState : byte
         {
-            Idle = 0,
+            OnVoid, //pointer is on an empty space on the drawing
+
+            OnNode,
+            OnNodeEastGrip,
+            OnNodeWestGrip,
+            OnNodeNorthGrip,
+            OnNodeSouthGrip,
+            OnNodeNorthEastGrip,
+            OnNodeNorthWestGrip,
+            OnNodeSouthEastGrip,
+            OnNodeSouthWestGrip,
+
+            OnEdge,
+            OnEdgeSide1,
+            OnEdgeSide2,
+            OnEdgeTerm1,
+            OnEdgeTerm2,
+            OnEdgePoint,
+            OnEdgeMidpoint,  
         }
         #endregion
 
-        #region InitModeStateActions  =========================================
-        private void InitModeStateEventActions()
+        #region SetModeStateActions  ==========================================
+        private void SetModeStateEventActions()
         {
-            DefineModeStateEventAction((byte)DrawMode.View, (byte)DrawState.Idle, DrawEvent.ExecuteAction, PageModel.TriggerUIRefresh);
-            DefineModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.Idle, DrawEvent.ExecuteAction, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Delete, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Gravity, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Operate, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+        }
+        #endregion
 
+        #region SetModeStateCursors  ==========================================
+        private void SetModeStateCursors()
+        {
+            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.Hit);
         }
         #endregion
 
@@ -41,9 +83,10 @@ namespace ModelGraph.Core
             Graph = graph;
             Selector = new GraphSelector(graph);
 
-            InitModeNames(typeof(DrawMode));
-            InitStateNames(typeof(DrawState));
-            InitModeStateEventActions();
+            SetModeNames(typeof(DrawMode));
+            SetStateNames(typeof(DrawState));
+            SetModeStateEventActions();
+            SetModeStateCursors();
             ShowDrawItems(DrawItem.Overview);
 
             FlyTreeModel = new TreeModel(owner, null);

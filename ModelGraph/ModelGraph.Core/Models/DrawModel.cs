@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         #region DrawStateCursor  ==============================================
         private Dictionary<(byte,byte), DrawCursor> _modeState_Cursor = new Dictionary<(byte, byte), DrawCursor>();
         public DrawCursor GetModeStateCursor() => _modeState_Cursor.TryGetValue((_drawMode, _drawState), out DrawCursor cur) ? cur : DrawCursor.Arrow;
-        protected void SetDrawModeStateCursors(byte mode, byte state, DrawCursor cursor) => _modeState_Cursor[(mode, state)] = cursor;
+        protected void SetModeStateCursor(byte mode, byte state, DrawCursor cursor) => _modeState_Cursor[(mode, state)] = cursor;
         #endregion
 
         #region DrawStateAction  ==============================================
@@ -45,25 +45,25 @@ namespace ModelGraph.Core
                 var modeName = _drawModeNames.TryGetValue(mode, out string vMode) ? vMode : $"#{_drawMode}";
                 var stateName = _drawStateNames.TryGetValue(state, out string vState) ? vState : $"#{_drawState}";
                 var executing = "no action";
-                if (execute && TryGetEventAction((DrawEvent.ExecuteAction), out Action action))
+                if (execute && TryGetEventAction((DrawEvent.Pseudo), out Action action))
                 {
                     executing = "executing action";
                     action();
                 }
-                Debug.WriteLine($"Drawing  Mode:{modeName}  State:{stateName} - {executing}");
+                Debug.WriteLine($"Drawing mode state:  {modeName} {stateName} - {executing}");
             }
         }
 
-        protected void DefineModeStateEventAction(byte mode, byte state, DrawEvent evt, Action act) => _modeStateEvent_Action[(mode, state, evt)] = act;
+        protected void SetModeStateEventAction(byte mode, byte state, DrawEvent evt, Action act) => _modeStateEvent_Action[(mode, state, evt)] = act;
 
-        protected void InitModeNames(Type drawModeEnum)
+        protected void SetModeNames(Type drawModeEnum)
         {
             foreach(byte key in Enum.GetValues(drawModeEnum))
             {
                 _drawModeNames[key] = Enum.GetName(drawModeEnum, key);
             }
         }
-        protected void InitStateNames(Type drawStateEnum)
+        protected void SetStateNames(Type drawStateEnum)
         {
             foreach (byte key in Enum.GetValues(drawStateEnum))
             {

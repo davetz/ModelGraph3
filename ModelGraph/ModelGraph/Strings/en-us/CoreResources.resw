@@ -321,6 +321,72 @@
   <data name="021S" xml:space="preserve">
     <value>Rotate right 45 degrees</value>
   </data>
+  <data name="0D2A" xml:space="preserve">
+    <value>F</value>
+  </data>
+  <data name="0D2N" xml:space="preserve">
+    <value>FlipRotate, define auto flip rotate options</value>
+  </data>
+  <data name="0D3A" xml:space="preserve">
+    <value>T</value>
+  </data>
+  <data name="0D3N" xml:space="preserve">
+    <value>Terninals, define allowed connection points</value>
+  </data>
+  <data name="0D4A" xml:space="preserve">
+    <value>O</value>
+  </data>
+  <data name="0D4N" xml:space="preserve">
+    <value>Operate tap on item to invoke an preprogramed action</value>
+  </data>
+  <data name="0D5A" xml:space="preserve">
+    <value>G</value>
+  </data>
+  <data name="0D5N" xml:space="preserve">
+    <value>Gravity tap on items to shrink the space between them</value>
+  </data>
+  <data name="0D6A" xml:space="preserve">
+    <value>R</value>
+  </data>
+  <data name="0D6N" xml:space="preserve">
+    <value>Reshape items by draging/adding/removing inflection points</value>
+  </data>
+  <data name="0D7A" xml:space="preserve">
+    <value>D</value>
+  </data>
+  <data name="0D7N" xml:space="preserve">
+    <value>Delete tap on items to delete</value>
+  </data>
+  <data name="0D8A" xml:space="preserve">
+    <value>U</value>
+  </data>
+  <data name="0D8N" xml:space="preserve">
+    <value>Unlink tap on relational link symbol  </value>
+  </data>
+  <data name="0D9A" xml:space="preserve">
+    <value>P</value>
+  </data>
+  <data name="0D9N" xml:space="preserve">
+    <value>Paste new instance of copied/palatte items</value>
+  </data>
+  <data name="0DAA" xml:space="preserve">
+    <value>L</value>
+  </data>
+  <data name="0DAN" xml:space="preserve">
+    <value>Link items using pointer click, drag, release</value>
+  </data>
+  <data name="0DBA" xml:space="preserve">
+    <value>C</value>
+  </data>
+  <data name="0DBN" xml:space="preserve">
+    <value>Copy selected item</value>
+  </data>
+  <data name="0DCA" xml:space="preserve">
+    <value>M</value>
+  </data>
+  <data name="0DCN" xml:space="preserve">
+    <value>Move items with pointer or with arrow keys</value>
+  </data>
   <data name="0DDA" xml:space="preserve">
     <value>E</value>
   </data>

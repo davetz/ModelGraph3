@@ -30,76 +30,163 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="pointer1.cur">
+    <None Include="pointer01.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer2.cur">
+    <None Include="pointer02.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer3.cur">
+    <None Include="pointer03.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer4.cur">
+    <None Include="pointer04.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer5.cur">
+    <None Include="pointer05.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer6.cur">
+    <None Include="pointer06.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer7.cur">
+    <None Include="pointer07.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer8.cur">
+    <None Include="pointer08.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointer9.cur">
+    <None Include="pointer09.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerA.cur">
+    <None Include="pointer10.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerB.cur">
+    <None Include="pointer11.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerC.cur">
+    <None Include="pointer12.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerD.cur">
+    <None Include="pointer13.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerE.cur">
+    <None Include="pointer14.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerF.cur">
+    <None Include="pointer15.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerG.cur">
+    <None Include="pointer16.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerH.cur">
+    <None Include="pointer17.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerI.cur">
+    <None Include="pointer18.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerJ.cur">
+    <None Include="pointer19.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerK.cur">
+    <None Include="pointer20.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerL.cur">
+    <None Include="pointer21.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerM.cur">
+    <None Include="pointer22.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerN.cur">
+    <None Include="pointer23.cur">
       <Filter>Resource Files</Filter>
     </None>
-    <None Include="pointerO.cur">
+    <None Include="pointer24.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer25.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer26.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer27.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer28.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer29.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer30.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer31.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer32.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer33.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer34.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer35.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer36.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer37.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer38.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer39.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer40.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer41.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer42.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer43.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer44.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer45.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer46.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer47.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer48.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer49.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer50.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer51.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer52.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer53.cur">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>

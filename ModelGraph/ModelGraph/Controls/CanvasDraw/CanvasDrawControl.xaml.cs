@@ -488,7 +488,7 @@ namespace ModelGraph.Controls
             {
                 action(); //imediately execute the drag event
                 EditCanvas.Invalidate(); //and then trigger editCanvas refresh
-                RefreshAll();
+                //RefreshAll();
             }
         }
         #endregion

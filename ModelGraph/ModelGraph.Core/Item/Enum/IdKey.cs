@@ -71,9 +71,9 @@ namespace ModelGraph.Core
         TerminalMode = 0xD3, //add terminals to symbol
         OperateMode = 0xD4,
         GravityMode = 0xD5,
-        DeleteMode = 0xD6,
-        UnlinkMode = 0xD7,
-        ShapeMode = 0xD8, //adjust the shape of an object (add,move,remove) inflection points
+        ReshapeMode = 0xD6, //adjust the shape of an object (add,move,remove) inflection points
+        DeleteMode = 0xD7,
+        UnlinkMode = 0xD8,
         PasteMode = 0xD9,
         LinkMode = 0xDA,
         CopyMode = 0xDB,
