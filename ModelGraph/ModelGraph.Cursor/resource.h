@@ -29,32 +29,6 @@
 #define IDC_POINTER25                   125
 #define IDC_POINTER26                   126
 #define IDC_POINTER27                   127
-#define IDC_POINTER28                   128
-#define IDC_POINTER29                   129
-#define IDC_POINTER30                   130
-#define IDC_POINTER31                   131
-#define IDC_POINTER32                   132
-#define IDC_POINTER33                   133
-#define IDC_POINTER34                   134
-#define IDC_POINTER35                   135
-#define IDC_POINTER36                   136
-#define IDC_POINTER37                   137
-#define IDC_POINTER38                   138
-#define IDC_POINTER39                   139
-#define IDC_POINTER40                   140
-#define IDC_POINTER41                   141
-#define IDC_POINTER42                   142
-#define IDC_POINTER43                   143
-#define IDC_POINTER44                   144
-#define IDC_POINTER45                   145
-#define IDC_POINTER46                   146
-#define IDC_POINTER47                   147
-#define IDC_POINTER48                   148
-#define IDC_POINTER49                   149
-#define IDC_POINTER50                   150
-#define IDC_POINTER51                   151
-#define IDC_POINTER52                   152
-#define IDC_POINTER53                   153
 
 // Next default values for new objects
 // 

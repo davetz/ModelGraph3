@@ -104,57 +104,6 @@ IDC_POINTER26           CURSOR                  "pointer26.cur"
 
 IDC_POINTER27           CURSOR                  "pointer27.cur"
 
-IDC_POINTER28           CURSOR                  "pointer28.cur"
-
-IDC_POINTER29           CURSOR                  "pointer29.cur"
-
-IDC_POINTER30           CURSOR                  "pointer30.cur"
-
-IDC_POINTER31           CURSOR                  "pointer31.cur"
-
-IDC_POINTER32           CURSOR                  "pointer32.cur"
-
-IDC_POINTER33           CURSOR                  "pointer33.cur"
-
-IDC_POINTER34           CURSOR                  "pointer34.cur"
-
-IDC_POINTER35           CURSOR                  "pointer35.cur"
-
-IDC_POINTER36           CURSOR                  "pointer36.cur"
-
-IDC_POINTER37           CURSOR                  "pointer37.cur"
-
-IDC_POINTER38           CURSOR                  "pointer38.cur"
-
-IDC_POINTER39           CURSOR                  "pointer39.cur"
-
-IDC_POINTER40           CURSOR                  "pointer40.cur"
-
-IDC_POINTER41           CURSOR                  "pointer41.cur"
-
-IDC_POINTER42           CURSOR                  "pointer42.cur"
-
-IDC_POINTER43           CURSOR                  "pointer43.cur"
-
-IDC_POINTER44           CURSOR                  "pointer44.cur"
-
-IDC_POINTER45           CURSOR                  "pointer45.cur"
-
-IDC_POINTER46           CURSOR                  "pointer46.cur"
-
-IDC_POINTER47           CURSOR                  "pointer47.cur"
-
-IDC_POINTER48           CURSOR                  "pointer48.cur"
-
-IDC_POINTER49           CURSOR                  "pointer49.cur"
-
-IDC_POINTER50           CURSOR                  "pointer50.cur"
-
-IDC_POINTER51           CURSOR                  "pointer51.cur"
-
-IDC_POINTER52           CURSOR                  "pointer52.cur"
-
-IDC_POINTER53           CURSOR                  "pointer53.cur"
 
 #endif    // English (United States) resources
 /////////////////////////////////////////////////////////////////////////////

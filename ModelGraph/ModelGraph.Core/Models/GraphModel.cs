@@ -73,7 +73,20 @@ namespace ModelGraph.Core
         #region SetModeStateCursors  ==========================================
         private void SetModeStateCursors()
         {
-            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.Hit);
+            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.Splat);
+            SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnVoid, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnVoid, DrawCursor.Armed);
+
+            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnNode, DrawCursor.Edit);
+            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawCursor.Move);
+            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnNode, DrawCursor.Copy);
+            SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Delete);
+            SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnNode, DrawCursor.Gravity);
+            SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnNode, DrawCursor.Operate);
         }
         #endregion
 
