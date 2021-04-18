@@ -14,23 +14,6 @@ namespace ModelGraph.Core
         internal Extent Extent = new Extent(); // selector rectangle
         protected bool _enableSnapshot = true;
 
-
-        #region Properties  ===================================================
-        internal bool IsVoidHit => (HitLocation == HitLocation.Void);
-        internal bool IsNodeHit => ((HitLocation & HitLocation.Node) != 0);
-        internal bool IsEdgeHit => ((HitLocation & HitLocation.Edge) != 0);
-        internal bool IsTopHit => ((HitLocation & HitLocation.Top) != 0);
-        internal bool IsLeftHit => ((HitLocation & HitLocation.Left) != 0);
-        internal bool IsRightHit => ((HitLocation & HitLocation.Right) != 0);
-        internal bool IsBottomHit => ((HitLocation & HitLocation.Bottom) != 0);
-        internal bool IsCenterHit => ((HitLocation & HitLocation.Center) != 0);
-        internal bool IsSideHit => ((HitLocation & HitLocation.SideOf) != 0);
-
-        internal bool IsEnd1Hit => ((HitLocation & HitLocation.End1) != 0);
-        internal bool IsEnd2Hit => ((HitLocation & HitLocation.End2) != 0);
-        internal bool IsBendHit => ((HitLocation & HitLocation.Bend) != 0);
-        #endregion
-
         #region RequiredMethods  ==============================================
         internal abstract void HitTestPoint(Vector2 p);
         internal abstract void HitTestRegion(bool toggleMode, Vector2 p1, Vector2 p2);

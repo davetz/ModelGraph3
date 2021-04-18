@@ -148,9 +148,9 @@
     <ResourceCompile Include="Resource.rc" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="pointer01.cur" />
-    <None Include="pointer03.cur" />
     <None Include="pointer02.cur" />
+    <None Include="pointer03.cur" />
+    <None Include="pointer01.cur" />
     <None Include="pointer04.cur" />
     <None Include="pointer05.cur" />
     <None Include="pointer06.cur" />

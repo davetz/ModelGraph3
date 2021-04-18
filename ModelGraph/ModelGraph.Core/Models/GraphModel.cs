@@ -18,6 +18,7 @@ namespace ModelGraph.Core
             IdKey.CopyMode,
             IdKey.PasteMode,
             IdKey.DeleteMode,
+            IdKey.ReshapeMode,
             IdKey.GravityMode,
             IdKey.OperateMode,
         };
@@ -29,6 +30,7 @@ namespace ModelGraph.Core
             Copy,
             Paste,
             Delete,
+            Reshape,
             Gravity,
             Operate,
         }
@@ -65,26 +67,42 @@ namespace ModelGraph.Core
             SetModeStateEventAction((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Delete, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Gravity, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Operate, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+
+
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.Skim, ViewSkim);
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnNode, DrawEvent.Skim, ViewSkim);
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnEdge, DrawEvent.Skim, ViewSkim);
+
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Skim, ViewSkim);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnNode, DrawEvent.Skim, ViewSkim);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnEdge, DrawEvent.Skim, ViewSkim);
+
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Skim, MoveSkim);
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawEvent.Skim, MoveSkim);
         }
         #endregion
 
         #region SetModeStateCursors  ==========================================
         private void SetModeStateCursors()
         {
-            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawCursor.Armed);
-            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.Armed);
-            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawCursor.Armed);
-            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.Splat);
-            SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Armed);
-            SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnVoid, DrawCursor.Armed);
-            SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnVoid, DrawCursor.Armed);
+            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.New);
+            SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnVoid, DrawCursor.Aim);
 
             SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnNode, DrawCursor.Edit);
+            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnEdge, DrawCursor.Edit);
             SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawCursor.Move);
             SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnNode, DrawCursor.Copy);
             SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Delete);
+            SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnNode, DrawCursor.Reshape);
             SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnNode, DrawCursor.Gravity);
             SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnNode, DrawCursor.Operate);
         }
@@ -119,7 +137,6 @@ namespace ModelGraph.Core
             root.PostRefresh();
         }
         #endregion
-
 
         #region Refresh/UpdateEditorData  =====================================
         internal void Refresh()
@@ -205,45 +222,6 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region SkimHitTest  ==================================================
-        private void SkimHitTest()
-        {
-            Selector.HitTestPoint(Editor.Point2);
-            if (Selector.IsVoidHit)
-            {
-                HideDrawItems(DrawItem.ToolTip);
-                if (ModelDelta != Graph.ModelDelta)
-                {
-                    ModelDelta = Graph.ModelDelta;
-                    Graph.RebuildHitTestMap();
-                    Selector.UpdateModels();
-                }
-                //ModifyDrawState(DrawState.NowOnVoid, DrawState.NowMask | DrawState.EventMask); //need both masks!
-            }
-            else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
-            {
-                ToolTip_Text1 = Selector.HitNode.GetNameId();
-                ToolTip_Text2 = Selector.HitNode.GetSummaryId();
-                FlyOutPoint = Selector.HitNode.Center;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                //ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask); //need both masks!
-                PageModel.TriggerUIRefresh();
-
-            }
-            else if (Selector.IsEdgeHit && Selector.HitEdge != Selector.PrevEdge)
-            {
-                ToolTip_Text1 = Selector.HitEdge.GetNameId();
-                ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
-                FlyOutPoint = Editor.Point2;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                //ModifyDrawState(DrawState.NowOnEdge, DrawState.NowMask | DrawState.EventMask); //need both masks!                
-                PageModel.TriggerUIRefresh();
-            }
-        }
-        #endregion
-
         #region Selector  =====================================================
         private bool HasSelector => false; // (DrawState & DrawState.HasSelector) != 0;
         private void TestSelectorTap()
@@ -312,6 +290,45 @@ namespace ModelGraph.Core
         private bool _selectToggleMode;
         #endregion
 
+        #region ViewMode  =====================================================
+        private void ViewSkim()
+        {
+            Selector.HitTestPoint(Editor.Point2);
+            if (Selector.IsVoidHit)
+            {
+                HideDrawItems(DrawItem.ToolTip);
+                if (ModelDelta != Graph.ModelDelta)
+                {
+                    ModelDelta = Graph.ModelDelta;
+                    Graph.RebuildHitTestMap();
+                    Selector.UpdateModels();
+                }
+                SetDrawState((byte)DrawState.OnVoid);
+            }
+            else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
+            {
+                ToolTip_Text1 = Selector.HitNode.GetNameId();
+                ToolTip_Text2 = Selector.HitNode.GetSummaryId();
+                FlyOutPoint = Selector.HitNode.Center;
+                ShowDrawItems(DrawItem.ToolTip);
+                ToolTipChanged();
+                SetDrawState((byte)DrawState.OnNode);
+                PageModel.TriggerUIRefresh();
+
+            }
+            else if (Selector.IsEdgeHit && Selector.HitEdge != Selector.PrevEdge)
+            {
+                ToolTip_Text1 = Selector.HitEdge.GetNameId();
+                ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
+                FlyOutPoint = Editor.Point2;
+                ShowDrawItems(DrawItem.ToolTip);
+                ToolTipChanged();
+                SetDrawState((byte)DrawState.OnEdge);
+                PageModel.TriggerUIRefresh();
+            }
+        }
+        #endregion
+
         #region EditMode  =====================================================
         private void EditOnNodeTapped()
         {
@@ -342,6 +359,32 @@ namespace ModelGraph.Core
         #endregion
 
         #region MoveMode  =====================================================
+        private void MoveSkim()
+        {
+            Selector.HitTestPoint(Editor.Point2);
+            if (Selector.IsVoidHit)
+            {
+                HideDrawItems(DrawItem.ToolTip);
+                if (ModelDelta != Graph.ModelDelta)
+                {
+                    ModelDelta = Graph.ModelDelta;
+                    Graph.RebuildHitTestMap();
+                    Selector.UpdateModels();
+                }
+                SetDrawState((byte)DrawState.OnVoid);
+            }
+            else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
+            {
+                ToolTip_Text1 = Selector.HitNode.GetNameId();
+                ToolTip_Text2 = Selector.HitNode.GetSummaryId();
+                FlyOutPoint = Selector.HitNode.Center;
+                ShowDrawItems(DrawItem.ToolTip);
+                ToolTipChanged();
+                SetDrawState((byte)DrawState.OnNode);
+                PageModel.TriggerUIRefresh();
+
+            }
+        }
         private void MoveOnNodeTapped()
         {
             Selector.SaveHitReference();
