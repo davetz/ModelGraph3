@@ -105,5 +105,11 @@
     <None Include="pointer27.cur">
       <Filter>Resource Files</Filter>
     </None>
+    <None Include="pointer10.cur">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="pointer11.cur">
+      <Filter>Resource Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
