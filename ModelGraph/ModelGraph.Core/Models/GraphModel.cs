@@ -82,13 +82,27 @@ namespace ModelGraph.Core
             SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnNode, DrawEvent.Skim, ViewSkim);
             SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnEdge, DrawEvent.Skim, ViewSkim);
 
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.Tap, SelectorOnVoidTap);
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.TapEnd, SelectorOnVoidTapEnd);
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.CtrlTap, SelectorOnVoidCtrlTap);
+
             SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Skim, ViewSkim);
             SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnNode, DrawEvent.Skim, ViewSkim);
             SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnEdge, DrawEvent.Skim, ViewSkim);
 
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Tap, SelectorOnVoidTap);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.TapEnd, SelectorOnVoidTapEnd);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.CtrlTap, SelectorOnVoidCtrlTap);
+
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnNode, DrawEvent.Tap, EditOnNodeTap);
+
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Skim, MoveSkim);
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawEvent.Skim, MoveSkim);
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnEdge, DrawEvent.Skim, MoveSkim);
+
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Tap, SelectorOnVoidTap);
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.TapEnd, SelectorOnVoidTapEnd);
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.CtrlTap, SelectorOnVoidCtrlTap);
 
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawEvent.UpArrowKey, MoveOnNodeUpArrow);
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnNode, DrawEvent.DownArrowKey, MoveOnNodeDownArrow);
@@ -133,6 +147,7 @@ namespace ModelGraph.Core
             SetModeStateCursor((byte)DrawMode.Delete, (byte)DrawState.OnNode, DrawCursor.Delete);
             SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnNode, DrawCursor.Reshape);
             SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnNode, DrawCursor.Gravity);
+            SetModeStateCursor((byte)DrawMode.Gravity, (byte)DrawState.OnEdge, DrawCursor.Gravity);
             SetModeStateCursor((byte)DrawMode.Operate, (byte)DrawState.OnNode, DrawCursor.Operate);
         }
         #endregion
@@ -252,34 +267,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region Selector  =====================================================
-        private bool HasSelector => false; // (DrawState & DrawState.HasSelector) != 0;
-        private void TestSelectorTap()
-        {
-            if (Selector.IsVoidHit && HasSelector)
-                SelectorOnVoidTapped();
-            else
-            {
-                //ModifyDrawState(DrawState.Tapped, DrawState.EventMask);
-                SelectorClear();
-            }
-        }
-        private void TestSelectorCtrlTap()
-        {
-            if (Selector.IsVoidHit && HasSelector)
-                SelectorOnVoidCtrlTapped();
-            else
-            {
-                //ModifyDrawState(DrawState.CtrlTapped, DrawState.EventMask);
-                SelectorClear();
-            }
-        }
-        private void TestSelectorTapEnd()
-        {
-            if (_tracingSelector)
-                SelectorOnVoidEnding();
-            //else
-                //ModifyDrawState(DrawState.TapDragEnd, DrawState.EventMask);
-        }
         private void SelectorClear()
         {
             if (Selector.IsVoidHit)
@@ -290,22 +277,24 @@ namespace ModelGraph.Core
                 HideDrawItems(DrawItem.Selector | DrawItem.ToolTip | DrawItem.FlyTree);
             }
         }
-        private void SelectorOnVoidTapped()
+        private void SelectorOnVoidTap()
         {
             _tracingSelector = true;
             _selectToggleMode = false;
             Selector.Clear();
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             ShowDrawItems(DrawItem.Selector);
+            PageModel.TriggerUIRefresh();
         }
-        private void SelectorOnVoidCtrlTapped()
+        private void SelectorOnVoidCtrlTap()
         {
             _tracingSelector = true;
             _selectToggleMode = true;
             HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
             ShowDrawItems(DrawItem.Selector);
+            PageModel.TriggerUIRefresh();
         }
-        private void SelectorOnVoidEnding()
+        private void SelectorOnVoidTapEnd()
         {
             if (_tracingSelector)
             {
@@ -359,7 +348,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region EditMode  =====================================================
-        private void EditOnNodeTapped()
+        private void EditOnNodeTap()
         {
             FlyTreeDelta++;
             HideDrawItems(DrawItem.ToolTip);
@@ -380,10 +369,6 @@ namespace ModelGraph.Core
                     FlyOutSize = new Vector2(240, 200);
                 }
             }
-        }
-        private void EditOnVoidTapped()
-        {
-            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
         }
         #endregion
 

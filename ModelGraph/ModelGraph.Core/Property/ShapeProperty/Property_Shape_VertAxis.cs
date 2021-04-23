@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_VertAxis : PropertyOf<SymbolModel, byte>
+    public class Property_Shape_VertAxis : PropertyOf<ShapeModel, byte>
     {
         internal override IdKey IdKey => IdKey.ShapeVertAxisProperty;
 

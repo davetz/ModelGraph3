@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_6F1_VertAlign : ItemModelOf<GraphModel>
+    public class Model_6F1_VertAlign : ItemModelOf<Selector>
     {
-        internal Model_6F1_VertAlign(ItemModel owner, GraphModel item) : base(owner, item) { }
+        internal Model_6F1_VertAlign(ItemModel owner, Selector item) : base(owner, item) { }
         internal override IdKey IdKey => IdKey.Model_6F1_VertAlign;
         public override string GetNameId() => Root.GetNameId(IdKey);
         public override void GetButtonCommands(Root root, List<ItemCommand> list)
@@ -13,7 +13,7 @@ namespace ModelGraph.Core
             var pageModel = GetPageModel();
             list.Clear();
             list.Add(new DrawCommand(this, IdKey.AlignTopCommand, noop));
-            list.Add(new DrawCommand(this, IdKey.AlignCenterCommand, Item.Selector.AlignHorzCenter));
+            list.Add(new DrawCommand(this, IdKey.AlignCenterCommand, Item.AlignVertCenter));
             list.Add(new DrawCommand(this, IdKey.AlignBottomCommand, noop));
         }
         private void noop() { }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace ModelGraph.Core
 {
-    public class Model_601_Shape : List1ModelOf<SymbolModel>
+    public class Model_601_Shape : List1ModelOf<ShapeModel>
     {
         private ItemModel[] _fullModelList;
         private List<ItemModel> _selectList = new List<ItemModel>(10);
@@ -20,7 +20,7 @@ namespace ModelGraph.Core
         private const int I_MinorAxis = 10;
         private const int I_Dimension = 11;
         private const int I_PolyLocked = 12;
-        internal Model_601_Shape(TreeModel owner, SymbolModel item) : base(owner, item) 
+        internal Model_601_Shape(TreeModel owner, ShapeModel item) : base(owner, item) 
         {
             var root = owner.PageModel.Owner;
             root.Get<Property_Shape_LineStyle>().CreatePropertyModel(this, Item);

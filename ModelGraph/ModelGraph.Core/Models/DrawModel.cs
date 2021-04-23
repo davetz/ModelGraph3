@@ -31,7 +31,13 @@ namespace ModelGraph.Core
         private Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
         private Dictionary<(byte,byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
 
-        public byte ModeIndex { get=>_drawMode; set=>SetModeState(value, 0, true); }
+        public byte ModeIndex { get=>_drawMode; set=>TransitionModeState(value); }
+        private void TransitionModeState(byte mode)
+        {
+            var prevState = _drawState;
+            SetModeState(mode, 0, true);
+            SetModeState(mode, prevState, true);
+        }
         public bool TryGetEventAction(DrawEvent evt, out Action act) => _modeStateEvent_Action.TryGetValue((_drawMode, _drawState, evt), out act);
         virtual public List<IdKey> GetModeIdKeys() => new List<IdKey>(0);
         protected void SetDrawState(byte state) => SetModeState(_drawMode, state, true);

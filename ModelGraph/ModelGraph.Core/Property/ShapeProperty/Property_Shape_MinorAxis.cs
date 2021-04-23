@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_MinorAxis : PropertyOf<SymbolModel, byte>
+    public class Property_Shape_MinorAxis : PropertyOf<ShapeModel, byte>
     {
         internal override IdKey IdKey => IdKey.ShapeMinorAxisProperty;
 

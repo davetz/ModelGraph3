@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_CentAxis : PropertyOf<SymbolModel, byte>
+    public class Property_Shape_CentAxis : PropertyOf<ShapeModel, byte>
     {
         internal override IdKey IdKey => IdKey.ShapeCentAxisProperty;
 

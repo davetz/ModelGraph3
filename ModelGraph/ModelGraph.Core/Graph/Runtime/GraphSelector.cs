@@ -33,6 +33,7 @@ namespace ModelGraph.Core
         {
             Graph = graph;
         }
+        internal override Item GetOwner() => Graph;
         #endregion
 
         #region Properties  ===================================================
@@ -318,11 +319,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region Rotate  =======================================================
-        internal void RotateLeft45() =>  Rotate(-45, HitPoint);
-        internal void RotateRight45() => Rotate( 45, HitPoint);
-        internal void RotateLeft90() => Rotate(-90, HitPoint);
-        internal void RotateRight90() => Rotate(90, HitPoint);
-        protected override void Rotate(Matrix3x2 mx, Vector2 atPoint)
+        protected override void Rotate(Matrix3x2 mx)
         {
             if (Nodes.Count < 2) return; // this is nonsense
 

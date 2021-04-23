@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_Polylocked : PropertyOf<SymbolModel, bool>
+    public class Property_Shape_Polylocked : PropertyOf<ShapeModel, bool>
     {
         internal override IdKey IdKey => IdKey.ShapePolylockedProperty;
 

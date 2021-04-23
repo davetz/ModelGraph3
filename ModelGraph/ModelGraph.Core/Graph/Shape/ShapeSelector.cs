@@ -17,11 +17,11 @@ namespace ModelGraph.Core
         internal List<int> Pins = new List<int>();
 
         #region Constructor  ==================================================
-        internal ShapeSelector(SymbolModel model)
+        internal ShapeSelector(ShapeModel model)
         {
             _model = model;
         }
-        private readonly SymbolModel _model;
+        private readonly ShapeModel _model;
         #endregion
 
         internal void Clear()

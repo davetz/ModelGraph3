@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Property_Shape_DashCap : EnumPropertyOf<SymbolModel>
+    public class Property_Shape_DashCap : EnumPropertyOf<ShapeModel>
     {
         internal override IdKey IdKey => IdKey.ShapeDashCapProperty;
 

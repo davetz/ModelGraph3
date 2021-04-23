@@ -38,7 +38,7 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_Shape_Polylocked(sto));
 
             root.RegisterInternalProperties(typeof(SymbolX), GetProps1(root)); //used by property name lookup
-            root.RegisterInternalProperties(typeof(SymbolModel), GetProps2(root)); //used by property name lookup
+            root.RegisterInternalProperties(typeof(ShapeModel), GetProps2(root)); //used by property name lookup
         }
         public void RegisterRelationalReferences(Root root)
         {

@@ -4,7 +4,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    public class SymbolModel : DrawModel
+    public class ShapeModel : DrawModel
     {
         internal readonly SymbolX Symbol;
         private const float EditRadius = 256;   //width, height of shape in the editor
@@ -13,12 +13,52 @@ namespace ModelGraph.Core
         private readonly float AbsoluteSize;
         internal ShapeSelector Selector;
 
+        #region DrawMode, DrawState  ==========================================
+        // Name the drawing modes and states for this model
+        public override List<IdKey> GetModeIdKeys() => new List<IdKey>()
+        {
+            IdKey.ViewMode,
+            IdKey.EditMode,
+            IdKey.MoveMode,
+            IdKey.CopyMode,
+            IdKey.PasteMode,
+            IdKey.DeleteMode,
+            IdKey.ReshapeMode,
+            IdKey.TerminalMode,
+            IdKey.FlipRotateMode,
+        };
+        private enum DrawMode : byte
+        {
+            View,
+            Edit,
+            Move,
+            Copy,
+            Paste,
+            Delete,
+            Reshape,
+            Terminal,
+            FlipRotate,
+        }
+        private enum DrawState : byte
+        {
+            OnVoid, //pointer is on an empty space on the drawing
+
+            OnShape,
+            OnLine,
+            OnLinePoint,
+        }
+        #endregion
+
         #region Constructor  ==================================================
-        internal SymbolModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
+        internal ShapeModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
         {
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
             Selector = new ShapeSelector(this);
+
+            SetModeNames(typeof(DrawMode));
+            SetStateNames(typeof(DrawState));
+
 
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);

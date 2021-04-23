@@ -26,7 +26,7 @@ namespace ModelGraph.Core
         {
             var pageModel = GetPageModel();
             list.Clear();
-            list.Add(new EditCommand(this, () => { pageModel.NewView( (p) => { new SymbolModel(p, root, Item); }, ControlType.ComplexDraw); }));
+            list.Add(new EditCommand(this, () => { pageModel.NewView( (p) => { new ShapeModel(p, root, Item); }, ControlType.ComplexDraw); }));
         }
     }
 }

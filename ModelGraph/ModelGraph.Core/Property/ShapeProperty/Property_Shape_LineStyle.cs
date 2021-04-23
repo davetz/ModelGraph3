@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Property_Shape_LineStyle : EnumPropertyOf<SymbolModel>
+    public class Property_Shape_LineStyle : EnumPropertyOf<ShapeModel>
     {
         internal override IdKey IdKey => IdKey.ShapeLineStyleProperty;
 

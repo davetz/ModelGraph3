@@ -607,7 +607,7 @@
     </UserControl.Resources>
 
 
-    <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" >
+    <Grid Background="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" PointerEntered="Grid_PointerEntered">
 
         <Grid.RowDefinitions>
             <RowDefinition Height="30" />

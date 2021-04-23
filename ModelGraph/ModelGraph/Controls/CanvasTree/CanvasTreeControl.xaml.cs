@@ -3,6 +3,7 @@ using ModelGraph.Helpers;
 using System;
 using System.Collections.Generic;
 using Windows.System;
+using Windows.UI.Core;
 using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Documents;
@@ -20,7 +21,7 @@ namespace ModelGraph.Controls
         }
         private void CanvasTreeControl_PointerMoved(object sender, PointerRoutedEventArgs e)
         {
-           e.Handled = true;
+            e.Handled = true;
         }
         #endregion
 
@@ -113,7 +114,7 @@ namespace ModelGraph.Controls
                     {
                         var key = pm.Depth;
                         var val = mc.MeasurePropertyName();
-                        if (!dic.TryGetValue(key, out int eval ))
+                        if (!dic.TryGetValue(key, out int eval))
                             dic.Add(key, val);
                         else
                             if (val > eval) dic[key] = val;
@@ -172,7 +173,7 @@ namespace ModelGraph.Controls
         #endregion
 
 
-        #region ItemModelUI  =================================================
+        #region ItemModelUI  ==================================================
         internal (int, Sorting, Usage, string) GetFilterParms(ItemModel m) => TCM.GetFilterParms(m);
         internal Canvas Canvas => TreeCanvas;
 
@@ -180,7 +181,7 @@ namespace ModelGraph.Controls
 
 
         #region Properties  ===================================================
-        internal ITreeModel TCM { get; private set;}
+        internal ITreeModel TCM { get; private set; }
 
         ItemModel Selected;
 
@@ -572,6 +573,17 @@ namespace ModelGraph.Controls
         }
         #endregion
 
+        #region Grid_PointerEntered  ==========================================
+        private void Grid_PointerEntered(object sender, PointerRoutedEventArgs e)
+        {
+            if (Window.Current.CoreWindow.PointerCursor != _arrowCursor)
+            {
+                Window.Current.CoreWindow.PointerCursor = _arrowCursor;
+            }
+        }
+        CoreCursor _arrowCursor = new CoreCursor(CoreCursorType.Arrow, 0);
+        #endregion
+
 
         #region Refresh  ======================================================
         internal void Refresh()
@@ -607,7 +619,7 @@ namespace ModelGraph.Controls
                 var mu = GetModelUI(m);
                 mu.TextProperty.Focus(FocusState.Programmatic);
             }
-              
+
             _pointWheelEnabled = true;
         }
         #endregion

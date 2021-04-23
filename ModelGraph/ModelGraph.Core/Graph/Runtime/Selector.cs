@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract class Selector
+    public abstract class Selector : Item
     {
         internal Vector2 HitPoint;  //refined hit point location
         internal Vector2 RefPoint;  //saved point reference
@@ -28,8 +28,8 @@ namespace ModelGraph.Core
         internal abstract void AlignHorzTop();
         internal abstract void AlignHorzCenter();
         internal abstract void AlignHorzBottom();
-        protected abstract void Rotate(Matrix3x2 mx, Vector2 atPoint);
-        internal void Rotate(float degree, Vector2 atPoint) => Rotate(Matrix3x2.CreateRotation((float)(degree * Math.PI / 180)), atPoint);
+        protected abstract void Rotate(Matrix3x2 mx);
+        internal void Rotate(float degree) => Rotate(Matrix3x2.CreateRotation((float)(degree * Math.PI / 180), HitPoint));
         #endregion
     }
 }

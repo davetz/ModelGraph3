@@ -1,7 +1,7 @@
 ﻿
 namespace ModelGraph.Core
 {
-    public class Property_Shape_StartCap : EnumPropertyOf<SymbolModel>
+    public class Property_Shape_StartCap : EnumPropertyOf<ShapeModel>
     {
         internal override IdKey IdKey => IdKey.ShapeStartCapProperty;
 

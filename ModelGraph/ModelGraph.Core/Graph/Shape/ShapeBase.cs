@@ -103,7 +103,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region SetProperty  ==================================================
-        internal static void SetProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
+        internal static void SetProperty(ShapeModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
             SetStrokeProperty(sm, pf, shapes);
             if ((pf & ShapeProperty.Aux) != 0) ResizeAuxAxis(shapes, sm.AuxAxis);
@@ -114,11 +114,11 @@ namespace ModelGraph.Core
             if ((pf & ShapeProperty.Rad2) != 0) ResizeMinorAxis(shapes, sm.Radius2);
             if ((pf & ShapeProperty.Dim) != 0) SetDimension(shapes, sm.Dimension);
         }
-        internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
+        internal static void SetStrokeProperty(ShapeModel sm, ShapeProperty pf, IEnumerable<Shape> shapes)
         {
             foreach (var s in shapes) SetStrokeProperty(sm, pf, s);
         }
-        internal static void SetStrokeProperty(SymbolModel sm, ShapeProperty pf, Shape s)
+        internal static void SetStrokeProperty(ShapeModel sm, ShapeProperty pf, Shape s)
         {
             if ((pf & ShapeProperty.LineWidth) != 0) s.SetStrokeWidth(sm.LineWidth);
             if ((pf & ShapeProperty.LineStyle) != 0) s.SetStokeStyle(sm.LineStyle);

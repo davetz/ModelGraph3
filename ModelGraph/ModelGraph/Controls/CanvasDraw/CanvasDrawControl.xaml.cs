@@ -957,7 +957,11 @@ namespace ModelGraph.Controls
 
         #region HelperMethods  ================================================
         private void SetGridPoint1(PointerRoutedEventArgs e) => GridPoint1 = GridPoint(e);
-        private void SetGridPoint2(PointerRoutedEventArgs e) => GridPoint2 = GridPoint(e);
+        private void SetGridPoint2(PointerRoutedEventArgs e)
+        {
+            GridPoint2 = GridPoint(e);
+            if (SelectorGrid.Visibility == Visibility.Visible) UpdateSelectorGrid();
+        }
         private void SetDrawPoint1(CanvasControl canvas, IDrawData data, PointerRoutedEventArgs e) => data.Point1 = DrawPoint(canvas, e);
         private void SetDrawPoint2(CanvasControl canvas, IDrawData data, PointerRoutedEventArgs e) => data.Point2 = DrawPoint(canvas, e);
         private Vector2 GridPoint(PointerRoutedEventArgs e)
@@ -1076,9 +1080,5 @@ namespace ModelGraph.Controls
         private Color _originalColor;
         #endregion
 
-        private void Pick2Canvas_Loaded(object sender, RoutedEventArgs e)
-        {
-
-        }
     }
 }
