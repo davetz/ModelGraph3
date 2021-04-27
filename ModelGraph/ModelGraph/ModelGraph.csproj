@@ -118,10 +118,10 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform">
-      <Version>6.2.10</Version>
+      <Version>6.2.12</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.UI.Xaml">
-      <Version>2.4.2</Version>
+      <Version>2.5.0</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.Xaml.Behaviors.Uwp.Managed">
       <Version>2.0.1</Version>
@@ -138,15 +138,20 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawColorPicker.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawControl.xaml.cs">
       <DependentUpon>CanvasDrawControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CanvasDraw\CanvasDrawAlignmentGrid.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawCopyGrid.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawMoveGrid.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawCursor.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawSelectorGrid.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawToolTipGrid.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawOverview.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawPanZoom.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawPicker1.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawPicker2.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawRoot.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawSelector.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawFlyTree.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawSideTree.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawToolTip.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawControl.xaml.cs">
       <DependentUpon>ModelDrawControl.xaml</DependentUpon>

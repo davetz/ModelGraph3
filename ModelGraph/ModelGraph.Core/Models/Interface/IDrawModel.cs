@@ -6,6 +6,13 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
+        #region UI-Layout  ====================================================
+        (int Width, int Height, bool CanResize) OverviewLayout { get; }
+        (int Width, int TopMargin) Picker1Layout { get; }
+        int Picker2Width { get; }
+        int SideTreeWidth { get; }
+        #endregion
+
         byte ModeIndex { get; set; }
         DrawItem VisibleDrawItems { get; set; }
 
@@ -22,6 +29,7 @@ namespace ModelGraph.Core
         Vector2 FlyOutPoint { get; } //flyoutTree drawPoint coordinates
         string ToolTip_Text1 { get; }
         string ToolTip_Text2 { get; }
+
 
         IDrawData HelperData { get; } // layer1 - static background data - (editor canvas only)
         IDrawData EditorData { get; } // layer2 - editor & overview data

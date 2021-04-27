@@ -16,6 +16,7 @@ namespace ModelGraph.Core
             owner.Add(this);
         }
         public virtual void Release() { }
+        public void PostRefresh() => PageModel.Root.PostRefresh();
         #endregion
 
         #region DrawStateCursor  ==============================================
@@ -79,11 +80,15 @@ namespace ModelGraph.Core
         #endregion
 
         #region Layout  =======================================================
-        public void PostRefresh() => PageModel.Root.PostRefresh();
-        public string ToolTip_Text1 { get; protected set; }
-        public string ToolTip_Text2 { get; protected set; }
+        virtual public (int Width, int Height, bool CanResize) OverviewLayout => (0, 0, false);
+        virtual public (int Width, int TopMargin) Picker1Layout => (0, 0);
+        virtual public int Picker2Width => 0;
+        virtual public int SideTreeWidth => 0;
+
         public Vector2 FlyOutSize { get; protected set; }
         public Vector2 FlyOutPoint { get; protected set; }
+        public string ToolTip_Text1 { get; protected set; }
+        public string ToolTip_Text2 { get; protected set; }
         public DrawItem VisibleDrawItems { get; set; }
 
         protected void HideDrawItems(DrawItem flags) => VisibleDrawItems &= ~flags;

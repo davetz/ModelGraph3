@@ -164,21 +164,6 @@
                         </StackPanel>
                     </Border>
 
-                    <Grid x:Name="AlignmentGrid" Background="Transparent" Width="100" Height="40" Visibility="Collapsed">
-
-                        <Button HorizontalAlignment="Right" VerticalAlignment="Top" Padding="0" Margin="-2,0,0,0" Width="12" Height="16" Background="White" ToolTipService.ToolTip="Show Menu" BorderThickness="0,2,2,2" BorderBrush="Blue">
-                            <FontIcon Glyph="&#xE937;" Margin="2,0,0,0" FontSize="10" FontWeight="ExtraBlack" FontFamily="Segoe MDL2 Assets" Foreground="Black"/>
-                            <Button.Flyout>
-                                <MenuFlyout Placement="Right">
-                                    <MenuFlyoutItem Text="Undo"/>
-                                    <MenuFlyoutSeparator />
-                                </MenuFlyout>
-                            </Button.Flyout>
-                        </Button>
-
-                        <Border x:Name="SelectorBorder" BorderThickness="3" Background="#60606060" BorderBrush="Blue" Margin="0,0,12,0" />
-                    </Grid>
-
                     <Grid x:Name="FlyTreeGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
                         <controls:CanvasTreeControl x:Name="FlyTreeCanvas"/>
                     </Grid>

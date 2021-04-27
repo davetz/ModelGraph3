@@ -49,6 +49,32 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region SetModeStateActions  ==========================================
+        private void SetModeStateEventActions()
+        {
+            SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Delete, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Terminal, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.FlipRotate, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+        }
+        #endregion
+
+        #region SetModeStateCursors  ==========================================
+        private void SetModeStateCursors()
+        {
+            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.New);
+            SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawCursor.Aim);
+        }
+        #endregion
+
         #region Constructor  ==================================================
         internal ShapeModel(PageModel owner, Root root, SymbolX symbol) : base(owner)
         {
@@ -58,7 +84,8 @@ namespace ModelGraph.Core
 
             SetModeNames(typeof(DrawMode));
             SetStateNames(typeof(DrawState));
-
+            SetModeStateEventActions();
+            SetModeStateCursors();
 
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);

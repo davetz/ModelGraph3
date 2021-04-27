@@ -24,8 +24,7 @@ namespace ModelGraph.Controls
                 }
                 else if (_standardCursors.TryGetValue(CoreCursorType.Arrow, out CoreCursor arrowCursor))
                 {
-                    Window.Current.CoreWindow.PointerCursor = arrowCursor;
-                    
+                    Window.Current.CoreWindow.PointerCursor = arrowCursor;                    
                 }
             }
         }
