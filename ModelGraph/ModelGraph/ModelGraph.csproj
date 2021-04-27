@@ -143,6 +143,7 @@
       <DependentUpon>CanvasDrawControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\CanvasDraw\CanvasDrawCursor.cs" />
+    <Compile Include="Controls\CanvasDraw\CanvasDrawDraw.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawOverview.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawPanZoom.cs" />
     <Compile Include="Controls\CanvasDraw\CanvasDrawPicker1.cs" />
