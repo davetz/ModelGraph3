@@ -10,6 +10,7 @@ namespace ModelGraph.Core
         private const float EditRadius = 256;   //width, height of shape in the editor
         private const float EditMargin = 32;    //size of empty space arround the shape editor 
         private const float EditExtent = EditRadius + EditMargin;
+        private const int EditSize = (int)(2 * EditExtent);
         private readonly float AbsoluteSize;
         internal ShapeSelector Selector;
 
@@ -81,6 +82,12 @@ namespace ModelGraph.Core
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
             Selector = new ShapeSelector(this);
+
+            SetDrawConfig(DrawItem.Editor, EditSize, SizeType.Fixed);
+            SetDrawConfig(DrawItem.Picker1, 40, SizeType.Fixed);
+            SetDrawConfig(DrawItem.Picker2, 40, SizeType.Fixed);
+            SetDrawConfig(DrawItem.Overview, 40, SizeType.Fixed);
+            SetDrawConfig(DrawItem.SideTree, 100, SizeType.Variable);
 
             SetModeNames(typeof(DrawMode));
             SetStateNames(typeof(DrawState));

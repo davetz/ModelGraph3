@@ -6,6 +6,18 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl
     {
+        private void ConfigPicker1()
+        {
+            if (Model.DrawConfig.TryGetValue(DrawItem.Picker1, out (int, SizeType) pic))
+            {
+                _picker1Width = pic.Item1;
+                if (Model.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr) && ovr.Item2 == SizeType.Fixed)
+                    _picker1TopMargin = ovr.Item1;
+                if ((Model.VisibleDrawItems & DrawItem.Picker1) != 0) RestorePicker1();
+            }
+            else
+                HidePicker1();
+        }
         internal void ShowPicker1(int width, int topMargin) // this is only way to show Picker1
         {
             _picker1Width = width;

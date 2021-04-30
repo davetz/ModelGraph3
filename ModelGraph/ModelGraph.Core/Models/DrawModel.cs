@@ -80,10 +80,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region Layout  =======================================================
-        virtual public (int Width, int Height, bool CanResize) OverviewLayout => (0, 0, false);
-        virtual public (int Width, int TopMargin) Picker1Layout => (0, 0);
-        virtual public int Picker2Width => 0;
-        virtual public int SideTreeWidth => 0;
+        public Dictionary<DrawItem, (int, SizeType)> DrawConfig => _drawConfig;
+        private Dictionary<DrawItem, (int, SizeType)> _drawConfig = new Dictionary<DrawItem, (int, SizeType)>(10);
+        protected void SetDrawConfig(DrawItem item, int width, SizeType type) => _drawConfig[item] = (width, type);
 
         public Vector2 FlyOutSize { get; protected set; }
         public Vector2 FlyOutPoint { get; protected set; }

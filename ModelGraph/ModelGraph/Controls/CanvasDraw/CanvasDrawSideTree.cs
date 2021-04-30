@@ -4,6 +4,16 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl
     {
+        private void ConfigSideTree()
+        {
+            if (Model.DrawConfig.TryGetValue(Core.DrawItem.SideTree, out (int, Core.SizeType) sdtr))
+            {
+                SideTreeGridColumn.Width = new GridLength(sdtr.Item1, (GridUnitType)sdtr.Item2);
+                SideTreeGrid.Visibility = Visibility.Visible;
+                SideTreeCanvas.SetSize(sdtr.Item1, sdtr.Item1);
+                PanZoomReset();
+            }
+        }
         internal void SetSideTreeSize(int width, int height)
         {
             if (SideTreeCanvas.IsEnabled)

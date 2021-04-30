@@ -41,7 +41,7 @@
             <Setter Property="BorderBrush" Value="{ThemeResource AppBarBackgroundThemeBrush}"/>
             <Setter Property="Background" Value="DarkSlateGray"/>
         </Style>
-        
+
         <Style x:Key="ColorPickerBorderStyle" TargetType="Border">
             <Setter Property="HorizontalAlignment" Value="Right"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -116,7 +116,7 @@
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Canvas.ZIndex="0">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="Auto" x:Name="Picker1GridColumn"/>
-                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*" x:Name="EditorGridColumn"/>
                 <ColumnDefinition Width="Auto" x:Name="Picker2GridColumn"/>
                 <ColumnDefinition Width="Auto" x:Name="SideTreeGridColumn"/>
             </Grid.ColumnDefinitions>
@@ -170,12 +170,12 @@
                 </Canvas>
             </Grid>
 
-            <Grid Grid.Column="2" x:Name="Picker2Grid" Background="DarkSlateGray" Margin="2,0,2,0" >
+            <Grid Grid.Column="2" x:Name="Picker2Grid" Background="DarkSlateGray" Margin="2,0,2,0"  Visibility="Collapsed">
                 <canvas:CanvasControl x:Name="Pick2Canvas" Draw="DrawCanvas_Draw" PointerPressed="Pick2Canvas_PointerPressed"/>
             </Grid>
             
             <Grid Grid.Column="3" x:Name="SideTreeGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
-                <controls:CanvasTreeControl x:Name="SideTreeCanvas" />
+                <controls:CanvasTreeControl x:Name="SideTreeCanvas"/>
             </Grid>
         </Grid>
     </Grid>

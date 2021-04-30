@@ -9,6 +9,18 @@ namespace ModelGraph.Controls
 {
     public sealed partial class CanvasDrawControl
     {
+        private void ConfigOverview()
+        {
+            if (Model.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr))
+            {
+                OverviewBorder.Width = ovr.Item1 + OverviewBorder.BorderThickness.Right;
+                OverviewBorder.Height = ovr.Item1;
+                _overviewCanResize = ovr.Item2 == SizeType.Variable;
+                _overviewIsValid = ovr.Item1 > 4;
+                RestoreOverview();
+            }
+            HideOverview();
+        }
         internal void SetOverview(int width, int height, bool canResize = false)
         {
             OverviewBorder.Width = width + OverviewBorder.BorderThickness.Right;

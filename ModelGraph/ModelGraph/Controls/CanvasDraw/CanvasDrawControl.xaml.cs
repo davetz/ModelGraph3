@@ -27,6 +27,14 @@ namespace ModelGraph.Controls
         public void Initialize(IDrawModel model)
         {
             Model = model;
+            ConfigPicker1();
+            ConfigOverview();
+            if (model.DrawConfig.TryGetValue(DrawItem.Editor, out (int,SizeType) edr))
+            {
+                EditorGridColumn.Width = new GridLength(edr.Item1, (GridUnitType)edr.Item2);
+            }
+            ConfigPicker2();
+            ConfigSideTree();
 
             if (model.FlyTreeModel is ITreeModel)
                 FlyTreeCanvas.Initialize(model.FlyTreeModel);

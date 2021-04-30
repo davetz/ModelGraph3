@@ -158,6 +158,10 @@ namespace ModelGraph.Core
             Graph = graph;
             Selector = new GraphSelector(graph);
 
+            SetDrawConfig(DrawItem.Editor, 300, SizeType.Variable);
+            SetDrawConfig(DrawItem.FlyTree, 100, SizeType.Auto);
+            SetDrawConfig(DrawItem.Overview, 100, SizeType.Variable);
+
             SetModeNames(typeof(DrawMode));
             SetStateNames(typeof(DrawState));
             SetModeStateEventActions();

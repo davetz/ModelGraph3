@@ -6,12 +6,7 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
-        #region UI-Layout  ====================================================
-        (int Width, int Height, bool CanResize) OverviewLayout { get; }
-        (int Width, int TopMargin) Picker1Layout { get; }
-        int Picker2Width { get; }
-        int SideTreeWidth { get; }
-        #endregion
+        Dictionary<DrawItem, (int, SizeType)> DrawConfig { get; }
 
         byte ModeIndex { get; set; }
         DrawItem VisibleDrawItems { get; set; }
