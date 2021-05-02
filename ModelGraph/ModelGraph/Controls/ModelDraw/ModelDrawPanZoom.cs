@@ -5,7 +5,7 @@ using ModelGraph.Core;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private const float maxScale = 10;
         private const float minZoomDiagonal = 8000;
@@ -24,22 +24,22 @@ namespace ModelGraph.Controls
         {
             if (EditCanvas.IsEnabled)
             {
-                SetScaleOffset(EditCanvas, Model.EditorData);
+                SetScaleOffset(EditCanvas, DrawModel.EditorData);
                 EditCanvas.Invalidate();
             }
             if (OverCanvas.IsEnabled)
             {
-                SetScaleOffset(OverCanvas, Model.EditorData);
+                SetScaleOffset(OverCanvas, DrawModel.EditorData);
                 OverCanvas.Invalidate();
             }
             if (Pick1Canvas.IsEnabled)
             {
-                SetScaleOffset(Pick1Canvas, Model.Picker1Data);
+                SetScaleOffset(Pick1Canvas, DrawModel.Picker1Data);
                 Pick1Canvas.Invalidate();
             }
             if (Pick2Canvas.IsEnabled)
             {
-                SetScaleOffset(Pick2Canvas, Model.Picker2Data);
+                SetScaleOffset(Pick2Canvas, DrawModel.Picker2Data);
                 Pick2Canvas.Invalidate();
             }
         }

@@ -7,7 +7,7 @@ using Microsoft.Graphics.Canvas.UI.Xaml;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private Vector2 GridPoint1;
         private Vector2 GridPoint2;
@@ -38,7 +38,7 @@ namespace ModelGraph.Controls
         private (float, float) GetFlyoutPoint()
         {
             var (scale, offset) = CanvasScaleOffset[EditCanvas];
-            var p = Model.FlyOutPoint * scale + offset;
+            var p = DrawModel.FlyOutPoint * scale + offset;
             return (p.X, p.Y);
         }
         #endregion
@@ -67,7 +67,7 @@ namespace ModelGraph.Controls
             _rootCtrlPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control);
             _rootShiftPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift);
             SetGridPoint1(e);
-            SetDrawPoint1(EditCanvas, Model.EditorData, e);
+            SetDrawPoint1(EditCanvas, DrawModel.EditorData, e);
             e.Handled = true;
 
             if (_overridePointerPressed is null)
@@ -86,7 +86,7 @@ namespace ModelGraph.Controls
         {
             _rootPointerIsPressed = false;
             SetGridPoint2(e);
-            SetDrawPoint2(EditCanvas, Model.EditorData, e);
+            SetDrawPoint2(EditCanvas, DrawModel.EditorData, e);
             e.Handled = true;
 
             if (_overridePointerReleased is null)
@@ -102,7 +102,7 @@ namespace ModelGraph.Controls
                 if (p.X < 0 || p.Y < 0) return;
 
                 SetGridPoint2(e);
-                SetDrawPoint2(EditCanvas, Model.EditorData, e);
+                SetDrawPoint2(EditCanvas, DrawModel.EditorData, e);
 
                 e.Handled = true;
 
@@ -137,7 +137,7 @@ namespace ModelGraph.Controls
 
         private void TestDrawEvent(DrawEvent evt)
         {
-            if (Model.TryGetEventAction(evt, out _))
+            if (DrawModel.TryGetEventAction(evt, out _))
             {
                 PostEvent(evt);
             }

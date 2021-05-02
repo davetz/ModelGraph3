@@ -6,12 +6,12 @@ using Windows.UI.Xaml.Media;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args) => SetNewColor(args.NewColor);
         private void ColorSampleBorder_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            var (A, R, G, B) = Model.ColorARGB;
+            var (A, R, G, B) = DrawModel.ColorARGB;
             var currentColor = Color.FromArgb(A, R, G, B);
             if (ColorPickerControl.Visibility == Visibility.Visible)
             {
@@ -32,7 +32,7 @@ namespace ModelGraph.Controls
         {
             _pickerColor = color;
             SetSampleColor(color);
-            Model.ColorARGB = (color.A, color.R, color.G, color.B);
+            DrawModel.ColorARGB = (color.A, color.R, color.G, color.B);
             if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
             if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
             if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();
@@ -67,7 +67,7 @@ namespace ModelGraph.Controls
         }
         private void CheckColorChange()
         {
-            var (A, R, G, B) = Model.ColorARGB;
+            var (A, R, G, B) = DrawModel.ColorARGB;
             var color = Color.FromArgb(A, R, G, B);
             if (color != _pickerColor)
             {

@@ -3,14 +3,14 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ShowFlyTree()
         {
             var (x, y) = GetFlyoutPoint();
             Canvas.SetTop(FlyTreeGrid, y);
             Canvas.SetLeft(FlyTreeGrid, x);
-            var sz = Model.FlyOutSize;
+            var sz = DrawModel.FlyOutSize;
             FlyTreeCanvas.SetSize(sz.X, sz.Y);
             FlyTreeCanvas.IsEnabled = true;
             FlyTreeGrid.Visibility = Visibility.Visible;
@@ -24,9 +24,9 @@ namespace ModelGraph.Controls
         {
             if (FlyTreeCanvas.IsEnabled && FlyTreeGrid.Visibility == Visibility.Visible)
             {
-                if (Model.FlyTreeDelta != _flyTreeDelta)
+                if (DrawModel.FlyTreeDelta != _flyTreeDelta)
                 {
-                    _flyTreeDelta = Model.FlyTreeDelta;
+                    _flyTreeDelta = DrawModel.FlyTreeDelta;
                     return true;
                 }
             }

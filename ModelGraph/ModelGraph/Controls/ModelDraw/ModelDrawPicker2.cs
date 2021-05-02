@@ -4,11 +4,11 @@ using Windows.UI.Xaml.Input;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ConfigPicker2()
         {
-            if (Model.DrawConfig.TryGetValue(DrawItem.Picker2, out (int,SizeType) pic2))
+            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Picker2, out (int,SizeType) pic2))
             {
                 _picker2Width = pic2.Item1;
                 RestorePicker2();
@@ -42,7 +42,7 @@ namespace ModelGraph.Controls
 
         private void Pick2Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
-            SetDrawPoint1(Pick2Canvas, Model.Picker2Data, e);
+            SetDrawPoint1(Pick2Canvas, DrawModel.Picker2Data, e);
             e.Handled = true;
             PostEvent(DrawEvent.Picker2Tap);
         }

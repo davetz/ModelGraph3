@@ -3,15 +3,15 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ShowToolTip()
         {
-            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text1)) HideToolTip();
-            ItemName.Text = Model.ToolTip_Text1;
+            if (string.IsNullOrWhiteSpace(DrawModel.ToolTip_Text1)) HideToolTip();
+            ItemName.Text = DrawModel.ToolTip_Text1;
 
             var offset = 60;
-            if (string.IsNullOrWhiteSpace(Model.ToolTip_Text2))
+            if (string.IsNullOrWhiteSpace(DrawModel.ToolTip_Text2))
             {
                 offset /= 2;
                 ItemToolTip.Visibility = Visibility.Collapsed;
@@ -19,7 +19,7 @@ namespace ModelGraph.Controls
             else
             {
                 ItemToolTip.Visibility = Visibility.Collapsed;
-                ItemToolTip.Text = Model.ToolTip_Text2;
+                ItemToolTip.Text = DrawModel.ToolTip_Text2;
             }
 
             var ds = ItemToolTip.Text.Length * 4;

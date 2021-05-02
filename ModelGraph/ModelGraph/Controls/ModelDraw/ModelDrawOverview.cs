@@ -7,11 +7,11 @@ using ModelGraph.Core;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ConfigOverview()
         {
-            if (Model.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr))
+            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr))
             {
                 OverviewBorder.Width = ovr.Item1 + OverviewBorder.BorderThickness.Right;
                 OverviewBorder.Height = ovr.Item1;
@@ -37,8 +37,8 @@ namespace ModelGraph.Controls
             {
                 OverviewResize.Visibility = _overviewCanResize ? Visibility.Visible : Visibility.Collapsed;
                 OverCanvas.IsEnabled = true;  //enable CanvasDraw
-                OverviewBorder.Visibility = (Model.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible; ;
-                SetScaleOffset(OverCanvas, Model.EditorData);
+                OverviewBorder.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible; ;
+                SetScaleOffset(OverCanvas, DrawModel.EditorData);
             }
             else
                 HideOverview();
@@ -79,7 +79,7 @@ namespace ModelGraph.Controls
 
             OverviewBorder.Width = size.X;
             OverviewBorder.Height = size.Y;
-            SetScaleOffset(OverCanvas, Model.EditorData);
+            SetScaleOffset(OverCanvas, DrawModel.EditorData);
             OverCanvas.Invalidate();
         }
 

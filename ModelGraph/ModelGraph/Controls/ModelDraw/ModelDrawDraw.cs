@@ -7,7 +7,7 @@ using ModelGraph.Core;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private CanvasStrokeStyle StrokeStyle(StrokeType s)
         {
@@ -35,14 +35,14 @@ namespace ModelGraph.Controls
 
             if (sender == EditCanvas)
             {
-                Draw(Model.HelperData);
-                Draw(Model.EditorData);
+                Draw(DrawModel.HelperData);
+                Draw(DrawModel.EditorData);
                 if (SelectorGrid.Visibility == Visibility.Visible)
                     UpdateSelectorGrid();
             }
-            else if (sender == OverCanvas) Draw(Model.EditorData);
-            else if (sender == Pick1Canvas) Draw(Model.Picker1Data);
-            else if (sender == Pick2Canvas) Draw(Model.Picker2Data);
+            else if (sender == OverCanvas) Draw(DrawModel.EditorData);
+            else if (sender == Pick1Canvas) Draw(DrawModel.Picker1Data);
+            else if (sender == Pick2Canvas) Draw(DrawModel.Picker2Data);
 
             void Draw(IDrawData data)
             {

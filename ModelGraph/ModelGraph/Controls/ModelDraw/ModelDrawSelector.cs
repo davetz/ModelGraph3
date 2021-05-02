@@ -5,7 +5,7 @@ using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
 
         void ShowSelectorGrid()

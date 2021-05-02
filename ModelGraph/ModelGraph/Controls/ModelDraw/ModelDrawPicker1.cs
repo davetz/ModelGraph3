@@ -4,16 +4,16 @@ using ModelGraph.Core;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void ConfigPicker1()
         {
-            if (Model.DrawConfig.TryGetValue(DrawItem.Picker1, out (int, SizeType) pic))
+            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Picker1, out (int, SizeType) pic))
             {
                 _picker1Width = pic.Item1;
-                if (Model.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr) && ovr.Item2 == SizeType.Fixed)
+                if (DrawModel.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr) && ovr.Item2 == SizeType.Fixed)
                     _picker1TopMargin = ovr.Item1;
-                if ((Model.VisibleDrawItems & DrawItem.Picker1) != 0) RestorePicker1();
+                if ((DrawModel.VisibleDrawItems & DrawItem.Picker1) != 0) RestorePicker1();
             }
             else
                 HidePicker1();
@@ -50,7 +50,7 @@ namespace ModelGraph.Controls
         private void Pick1Canvas_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             _pickPointerIsPressed = true;
-            SetDrawPoint1(Pick1Canvas, Model.Picker1Data, e);
+            SetDrawPoint1(Pick1Canvas, DrawModel.Picker1Data, e);
             e.Handled = true;
 
             if (e.KeyModifiers == Windows.System.VirtualKeyModifiers.Control)
@@ -68,7 +68,7 @@ namespace ModelGraph.Controls
             e.Handled = true;
             if (_pickPointerIsPressed)
             {
-                SetDrawPoint2(Pick1Canvas, Model.Picker1Data, e);
+                SetDrawPoint2(Pick1Canvas, DrawModel.Picker1Data, e);
                 PostEvent(DrawEvent.Picker1Drag);
             }
         }

@@ -4,7 +4,7 @@ using Windows.UI.Xaml;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasDrawControl
+    public sealed partial class ModelDrawControl
     {
         private void RestorePointerCursor() => TrySetNewCursor(CoreCursorType.Arrow);
         private void TrySetNewCursor(CoreCursorType cursorType, int id = 0)

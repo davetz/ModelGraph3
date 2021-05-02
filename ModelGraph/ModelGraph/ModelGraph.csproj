@@ -138,30 +138,21 @@
     <Compile Include="Activation\ShareTargetActivationHandler.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderBehavior.cs" />
     <Compile Include="Behaviors\NavigationViewHeaderMode.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawColorPicker.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawControl.xaml.cs">
-      <DependentUpon>CanvasDrawControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\CanvasDraw\CanvasDrawCursor.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawDraw.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawOverview.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawPanZoom.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawPicker1.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawPicker2.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawRoot.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawSelector.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawFlyTree.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawSideTree.cs" />
-    <Compile Include="Controls\CanvasDraw\CanvasDrawToolTip.cs" />
     <Compile Include="Controls\IModelPageControl.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawColorPicker.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawCursor.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawDraw.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawFlyTree.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawOverview.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawPanZoom.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawPicker1.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawPicker2.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawRoot.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawSelector.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawSideTree.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawToolTip.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawControl.xaml.cs">
       <DependentUpon>ModelDrawControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ModelSymbol\ModelSymbolControl.xaml.cs">
-      <DependentUpon>ModelSymbolControl.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Controls\ModelGraph\ModelGraphControl.xaml.cs">
-      <DependentUpon>ModelGraphControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
@@ -222,19 +213,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Controls\CanvasDraw\CanvasDrawControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Controls\ModelDraw\ModelDrawControl.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="Controls\ModelSymbol\ModelSymbolControl.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="Controls\ModelGraph\ModelGraphControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
