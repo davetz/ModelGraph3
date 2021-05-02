@@ -19,7 +19,7 @@ namespace ModelGraph.Controls
 
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
-        #region Constructor/Initialize  =======================================
+        #region Constructor  ==================================================
         public ModelDrawControl(IPageModel model)
         {
             PageModel = model;

@@ -11,10 +11,10 @@ using Windows.UI.Xaml.Input;
 
 namespace ModelGraph.Controls
 {
-    public sealed partial class CanvasTreeControl : UserControl
+    public sealed partial class TreeCanvasControl : UserControl
     {
         #region Constructor  ==================================================
-        public CanvasTreeControl()
+        public TreeCanvasControl()
         {
             InitializeComponent();
             PointerMoved += CanvasTreeControl_PointerMoved;

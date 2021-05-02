@@ -9,7 +9,7 @@ namespace ModelGraph.Controls
     internal class ItemModelUI
     {
         #region Properties  ===================================================
-        private readonly CanvasTreeControl TC;
+        private readonly TreeCanvasControl TC;
         public ItemModel Model { get; private set; }
         public PropertyModel PropertyModel { get; private set; }
         internal Root DataRoot { get; private set; }
@@ -38,14 +38,14 @@ namespace ModelGraph.Controls
         #endregion
 
         #region Constructor  ==================================================
-        private ItemModelUI(CanvasTreeControl tc)
+        private ItemModelUI(TreeCanvasControl tc)
         {
             TC = tc;
         }
         #endregion
 
         #region Allocate  =====================================================
-        internal static void Allocate(CanvasTreeControl tc, int count, Stack<ItemModelUI> stack)
+        internal static void Allocate(TreeCanvasControl tc, int count, Stack<ItemModelUI> stack)
         {
             for (int i = 0; i < count; i++)
             {

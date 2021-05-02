@@ -11,6 +11,6 @@
     d:DesignWidth="400">
 
     <Grid>
-        <controls:CanvasTreeControl x:Name="TreeCanvas" />
+        <controls:TreeCanvasControl x:Name="TreeCanvas" />
     </Grid>
 </Page>

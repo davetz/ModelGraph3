@@ -157,9 +157,9 @@
     <Compile Include="Controls\ModelTree\ModelTreeControl.xaml.cs">
       <DependentUpon>ModelTreeControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Controls\CanvasTree\ItemModelUI.cs" />
-    <Compile Include="Controls\CanvasTree\CanvasTreeControl.xaml.cs">
-      <DependentUpon>CanvasTreeControl.xaml</DependentUpon>
+    <Compile Include="Controls\TreeCanvas\ItemModelUI.cs" />
+    <Compile Include="Controls\TreeCanvas\TreeCanvasControl.xaml.cs">
+      <DependentUpon>TreeCanvasControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="Helpers\DataRequestExtensions.cs" />
     <Compile Include="Helpers\EnumToBooleanConverter.cs" />
@@ -221,7 +221,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Controls\CanvasTree\CanvasTreeControl.xaml">
+    <Page Include="Controls\TreeCanvas\TreeCanvasControl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

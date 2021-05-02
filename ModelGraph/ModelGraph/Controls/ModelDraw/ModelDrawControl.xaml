@@ -201,7 +201,7 @@
                         </Border>
 
                         <Grid x:Name="FlyTreeGrid" Margin="0" Padding="0" Background="{ThemeResource AppBarBackgroundThemeBrush}"  Visibility="Collapsed">
-                            <local:CanvasTreeControl x:Name="FlyTreeCanvas"/>
+                            <local:TreeCanvasControl x:Name="FlyTreeCanvas"/>
                         </Grid>
                     </Canvas>
                 </Grid>
@@ -211,7 +211,7 @@
                 </Grid>
 
                 <Grid Grid.Column="3" x:Name="SideTreeGrid" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Collapsed">
-                    <local:CanvasTreeControl x:Name="SideTreeCanvas"/>
+                    <local:TreeCanvasControl x:Name="SideTreeCanvas"/>
                 </Grid>
             </Grid>
         </Grid>
