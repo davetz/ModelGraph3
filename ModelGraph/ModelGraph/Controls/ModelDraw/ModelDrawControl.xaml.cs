@@ -7,6 +7,7 @@ using Windows.UI.Xaml.Controls;
 using Windows.UI.Xaml.Input;
 using ModelGraph.Core;
 using Windows.UI.Xaml;
+using System.Diagnostics;
 
 namespace ModelGraph.Controls
 {
@@ -16,7 +17,6 @@ namespace ModelGraph.Controls
         public IPageModel PageModel { get; }
         IDrawModel DrawModel => PageModel.LeadModel as IDrawModel;
         private readonly CoreDispatcher _dispatcher = CoreWindow.GetForCurrentThread().Dispatcher;
-
         public (int Width, int Height) PreferredSize => throw new System.NotImplementedException();
 
         #region Constructor  ==================================================
@@ -52,6 +52,15 @@ namespace ModelGraph.Controls
             CanvasScaleOffset[Pick1Canvas] = (0.5f, new Vector2());
             CanvasScaleOffset[Pick2Canvas] = (0.5f, new Vector2());
             ChedkDrawItems();
+        }
+        private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            var height = ActualHeight - ControlGrid.ActualHeight;
+            if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible && DrawModel.DrawConfig.TryGetValue(DrawItem.SideTree, out (int, SizeType) sdt) && sdt.Item2 == SizeType.Variable)
+            {
+                var width = SideTreeGrid.ActualWidth;
+                SideTreeCanvas.SetSize(width, height);
+            }
         }
         #endregion
 
@@ -389,6 +398,5 @@ namespace ModelGraph.Controls
             }
         }
         #endregion
-
     }
 }
