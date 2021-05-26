@@ -11,7 +11,9 @@ namespace ModelGraph.Core
         SideTree = 0x20,
         Overview = 0x40,
         Selector = 0X80,
-        ColorPicker = 0x100,
+        LeftPane = 0x100,
+        RightPane = 0x200,
+        ColorPicker = 0x400,
         ToolTipChange = 0x1000,
     };
 }

@@ -83,11 +83,20 @@ namespace ModelGraph.Core
             AbsoluteSize = symbol.AbsoluteSize;
             Selector = new ShapeSelector(this);
 
-            SetDrawConfig(DrawItem.Editor, EditSize, SizeType.Fixed);
-            SetDrawConfig(DrawItem.Picker1, 40, SizeType.Fixed);
-            SetDrawConfig(DrawItem.Picker2, 40, SizeType.Fixed);
-            SetDrawConfig(DrawItem.Overview, 40, SizeType.Fixed);
-            SetDrawConfig(DrawItem.SideTree, 100, SizeType.Variable);
+            Overview = Editor;
+            OverviewWidth = 40;
+
+            EditorWidth = EditSize;
+            BackLay = new DrawData();
+
+            Picker1 = new DrawData();
+            Picker1Width = 40;
+
+            Picker2 = new DrawData();
+            Picker2Width = 40;
+
+            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
+            SideTreeWidth = 100;
 
             SetModeNames(typeof(DrawMode));
             SetStateNames(typeof(DrawState));
@@ -97,14 +106,13 @@ namespace ModelGraph.Core
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
             Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);
-            SideTreeModel = new TreeModel(PageModel, (m) => { new Model_601_Shape(m, this); });
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
             VisibleDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
 
             SetViewMode();
-            RefreshHelperData();
+            InititalizeBackData();
             Refresh();
         }
         #endregion
@@ -183,7 +191,7 @@ namespace ModelGraph.Core
             #region InternalMethods  ==========================================
             void RefreshPicker1Data()
             {
-                var r = Picker1.Extent.Width / 2;
+                var r = Picker1Data.Extent.Width / 2;
                 var c = new Vector2(0, 0);
                 var a = (float)Symbol.AbsoluteSize;
                 Picker1.Clear();
@@ -195,12 +203,12 @@ namespace ModelGraph.Core
                         var points = new Vector2[] { c, new Vector2(r, r) };
                         Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     }
-                    c = new Vector2(0, c.Y + Picker1.Extent.Width);
+                    c = new Vector2(0, c.Y + Picker1Data.Extent.Width);
                 }
             }
             void RefreshPicker2Data()
             {
-                var r = Picker2.Extent.Width / 2;
+                var r = Picker2Data.Extent.Width / 2;
                 var c = new Vector2(0, 0);
                 var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
 
@@ -213,7 +221,7 @@ namespace ModelGraph.Core
                         var points = new Vector2[] { c, new Vector2(r, r) };
                         Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
                     }
-                    c = new Vector2(0, c.Y + Picker2.Extent.Width);
+                    c = new Vector2(0, c.Y + Picker2Data.Extent.Width);
                 }
             }
             #endregion
@@ -248,8 +256,8 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region RefreshHelperData  ============================================
-        private void RefreshHelperData()
+        #region InititalizeBackData  ==========================================
+        private void InititalizeBackData()
         {
             var r = EditRadius;
             var d = (float)(r * Math.Sin(Math.PI / 8)); //22.5 degree displacement
@@ -296,11 +304,11 @@ namespace ModelGraph.Core
             (byte, byte, byte, byte) color1 = (0xff, 0xff, 0xff, 0xff);
             (byte, byte, byte, byte) color2 = (0x80, 0xff, 0xff, 0x00);
 
-            Helper.Clear();
-            Helper.AddParms((points1.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color1));
-            Helper.AddParms((points2.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color2));
-            Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r / 2, r / 2) }, (ShapeType.Circle, StrokeType.Simple, 1), color2));
-            Helper.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r, r) }, (ShapeType.Circle, StrokeType.Simple, 1), color1));
+            BackLay.Clear();
+            BackLay.AddParms((points1.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color1));
+            BackLay.AddParms((points2.ToArray(), (ShapeType.Line, StrokeType.Simple, 1), color2));
+            BackLay.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r / 2, r / 2) }, (ShapeType.Circle, StrokeType.Simple, 1), color2));
+            BackLay.AddParms((new Vector2[] { new Vector2(0, 0), new Vector2(r, r) }, (ShapeType.Circle, StrokeType.Simple, 1), color1));
 
             var yN = -r - 32;
             var x1 = -r - 16;
@@ -308,33 +316,33 @@ namespace ModelGraph.Core
             var x3 = -6f;
             var x4 = r / 2 - 8;
             var x5 = r - 16;
-            Helper.AddText(((new Vector2(x1, yN), "nwc"), color2));
-            Helper.AddText(((new Vector2(x2, yN), "nw"), color2));
-            Helper.AddText(((new Vector2(x3, yN), "N"), color1));
-            Helper.AddText(((new Vector2(x4, yN), "ne"), color2));
-            Helper.AddText(((new Vector2(x5, yN), "nec"), color2));
+            BackLay.AddText(((new Vector2(x1, yN), "nwc"), color2));
+            BackLay.AddText(((new Vector2(x2, yN), "nw"), color2));
+            BackLay.AddText(((new Vector2(x3, yN), "N"), color1));
+            BackLay.AddText(((new Vector2(x4, yN), "ne"), color2));
+            BackLay.AddText(((new Vector2(x5, yN), "nec"), color2));
 
             var yS = r + 2;
-            Helper.AddText(((new Vector2(x1, yS), "swc"), color2));
-            Helper.AddText(((new Vector2(x2, yS), "sw"), color2));
-            Helper.AddText(((new Vector2(x3, yS), "S"), color1));
-            Helper.AddText(((new Vector2(x4, yS), "se"), color2));
-            Helper.AddText(((new Vector2(x5, yS), "sec"), color2));
+            BackLay.AddText(((new Vector2(x1, yS), "swc"), color2));
+            BackLay.AddText(((new Vector2(x2, yS), "sw"), color2));
+            BackLay.AddText(((new Vector2(x3, yS), "S"), color1));
+            BackLay.AddText(((new Vector2(x4, yS), "se"), color2));
+            BackLay.AddText(((new Vector2(x5, yS), "sec"), color2));
 
             var y2 = -r / 2 - 18;
             var y3 = -16f;
             var y4 = r / 2 - 16;
             var x6 = -r - 30;
             var x7 = -r - 24;
-            Helper.AddText(((new Vector2(x6, y2), "wn"), color2));
-            Helper.AddText(((new Vector2(x7, y3), "W"), color1));
-            Helper.AddText(((new Vector2(x6, y4), "ws"), color2));
+            BackLay.AddText(((new Vector2(x6, y2), "wn"), color2));
+            BackLay.AddText(((new Vector2(x7, y3), "W"), color1));
+            BackLay.AddText(((new Vector2(x6, y4), "ws"), color2));
 
             var x8 = r + 4;
             var x9 = r + 6;
-            Helper.AddText(((new Vector2(x8, y2), "en"), color2));
-            Helper.AddText(((new Vector2(x9, y3), "E"), color1));
-            Helper.AddText(((new Vector2(x8, y4), "es"), color2));
+            BackLay.AddText(((new Vector2(x8, y2), "en"), color2));
+            BackLay.AddText(((new Vector2(x9, y3), "E"), color1));
+            BackLay.AddText(((new Vector2(x8, y4), "es"), color2));
         }
 
 
@@ -346,7 +354,7 @@ namespace ModelGraph.Core
         private void Picker1Tap(bool add = false)
         {
             _picker2Index = -1;
-            _picker1Index = (int)(0.5f + Picker1.Point1.Y / Picker1.Extent.Width);
+            _picker1Index = (int)(0.5f + Picker1Data.Point1.Y / Picker1Data.Extent.Width);
             if (Picker1IsValid)
             {
                 var s = Symbol.GetShapes()[_picker1Index];
@@ -392,7 +400,7 @@ namespace ModelGraph.Core
             _picker1Index = -1;
             SelectedShapes.Clear();
  
-            _picker2Index = (int)(0.5f + Picker2.Point1.Y / Picker2.Extent.Width);
+            _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
             if (Picker2IsValid)
             {
                 SelectedShapes.Add(_templateShapes[_picker2Index]);
@@ -462,7 +470,7 @@ namespace ModelGraph.Core
         #region SkimHitTest  ==================================================
         private void SkimHitTest()
         {
-            var dp = Editor.Point2;
+            var dp = EditData.Point2;
             //var mode = DrawState & DrawState.ModeMask;
             //if (mode == DrawState.PinsMode)
             //{
@@ -591,7 +599,7 @@ namespace ModelGraph.Core
         #region MoveMode  =====================================================
         private void DragShapeAction()
         {
-            var delta = Editor.PointDelta(true) / EditRadius;
+            var delta = EditData.PointDelta(true) / EditRadius;
             Shape.MoveCenter(SelectedShapes, delta);
             RefreshEditorData(); //fast responce
         }
@@ -604,7 +612,7 @@ namespace ModelGraph.Core
         #region PinsMode  =====================================================
         private void DragPinAction()
         {
-            var delta = Editor.PointDelta(true) / EditRadius;
+            var delta = EditData.PointDelta(true) / EditRadius;
             Shape.MovePoint(SelectedShapes[0], _pinIndex, delta, EditRadius);
             RefreshEditorData(); //fast responce
         }
@@ -640,7 +648,7 @@ namespace ModelGraph.Core
         {
             if (Picker2IsValid)
             {
-                var cp = Editor.Point1 / EditRadius;
+                var cp = EditData.Point1 / EditRadius;
                 var ns = _templateShapes[_picker2Index].Clone(cp);
                 Symbol.GetShapes().Add(ns);
                 Refresh();

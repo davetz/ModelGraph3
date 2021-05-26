@@ -6,8 +6,6 @@ namespace ModelGraph.Core
 {
     public interface IDrawModel
     {
-        Dictionary<DrawItem, (int, SizeType)> DrawConfig { get; }
-
         byte ModeIndex { get; set; }
         DrawItem VisibleDrawItems { get; set; }
 
@@ -25,15 +23,35 @@ namespace ModelGraph.Core
         string ToolTip_Text1 { get; }
         string ToolTip_Text2 { get; }
 
-
-        IDrawData HelperData { get; } // layer1 - static background data - (editor canvas only)
-        IDrawData EditorData { get; } // layer2 - editor & overview data
+        // a null pointer indicates a usage choice
+        IDrawData BackData { get; } // editor background layer
+        IDrawData EditData { get; } // editor interactive layer
         IDrawData Picker1Data { get; }
         IDrawData Picker2Data { get; }
-
+        IDrawData OverviewData { get; }
         ITreeModel FlyTreeModel { get; }
         ITreeModel SideTreeModel { get; }
-        uint FlyTreeDelta { get; }
-        uint SideTreeDelta { get; }
+
+        //Optional ui controls
+        bool HasUndoRedo { get; }
+        bool HasApplyRevert { get; }
+        ushort UndoCount { get; }
+        ushort RedoCount { get; }
+
+        // initial ui layout grid widths
+        ushort EditorWidth { get; }
+        ushort Picker1Width { get; }
+        ushort Picker2Width { get; }
+        ushort OverviewWidth { get; }
+        ushort SideTreeWidth { get; }
+
+        // increment the delta after updating the data
+        byte EditorDelta { get; }
+        byte Picker1Delta { get; }
+        byte Picker2Delta { get; }
+        byte OverviewDelta { get; }
+        byte ToolTipDelta { get; }
+        byte FlyTreeDelta { get; }
+        byte SideTreeDelta { get; }
     }
 }

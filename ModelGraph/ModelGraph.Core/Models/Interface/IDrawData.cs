@@ -5,8 +5,7 @@ namespace ModelGraph.Core
 {
     public interface IDrawData
     {
-        uint DataDelta { get; }
-        Extent Extent { get; }
+        Extent Extent { get; } // extent of data coordinates 
         Vector2 Point1 { get; set; }
         Vector2 Point2 { get; set; }
         Vector2 PointDelta(bool reset = false);

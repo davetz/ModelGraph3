@@ -24,12 +24,12 @@ namespace ModelGraph.Controls
         {
             if (EditCanvas.IsEnabled)
             {
-                SetScaleOffset(EditCanvas, DrawModel.EditorData);
+                SetScaleOffset(EditCanvas, DrawModel.EditData);
                 EditCanvas.Invalidate();
             }
             if (OverCanvas.IsEnabled)
             {
-                SetScaleOffset(OverCanvas, DrawModel.EditorData);
+                SetScaleOffset(OverCanvas, DrawModel.EditData);
                 OverCanvas.Invalidate();
             }
             if (Pick1Canvas.IsEnabled)

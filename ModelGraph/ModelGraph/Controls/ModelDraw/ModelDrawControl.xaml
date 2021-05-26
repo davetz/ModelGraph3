@@ -12,7 +12,6 @@
     SizeChanged="Page_SizeChanged"
     Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
 
-
     <Page.Resources>
         <Style x:Key="ToggleBorderStyle" TargetType="Border">
             <Setter Property="BorderBrush" Value="Black"/>
@@ -40,12 +39,36 @@
             <Setter Property="Padding" Value="0"/>
         </Style>
 
-        <Style x:Key="ResizeHandelStyle" TargetType="Border">
-            <Setter Property="Width" Value="10"/>
-            <Setter Property="Height" Value="10"/>
-            <Setter Property="Background" Value="White"/>
-            <Setter Property="BorderBrush" Value="Black"/>
-            <Setter Property="BorderThickness" Value="2"/>
+        <Style x:Key="ApplyRevrtButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+        
+        <Style x:Key="UndoButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="10,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Content" Value="&#xe7a6;" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="RedoButtonStyle" TargetType="Button">
+            <Setter Property="Margin" Value="2,0,0,0" />
+            <Setter Property="IsTabStop" Value="False"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="Content" Value="&#xe7a7;" />
+            <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
+        </Style>
+
+        <Style x:Key="UndoRedoCountStyle" TargetType="TextBlock">
+            <Setter Property="Margin" Value="2,0,2,0" />
+            <Setter Property="TextAlignment" Value="Left" />
+            <Setter Property="VerticalAlignment" Value="Bottom" />
+            <Setter Property="FontSize" Value="8" />
         </Style>
 
         <Style x:Key="OverviewBorderStyle" TargetType="Border">
@@ -85,6 +108,7 @@
         <Style x:Key="ColorPickerStyle" TargetType="ColorPicker">
             <Setter Property="Width" Value="300"/>
             <Setter Property="Height" Value="392"/>
+            <Setter Property="ColorSpectrumShape" Value="Ring"/>
             <Setter Property="IsAlphaEnabled" Value="False"/>
             <Setter Property="IsHexInputVisible" Value="True"/>
             <Setter Property="VerticalAlignment" Value="Top"/>
@@ -98,7 +122,7 @@
             <Setter Property="Height" Value="8"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="Fill" Value="{ThemeResource AppBarBackgroundThemeBrush}" />
+            <Setter Property="Fill" Value="LightBlue" />
         </Style>
     </Page.Resources>
 
@@ -110,15 +134,20 @@
 
         <Grid Grid.Row="0" x:Name="ControlGrid">
             <StackPanel Orientation="Horizontal" Margin="0,0,0 4">
-                <Border x:Name="OverviewOnOffBorder"  Style="{StaticResource ToggleBorderStyle}" Margin="4,2,8,0">
+                <Border x:Name="OverviewOnOffBorder"  Style="{StaticResource ToggleBorderStyle}" Margin="4,2,0,0">
                     <TextBlock x:Name="OverviewOnOffTextBlock" Style="{StaticResource ToggleTextBlockStyle}" Text="&#xF0AE;" PointerPressed="OverviewOnOffTextBlock_PointerPressed"/>
                 </Border>
-                <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top"  SelectionChanged="ModeComboBox_SelectionChanged">
-                </ComboBox>
+                <Rectangle Margin="0,0,8,0"/>
+                <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top"  SelectionChanged="ModeComboBox_SelectionChanged"/>
             </StackPanel>
-            <Border x:Name="PalletOnOffBorder"  Style="{StaticResource ToggleBorderStyle}" Margin="0,2,4,0" HorizontalAlignment="Right">
-                <TextBlock x:Name="PalletOnOffTextBlock" Style="{StaticResource ToggleTextBlockStyle}" Text="&#xF0AE;" PointerPressed="PalletOnOffTextBlock_PointerPressed" />
-            </Border>
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Button x:Uid="ModelDraw_ApplyButton" x:Name="ApplyButton" Style="{StaticResource ApplyRevrtButtonStyle}"/>
+                <Button x:Uid="ModelDraw_RevertButton" x:Name="RevertButton" Style="{StaticResource ApplyRevrtButtonStyle}"/>
+                <Button x:Uid="ModelDraw_UndoButton" x:Name="UndoButton" Style="{StaticResource UndoButtonStyle}" Click="UndoButton_Click"/>
+                <TextBlock x:Uid="ModelDraw_UndoCount" x:Name="UndoCount" Style="{StaticResource UndoRedoCountStyle}" />
+                <Button x:Uid="ModelDraw_RedoButton"  x:Name="RedoButton" Style="{StaticResource RedoButtonStyle}"  Click="RedoButton_Click"/>
+                <TextBlock x:Uid="ModelDraw_RedoCount" x:Name="RedoCount" Style="{StaticResource UndoRedoCountStyle}" />
+            </StackPanel>
         </Grid>
 
         <Grid Grid.Row="1">

@@ -67,7 +67,7 @@ namespace ModelGraph.Controls
             _rootCtrlPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Control);
             _rootShiftPointerPressed = e.KeyModifiers.HasFlag(Windows.System.VirtualKeyModifiers.Shift);
             SetGridPoint1(e);
-            SetDrawPoint1(EditCanvas, DrawModel.EditorData, e);
+            SetDrawPoint1(EditCanvas, DrawModel.EditData, e);
             e.Handled = true;
 
             if (_overridePointerPressed is null)
@@ -86,7 +86,7 @@ namespace ModelGraph.Controls
         {
             _rootPointerIsPressed = false;
             SetGridPoint2(e);
-            SetDrawPoint2(EditCanvas, DrawModel.EditorData, e);
+            SetDrawPoint2(EditCanvas, DrawModel.EditData, e);
             e.Handled = true;
 
             if (_overridePointerReleased is null)
@@ -102,7 +102,7 @@ namespace ModelGraph.Controls
                 if (p.X < 0 || p.Y < 0) return;
 
                 SetGridPoint2(e);
-                SetDrawPoint2(EditCanvas, DrawModel.EditorData, e);
+                SetDrawPoint2(EditCanvas, DrawModel.EditData, e);
 
                 e.Handled = true;
 

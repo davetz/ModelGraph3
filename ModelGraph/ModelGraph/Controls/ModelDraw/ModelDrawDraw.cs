@@ -35,12 +35,12 @@ namespace ModelGraph.Controls
 
             if (sender == EditCanvas)
             {
-                Draw(DrawModel.HelperData);
-                Draw(DrawModel.EditorData);
+                Draw(DrawModel.BackData);
+                Draw(DrawModel.EditData);
                 if (SelectorGrid.Visibility == Visibility.Visible)
                     UpdateSelectorGrid();
             }
-            else if (sender == OverCanvas) Draw(DrawModel.EditorData);
+            else if (sender == OverCanvas) Draw(DrawModel.EditData);
             else if (sender == Pick1Canvas) Draw(DrawModel.Picker1Data);
             else if (sender == Pick2Canvas) Draw(DrawModel.Picker2Data);
 

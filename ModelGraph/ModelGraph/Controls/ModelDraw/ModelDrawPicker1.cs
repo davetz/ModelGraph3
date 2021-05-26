@@ -8,37 +8,25 @@ namespace ModelGraph.Controls
     {
         private void ConfigPicker1()
         {
-            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Picker1, out (int, SizeType) pic))
+            if (DrawModel.Picker1Data is IDrawData)
             {
-                _picker1Width = pic.Item1;
-                if (DrawModel.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr) && ovr.Item2 == SizeType.Fixed)
-                    _picker1TopMargin = ovr.Item1;
-                if ((DrawModel.VisibleDrawItems & DrawItem.Picker1) != 0) RestorePicker1();
+                Pick1Canvas.Width = DrawModel.Picker1Width < 16 ? 16 : DrawModel.Picker1Width;
+                Picker1Grid.Margin = (DrawModel.OverviewData is IDrawData) ? new Thickness(0, DrawModel.OverviewWidth, Picker1Grid.Margin.Right, 0) : new Thickness(0, 0, Picker1Grid.Margin.Right, 0);
+                RestorePicker1();
             }
             else
                 HidePicker1();
         }
-        internal void ShowPicker1(int width, int topMargin) // this is only way to show Picker1
-        {
-            _picker1Width = width;
-            _picker1TopMargin = topMargin;
-            RestorePicker1();
-        }
-        private int _picker1Width;
-        private int _picker1TopMargin;
         private void RestorePicker1()
         {
-
-            Pick1Canvas.Width = _picker1Width;
-            if (_picker1Width < 4)
-                HidePicker1();
-            else
+            if (DrawModel.Picker1Data is IDrawData)
             {
                 Pick1Canvas.IsEnabled = true;  //enable CanvasDraw
                 Picker1Grid.Visibility = Visibility.Visible;
-                Picker1GridColumn.Width = new GridLength(_picker1Width + Picker1Grid.Margin.Right);
-                Picker1Grid.Margin = new Thickness(0, _picker1TopMargin, Picker1Grid.Margin.Right, 0);
+                Picker1GridColumn.Width = new GridLength(Pick1Canvas.Width + Picker1Grid.Margin.Right);
             }
+            else
+                HidePicker1();
         }
         internal void HidePicker1()
         {

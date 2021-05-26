@@ -8,30 +8,19 @@ namespace ModelGraph.Controls
     {
         private void ConfigPicker2()
         {
-            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Picker2, out (int,SizeType) pic2))
-            {
-                _picker2Width = pic2.Item1;
-                RestorePicker2();
-            }
-            HidePicker2();
-        }
-        internal void ShowPicker2(int width) // this is only way to show Picker2
-        {
-            _picker2Width = width;
-            RestorePicker2();
-        }
-        private int _picker2Width;
-        private void RestorePicker2()
-        {
-            Pick2Canvas.Width = _picker2Width;
-            if (_picker2Width < 4)
+            if (DrawModel.Picker2Data is null)
                 HidePicker2();
             else
             {
-                Pick2Canvas.IsEnabled = true;  //enable CanvasDraw
-                Picker2Grid.Visibility = Visibility.Visible;
-                Picker2GridColumn.Width = new GridLength(_picker2Width + Picker2Grid.Margin.Left);
+                Picker2Grid.Width = Pick2Canvas.Width = DrawModel.Picker2Width < 16 ? 16 : DrawModel.Picker2Width;
+                RestorePicker2();
             }
+        }
+        private void RestorePicker2()
+        {
+            Pick2Canvas.IsEnabled = true;  //enable CanvasDraw
+            Picker2Grid.Visibility = Visibility.Visible;
+            Picker2GridColumn.Width = new GridLength(Picker2Grid.Width + Picker2Grid.Margin.Left);
         }
         internal void HidePicker2()
         {

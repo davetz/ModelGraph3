@@ -20,7 +20,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region DrawStateCursor  ==============================================
-        private Dictionary<(byte,byte), DrawCursor> _modeState_Cursor = new Dictionary<(byte, byte), DrawCursor>();
+        private Dictionary<(byte, byte), DrawCursor> _modeState_Cursor = new Dictionary<(byte, byte), DrawCursor>();
         public DrawCursor GetModeStateCursor() => _modeState_Cursor.TryGetValue((_drawMode, _drawState), out DrawCursor cur) ? cur : DrawCursor.Arrow;
         protected void SetModeStateCursor(byte mode, byte state, DrawCursor cursor) => _modeState_Cursor[(mode, state)] = cursor;
         #endregion
@@ -30,9 +30,9 @@ namespace ModelGraph.Core
         private byte _drawState = 0; //byte value of the current draw state, model dependant
         private Dictionary<byte, string> _drawModeNames = new Dictionary<byte, string>();
         private Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
-        private Dictionary<(byte,byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
+        private Dictionary<(byte, byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
 
-        public byte ModeIndex { get=>_drawMode; set=>TransitionModeState(value); }
+        public byte ModeIndex { get => _drawMode; set => TransitionModeState(value); }
         private void TransitionModeState(byte mode)
         {
             var prevState = _drawState;
@@ -65,7 +65,7 @@ namespace ModelGraph.Core
 
         protected void SetModeNames(Type drawModeEnum)
         {
-            foreach(byte key in Enum.GetValues(drawModeEnum))
+            foreach (byte key in Enum.GetValues(drawModeEnum))
             {
                 _drawModeNames[key] = Enum.GetName(drawModeEnum, key);
             }
@@ -80,10 +80,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region Layout  =======================================================
-        public Dictionary<DrawItem, (int, SizeType)> DrawConfig => _drawConfig;
-        private Dictionary<DrawItem, (int, SizeType)> _drawConfig = new Dictionary<DrawItem, (int, SizeType)>(10);
-        protected void SetDrawConfig(DrawItem item, int width, SizeType type) => _drawConfig[item] = (width, type);
-
         public Vector2 FlyOutSize { get; protected set; }
         public Vector2 FlyOutPoint { get; protected set; }
         public string ToolTip_Text1 { get; protected set; }
@@ -99,29 +95,51 @@ namespace ModelGraph.Core
             else
                 VisibleDrawItems &= ~DrawItem.ToolTipChange;
         }
+
+        public ushort EditorWidth {get; protected set;}
+
+        public ushort Picker1Width { get; protected set; }
+
+        public ushort Picker2Width { get; protected set; }
+
+        public ushort OverviewWidth { get; protected set; }
+
+        public ushort SideTreeWidth { get; protected set; }
+
+
         #endregion
 
         #region IDrawData  ====================================================
         virtual public string HeaderTitle => "No Title was specified";
 
-        public IDrawData HelperData => Helper;      // editor layer1  
-        protected DrawData Helper = new DrawData();
-
-        public IDrawData EditorData => Editor;      // editor layer2
-        protected DrawData Editor = new DrawData();
-
+        public IDrawData EditData => Editor;
+        public IDrawData BackData => BackLay;
         public IDrawData Picker1Data => Picker1;
-        protected DrawData Picker1 = new DrawData();
-
         public IDrawData Picker2Data => Picker2;
-        protected DrawData Picker2 = new DrawData();
-        #endregion
+        public IDrawData OverviewData => Overview;
 
-        #region ITreeModel  ===================================================
-        public uint FlyTreeDelta { get; protected set; } = 1;
-        public uint SideTreeDelta { get; protected set; } = 1;
+        protected DrawData Editor = new DrawData(); // editor interactive layer - required
+        protected DrawData BackLay { get; set; }    // editor background layer - optional 
+        protected DrawData Picker1 { get; set; }  // optional
+        protected DrawData Picker2{ get; set; }   // optional
+        protected DrawData Overview { get; set; } // optional, but usually points to Editor
+
         public ITreeModel FlyTreeModel { get; protected set; }
         public ITreeModel SideTreeModel { get; protected set; }
+
+        public ushort UndoCount { get; protected set; }
+        public ushort RedoCount { get; protected set; }
+
+        public bool HasUndoRedo { get; protected set; }
+        public bool HasApplyRevert { get; protected set; }
+
+        public byte EditorDelta { get; protected set; } = 1;
+        public byte Picker1Delta { get; protected set; } = 1;
+        public byte Picker2Delta { get; protected set; } = 1;
+        public byte ToolTipDelta { get; protected set; } = 1;
+        public byte FlyTreeDelta { get; protected set; } = 1;
+        public byte SideTreeDelta { get; protected set; } = 1;
+        public byte OverviewDelta { get; protected set; } = 1;
         #endregion
 
         #region ColorARGB  ====================================================

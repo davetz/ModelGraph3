@@ -11,34 +11,24 @@ namespace ModelGraph.Controls
     {
         private void ConfigOverview()
         {
-            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Overview, out (int, SizeType) ovr))
+            if (DrawModel.OverviewData is IDrawData)
             {
-                OverviewBorder.Width = ovr.Item1 + OverviewBorder.BorderThickness.Right;
-                OverviewBorder.Height = ovr.Item1;
-                _overviewCanResize = ovr.Item2 == SizeType.Variable;
-                _overviewIsValid = ovr.Item1 > 4;
+                OverviewBorder.Width = DrawModel.OverviewWidth + OverviewBorder.BorderThickness.Right;
+                OverviewBorder.Height = DrawModel.OverviewWidth;
+                OverviewOnOffBorder.Visibility = (DrawModel.Picker1Data is IDrawData) ? Visibility.Collapsed : Visibility.Visible;
                 RestoreOverview();
             }
-            HideOverview();
+            else
+                HideOverview();
         }
-        internal void SetOverview(int width, int height, bool canResize = false)
-        {
-            OverviewBorder.Width = width + OverviewBorder.BorderThickness.Right;
-            OverviewBorder.Height = height;
-            _overviewCanResize = canResize;
-            _overviewIsValid = width > 4;
-            RestoreOverview();
-        }
-        private bool _overviewCanResize;
-        private bool _overviewIsValid;
         private void RestoreOverview()
         {
-            if (_overviewIsValid)
+            if (DrawModel.OverviewData is IDrawData)
             {
-                OverviewResize.Visibility = _overviewCanResize ? Visibility.Visible : Visibility.Collapsed;
+                OverviewBorder.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible;
+                OverviewResize.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 || DrawModel.Picker1Data is IDrawData ? Visibility.Collapsed : Visibility.Visible;
                 OverCanvas.IsEnabled = true;  //enable CanvasDraw
-                OverviewBorder.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible; ;
-                SetScaleOffset(OverCanvas, DrawModel.EditorData);
+                SetScaleOffset(OverCanvas, DrawModel.OverviewData);
             }
             else
                 HideOverview();
@@ -46,7 +36,7 @@ namespace ModelGraph.Controls
         internal void HideOverview()
         {
             OverCanvas.IsEnabled = false;  //disable CanvasDraw
-            OverviewBorder.Visibility = Visibility.Collapsed;
+            OverviewResize.Visibility = OverviewBorder.Visibility = Visibility.Collapsed;
         }
 
         private void OverCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -79,7 +69,7 @@ namespace ModelGraph.Controls
 
             OverviewBorder.Width = size.X;
             OverviewBorder.Height = size.Y;
-            SetScaleOffset(OverCanvas, DrawModel.EditorData);
+            SetScaleOffset(OverCanvas, DrawModel.EditData);
             OverCanvas.Invalidate();
         }
 

@@ -306,4 +306,28 @@
   <data name="SymbolModel_ShowPins_Btn.ToolTipService.ToolTip" xml:space="preserve">
     <value>Show Pins</value>
   </data>
+  <data name="ModelDraw_ApplyButton.Content" xml:space="preserve">
+    <value>Apply</value>
+  </data>
+  <data name="ModelDraw_ApplyButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Apply your changes to the model</value>
+  </data>
+  <data name="ModelDraw_RedoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Redo set of change to the graphics</value>
+  </data>
+  <data name="ModelDraw_RevertButton.Content" xml:space="preserve">
+    <value>Revert</value>
+  </data>
+  <data name="ModelDraw_RevertButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Revert to previous vertsion</value>
+  </data>
+  <data name="ModelDraw_UndoButton.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Undo  set of change to the graphics </value>
+  </data>
+  <data name="ModelDraw_RedoCount.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Number of change sets that can be undon</value>
+  </data>
+  <data name="ModelDraw_UndoCount.ToolTipService.ToolTip" xml:space="preserve">
+    <value>Number of change sets that can be redone</value>
+  </data>
 </root>

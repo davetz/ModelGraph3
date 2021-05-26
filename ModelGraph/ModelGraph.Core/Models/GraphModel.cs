@@ -158,9 +158,10 @@ namespace ModelGraph.Core
             Graph = graph;
             Selector = new GraphSelector(graph);
 
-            SetDrawConfig(DrawItem.Editor, 300, SizeType.Variable);
-            SetDrawConfig(DrawItem.FlyTree, 100, SizeType.Auto);
-            SetDrawConfig(DrawItem.Overview, 100, SizeType.Variable);
+            EditorWidth = 300;
+
+            Overview = Editor; // enable overview
+            OverviewWidth = 100; // inital width
 
             SetModeNames(typeof(DrawMode));
             SetStateNames(typeof(DrawState));
@@ -261,8 +262,8 @@ namespace ModelGraph.Core
         #region PickerEvents  =================================================
         private void Picker2Select()
         {
-            var y = Picker2.Point1.Y;
-            var w = Picker2.Extent.Width;
+            var y = Picker2Data.Point1.Y;
+            var w = Picker2Data.Extent.Width;
             var x = w / 2;
             var z = (y / w) * w + x;
             Picker2.Clear();
@@ -303,7 +304,7 @@ namespace ModelGraph.Core
             if (_tracingSelector)
             {
                 _tracingSelector = false;
-                Selector.HitTestRegion(_selectToggleMode, Editor.Point1, Editor.Point2);
+                Selector.HitTestRegion(_selectToggleMode, EditData.Point1, EditData.Point2);
             }
             HideDrawItems(DrawItem.Selector);
             UpdateEditorData();
@@ -315,7 +316,7 @@ namespace ModelGraph.Core
         #region ViewMode  =====================================================
         private void ViewSkim()
         {
-            Selector.HitTestPoint(Editor.Point2);
+            Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
                 HideDrawItems(DrawItem.ToolTip);
@@ -342,7 +343,7 @@ namespace ModelGraph.Core
             {
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
-                FlyOutPoint = Editor.Point2;
+                FlyOutPoint = EditData.Point2;
                 ShowDrawItems(DrawItem.ToolTip);
                 ToolTipChanged();
                 SetDrawState((byte)DrawState.OnEdge);
@@ -379,7 +380,7 @@ namespace ModelGraph.Core
         #region MoveMode  =====================================================
         private void MoveSkim()
         {
-            Selector.HitTestPoint(Editor.Point2);
+            Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
                 HideDrawItems(DrawItem.ToolTip);
@@ -411,7 +412,7 @@ namespace ModelGraph.Core
         }
         private void MoveOnNodeDrag()
         {
-            var v = Editor.PointDelta(true);
+            var v = EditData.PointDelta(true);
             Selector.Move(v);
             UpdateEditorData();
         }
@@ -429,7 +430,7 @@ namespace ModelGraph.Core
         #region LinkMode  =====================================================
         private void LinkSkim()
         {
-            Selector.HitTestPoint(Editor.Point2);
+            Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
                 HideDrawItems(DrawItem.ToolTip);
@@ -456,7 +457,7 @@ namespace ModelGraph.Core
             {
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
-                FlyOutPoint = Editor.Point2;
+                FlyOutPoint = EditData.Point2;
                 ShowDrawItems(DrawItem.ToolTip);
                 ToolTipChanged();
                 SetDrawState((byte)DrawState.OnEdge);
@@ -468,7 +469,7 @@ namespace ModelGraph.Core
         #region UnLinkMode  ===================================================
         private void UnLinkSkim()
         {
-            Selector.HitTestPoint(Editor.Point2);
+            Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
                 HideDrawItems(DrawItem.ToolTip);
@@ -495,7 +496,7 @@ namespace ModelGraph.Core
             {
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
-                FlyOutPoint = Editor.Point2;
+                FlyOutPoint = EditData.Point2;
                 ShowDrawItems(DrawItem.ToolTip);
                 ToolTipChanged();
                 SetDrawState((byte)DrawState.OnEdge);

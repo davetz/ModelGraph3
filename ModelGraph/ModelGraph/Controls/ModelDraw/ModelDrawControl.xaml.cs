@@ -25,27 +25,12 @@ namespace ModelGraph.Controls
             PageModel = model;
             InitializeComponent();
             InitializeModeSelector();
+
+            ConfigFlyTree();
             ConfigPicker1();
             ConfigOverview();
-            if (DrawModel.DrawConfig.TryGetValue(DrawItem.Editor, out (int, SizeType) edr))
-            {
-                EditorGridColumn.Width = new GridLength(edr.Item1, (GridUnitType)edr.Item2);
-            }
             ConfigPicker2();
             ConfigSideTree();
-
-            if (DrawModel.FlyTreeModel is ITreeModel)
-                FlyTreeCanvas.Initialize(DrawModel.FlyTreeModel);
-            else
-                FlyTreeCanvas.IsEnabled = false;
-
-            if (DrawModel.SideTreeModel is ITreeModel)
-            {
-
-                SideTreeCanvas.Initialize(DrawModel.SideTreeModel);
-            }
-            else
-                SideTreeCanvas.IsEnabled = false;
 
             CanvasScaleOffset[EditCanvas] = (0.5f, new Vector2());
             CanvasScaleOffset[OverCanvas] = (0.5f, new Vector2());
@@ -56,7 +41,7 @@ namespace ModelGraph.Controls
         private void Page_SizeChanged(object sender, SizeChangedEventArgs e)
         {
             var height = ActualHeight - ControlGrid.ActualHeight;
-            if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible && DrawModel.DrawConfig.TryGetValue(DrawItem.SideTree, out (int, SizeType) sdt) && sdt.Item2 == SizeType.Variable)
+            if (SideTreeCanvas.IsEnabled && SideTreeGrid.Visibility == Visibility.Visible)
             {
                 var width = SideTreeGrid.ActualWidth;
                 SideTreeCanvas.SetSize(width, height);
@@ -181,23 +166,6 @@ namespace ModelGraph.Controls
         }
         #endregion
 
-        #region HideShowPallet  ===============================================
-        private void PalletOnOffTextBlock_PointerPressed(object sender, PointerRoutedEventArgs e)
-        {
-            if ((DrawModel.VisibleDrawItems & DrawItem.Picker2) == 0)
-            {
-                PalletOnOffTextBlock.Text = "\uF0AD";
-                DrawModel.VisibleDrawItems |= DrawItem.Picker2;
-                Refresh();
-            }
-            else
-            {
-                PalletOnOffTextBlock.Text = "\uF0AE";
-                DrawModel.VisibleDrawItems &= ~DrawItem.Picker2;
-                Refresh();
-            }
-        }
-        #endregion
 
         #region CheckDrawItems  ===============================================
         private void ChedkDrawItems()
@@ -258,9 +226,9 @@ namespace ModelGraph.Controls
         {
             if (EditCanvas.IsEnabled)
             {
-                if (DrawModel.EditorData.DataDelta != _editCanvasDelta)
+                if (DrawModel.EditorDelta != _editCanvasDelta)
                 {
-                    _editCanvasDelta = DrawModel.EditorData.DataDelta;
+                    _editCanvasDelta = DrawModel.EditorDelta;
                     return true;
                 }
             }
@@ -270,9 +238,9 @@ namespace ModelGraph.Controls
         {
             if (OverCanvas.IsEnabled && OverviewBorder.Visibility == Visibility.Visible)
             {
-                if (DrawModel.EditorData.DataDelta != _overCanvasDelta)
+                if (DrawModel.EditorDelta != _overCanvasDelta)
                 {
-                    _overCanvasDelta = DrawModel.EditorData.DataDelta;
+                    _overCanvasDelta = DrawModel.EditorDelta;
                     return true;
                 }
             }
@@ -282,9 +250,9 @@ namespace ModelGraph.Controls
         {
             if (Pick1Canvas.IsEnabled && Pick1Canvas.Visibility == Visibility.Visible)
             {
-                if (DrawModel.Picker1Data.DataDelta != _pick1CanvasDelta)
+                if (DrawModel.Picker1Delta != _pick1CanvasDelta)
                 {
-                    _pick1CanvasDelta = DrawModel.Picker1Data.DataDelta;
+                    _pick1CanvasDelta = DrawModel.Picker1Delta;
                     return true;
                 }
             }
@@ -294,18 +262,31 @@ namespace ModelGraph.Controls
         {
             if (Pick2Canvas.IsEnabled && Pick2Canvas.Visibility == Visibility.Visible)
             {
-                if (DrawModel.Picker2Data.DataDelta != _pick2CanvasDelta)
+                if (DrawModel.Picker2Delta != _pick2CanvasDelta)
                 {
-                    _pick2CanvasDelta = DrawModel.Picker2Data.DataDelta;
+                    _pick2CanvasDelta = DrawModel.Picker2Delta;
                     return true;
                 }
             }
             return false;
         }
-        private uint _editCanvasDelta;
-        private uint _overCanvasDelta;
-        private uint _pick1CanvasDelta;
-        private uint _pick2CanvasDelta;
+        private bool UpdateToolTip()
+        {
+            if (ToolTipBorder.Visibility == Visibility.Visible)
+            {
+                if (DrawModel.ToolTipDelta != _toolTipDelta)
+                {
+                    _toolTipDelta = DrawModel.ToolTipDelta;
+                    return true;
+                }
+            }
+            return false;
+        }
+        private byte _editCanvasDelta;
+        private byte _overCanvasDelta;
+        private byte _pick1CanvasDelta;
+        private byte _pick2CanvasDelta;
+        private byte _toolTipDelta;
         #endregion
 
         #region Refresh  ======================================================
@@ -396,6 +377,32 @@ namespace ModelGraph.Controls
                 Pick2Canvas.RemoveFromVisualTree();
                 Pick2Canvas = null;
             }
+        }
+        #endregion
+
+
+        #region UndoRedo  =====================================================
+        private void UndoButton_Click(object sender, RoutedEventArgs e) => TryUndo();
+        private void RedoButton_Click(object sender, RoutedEventArgs e) => TryRedo();
+
+        private void UpdateUndoRedoControls()
+        {
+            //var (canUndo, canRedo, undoCount, redoCount) = _graph.UndoRedoParms;
+
+            //UndoButton.IsEnabled = canUndo;
+            //RedoButton.IsEnabled = canRedo;
+            //UndoCount.Text = undoCount.ToString();
+            //RedoCount.Text = redoCount.ToString();
+        }
+        private  void TryUndo()
+        {
+            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _graph.TryUndo(); _graph.AdjustGraph(); });
+            //PostRefresh();
+        }
+        private  void TryRedo()
+        {
+            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _graph.TryRedo(); _graph.AdjustGraph(); });
+            //PostRefresh();
         }
         #endregion
     }

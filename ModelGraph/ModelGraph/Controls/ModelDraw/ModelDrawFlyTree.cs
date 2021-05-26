@@ -1,10 +1,18 @@
-﻿using Windows.UI.Xaml;
+﻿using ModelGraph.Core;
+using Windows.UI.Xaml;
 using Windows.UI.Xaml.Controls;
 
 namespace ModelGraph.Controls
 {
     public sealed partial class ModelDrawControl
     {
+        private void ConfigFlyTree()
+        {
+            if (DrawModel.FlyTreeModel is ITreeModel)
+                FlyTreeCanvas.Initialize(DrawModel.FlyTreeModel);
+            else
+                HideFlyTree();
+        }
         private void ShowFlyTree()
         {
             var (x, y) = GetFlyoutPoint();
