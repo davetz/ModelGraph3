@@ -142,6 +142,7 @@
     <Compile Include="Controls\ModelDraw\ModelDrawColorPicker.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawCursor.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawDraw.cs" />
+    <Compile Include="Controls\ModelDraw\ModelDrawControlBar.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawFlyTree.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawOverview.cs" />
     <Compile Include="Controls\ModelDraw\ModelDrawPanZoom.cs" />

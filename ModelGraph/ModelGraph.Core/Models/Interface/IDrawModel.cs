@@ -34,7 +34,11 @@ namespace ModelGraph.Core
 
         //Optional ui controls
         bool HasUndoRedo { get; }
+        bool CanUndo { get; }
+        bool CanRedo { get; }
         bool HasApplyRevert { get; }
+        bool CanApply { get; }
+        bool CanRevert { get; }
         ushort UndoCount { get; }
         ushort RedoCount { get; }
 

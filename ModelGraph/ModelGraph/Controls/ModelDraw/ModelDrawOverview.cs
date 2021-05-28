@@ -15,7 +15,6 @@ namespace ModelGraph.Controls
             {
                 OverviewBorder.Width = DrawModel.OverviewWidth + OverviewBorder.BorderThickness.Right;
                 OverviewBorder.Height = DrawModel.OverviewWidth;
-                OverviewOnOffBorder.Visibility = (DrawModel.Picker1Data is IDrawData) ? Visibility.Collapsed : Visibility.Visible;
                 RestoreOverview();
             }
             else

@@ -103,6 +103,8 @@ namespace ModelGraph.Core
             SetModeStateEventActions();
             SetModeStateCursors();
 
+            HasApplyRevert = true;
+
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
             Picker2.GetExtent = () => new Extent(-16, 0, 16, 0);

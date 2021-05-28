@@ -172,6 +172,8 @@ namespace ModelGraph.Core
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
 
+            HasUndoRedo = true;
+
             UpdateEditorData();
         }
         public override void Release()

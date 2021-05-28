@@ -131,7 +131,11 @@ namespace ModelGraph.Core
         public ushort RedoCount { get; protected set; }
 
         public bool HasUndoRedo { get; protected set; }
+        public bool CanUndo { get; protected set; }
+        public bool CanRedo { get; protected set; }
         public bool HasApplyRevert { get; protected set; }
+        public bool CanApply { get; protected set; }
+        public bool CanRevert { get; protected set; }
 
         public byte EditorDelta { get; protected set; } = 1;
         public byte Picker1Delta { get; protected set; } = 1;
