@@ -313,7 +313,7 @@
     <value>Apply your changes to the model</value>
   </data>
   <data name="ModelDraw_RedoButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Redo set of change to the graphics</value>
+    <value>Redo change to the graphics</value>
   </data>
   <data name="ModelDraw_RevertButton.Content" xml:space="preserve">
     <value>Revert</value>
@@ -322,12 +322,12 @@
     <value>Revert to previous vertsion</value>
   </data>
   <data name="ModelDraw_UndoButton.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Undo  set of change to the graphics </value>
+    <value>Undo  change to the graphics </value>
   </data>
   <data name="ModelDraw_RedoCount.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Number of change sets that can be undon</value>
+    <value>Number of changes that can be redone</value>
   </data>
   <data name="ModelDraw_UndoCount.ToolTipService.ToolTip" xml:space="preserve">
-    <value>Number of change sets that can be redone</value>
+    <value>Number of changes that can be undone</value>
   </data>
 </root>

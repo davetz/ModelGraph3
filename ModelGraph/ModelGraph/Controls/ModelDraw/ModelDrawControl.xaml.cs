@@ -231,6 +231,7 @@ namespace ModelGraph.Controls
 
             ChedkDrawItems();
             CheckColorChange();
+            UpdateUndoRedoControls();
 
             if (UpdateFlyTree()) FlyTreeCanvas.Refresh();
             if (UpdateSideTree()) SideTreeCanvas.Refresh();

@@ -81,28 +81,21 @@ namespace ModelGraph.Controls
         #endregion
 
 
-        #region UndoRedo  =====================================================
-        private void UndoButton_Click(object sender, RoutedEventArgs e) => TryUndo();
-        private void RedoButton_Click(object sender, RoutedEventArgs e) => TryRedo();
+        #region OptionalControlButtons  =======================================
+        private void ApplyButton_Click(object sender, RoutedEventArgs e) => PostEvent(DrawEvent.Apply);
+        private void RevertButton_Click(object sender, RoutedEventArgs e) => PostEvent(DrawEvent.Revert);
+        private void UndoButton_Click(object sender, RoutedEventArgs e) => PostEvent(DrawEvent.Undo);
+        private void RedoButton_Click(object sender, RoutedEventArgs e) => PostEvent(DrawEvent.Redo);
 
         private void UpdateUndoRedoControls()
         {
-            //var (canUndo, canRedo, undoCount, redoCount) = _graph.UndoRedoParms;
-
-            //UndoButton.IsEnabled = canUndo;
-            //RedoButton.IsEnabled = canRedo;
-            //UndoCount.Text = undoCount.ToString();
-            //RedoCount.Text = redoCount.ToString();
-        }
-        private void TryUndo()
-        {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _graph.TryUndo(); _graph.AdjustGraph(); });
-            //PostRefresh();
-        }
-        private void TryRedo()
-        {
-            //await Dispatcher.RunAsync(Windows.UI.Core.CoreDispatcherPriority.Normal, () => { _graph.TryRedo(); _graph.AdjustGraph(); });
-            //PostRefresh();
+            if (DrawModel.HasUndoRedo)
+            {
+                UndoButton.IsEnabled = DrawModel.UndoCount > 0;
+                RedoButton.IsEnabled = DrawModel.RedoCount > 0;
+                UndoCount.Text = DrawModel.UndoCount.ToString();
+                RedoCount.Text = DrawModel.RedoCount.ToString();
+            }
         }
         #endregion
     }

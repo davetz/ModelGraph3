@@ -51,7 +51,7 @@
             <Setter Property="IsTabStop" Value="False"/>
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Content" Value="&#xe7a6;" />
+            <Setter Property="Content" Value="&#xE7A7;" />
             <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
         </Style>
 
@@ -60,7 +60,7 @@
             <Setter Property="IsTabStop" Value="False"/>
             <Setter Property="FontFamily" Value="Segoe MDL2 Assets" />
             <Setter Property="FontSize" Value="14" />
-            <Setter Property="Content" Value="&#xe7a7;" />
+            <Setter Property="Content" Value="&#xE7A6;" />
             <Setter Property="Background" Value="{ThemeResource SystemControlPageBackgroundChromeLowBrush}" />
         </Style>
 
@@ -141,8 +141,8 @@
                 <ComboBox x:Name="ModeComboBox" VerticalAlignment="Top"  SelectionChanged="ModeComboBox_SelectionChanged"/>
             </StackPanel>
             <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
-                <Button x:Uid="ModelDraw_ApplyButton" x:Name="ApplyButton" Style="{StaticResource ApplyRevrtButtonStyle}"/>
-                <Button x:Uid="ModelDraw_RevertButton" x:Name="RevertButton" Style="{StaticResource ApplyRevrtButtonStyle}"/>
+                <Button x:Uid="ModelDraw_ApplyButton" x:Name="ApplyButton" Style="{StaticResource ApplyRevrtButtonStyle}" Click="ApplyButton_Click"/>
+                <Button x:Uid="ModelDraw_RevertButton" x:Name="RevertButton" Style="{StaticResource ApplyRevrtButtonStyle}" Click="RevertButton_Click"/>
                 <Button x:Uid="ModelDraw_UndoButton" x:Name="UndoButton" Style="{StaticResource UndoButtonStyle}" Click="UndoButton_Click"/>
                 <TextBlock x:Uid="ModelDraw_UndoCount" x:Name="UndoCount" Style="{StaticResource UndoRedoCountStyle}" />
                 <Button x:Uid="ModelDraw_RedoButton"  x:Name="RedoButton" Style="{StaticResource RedoButtonStyle}"  Click="RedoButton_Click"/>

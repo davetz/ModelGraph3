@@ -33,14 +33,11 @@ namespace ModelGraph.Core
         ITreeModel SideTreeModel { get; }
 
         //Optional ui controls
-        bool HasUndoRedo { get; }
-        bool CanUndo { get; }
-        bool CanRedo { get; }
-        bool HasApplyRevert { get; }
-        bool CanApply { get; }
-        bool CanRevert { get; }
         ushort UndoCount { get; }
         ushort RedoCount { get; }
+        bool HasUndoRedo { get; }
+        bool HasApplyRevert { get; }
+
 
         // initial ui layout grid widths
         ushort EditorWidth { get; }
@@ -48,6 +45,7 @@ namespace ModelGraph.Core
         ushort Picker2Width { get; }
         ushort OverviewWidth { get; }
         ushort SideTreeWidth { get; }
+
 
         // increment the delta after updating the data
         byte EditorDelta { get; }

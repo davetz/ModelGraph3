@@ -28,9 +28,9 @@ namespace ModelGraph.Core
         #region DrawStateAction  ==============================================
         private byte _drawMode = 0; //byte value of the current draw mode, model dependant
         private byte _drawState = 0; //byte value of the current draw state, model dependant
-        private Dictionary<byte, string> _drawModeNames = new Dictionary<byte, string>();
-        private Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
-        private Dictionary<(byte, byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
+        private readonly Dictionary<byte, string> _drawModeNames = new Dictionary<byte, string>();
+        private readonly Dictionary<byte, string> _drawStateNames = new Dictionary<byte, string>();
+        private readonly Dictionary<(byte, byte, DrawEvent), Action> _modeStateEvent_Action = new Dictionary<(byte, byte, DrawEvent), Action>();
 
         public byte ModeIndex { get => _drawMode; set => TransitionModeState(value); }
         private void TransitionModeState(byte mode)
@@ -131,11 +131,7 @@ namespace ModelGraph.Core
         public ushort RedoCount { get; protected set; }
 
         public bool HasUndoRedo { get; protected set; }
-        public bool CanUndo { get; protected set; }
-        public bool CanRedo { get; protected set; }
         public bool HasApplyRevert { get; protected set; }
-        public bool CanApply { get; protected set; }
-        public bool CanRevert { get; protected set; }
 
         public byte EditorDelta { get; protected set; } = 1;
         public byte Picker1Delta { get; protected set; } = 1;
