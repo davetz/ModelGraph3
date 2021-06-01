@@ -40,6 +40,7 @@ namespace ModelGraph.Core
             Terminal,
             FlipRotate,
         }
+        private DrawMode Mode { get => (DrawMode)_drawMode; set => ModeIndex = (byte)value; }
         private enum DrawState : byte
         {
             OnVoid, //pointer is on an empty space on the drawing
@@ -53,6 +54,9 @@ namespace ModelGraph.Core
         #region SetModeStateActions  ==========================================
         private void SetModeStateEventActions()
         {
+            SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(); });
+            SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Tap(); });
+            SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
             SetModeStateEventAction((byte)DrawMode.View, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
@@ -104,6 +108,7 @@ namespace ModelGraph.Core
             SetModeStateCursors();
 
             HasApplyRevert = true;
+            HasColorPicker = true;
 
             Editor.GetExtent = () => new Extent(-EditExtent, -EditExtent, EditExtent, EditExtent);
             Picker1.GetExtent = () => new Extent(-16, 0, 16, 0);
@@ -111,7 +116,7 @@ namespace ModelGraph.Core
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
-            VisibleDrawItems = DrawItem.Picker1 | DrawItem.Picker2 | DrawItem.Overview | DrawItem.ColorPicker | DrawItem.SideTree;
+            Picker1IsVisible = Picker2IsVisible = OverviewIsVisible = SideTreeIsVisible = true;
 
             SetViewMode();
             InititalizeBackData();
@@ -123,8 +128,8 @@ namespace ModelGraph.Core
 
         private void SetProperties()
         {
-            Shape.GetStrokeProperty(SelectedShapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
-            Shape.GetSizerProperty(SelectedShapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
+            Shape.GetStrokeProperty(Selector.Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
+            Shape.GetSizerProperty(Selector.Shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
             SideTreeDelta++;
             (SideTreeModel as TreeModel).Validate();
             Refresh();
@@ -177,7 +182,7 @@ namespace ModelGraph.Core
         {
             if (Equals(storage, value)) return;
             storage = value;
-            Shape.SetProperty(this, sp, SelectedShapes);
+            Shape.SetProperty(this, sp, Selector.Shapes);
             SetProperties();
         }
         #endregion
@@ -200,7 +205,7 @@ namespace ModelGraph.Core
                 foreach (var s in Symbol.GetShapes())
                 {
                     s.AddDrawData(Picker1, a, r, c);
-                    if (SelectedShapes.Contains(s))
+                    if (Selector.Shapes.Contains(s))
                     {
                         var points = new Vector2[] { c, new Vector2(r, r) };
                         Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
@@ -239,22 +244,22 @@ namespace ModelGraph.Core
             Editor.Clear();
             var shapes = Symbol.GetShapes();
             var coloring = Shape.Coloring.Normal;
-            //if (DrawState == DrawState.PinsMode && SelectedShapes.Count == 1)
-            //{
-            //    coloring = Shape.Coloring.Light;
-            //    Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
-            //}
+            if (Mode == DrawMode.Reshape && Selector.Shapes.Count == 1)
+            {
+                coloring = Shape.Coloring.Light;
+                Shape.AddDrawTargets(Selector.Shapes[0], _pinTargets, Editor, r, c);
+            }
 
-            //foreach (var s in shapes) { s.AddDrawData(Editor, a, r, c, coloring); }
+            foreach (var s in shapes) { s.AddDrawData(Editor, a, r, c, coloring); }
 
-            //if (DrawState == DrawState.PinsMode && SelectedShapes.Count == 1)
-            //{
-            //    Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
-            //}
-            //else if (DrawState == DrawState.EditMode && _hitSelecteShapes)
-            //{
-            //    Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.CenterRect, StrokeType.Filled, 0), (80, 255, 200, 255)));
-            //}
+            if (Mode == DrawMode.Reshape && Selector.Shapes.Count == 1)
+            {
+                Shape.AddDrawTargets(Selector.Shapes[0], _pinTargets, Editor, r, c);
+            }
+            else if (Mode == DrawMode.Edit && _hitSelecteShapes)
+            {
+                Editor.AddParms((Shape.GetHitExtent(r, c, Selector.Shapes), (ShapeType.CenterRect, StrokeType.Filled, 0), (80, 255, 200, 255)));
+            }
         }
         #endregion
 
@@ -362,63 +367,62 @@ namespace ModelGraph.Core
                 var s = Symbol.GetShapes()[_picker1Index];
                 if (add)
                 {
-                    if (SelectedShapes.Contains(s))
+                    if (Selector.Shapes.Contains(s))
                     {
-                        SelectedShapes.Remove(s);
-                        if (SelectedShapes.Count == 0) SetViewMode();
+                        Selector.Shapes.Remove(s);
+                        if (Selector.Shapes.Count == 0) SetViewMode();
                     }
                     else
-                        SelectedShapes.Add(s);
+                        Selector.Shapes.Add(s);
                 }
                 else
                 {
-                    SelectedShapes.Clear();
-                    SelectedShapes.Add(s);
+                    Selector.Shapes.Clear();
+                    Selector.Shapes.Add(s);
                 }
             }
             else
             {
-                SelectedShapes.Clear();
+                Selector.Shapes.Clear();
             }
             SetProperties();
-            //if (DrawState == DrawState.PinsMode) return;
-            //if (SelectedShapes.Count == 0) SetViewMode();
-            //SetDrawState(DrawState.EditMode);
+            if (Mode == DrawMode.Reshape) return;
+            if (Selector.Shapes.Count == 0) SetViewMode();
+            Mode = DrawMode.Edit;
         }
         private void OverviewTap()
         {
             var shapes = Symbol.GetShapes();
-            if (SelectedShapes.Count == shapes.Count)
+            if (Selector.Shapes.Count == shapes.Count)
                 SetViewMode();
             _picker1Index = 0; //will make Picker1Valid true
-            SelectedShapes.Clear();
-            SelectedShapes.AddRange(shapes);
+            Selector.Shapes.Clear();
+            Selector.Shapes.AddRange(shapes);
             SetProperties();
-            //SetDrawState(DrawState.EditMode);
+            Mode = DrawMode.Edit;
         }
 
         private void Picker2Tap()
         {
             _picker1Index = -1;
-            SelectedShapes.Clear();
+            Selector.Shapes.Clear();
  
             _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
             if (Picker2IsValid)
             {
-                SelectedShapes.Add(_templateShapes[_picker2Index]);
+                Selector.Shapes.Add(_templateShapes[_picker2Index]);
             }
             SetProperties();
 
-            //if (Picker2IsValid)
-            //    SetDrawState(DrawState.CreateMode);
-            //else
-            //   SetViewMode();
+            if (Picker2IsValid)
+                Mode = DrawMode.Paste;
+            else
+               Mode = DrawMode.View;
         }
         private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
         private bool Picker2IsValid => _picker2Index > -1 && _picker2Index < _picker2Shapes.Length;
         private int _picker1Index;
         private int _picker2Index;
-        internal List<Shape> SelectedShapes = new List<Shape>();
         private List<Shape> _templateShapes = new List<Shape>(_picker2Shapes.Length);
         private static Shape[] _picker2Shapes =
         {
@@ -440,9 +444,9 @@ namespace ModelGraph.Core
         #region ColorARGB/Apply/Revert  =======================================
         protected override void ColorARGBChanged()
         {
-            if (SelectedShapes.Count > 0)
+            if (Selector.Shapes.Count > 0)
             {
-                foreach (var s in SelectedShapes)
+                foreach (var s in Selector.Shapes)
                 {
                     s.SetColor(ColorARGB);
                 }
@@ -493,7 +497,7 @@ namespace ModelGraph.Core
             //{
             //    var r = EditRadius;
             //    var c = new Vector2();
-            //    _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
+            //    _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, Selector.Shapes);
             //    if (_hitSelecteShapes)
             //    {
             //        ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
@@ -508,7 +512,7 @@ namespace ModelGraph.Core
         {
             //SetDrawState(DrawState.ViewMode);
             //_picker1Index = _picker2Index = -1;
-            //SelectedShapes.Clear();
+            //Selector.Shapes.Clear();
             //SetProperties();
         }
         private void PasteAction()
@@ -527,25 +531,25 @@ namespace ModelGraph.Core
         #region EditMode == ModifySymbol  =====================================
         private void NudgeUp()
         {
-            Shape.MoveCenter(SelectedShapes, new Vector2(0, -0.01f));
+            Shape.MoveCenter(Selector.Shapes, new Vector2(0, -0.01f));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeDown()
         {
-            Shape.MoveCenter(SelectedShapes, new Vector2(0, 0.01f));
+            Shape.MoveCenter(Selector.Shapes, new Vector2(0, 0.01f));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeLeft()
         {
-            Shape.MoveCenter(SelectedShapes, new Vector2(-0.01f, 0));
+            Shape.MoveCenter(Selector.Shapes, new Vector2(-0.01f, 0));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeRight()
         {
-            Shape.MoveCenter(SelectedShapes, new Vector2(0.01f, 0));
+            Shape.MoveCenter(Selector.Shapes, new Vector2(0.01f, 0));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
@@ -553,9 +557,9 @@ namespace ModelGraph.Core
         private void CutAction()
         {
             _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(SelectedShapes);
+            _shapeClipboard.AddRange(Selector.Shapes);
             var shapes = Symbol.GetShapes();
-            foreach (var s in SelectedShapes)
+            foreach (var s in Selector.Shapes)
             {
                 shapes.Remove(s);
             }
@@ -565,32 +569,32 @@ namespace ModelGraph.Core
         private void CopyAction()
         {
             _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(SelectedShapes);
+            _shapeClipboard.AddRange(Selector.Shapes);
             SetViewMode();
         }
         private void CenterAction()
         {
-            Shape.SetCenter(SelectedShapes, new Vector2());
+            Shape.SetCenter(Selector.Shapes, new Vector2());
             Refresh();
         }
         private void RotateLeft()
         {
-            Shape.RotateLeft(SelectedShapes, _useAlternate);
+            Shape.RotateLeft(Selector.Shapes, _useAlternate);
             Refresh();
         }
         private void RotateRight()
         {
-            Shape.RotateRight(SelectedShapes, _useAlternate);
+            Shape.RotateRight(Selector.Shapes, _useAlternate);
             Refresh();
         }
         private void VerticalFlip()
         {
-            Shape.VerticalFlip(SelectedShapes);
+            Shape.VerticalFlip(Selector.Shapes);
             Refresh();
         }
         private void HorizontalFlip()
         {
-            Shape.HorizontalFlip(SelectedShapes);
+            Shape.HorizontalFlip(Selector.Shapes);
             Refresh();
         }
         private void SetDegree22() => _useAlternate = false;
@@ -602,7 +606,7 @@ namespace ModelGraph.Core
         private void DragShapeAction()
         {
             var delta = EditData.PointDelta(true) / EditRadius;
-            Shape.MoveCenter(SelectedShapes, delta);
+            Shape.MoveCenter(Selector.Shapes, delta);
             RefreshEditorData(); //fast responce
         }
         private void EndDragAction()
@@ -615,30 +619,30 @@ namespace ModelGraph.Core
         private void DragPinAction()
         {
             var delta = EditData.PointDelta(true) / EditRadius;
-            Shape.MovePoint(SelectedShapes[0], _pinIndex, delta, EditRadius);
+            Shape.MovePoint(Selector.Shapes[0], _pinIndex, delta, EditRadius);
             RefreshEditorData(); //fast responce
         }
         private void NudgePinUp()
         {
-            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, -0.01f), 1);
+            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0, -0.01f), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinDown()
         {
-            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, 0.01f), 1);
+            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0, 0.01f), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinLeft()
         {
-            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(-0.01f, 0), 1);
+            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(-0.01f, 0), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinRight()
         {
-            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0.01f, 0), 1);
+            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0.01f, 0), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }

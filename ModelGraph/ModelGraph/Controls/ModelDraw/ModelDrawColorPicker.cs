@@ -8,19 +8,16 @@ namespace ModelGraph.Controls
 {
     public sealed partial class ModelDrawControl
     {
+        private void ConfigColorPicker()
+        {
+            ColorPickerBorder.Visibility = DrawModel.HasColorPicker ? Visibility.Visible : Visibility.Collapsed;
+        }
         private void ColorPickerControl_ColorChanged(ColorPicker sender, ColorChangedEventArgs args) => SetNewColor(args.NewColor);
         private void ColorSampleBorder_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
             var (A, R, G, B) = DrawModel.ColorARGB;
             var currentColor = Color.FromArgb(A, R, G, B);
-            if (ColorPickerControl.Visibility == Visibility.Visible)
-            {
-                HideColorPicker(currentColor);
-            }
-            else
-            {
-                ShowColorPicker(currentColor);
-            }
+            if (ColorPickerControl.Visibility == Visibility.Visible) HideColorPicker(currentColor); else ShowColorPicker(currentColor);
         }
         private void UndoColorBoarder_PointerPressed(object sender, PointerRoutedEventArgs e)
         {
@@ -32,7 +29,7 @@ namespace ModelGraph.Controls
         {
             _pickerColor = color;
             SetSampleColor(color);
-            DrawModel.ColorARGB = (color.A, color.R, color.G, color.B);
+            DrawModel.ColorARGB = (color.A, color.R, color.G, color.B); //triggers a DrawModel data update
             if (EditCanvas.IsEnabled) EditCanvas.Invalidate();
             if (OverCanvas.IsEnabled) OverCanvas.Invalidate();
             if (Pick1Canvas.IsEnabled) Pick1Canvas.Invalidate();

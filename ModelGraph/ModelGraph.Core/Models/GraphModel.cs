@@ -8,8 +8,11 @@ namespace ModelGraph.Core
         internal readonly Graph Graph;
         internal readonly GraphSelector Selector;
 
+        public override int UndoCount => Graph.UndoCount;
+        public override int RedoCount => Graph.UndoCount;
+
         #region DrawMode, DrawState  ==========================================
-        // Name the drawing modes and states for this model
+        // Name the numeric drawing modes and states for this model
         public override List<IdKey> GetModeIdKeys() => new List<IdKey>()
         {
             IdKey.ViewMode,
@@ -116,7 +119,6 @@ namespace ModelGraph.Core
             SetModeStateEventAction((byte)DrawMode.Link, (byte)DrawState.OnNode, DrawEvent.Skim, LinkSkim);
             SetModeStateEventAction((byte)DrawMode.Link, (byte)DrawState.OnEdge, DrawEvent.Skim, LinkSkim);
 
-
             SetModeStateEventAction((byte)DrawMode.UnLink, (byte)DrawState.OnVoid, DrawEvent.Skim, UnLinkSkim);
             SetModeStateEventAction((byte)DrawMode.UnLink, (byte)DrawState.OnNode, DrawEvent.Skim, UnLinkSkim);
             SetModeStateEventAction((byte)DrawMode.UnLink, (byte)DrawState.OnEdge, DrawEvent.Skim, UnLinkSkim);
@@ -167,7 +169,6 @@ namespace ModelGraph.Core
             SetStateNames(typeof(DrawState));
             SetModeStateEventActions();
             SetModeStateCursors();
-            ShowDrawItems(DrawItem.Overview);
 
             FlyTreeModel = new TreeModel(owner, null);
             Editor.GetExtent = graph.ResetExtent;
@@ -193,7 +194,7 @@ namespace ModelGraph.Core
         internal void Refresh()
         {
             UpdateEditorData();
-            if ((VisibleDrawItems & DrawItem.FlyTree) != 0) FlyTreeDelta++;
+            if (FlyTreeIsVisible) FlyTreeDelta++;
             PageModel.TriggerUIRefresh();
         }
 
@@ -281,7 +282,7 @@ namespace ModelGraph.Core
                 _tracingSelector = false;
                 _selectToggleMode = false;
                 Selector.Clear();
-                HideDrawItems(DrawItem.Selector | DrawItem.ToolTip | DrawItem.FlyTree);
+                SelectorIsVisible = ToolTipIsVisible = FlyTreeIsVisible = false;
             }
         }
         private void SelectorOnVoidTap()
@@ -289,16 +290,16 @@ namespace ModelGraph.Core
             _tracingSelector = true;
             _selectToggleMode = false;
             Selector.Clear();
-            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
-            ShowDrawItems(DrawItem.Selector);
+            ToolTipIsVisible = FlyTreeIsVisible = false;
+            SelectorIsVisible = true;
             PageModel.TriggerUIRefresh();
         }
         private void SelectorOnVoidCtrlTap()
         {
             _tracingSelector = true;
             _selectToggleMode = true;
-            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
-            ShowDrawItems(DrawItem.Selector);
+            ToolTipIsVisible = FlyTreeIsVisible = false;
+            SelectorIsVisible = true;
             PageModel.TriggerUIRefresh();
         }
         private void SelectorOnVoidTapEnd()
@@ -308,7 +309,7 @@ namespace ModelGraph.Core
                 _tracingSelector = false;
                 Selector.HitTestRegion(_selectToggleMode, EditData.Point1, EditData.Point2);
             }
-            HideDrawItems(DrawItem.Selector);
+            SelectorIsVisible = false;
             UpdateEditorData();
         }
         private bool _tracingSelector;
@@ -321,23 +322,23 @@ namespace ModelGraph.Core
             Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
-                HideDrawItems(DrawItem.ToolTip);
+                ToolTipIsVisible = false;
                 if (ModelDelta != Graph.ModelDelta)
                 {
                     ModelDelta = Graph.ModelDelta;
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                SetDrawState((byte)DrawState.OnVoid);
+                SetState((byte)DrawState.OnVoid);
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
                 ToolTip_Text1 = Selector.HitNode.GetNameId();
                 ToolTip_Text2 = Selector.HitNode.GetSummaryId();
                 FlyOutPoint = Selector.HitNode.Center;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnNode);
+                ToolTipIsVisible = true;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnNode);
                 PageModel.TriggerUIRefresh();
 
             }
@@ -346,9 +347,9 @@ namespace ModelGraph.Core
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
                 FlyOutPoint = EditData.Point2;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnEdge);
+                ToolTipIsVisible = true;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnEdge);
                 PageModel.TriggerUIRefresh();
             }
         }
@@ -358,12 +359,11 @@ namespace ModelGraph.Core
         private void EditOnNodeTap()
         {
             FlyTreeDelta++;
-            HideDrawItems(DrawItem.ToolTip);
+            ToolTipIsVisible = false;
             if (FlyTreeModel is TreeModel tm)
             {
                 Selector.SaveHitReference();
-                HideDrawItems(DrawItem.ToolTip);
-                ShowDrawItems(DrawItem.FlyTree);
+                FlyTreeIsVisible = true;
                 FlyOutPoint = Selector.HitNode.Center;
                 if (Selector.Nodes.Count > 1)
                 {
@@ -385,23 +385,23 @@ namespace ModelGraph.Core
             Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
-                HideDrawItems(DrawItem.ToolTip);
+                ToolTipIsVisible = false;
                 if (ModelDelta != Graph.ModelDelta)
                 {
                     ModelDelta = Graph.ModelDelta;
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                SetDrawState((byte)DrawState.OnVoid);
+                SetState((byte)DrawState.OnVoid);
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
                 ToolTip_Text1 = Selector.HitNode.GetNameId();
                 ToolTip_Text2 = Selector.HitNode.GetSummaryId();
                 FlyOutPoint = Selector.HitNode.Center;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnNode);
+                ToolTipIsVisible = true;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnNode);
                 PageModel.TriggerUIRefresh();
 
             }
@@ -409,7 +409,7 @@ namespace ModelGraph.Core
         private void MoveOnNodeTap()
         {
             Selector.SaveHitReference();
-            HideDrawItems(DrawItem.ToolTip | DrawItem.FlyTree);
+            ToolTipIsVisible = FlyTreeIsVisible = false;
             Refresh();
         }
         private void MoveOnNodeDrag()
@@ -435,23 +435,23 @@ namespace ModelGraph.Core
             Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
-                HideDrawItems(DrawItem.ToolTip);
+                ToolTipIsVisible = false;
                 if (ModelDelta != Graph.ModelDelta)
                 {
                     ModelDelta = Graph.ModelDelta;
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                SetDrawState((byte)DrawState.OnVoid);
+                SetState((byte)DrawState.OnVoid);
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
                 ToolTip_Text1 = Selector.HitNode.GetNameId();
                 ToolTip_Text2 = Selector.HitNode.GetSummaryId();
                 FlyOutPoint = Selector.HitNode.Center;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnNode);
+                ToolTipIsVisible = false;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnNode);
                 PageModel.TriggerUIRefresh();
 
             }
@@ -460,9 +460,9 @@ namespace ModelGraph.Core
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
                 FlyOutPoint = EditData.Point2;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnEdge);
+                ToolTipIsVisible = false;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnEdge);
                 PageModel.TriggerUIRefresh();
             }
         }
@@ -474,23 +474,23 @@ namespace ModelGraph.Core
             Selector.HitTestPoint(EditData.Point2);
             if (Selector.IsVoidHit)
             {
-                HideDrawItems(DrawItem.ToolTip);
+                ToolTipIsVisible = false;
                 if (ModelDelta != Graph.ModelDelta)
                 {
                     ModelDelta = Graph.ModelDelta;
                     Graph.RebuildHitTestMap();
                     Selector.UpdateModels();
                 }
-                SetDrawState((byte)DrawState.OnVoid);
+                SetState((byte)DrawState.OnVoid);
             }
             else if (Selector.IsNodeHit && Selector.HitNode != Selector.PrevNode)
             {
                 ToolTip_Text1 = Selector.HitNode.GetNameId();
                 ToolTip_Text2 = Selector.HitNode.GetSummaryId();
                 FlyOutPoint = Selector.HitNode.Center;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnNode);
+                ToolTipIsVisible = true;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnNode);
                 PageModel.TriggerUIRefresh();
 
             }
@@ -499,9 +499,9 @@ namespace ModelGraph.Core
                 ToolTip_Text1 = Selector.HitEdge.GetNameId();
                 ToolTip_Text2 = Selector.HitEdge.GetSummaryId();
                 FlyOutPoint = EditData.Point2;
-                ShowDrawItems(DrawItem.ToolTip);
-                ToolTipChanged();
-                SetDrawState((byte)DrawState.OnEdge);
+                ToolTipIsVisible = true;
+                ToolTipDelta++;
+                SetState((byte)DrawState.OnEdge);
                 PageModel.TriggerUIRefresh();
             }
         }

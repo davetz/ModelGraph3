@@ -7,9 +7,8 @@ namespace ModelGraph.Core
     public interface IDrawModel
     {
         byte ModeIndex { get; set; }
-        DrawItem VisibleDrawItems { get; set; }
 
-        void PostRefresh(); //UI controls are loaded and ready for data 
+        void DrawControlReady(); //UI controls are loaded and ready for data 
         void Release(); //user has closed this standalone view
         List<IdKey> GetModeIdKeys();
         DrawCursor GetModeStateCursor();
@@ -33,11 +32,11 @@ namespace ModelGraph.Core
         ITreeModel SideTreeModel { get; }
 
         //Optional ui controls
-        ushort UndoCount { get; }
-        ushort RedoCount { get; }
+        int UndoCount { get; }
+        int RedoCount { get; }
         bool HasUndoRedo { get; }
         bool HasApplyRevert { get; }
-
+        bool HasColorPicker { get; }
 
         // initial ui layout grid widths
         ushort EditorWidth { get; }
@@ -55,5 +54,14 @@ namespace ModelGraph.Core
         byte ToolTipDelta { get; }
         byte FlyTreeDelta { get; }
         byte SideTreeDelta { get; }
+
+        //ui control visibility
+        bool ToolTipIsVisible { get; }
+        bool Picker1IsVisible { get; }
+        bool Picker2IsVisible { get; }
+        bool SelectorIsVisible { get; }
+        bool FlyTreeIsVisible { get; }
+        bool SideTreeIsVisible { get; }
+        bool OverviewIsVisible { get; set; }
     }
 }

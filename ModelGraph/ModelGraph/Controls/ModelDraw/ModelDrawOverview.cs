@@ -20,22 +20,33 @@ namespace ModelGraph.Controls
             else
                 HideOverview();
         }
+        private void OverviewOnOffTextBlock_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
+        {
+            if (_overviewIsVisible) HideOverview(); else RestoreOverview();
+        }
+
         private void RestoreOverview()
         {
             if (DrawModel.OverviewData is IDrawData)
             {
-                OverviewBorder.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 ? Visibility.Collapsed : Visibility.Visible;
-                OverviewResize.Visibility = (DrawModel.VisibleDrawItems & DrawItem.Overview) == 0 || DrawModel.Picker1Data is IDrawData ? Visibility.Collapsed : Visibility.Visible;
+                DrawModel.OverviewIsVisible = _overviewIsVisible = true;
+                OverviewBorder.Visibility = Visibility.Visible;
+                OverviewOnOffTextBlock.Text = "\uF0AD";
+                OverviewBorder.Visibility = Visibility.Visible;
+                OverviewResize.Visibility = DrawModel.Picker1Data is null ? Visibility.Visible : Visibility.Collapsed;
                 OverCanvas.IsEnabled = true;  //enable CanvasDraw
                 SetScaleOffset(OverCanvas, DrawModel.OverviewData);
+                OverCanvas.Invalidate();
             }
             else
                 HideOverview();
         }
         internal void HideOverview()
         {
+            DrawModel.OverviewIsVisible = _overviewIsVisible = false;
+            OverviewBorder.Visibility = OverviewResize.Visibility = Visibility.Collapsed;
+            OverviewOnOffTextBlock.Text = "\uF0AE";
             OverCanvas.IsEnabled = false;  //disable CanvasDraw
-            OverviewResize.Visibility = OverviewBorder.Visibility = Visibility.Collapsed;
         }
 
         private void OverCanvas_PointerPressed(object sender, PointerRoutedEventArgs e)
@@ -72,7 +83,6 @@ namespace ModelGraph.Controls
             OverCanvas.Invalidate();
         }
 
-        #region PointerEventOverride  =========================================
         private void OverridePointerMoved(Action action) => _overridePointerMoved = action;
         private void OverridePointerPressed(Action action) => _overridePointerPressed = action;
         private void OverridePointerReleased(Action action) => _overridePointerReleased = action;
@@ -85,6 +95,5 @@ namespace ModelGraph.Controls
         private Action _overridePointerMoved;
         private Action _overridePointerPressed;
         private Action _overridePointerReleased;
-        #endregion
     }
 }

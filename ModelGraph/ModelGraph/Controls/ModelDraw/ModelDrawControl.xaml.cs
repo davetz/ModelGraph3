@@ -25,12 +25,14 @@ namespace ModelGraph.Controls
             PageModel = model;
             InitializeComponent();
 
-            ConfigControlBar();
+            ConfigDrawItems();
             ConfigFlyTree();
             ConfigPicker1();
-            ConfigOverview();
             ConfigPicker2();
+            ConfigOverview();
             ConfigSideTree();
+            ConfigControlBar();
+            ConfigColorPicker();
 
             CanvasScaleOffset[EditCanvas] = (0.5f, new Vector2());
             CanvasScaleOffset[OverCanvas] = (0.5f, new Vector2());
@@ -79,80 +81,73 @@ namespace ModelGraph.Controls
         }
         #endregion
 
-        #region HideShowOverview  =============================================
-        private void OverviewOnOffTextBlock_PointerPressed(object sender, Windows.UI.Xaml.Input.PointerRoutedEventArgs e)
-        {
-            if ((DrawModel.VisibleDrawItems & DrawItem.Overview) == 0)
-            {
-                OverviewOnOffTextBlock.Text = "\uF0AD";
-                DrawModel.VisibleDrawItems |= DrawItem.Overview;
-                Refresh();
-            }
-            else
-            {
-                OverviewOnOffTextBlock.Text = "\uF0AE";
-                DrawModel.VisibleDrawItems &= ~DrawItem.Overview;
-                Refresh();
-            }
-        }
-        #endregion
-
 
         #region CheckDrawItems  ===============================================
         private void ChedkDrawItems()
         {
-            var visibleItems = DrawModel.VisibleDrawItems;
-            if (visibleItems != _prevVisible)
+            if (DrawModel.SelectorIsVisible != _selectorIsVisible)
             {
-                if ((visibleItems & DrawItem.Selector) == 0 && SelectorGrid.Visibility != Visibility.Collapsed)
-                    HideSelectorGrid();
-                if ((visibleItems & DrawItem.Selector) != 0 && SelectorGrid.Visibility != Visibility.Visible)
-                    ShowSelectorGrid();
+                _selectorIsVisible = DrawModel.SelectorIsVisible;
+                if (_selectorIsVisible) ShowSelectorGrid(); else HideSelectorGrid();
+            }
+            if (DrawModel.ToolTipIsVisible != _toolTipIsVisible)
+            {
+                _toolTipIsVisible = DrawModel.ToolTipIsVisible;
+                if (_toolTipIsVisible) ShowToolTip(); else HideToolTip();
+            }
+            else if (_toolTipIsVisible && UpdateToolTip())
+                ShowToolTip();
 
-                if ((visibleItems & DrawItem.ToolTip) == 0 && ToolTipBorder.Visibility != Visibility.Collapsed)
-                    HideToolTip();
-                if ((visibleItems & DrawItem.ToolTip) != 0 && ToolTipBorder.Visibility != Visibility.Visible)
-                    ShowToolTip();
-                if ((visibleItems & DrawItem.ToolTip) != 0 && (visibleItems & DrawItem.ToolTipChange) != (_prevVisible & DrawItem.ToolTipChange))
-                    ShowToolTip();
+            if (DrawModel.FlyTreeIsVisible != _flyTreeIsVisible)
+            {
+                _flyTreeIsVisible = DrawModel.FlyTreeIsVisible;
+                if (_flyTreeIsVisible) ShowFlyTree(); else HideFlyTree();
+            }
 
-                if ((visibleItems & DrawItem.FlyTree) == 0 && FlyTreeGrid.Visibility != Visibility.Collapsed)
-                    HideFlyTree();
-                if ((visibleItems & DrawItem.FlyTree) != 0 && FlyTreeGrid.Visibility != Visibility.Visible)
-                    ShowFlyTree();
+            if (DrawModel.Picker1IsVisible != _picker1IsVisible)
+            {
+                _picker1IsVisible = DrawModel.Picker1IsVisible;
+                if (_picker1IsVisible) RestorePicker1(); else HidePicker1();
+            }
 
-                if ((visibleItems & DrawItem.Picker1) == 0 && Pick1Canvas.Visibility != Visibility.Collapsed)
-                    HidePicker1();
-                if ((visibleItems & DrawItem.Picker1) != 0 && Pick1Canvas.Visibility != Visibility.Visible)
-                    RestorePicker1();
+            if (DrawModel.Picker2IsVisible != _picker2IsVisible)
+            {
+                _picker2IsVisible = DrawModel.Picker2IsVisible;
+                if (_picker2IsVisible) RestorePicker2(); else HidePicker2();
+            }
 
-                if ((visibleItems & DrawItem.Picker2) == 0 && Picker2Grid.Visibility != Visibility.Collapsed)
-                    HidePicker2();
-                if ((visibleItems & DrawItem.Picker2) != 0 && Picker2Grid.Visibility != Visibility.Visible)
-                    RestorePicker2();
+            if (DrawModel.SideTreeIsVisible != _sideTreeIsVisible)
+            {
+                _sideTreeIsVisible = DrawModel.SideTreeIsVisible;
+                SideTreeGrid.Visibility = _sideTreeIsVisible ? Visibility.Visible : Visibility.Collapsed;
+            }
 
-                if ((visibleItems & DrawItem.SideTree) == 0 && SideTreeGrid.Visibility != Visibility.Collapsed)
-                    SideTreeGrid.Visibility = Visibility.Collapsed;
-                if ((visibleItems & DrawItem.SideTree) != 0 && SideTreeGrid.Visibility != Visibility.Visible)
-                    SideTreeGrid.Visibility = Visibility.Visible;
-
-                if ((visibleItems & DrawItem.Overview) == 0 && OverviewBorder.Visibility != Visibility.Collapsed)
-                    HideOverview();
-                if ((visibleItems & DrawItem.Overview) != 0 && OverviewBorder.Visibility != Visibility.Visible)
-                    RestoreOverview();
-
-                if ((visibleItems & DrawItem.ColorPicker) == 0 && ColorPickerBorder.Visibility != Visibility.Collapsed)
-                    ColorPickerBorder.Visibility = Visibility.Collapsed;
-                if ((visibleItems & DrawItem.ColorPicker) != 0 && ColorPickerBorder.Visibility != Visibility.Visible)
-                    ColorPickerBorder.Visibility = Visibility.Visible;
-
-                _prevVisible = visibleItems;
+            if (DrawModel.OverviewIsVisible != _overviewIsVisible)
+            {
+                _overviewIsVisible = DrawModel.OverviewIsVisible;
+                if (_overviewIsVisible) RestoreOverview(); else HideOverview();
             }
         }
-        private DrawItem _prevVisible;
+        private void ConfigDrawItems()
+        {
+            _toolTipIsVisible = !DrawModel.ToolTipIsVisible;
+            _picker1IsVisible = !DrawModel.Picker1IsVisible;
+            _picker2IsVisible = !DrawModel.Picker2IsVisible;
+            _selectorIsVisible = !DrawModel.SelectorIsVisible;
+            _flyTreeIsVisible = !DrawModel.FlyTreeIsVisible;
+            _sideTreeIsVisible = !DrawModel.SideTreeIsVisible;
+            _overviewIsVisible = !DrawModel.OverviewIsVisible;
+        }
+        private bool _toolTipIsVisible;
+        private bool _picker1IsVisible;
+        private bool _picker2IsVisible;
+        private bool _selectorIsVisible;
+        private bool _flyTreeIsVisible;
+        private bool _sideTreeIsVisible;
+        private bool _overviewIsVisible;
         #endregion
 
-        #region CheckCanvasDataDelta  =========================================
+        #region CheckDataDelta  ===============================================
         private bool UpdateEditCanvas()
         {
             if (EditCanvas.IsEnabled)
@@ -287,7 +282,7 @@ namespace ModelGraph.Controls
             {
                 PanZoomReset();
             }
-            DrawModel.PostRefresh();
+            DrawModel.DrawControlReady();
         }
         bool _isDrawCanvasLoaded;
 

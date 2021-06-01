@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 
 namespace ModelGraph.Core
-{/*
- */
+{
     public partial class Graph
     {
         private Stack<Snapshot> _undoStack = new Stack<Snapshot>();
@@ -21,6 +20,9 @@ namespace ModelGraph.Core
 
         private bool CanUndo { get { return _undoStack.Count > 0; } }
         private bool CanRedo { get { return _redoStack.Count > 0; } }
+
+        internal int UndoCount => _undoStack.Count;
+        internal int RedoCount => _redoStack.Count;
 
 
         internal (bool canUndo, bool canRedo, int undoCount, int redoCount) UndoRedoParms => (CanUndo, CanRedo, _undoStack.Count, _redoStack.Count);

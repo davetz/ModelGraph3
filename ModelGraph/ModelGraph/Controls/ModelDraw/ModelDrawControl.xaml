@@ -117,12 +117,12 @@
             <Setter Property="IsColorChannelTextInputVisible" Value="False"/>
         </Style>
 
-        <Style x:Key="OverviewResizeStyle" TargetType="Rectangle">
-            <Setter Property="Width" Value="8"/>
-            <Setter Property="Height" Value="8"/>
+        <Style x:Key="OverviewResizeStyle" TargetType="Ellipse">
+            <Setter Property="Width" Value="12"/>
+            <Setter Property="Height" Value="12"/>
+            <Setter Property="Margin" Value="0,0,-6,-6"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
             <Setter Property="HorizontalAlignment" Value="Right"/>
-            <Setter Property="Fill" Value="LightBlue" />
         </Style>
     </Page.Resources>
 
@@ -155,10 +155,17 @@
             <Border x:Name="OverviewBorder" Style="{StaticResource OverviewBorderStyle}" Canvas.ZIndex="4">
                 <Grid PointerMoved="RootCanvas_PointerMoved" PointerReleased="RootCanvas_PointerReleased">
                     <canvas:CanvasControl x:Name="OverCanvas" Draw="DrawCanvas_Draw" PointerPressed="OverCanvas_PointerPressed" />
-                    <Rectangle x:Name="OverviewResize" Style="{StaticResource OverviewResizeStyle}"
+                    <Ellipse x:Name="OverviewResize" Style="{StaticResource OverviewResizeStyle}"
                            PointerEntered="OverviewResize_PointerEntered"
                            PointerExited="OverviewResize_PointerExited"
-                           PointerPressed="OverviewResize_PointerPressed"/>
+                           PointerPressed="OverviewResize_PointerPressed">
+                        <Ellipse.Fill>
+                            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                <GradientStop Color="Black"/>
+                                <GradientStop Color="White" Offset="1"/>
+                            </LinearGradientBrush>
+                        </Ellipse.Fill>
+                    </Ellipse>
                 </Grid>
             </Border>
 
