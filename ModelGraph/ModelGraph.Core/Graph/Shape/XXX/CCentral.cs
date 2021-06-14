@@ -2,12 +2,12 @@
 
 namespace ModelGraph.Core
 {
-    internal abstract class Central : Shape
+    internal abstract class CCentral : XShape
     {
-        internal Central() { }
+        internal CCentral() { }
 
         protected Vector2 Center { get { return DXY[0]; } set { DXY[0] = Limit(value.X, value.Y); } }
-        protected override ShapeProperty ValidLineProperty => ShapeProperty.LineStyle | ShapeProperty.DashCap | ShapeProperty.LineWidth;
+        protected override XShapeProperty ValidLineProperty => XShapeProperty.LineStyle | XShapeProperty.DashCap | XShapeProperty.LineWidth;
 
 
         #region GetCenterRadius  ==============================================

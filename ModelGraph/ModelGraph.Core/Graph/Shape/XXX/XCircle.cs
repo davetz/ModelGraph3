@@ -3,10 +3,10 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class Circle : Central
+    internal class XCircle : CCentral
     {
         protected override ShapeType ShapeType => ShapeType.Circle;
-        internal Circle(bool deserializing = false)
+        internal XCircle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
@@ -15,11 +15,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private Circle(Shape shape)
+        private XCircle(XShape shape)
         {
             CopyData(shape);
         }
-        private Circle(Shape shape, Vector2 center)
+        private XCircle(XShape shape, Vector2 center)
         {
             CopyData(shape);
             Center = center;
@@ -27,8 +27,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new Circle(this);
-        internal override Shape Clone(Vector2 center) => new Circle(this, center);
+        internal override XShape Clone() =>new XCircle(this);
+        internal override XShape Clone(Vector2 center) => new XCircle(this, center);
 
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring colr = Coloring.Normal)
         {
@@ -49,7 +49,7 @@ namespace ModelGraph.Core
             else
                 Radius1 = Radius2 = (Radius1 * scale.X);
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad1;
         #endregion
     }
 }

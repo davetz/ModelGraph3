@@ -2,11 +2,11 @@
 
 namespace ModelGraph.Core
 {
-    public class Property_Shape_MinorAxis : PropertyOf<ShapeModel, byte>
+    public class Property_Shape_Radius2 : PropertyOf<ShapeModel, byte>
     {
-        internal override IdKey IdKey => IdKey.ShapeMinorAxisProperty;
+        internal override IdKey IdKey => IdKey.ShapeRadius2Property;
 
-        internal Property_Shape_MinorAxis(PropertyRoot owner) : base(owner)
+        internal Property_Shape_Radius2(PropertyRoot owner) : base(owner)
         {
             Value = new ByteValue(this);
         }

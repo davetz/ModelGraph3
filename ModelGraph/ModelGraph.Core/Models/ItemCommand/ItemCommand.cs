@@ -23,7 +23,7 @@ namespace ModelGraph.Core
             }
         }
 
-        public virtual bool IsRemoveCommand => false;
-        public virtual bool IsInsertCommand => false;
+        public bool IsRemoveCommand => IdKey == IdKey.RemoveCommand; //used by the UI for Delete acceleratorKey
+        public bool IsInsertCommand => IdKey == IdKey.InsertCommand; //used by the UI for Insert acceleratorKey
     }
 }

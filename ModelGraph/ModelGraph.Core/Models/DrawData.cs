@@ -7,7 +7,7 @@ namespace ModelGraph.Core
     public class DrawData : IDrawData
     {
         internal Func<Extent> GetExtent;
-        internal void Clear() { Text.Clear(); Parms.Clear(); DataDelta++; }
+        internal void Clear() { Text.Clear(); Parms.Clear();}
         internal void AddText(((Vector2, string), (byte, byte, byte, byte)) data) => Text.Add(data);
         internal void AddParms((Vector2[], (ShapeType, StrokeType, byte), (byte, byte, byte, byte)) data) => Parms.Add(data);
         internal void AddTargets(Vector2[] points, TargetType targtype) => Parms.Add((points, TargetParm[targtype], TargetColor));
@@ -25,9 +25,6 @@ namespace ModelGraph.Core
             [TargetType.HollowGrip2] = (ShapeType.Grip2, StrokeType.Simple, 1),
             [TargetType.HollowGrip4] = (ShapeType.Grip4, StrokeType.Simple, 1),
         };
-
-
-        public uint DataDelta { get; private set; }
 
         public virtual Extent Extent { get => (GetExtent is null) ? new Extent() : GetExtent(); }
         public Vector2 Point1 { get; set; }

@@ -66,8 +66,8 @@ namespace ModelGraph.Controls
                                 for (int i = 0; i < P.Length; i += 2)
                                 {
                                     var a = P[i] * scale + offset;
-                                    var b = P[i + 1] * scale;
-                                    ds.DrawLine(a, b + offset, color, V, stroke);
+                                    var b = P[i + 1] * scale + offset;
+                                    ds.DrawLine(a, b, color, V, stroke);
                                 }
                                 break;
                             case ShapeType.Circle:

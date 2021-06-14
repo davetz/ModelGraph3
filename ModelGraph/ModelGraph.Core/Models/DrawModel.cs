@@ -53,7 +53,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region UI drawMode ===================================================
-        //the draw mode index is used to select an idKey for localized strings
+        //The draw mode index gets and sets the target models mode of operation,
+        //it also is used to select an idKey for localized strings for the UI
         virtual public List<IdKey> GetModeIdKeys() => new List<IdKey>(0); //specified by the target model
 
         //the UI can get and set the draw mode
@@ -61,13 +62,10 @@ namespace ModelGraph.Core
         private void TransitionModeState(byte mode)
         {
             var prevState = _drawState;
-            SetModeState(mode, 0, true); //fake the effect of a pointer move
+            //fake the effect of pointer move to a void area and then move back
+            SetModeState(mode, 0, true); 
             SetModeState(mode, prevState, true);
         }
-
-        // the target model sets the draw state
-        protected void SetState(byte state) => SetModeState(_drawMode, state, true);
-
         private void SetModeState(byte mode, byte state, bool execute = false)
         {
             if (mode != _drawMode || state != _drawState)
@@ -85,6 +83,9 @@ namespace ModelGraph.Core
                 Debug.WriteLine($"Drawing mode state:  {modeName} {stateName} - {executing}");
             }
         }
+
+        // the target model sets the draw state
+        protected void SetState(byte state) => SetModeState(_drawMode, state, true);
         #endregion
 
         #region UI drawEvent  =================================================
@@ -150,11 +151,11 @@ namespace ModelGraph.Core
 
         public ushort SideTreeWidth { get; protected set; }
 
-        public IDrawData EditData => Editor;
-        public IDrawData BackData => BackLay;
-        public IDrawData Picker1Data => Picker1;
-        public IDrawData Picker2Data => Picker2;
         public IDrawData OverviewData => Overview;
+        public IDrawData Picker1Data => Picker1;
+        public IDrawData BackData => BackLay;
+        public IDrawData EditData => Editor;
+        public IDrawData Picker2Data => Picker2;
 
         protected DrawData Editor = new DrawData(); // editor interactive layer - required
         protected DrawData BackLay { get; set; }    // editor background layer - optional 
@@ -182,8 +183,8 @@ namespace ModelGraph.Core
 
         //ui control visibility
         public bool ToolTipIsVisible { get; protected set; }
-        public bool Picker1IsVisible { get; protected set; }
-        public bool Picker2IsVisible { get; protected set; }
+        public bool LeftCanvasIsVisible { get; set; }
+        public bool RightCanvasIsVisible { get; set; }
         public bool SelectorIsVisible { get; protected set; }
         public bool FlyTreeIsVisible { get; protected set; }
         public bool SideTreeIsVisible { get; protected set; }

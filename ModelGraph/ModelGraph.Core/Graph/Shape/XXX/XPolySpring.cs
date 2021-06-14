@@ -3,10 +3,10 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class PolySpring : PolySpline
+    internal class XPolySpring : XPolySpline
     {
         protected override ShapeType ShapeType => ShapeType.PolySpring;
-        internal PolySpring(bool deserializing = false)
+        internal XPolySpring(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
@@ -17,11 +17,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolySpring(Shape shape)
+        private XPolySpring(XShape shape)
         {
             CopyData(shape);
         }
-        private PolySpring(Shape shape, Vector2 p)
+        private XPolySpring(XShape shape, Vector2 p)
         {
             CopyData(shape);
             SetCenter(p);
@@ -116,10 +116,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() => new PolySpring(this);
-        internal override Shape Clone(Vector2 center) => new PolySpring(this, center);
+        internal override XShape Clone() => new XPolySpring(this);
+        internal override XShape Clone(Vector2 center) => new XPolySpring(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 18);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad2 | ShapeProperty.Rad1 | ShapeProperty.Dim;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad2 | XShapeProperty.Rad1 | XShapeProperty.Dim;
         #endregion
     }
 }

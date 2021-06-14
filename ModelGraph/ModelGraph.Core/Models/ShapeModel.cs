@@ -12,7 +12,6 @@ namespace ModelGraph.Core
         private const float EditExtent = EditRadius + EditMargin;
         private const int EditSize = (int)(2 * EditExtent);
         private readonly float AbsoluteSize;
-        internal ShapeSelector Selector;
 
         #region DrawMode, DrawState  ==========================================
         // Name the drawing modes and states for this model
@@ -47,13 +46,15 @@ namespace ModelGraph.Core
 
             OnShape,
             OnLine,
-            OnLinePoint,
+            OnPin,
         }
         #endregion
 
         #region SetModeStateActions  ==========================================
         private void SetModeStateEventActions()
         {
+            SetEventAction(DrawEvent.Apply, ApplyChange);
+            SetEventAction(DrawEvent.Revert, Revert);
             SetEventAction(DrawEvent.Picker1Tap, () => { Picker1Tap(); });
             SetEventAction(DrawEvent.Picker2Tap, () => { Picker2Tap(); });
             SetEventAction(DrawEvent.Picker1CtrlTap, () => { Picker1Tap(true); });
@@ -61,7 +62,7 @@ namespace ModelGraph.Core
             SetModeStateEventAction((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
-            SetModeStateEventAction((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
+            SetModeStateEventAction((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawEvent.Tap, CloneAction);
             SetModeStateEventAction((byte)DrawMode.Delete, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
             SetModeStateEventAction((byte)DrawMode.Terminal, (byte)DrawState.OnVoid, DrawEvent.Pseudo, PageModel.TriggerUIRefresh);
@@ -72,11 +73,9 @@ namespace ModelGraph.Core
         #region SetModeStateCursors  ==========================================
         private void SetModeStateCursors()
         {
-            SetModeStateCursor((byte)DrawMode.Edit, (byte)DrawState.OnVoid, DrawCursor.Aim);
-            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.Aim);
-            SetModeStateCursor((byte)DrawMode.Copy, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Move, (byte)DrawState.OnVoid, DrawCursor.SizeAll);
             SetModeStateCursor((byte)DrawMode.Paste, (byte)DrawState.OnVoid, DrawCursor.New);
-            SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnVoid, DrawCursor.Aim);
+            SetModeStateCursor((byte)DrawMode.Reshape, (byte)DrawState.OnPin, DrawCursor.SizeAll);
         }
         #endregion
 
@@ -85,7 +84,6 @@ namespace ModelGraph.Core
         {
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
-            Selector = new ShapeSelector(this);
 
             Overview = Editor;
             OverviewWidth = 40;
@@ -116,7 +114,7 @@ namespace ModelGraph.Core
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
-            Picker1IsVisible = Picker2IsVisible = OverviewIsVisible = SideTreeIsVisible = true;
+            LeftCanvasIsVisible = RightCanvasIsVisible = OverviewIsVisible = SideTreeIsVisible = true;
 
             SetViewMode();
             InititalizeBackData();
@@ -125,11 +123,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region ShapeProperty  ================================================
-
-        private void SetProperties()
+        private void GetProperties()
         {
-            Shape.GetStrokeProperty(Selector.Shapes, ref _propertyFlags, ref _lineWidth, ref _lineStyle, ref _startCap, ref _dashCap, ref _endCap, ref _colorARGB);
-            Shape.GetSizerProperty(Selector.Shapes, ref _polyLocked, ref _min, ref _max, ref _dimension, ref _auxAxis, ref _radius1, ref _radius2, ref _size, ref _vSize, ref _hSize);
+            _propertyFlags = Shape.GetProperties(this, SelectedShapes);
+
             SideTreeDelta++;
             (SideTreeModel as TreeModel).Validate();
             Refresh();
@@ -141,49 +138,119 @@ namespace ModelGraph.Core
         private ShapeProperty _propertyFlags;
 
         internal CapStyle EndCap { get => _endCap; set => Set(ref _endCap, value, ShapeProperty.EndCap); }
+        internal void InitEndCap(CapStyle value) => _endCap = value;
         private CapStyle _endCap;
 
         internal CapStyle DashCap { get => _dashCap; set => Set(ref _dashCap, value, ShapeProperty.DashCap); }
+        internal void InitDashCap(CapStyle value) => _dashCap = value;
         private CapStyle _dashCap;
 
         internal CapStyle StartCap { get => _startCap; set => Set(ref _startCap, value, ShapeProperty.StartCap); }
+        internal void InitStartCap(CapStyle value) => _startCap = value;
         private CapStyle _startCap;
 
-        internal StrokeStyle LineStyle { get => _lineStyle; set => Set(ref _lineStyle, value, ShapeProperty.LineStyle); }
-        private StrokeStyle _lineStyle;
+        internal StrokeStyle StrokeStyle { get => _strokeStyle; set => Set(ref _strokeStyle, value, ShapeProperty.StrokeStyle); }
+        internal void InitStrokeStyle(StrokeStyle value) => _strokeStyle = value;
+        private StrokeStyle _strokeStyle;
 
-        internal byte LineWidth { get => _lineWidth; set => Set(ref _lineWidth, value, ShapeProperty.LineWidth); }
-        private byte _lineWidth = 2;
+        internal byte StrokeWidth { get => _strokeWidth; set => Set(ref _strokeWidth, value, ShapeProperty.StrokeWidth); }
+        internal void InitStrokeWidth(byte value) => _strokeWidth = value;
+        private byte _strokeWidth = 1;
 
-        internal byte AuxAxis { get => _auxAxis; set => Set(ref _auxAxis, value, ShapeProperty.Aux); }
-        private byte _auxAxis = 25;
 
-        internal byte Size { get => _size; set => Set(ref _size, value, ShapeProperty.Size); }
-        private byte _size = 25;
+        internal byte Factor1 { get => _factor1; set => Set(ref _factor1, value, ShapeProperty.Factor1); }
+        internal void InitFactor1(byte value) => _factor1 = value;
+        private byte _factor1 = 25;
 
-        internal byte VSize { get => _vSize; set => Set(ref _vSize, value, ShapeProperty.Vert); }
-        private byte _vSize = 25;
-
-        internal byte HSize { get => _hSize; set => Set(ref _hSize, value, ShapeProperty.Horz); }
-        private byte _hSize = 25;
-
-        internal byte Radius1 { get => _radius1; set => Set(ref _radius1, value, ShapeProperty.Rad1); }
+        internal byte Radius1 { get => _radius1; set => Set(ref _radius1, value, ShapeProperty.Radius1); }
+        internal void InitRadius1(byte value) => _radius1 = value;
         private byte _radius1 = 25;
 
-        internal byte Radius2 { get => _radius2; set => Set(ref _radius2, value, ShapeProperty.Rad2); }
+        internal byte Radius2 { get => _radius2; set => Set(ref _radius2, value, ShapeProperty.Radius2); }
+        internal void InitRadius2(byte value) => _radius2 = value;
         private byte _radius2 = 25;
 
-        internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dim); }
-        private byte _dimension = 3;
-        internal bool PolyLocked { get => _polyLocked; set => Set(ref _polyLocked, value, ShapeProperty.PolyLocked); }
-        private bool _polyLocked = false;
+        internal byte Rotation { get => _rotation; set => Set(ref _rotation, value, ShapeProperty.Rotation); }
+        internal void InitRotation(byte value) => _rotation = value;
+        private byte _rotation = 0;
 
+        internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dimension); }
+        internal void InitDimension(byte value) => _dimension = value;
+        private byte _dimension = 3;
+
+        internal bool IsImpaired { get => _isImpaired; set => Set(ref _isImpaired, value, ShapeProperty.IsImpaired); }
+        internal void InitImpared(bool value) => _isImpaired = value;
+        private bool _isImpaired = false;
+
+        private short SCLAMP(short v) => v < LNS ? LNS : v > LPS ? LPS : v;
+        private short SCLAMP(int v) => v < LNS ? LNS : v > LPS ? LPS : (short)v;
+        const short LNS = -128;
+        const short LPS = 128;
+
+        private ushort USCLAMP(ushort v) => v > LPUS ? LPUS : v;
+        private ushort USCLAMP(int v) => v < LNUS ? LNUS : v > LPUS ? LPUS : (ushort)v;
+        const ushort LNUS = 0;
+        const ushort LPUS = 256;
+
+        internal ushort SizeX { get => _sizeX; set => Set(ref _prevSizeX, ref _sizeX, USCLAMP(value), ShapeProperty.SizeX); }
+        internal void InitSizeX(ushort value) => _sizeX = value;
+        internal float DeltaSizeX => USCLAMP(_centerX - _prevCenterX) / 256f;
+        private ushort _sizeX = 0;
+        private ushort _prevSizeX = 0;
+
+        internal ushort SizeY { get => _sizeY; set => Set(ref _prevSizeY, ref _sizeY, USCLAMP(value), ShapeProperty.SizeY); }
+        internal void InitSizeY(ushort value) => _sizeY = value;
+        internal float DeltaSizeY => USCLAMP(_sizeY - _prevSizeY) / 256f;
+        private ushort _sizeY = 0;
+        private ushort _prevSizeY = 0;
+
+        internal short CenterX { get => _centerX; set => Set(ref _prevCenterX, ref _centerX, SCLAMP(value), ShapeProperty.CenterX); }
+        internal void InitCenterX(short value) => _centerX = value;
+        internal float DeltaCenterX => SCLAMP(_centerX - _prevCenterX) / 128f;
+        private short _centerX = 0;
+        private short _prevCenterX = 0;
+
+        internal short CenterY { get => _centerY; set => Set(ref _prevCenterY, ref _centerY, SCLAMP(value), ShapeProperty.CenterY); }
+        internal void InitCenterY(short value) => _centerY = value;
+        internal float DeltaCenterY => SCLAMP(_centerY - _prevCenterY) / 128f;
+        private short _centerY = 0;
+        private short _prevCenterY = 0;
+
+        internal short ExtentEast { get => _extentEast; set => Set(ref _prevExtentEast, ref _extentEast, SCLAMP(value), ShapeProperty.ExtentEast); }
+        internal void InitExtentEast(short value) => _extentEast = value;
+        internal float DeltaExtentEast => SCLAMP(_extentEast - _prevExtentEast) / 128f;
+        private short _extentEast = 0;
+        private short _prevExtentEast = 0;
+
+        internal short ExtentWest { get => _extentWest; set => Set(ref _prevExtentWest, ref _extentWest, SCLAMP(value), ShapeProperty.ExtentWest); }
+        internal void InitExtentWest(short value) => _extentWest = value;
+        internal float DeltaExtentWest => SCLAMP(_extentWest - _prevExtentWest) / 128f;
+        private short _extentWest = 0;
+        private short _prevExtentWest = 0;
+
+        internal short ExtentNorth { get => _extentNorth; set => Set(ref _prevExtentNorth, ref _extentNorth, SCLAMP(value), ShapeProperty.ExtentNorth); }
+        internal void InitExtentNorth(short value) => _extentNorth = value;
+        internal float DeltaExtentNorth => SCLAMP(_extentNorth - _prevExtentNorth) / 128f;
+        private short _extentNorth = 0;
+        private short _prevExtentNorth = 0;
+
+        internal short ExtentSouth { get => _extentSouth; set => Set(ref _prevExtentSouth, ref _extentSouth, SCLAMP(value), ShapeProperty.ExtentSouth); }
+        internal void InitExtentSouth(short value) => _extentSouth = value;
+        internal float DeltaExtentSouth => SCLAMP(_extentSouth - _prevExtentSouth) / 128f; 
+        private short _extentSouth = 0;
+        private short _prevExtentSouth = 0;
+
+        private void Set<T>(ref T previous, ref T storage, T value, ShapeProperty sp)
+        {
+            previous = storage;
+            Set(ref storage, value, sp);
+        }
         private void Set<T>(ref T storage, T value, ShapeProperty sp)
         {
             if (Equals(storage, value)) return;
             storage = value;
-            Shape.SetProperty(this, sp, Selector.Shapes);
-            SetProperties();
+            Shape.SetProperty(this, sp, SelectedShapes);
+            GetProperties();
         }
         #endregion
 
@@ -202,10 +269,11 @@ namespace ModelGraph.Core
                 var c = new Vector2(0, 0);
                 var a = (float)Symbol.AbsoluteSize;
                 Picker1.Clear();
+                Picker1Delta++;
                 foreach (var s in Symbol.GetShapes())
                 {
                     s.AddDrawData(Picker1, a, r, c);
-                    if (Selector.Shapes.Contains(s))
+                    if (SelectedShapes.Contains(s))
                     {
                         var points = new Vector2[] { c, new Vector2(r, r) };
                         Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
@@ -220,6 +288,7 @@ namespace ModelGraph.Core
                 var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
 
                 Picker2.Clear();
+                Picker2Delta++;
                 foreach (var s in _picker2Shapes)
                 {
                     s.AddDrawData(Picker2, a, r, c);
@@ -242,23 +311,24 @@ namespace ModelGraph.Core
             var a = AbsoluteSize;
 
             Editor.Clear();
+            EditorDelta++;
             var shapes = Symbol.GetShapes();
             var coloring = Shape.Coloring.Normal;
-            if (Mode == DrawMode.Reshape && Selector.Shapes.Count == 1)
+            if (Mode == DrawMode.Reshape && SelectedShapes.Count == 1)
             {
                 coloring = Shape.Coloring.Light;
-                Shape.AddDrawTargets(Selector.Shapes[0], _pinTargets, Editor, r, c);
+                Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
             }
 
             foreach (var s in shapes) { s.AddDrawData(Editor, a, r, c, coloring); }
 
-            if (Mode == DrawMode.Reshape && Selector.Shapes.Count == 1)
+            if (Mode == DrawMode.Reshape && SelectedShapes.Count == 1)
             {
-                Shape.AddDrawTargets(Selector.Shapes[0], _pinTargets, Editor, r, c);
+                Shape.AddDrawTargets(SelectedShapes[0], _pinTargets, Editor, r, c);
             }
             else if (Mode == DrawMode.Edit && _hitSelecteShapes)
             {
-                Editor.AddParms((Shape.GetHitExtent(r, c, Selector.Shapes), (ShapeType.CenterRect, StrokeType.Filled, 0), (80, 255, 200, 255)));
+                Editor.AddParms((Shape.GetHitExtent(r, c, SelectedShapes), (ShapeType.CenterRect, StrokeType.Filled, 0), (80, 255, 200, 255)));
             }
         }
         #endregion
@@ -367,86 +437,89 @@ namespace ModelGraph.Core
                 var s = Symbol.GetShapes()[_picker1Index];
                 if (add)
                 {
-                    if (Selector.Shapes.Contains(s))
+                    if (SelectedShapes.Contains(s))
                     {
-                        Selector.Shapes.Remove(s);
-                        if (Selector.Shapes.Count == 0) SetViewMode();
+                        SelectedShapes.Remove(s);
+                        if (SelectedShapes.Count == 0) SetViewMode();
                     }
                     else
-                        Selector.Shapes.Add(s);
+                        SelectedShapes.Add(s);
                 }
                 else
                 {
-                    Selector.Shapes.Clear();
-                    Selector.Shapes.Add(s);
+                    SelectedShapes.Clear();
+                    SelectedShapes.Add(s);
                 }
             }
             else
             {
-                Selector.Shapes.Clear();
+                SelectedShapes.Clear();
             }
-            SetProperties();
+            GetProperties();
             if (Mode == DrawMode.Reshape) return;
-            if (Selector.Shapes.Count == 0) SetViewMode();
+            if (SelectedShapes.Count == 0) SetViewMode();
             Mode = DrawMode.Edit;
+            Refresh(true);
         }
         private void OverviewTap()
         {
             var shapes = Symbol.GetShapes();
-            if (Selector.Shapes.Count == shapes.Count)
+            if (SelectedShapes.Count == shapes.Count)
                 SetViewMode();
             _picker1Index = 0; //will make Picker1Valid true
-            Selector.Shapes.Clear();
-            Selector.Shapes.AddRange(shapes);
-            SetProperties();
+            SelectedShapes.Clear();
+            SelectedShapes.AddRange(shapes);
+            GetProperties();
             Mode = DrawMode.Edit;
         }
 
         private void Picker2Tap()
         {
             _picker1Index = -1;
-            Selector.Shapes.Clear();
+            SelectedShapes.Clear();
  
             _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
             if (Picker2IsValid)
             {
-                Selector.Shapes.Add(_templateShapes[_picker2Index]);
+                SelectedShapes.Add(_templateShapes[_picker2Index]);
             }
-            SetProperties();
+            GetProperties();
 
             if (Picker2IsValid)
                 Mode = DrawMode.Paste;
             else
                Mode = DrawMode.View;
         }
+        internal List<Shape> SelectedShapes = new List<Shape>();
         private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
         private bool Picker2IsValid => _picker2Index > -1 && _picker2Index < _picker2Shapes.Length;
         private int _picker1Index;
         private int _picker2Index;
+        private List<Shape> Shapes = new List<Shape>(_picker2Shapes.Length);
         private List<Shape> _templateShapes = new List<Shape>(_picker2Shapes.Length);
         private static Shape[] _picker2Shapes =
         {
             new Line(),
-            new Circle(),
-            new Ellipes(),
-            new Rectangle(),
-            new RoundedRectangle(),
-            new PolySide(),
-            new PolyStar(),
-            new PolyGear(),
-            new PolyPulse(),
-            new PolySpike(),
-            new PolyWave(),
-            new PolySpring(),
+            //new XCircle(),
+            //new XEllipes(),
+            //new XRectangle(),
+            //new XRoundedRectangle(),
+            //new XPolySide(),
+            //new XPolyStar(),
+            //new XPolyGear(),
+            //new XPolyPulse(),
+            //new XPolySpike(),
+            //new XPolyWave(),
+            //new XPolySpring(),
         };
         #endregion
 
         #region ColorARGB/Apply/Revert  =======================================
         protected override void ColorARGBChanged()
         {
-            if (Selector.Shapes.Count > 0)
+            if (SelectedShapes.Count > 0)
             {
-                foreach (var s in Selector.Shapes)
+                foreach (var s in SelectedShapes)
                 {
                     s.SetColor(ColorARGB);
                 }
@@ -497,7 +570,7 @@ namespace ModelGraph.Core
             //{
             //    var r = EditRadius;
             //    var c = new Vector2();
-            //    _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, Selector.Shapes);
+            //    _hitSelecteShapes = Shape.HitShapes(Editor.Point2, r, c, SelectedShapes);
             //    if (_hitSelecteShapes)
             //    {
             //        ModifyDrawState(DrawState.NowOnNode, DrawState.NowMask | DrawState.EventMask);
@@ -512,7 +585,7 @@ namespace ModelGraph.Core
         {
             //SetDrawState(DrawState.ViewMode);
             //_picker1Index = _picker2Index = -1;
-            //Selector.Shapes.Clear();
+            //SelectedShapes.Clear();
             //SetProperties();
         }
         private void PasteAction()
@@ -531,25 +604,25 @@ namespace ModelGraph.Core
         #region EditMode == ModifySymbol  =====================================
         private void NudgeUp()
         {
-            Shape.MoveCenter(Selector.Shapes, new Vector2(0, -0.01f));
+            Shape.MoveCenter(SelectedShapes, new Vector2(0, -0.01f));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeDown()
         {
-            Shape.MoveCenter(Selector.Shapes, new Vector2(0, 0.01f));
+            Shape.MoveCenter(SelectedShapes, new Vector2(0, 0.01f));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeLeft()
         {
-            Shape.MoveCenter(Selector.Shapes, new Vector2(-0.01f, 0));
+            Shape.MoveCenter(SelectedShapes, new Vector2(-0.01f, 0));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgeRight()
         {
-            Shape.MoveCenter(Selector.Shapes, new Vector2(0.01f, 0));
+            Shape.MoveCenter(SelectedShapes, new Vector2(0.01f, 0));
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
@@ -557,9 +630,9 @@ namespace ModelGraph.Core
         private void CutAction()
         {
             _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(Selector.Shapes);
+            _shapeClipboard.AddRange(SelectedShapes);
             var shapes = Symbol.GetShapes();
-            foreach (var s in Selector.Shapes)
+            foreach (var s in SelectedShapes)
             {
                 shapes.Remove(s);
             }
@@ -569,32 +642,32 @@ namespace ModelGraph.Core
         private void CopyAction()
         {
             _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(Selector.Shapes);
+            _shapeClipboard.AddRange(SelectedShapes);
             SetViewMode();
         }
         private void CenterAction()
         {
-            Shape.SetCenter(Selector.Shapes, new Vector2());
+            Shape.SetCenter(SelectedShapes, new Vector2());
             Refresh();
         }
         private void RotateLeft()
         {
-            Shape.RotateLeft(Selector.Shapes, _useAlternate);
+            Shape.RotateLeft(SelectedShapes, _useAlternate);
             Refresh();
         }
         private void RotateRight()
         {
-            Shape.RotateRight(Selector.Shapes, _useAlternate);
+            Shape.RotateRight(SelectedShapes, _useAlternate);
             Refresh();
         }
         private void VerticalFlip()
         {
-            Shape.VerticalFlip(Selector.Shapes);
+            Shape.VerticalFlip(SelectedShapes);
             Refresh();
         }
         private void HorizontalFlip()
         {
-            Shape.HorizontalFlip(Selector.Shapes);
+            Shape.HorizontalFlip(SelectedShapes);
             Refresh();
         }
         private void SetDegree22() => _useAlternate = false;
@@ -606,7 +679,7 @@ namespace ModelGraph.Core
         private void DragShapeAction()
         {
             var delta = EditData.PointDelta(true) / EditRadius;
-            Shape.MoveCenter(Selector.Shapes, delta);
+            Shape.MoveCenter(SelectedShapes, delta);
             RefreshEditorData(); //fast responce
         }
         private void EndDragAction()
@@ -619,30 +692,30 @@ namespace ModelGraph.Core
         private void DragPinAction()
         {
             var delta = EditData.PointDelta(true) / EditRadius;
-            Shape.MovePoint(Selector.Shapes[0], _pinIndex, delta, EditRadius);
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, delta, EditRadius);
             RefreshEditorData(); //fast responce
         }
         private void NudgePinUp()
         {
-            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0, -0.01f), 1);
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, -0.01f), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinDown()
         {
-            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0, 0.01f), 1);
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0, 0.01f), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinLeft()
         {
-            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(-0.01f, 0), 1);
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(-0.01f, 0), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }
         private void NudgePinRight()
         {
-            Shape.MovePoint(Selector.Shapes[0], _pinIndex, new Vector2(0.01f, 0), 1);
+            Shape.MovePoint(SelectedShapes[0], _pinIndex, new Vector2(0.01f, 0), 1);
             RefreshEditorData();
             PageModel.TriggerUIRefresh();
         }

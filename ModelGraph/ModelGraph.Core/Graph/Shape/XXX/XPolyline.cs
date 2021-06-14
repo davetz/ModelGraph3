@@ -3,7 +3,7 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal abstract class Polyline : Shape
+    internal abstract class XPolyline : XShape
     {
 
         #region Polyline Methods  =============================================
@@ -55,12 +55,12 @@ namespace ModelGraph.Core
         #region OverideAbstract  ==============================================
         protected override Vector2 GetCenter()
         {
-            var (x1, y1, x2, y2, cx, cy) = GetExtent();
-            return new Vector2(cx, cy);
+            var (x1, y1, x2, y2) = GetExtent();
+            return new Vector2((x1 + x2), (y1 + y2)) / 2;
         }
-        protected override (float x1, float y1, float x2, float y2, float cx, float cy) GetExtent()
+        protected override (float dx1, float dy1, float dx2, float dy2) GetExtent()
         {
-            if (DXY is null) return (0, 0, 0, 0, 0, 0);
+            if (DXY is null) return (0, 0, 0, 0);
             var x1 = 1f;
             var y1 = 1f;
             var x2 = -1f;
@@ -73,28 +73,9 @@ namespace ModelGraph.Core
                 if (d.X > x2) x2 = d.X;
                 if (d.Y > y2) y2 = d.Y;
             }
-            var cx = (x2 + x1) / 2;
-            var cy = (y2 + y1) / 2;
-            return (x1 == 1) ? (0, 0, 0, 0, 0, 0) : (x1, y1, x2, y2, cx, cy);
+            return (x1 == 1) ? (0, 0, 0, 0) : (x1, y1, x2, y2);
         }
         protected override void Scale(Vector2 scale) => TransformPoints(Matrix3x2.CreateScale(scale));
-
-        protected override void DeltaCenterX(float delta)
-        {
-            for (int i = 0; i < DXY.Count; i++)
-            {
-                var p = DXY[i];
-                DXY[i] = new Vector2(p.X + delta, p.Y); 
-            }
-        }
-        protected override void DeltaCenterY(float delta)
-        {
-            for (int i = 0; i < DXY.Count; i++)
-            {
-                var p = DXY[i];
-                DXY[i] = new Vector2(p.X, p.Y + delta);
-            }
-        }
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring c = Coloring.Normal)
         {
             var points = GetDrawingPoints(scale, offset);
@@ -105,7 +86,7 @@ namespace ModelGraph.Core
             var points = GetDrawingPoints(flip, scale, offset);
             drawData.AddParms((points, ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Radius1 | ShapeProperty.Radius2;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad1 | XShapeProperty.Rad2;
         #endregion
     }
 }

@@ -4,10 +4,10 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class PolySide : Polygon
+    internal class XPolySide : XPolygon
     {
         protected override ShapeType ShapeType => ShapeType.PolySide;
-        internal PolySide(bool deserializing = false)
+        internal XPolySide(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
@@ -34,11 +34,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolySide(Shape shape)
+        private XPolySide(XShape shape)
         {
             CopyData(shape);
         }
-        private PolySide(Shape shape, Vector2 p)
+        private XPolySide(XShape shape, Vector2 p)
         {
             CopyData(shape);
             SetCenter(p);
@@ -46,9 +46,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new PolySide(this);
-        internal override Shape Clone(Vector2 center) => new PolySide(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Dim;
+        internal override XShape Clone() =>new XPolySide(this);
+        internal override XShape Clone(Vector2 center) => new XPolySide(this, center);
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad1 | XShapeProperty.Dim;
 
         protected override Vector2 GetCenter()
         {

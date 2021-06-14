@@ -22,20 +22,27 @@ namespace ModelGraph.Core
             var sto = root.Get<PropertyRoot>();
 
             root.RegisterReferenceItem(new Property_SymbolX_Attatch(sto));
-            root.RegisterReferenceItem(new Property_Shape_LineWidth(sto));
-            root.RegisterReferenceItem(new Property_Shape_LineStyle(sto));
+            root.RegisterReferenceItem(new Property_Shape_StrokeWidth(sto));
+            root.RegisterReferenceItem(new Property_Shape_StrokeStyle(sto));
             root.RegisterReferenceItem(new Property_Shape_StartCap(sto));
             root.RegisterReferenceItem(new Property_Shape_DashCap(sto));
             root.RegisterReferenceItem(new Property_Shape_EndCap(sto));
 
-            root.RegisterReferenceItem(new Property_Shape_AuxAxis(sto));
-            root.RegisterReferenceItem(new Property_Shape_CentAxis(sto));
-            root.RegisterReferenceItem(new Property_Shape_VertAxis(sto));
-            root.RegisterReferenceItem(new Property_Shape_HorzAxis(sto));
-            root.RegisterReferenceItem(new Property_Shape_MajorAxis(sto));
-            root.RegisterReferenceItem(new Property_Shape_MinorAxis(sto));
+            root.RegisterReferenceItem(new Property_Shape_SizeX(sto));
+            root.RegisterReferenceItem(new Property_Shape_SizeY(sto));
+
+            root.RegisterReferenceItem(new Property_Shape_Factor1(sto));
+            root.RegisterReferenceItem(new Property_Shape_Radius1(sto));
+            root.RegisterReferenceItem(new Property_Shape_Radius2(sto));
+            root.RegisterReferenceItem(new Property_Shape_Rotation(sto));
             root.RegisterReferenceItem(new Property_Shape_Dimension(sto));
-            root.RegisterReferenceItem(new Property_Shape_Polylocked(sto));
+            root.RegisterReferenceItem(new Property_Shape_CenterX(sto));
+            root.RegisterReferenceItem(new Property_Shape_CenterY(sto));
+
+            root.RegisterReferenceItem(new Property_Shape_ExtentEast(sto));
+            root.RegisterReferenceItem(new Property_Shape_ExtentWest(sto));
+            root.RegisterReferenceItem(new Property_Shape_ExtentNorth(sto));
+            root.RegisterReferenceItem(new Property_Shape_ExtentSouth(sto));
 
             root.RegisterInternalProperties(typeof(SymbolX), GetProps1(root)); //used by property name lookup
             root.RegisterInternalProperties(typeof(ShapeModel), GetProps2(root)); //used by property name lookup
@@ -60,8 +67,8 @@ namespace ModelGraph.Core
         };
         private Property[] GetProps2(Root root) => new Property[]
         {
-            root.Get<Property_Shape_LineStyle>(),
-            root.Get<Property_Shape_LineWidth>(),
+            root.Get<Property_Shape_StrokeStyle>(),
+            root.Get<Property_Shape_StrokeWidth>(),
             root.Get<Property_Shape_StartCap>(),
             root.Get<Property_Shape_DashCap>(),
             root.Get<Property_Shape_EndCap>(),

@@ -28,5 +28,10 @@ namespace ModelGraph.Core
             list.Clear();
             list.Add(new EditCommand(this, () => { pageModel.NewView( (p) => { new ShapeModel(p, root, Item); }, ControlType.ComplexDraw); }));
         }
+        public override void GetMenuCommands(Root root, List<ItemCommand> list)
+        {
+            list.Clear();
+            list.Add(new RemoveCommand(this, () => root.Get<ChangeManager>().RemoveItem(Item)));
+        }
     }
 }

@@ -367,19 +367,26 @@ namespace ModelGraph.Core
         ComputeXTakeLimitProperty = 0x4BC | Is_Reference,
 
         //=========================================
-        ShapeLineStyleProperty = 0x4C0 | Is_Covert,
-        ShapeLineWidthProperty = 0x4C1 | Is_Covert,
+        ShapeStrokeStyleProperty = 0x4C0 | Is_Covert,
+        ShapeStrokeWidthProperty = 0x4C1 | Is_Covert,
         ShapeStartCapProperty = 0x4C2 | Is_Covert,
         ShapeDashCapProperty = 0x4C3 | Is_Covert,
         ShapeEndCapProperty = 0x4C4 | Is_Covert,
-        ShapeAuxAxisProperty = 0x4C5 | Is_Covert,
-        ShapeCentAxisProperty = 0x4C6 | Is_Covert,
-        ShapeVertAxisProperty = 0x4C7 | Is_Covert,
-        ShapeHorzAxisProperty = 0x4C8 | Is_Covert,
-        ShapeMajorAxisProperty = 0x4C9 | Is_Covert,
-        ShapeMinorAxisProperty = 0x4CA | Is_Covert,
+        ShapeFactor1Property = 0x4C5 | Is_Covert,
+        ShapeRadius1Property = 0x4C6 | Is_Covert,
+        ShapeRadius2Property = 0x4C7 | Is_Covert,
+        ShapeCenterXProperty = 0x4C8 | Is_Covert,
+        ShapeCenterYProperty = 0x4C9 | Is_Covert,
+        ShapeRotationProperty = 0x4CA | Is_Covert,
         ShapeDimensionProperty = 0x4CB | Is_Covert,
-        ShapePolylockedProperty = 0x4CC | Is_Covert,
+        ShapeIsImpairedProperty = 0x4CC | Is_Covert,
+        ShapeExtentEastProperty = 0x4CD | Is_Covert,
+        ShapeExtentWestProperty = 0x4CE | Is_Covert,
+        ShapeExtentNorthProperty = 0x4CF | Is_Covert,
+        ShapeExtentSouthProperty = 0x4D0 | Is_Covert,
+        ShapeSizeXProperty = 0x4D1 | Is_Covert,
+        ShapeSizeYProperty = 0x4D2 | Is_Covert,
+
         #endregion
 
         #region Model ================================================(600-7FF)

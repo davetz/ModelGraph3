@@ -3,10 +3,10 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class PolyWave : PolySpline
+    internal class XPolyWave : XPolySpline
     {
         protected override ShapeType ShapeType => ShapeType.PolyWave;
-        internal PolyWave(bool deserializing = false)
+        internal XPolyWave(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
@@ -17,11 +17,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyWave(Shape shape)
+        private XPolyWave(XShape shape)
         {
             CopyData(shape);
         }
-        private PolyWave(Shape shape, Vector2 p)
+        private XPolyWave(XShape shape, Vector2 p)
         {
             CopyData(shape);
             SetCenter(p);
@@ -71,10 +71,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() => new PolyWave(this);
-        internal override Shape Clone(Vector2 center) => new PolyWave(this, center);
+        internal override XShape Clone() => new XPolyWave(this);
+        internal override XShape Clone(Vector2 center) => new XPolyWave(this, center);
         protected override (int min, int max) MinMaxDimension => (1, 22);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad2 | ShapeProperty.Rad1 | ShapeProperty.Dim;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad2 | XShapeProperty.Rad1 | XShapeProperty.Dim;
         #endregion
     }
 }

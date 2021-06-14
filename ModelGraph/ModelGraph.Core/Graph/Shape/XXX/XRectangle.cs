@@ -3,26 +3,23 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class RoundedRectangle : Central
+    internal class XRectangle : CCentral
     {
-        protected override ShapeType ShapeType => ShapeType.RoundedRect;
-        internal RoundedRectangle(bool deserializing = false)
+        protected override ShapeType ShapeType => ShapeType.CenterRect;
+        internal XRectangle(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
-            Radius1 = 0.5f;
-            Radius2 = 0.3f;
+            Radius1 = Radius2 = 0.30f;
             DXY = new List<Vector2>() { new Vector2(0, 0) };
         }
-        internal float Corner => 0.1f;
 
         #region PrivateConstructor  ===========================================
-        internal RoundedRectangle(Shape shape)
+        private XRectangle(XShape shape)
         {
             CopyData(shape);
         }
-
-        internal RoundedRectangle(Shape shape, Vector2 p)
+        private XRectangle(XShape shape, Vector2 p)
         {
             CopyData(shape);
             Center = p;
@@ -30,8 +27,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new RoundedRectangle(this);
-        internal override Shape Clone(Vector2 center) => new RoundedRectangle(this, center);
+        internal override XShape Clone() =>new XRectangle(this);
+        internal override XShape Clone(Vector2 center) => new XRectangle(this, center);
 
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring coloring = Coloring.Normal)
         {
@@ -45,7 +42,7 @@ namespace ModelGraph.Core
             var points = new Vector2[] { cp, new Vector2(r1, r2) };
             drawData.AddParms((points, ShapeStrokeWidth(), ShapeColor()));
         }
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad1 | XShapeProperty.Rad2;
         #endregion
     }
 }

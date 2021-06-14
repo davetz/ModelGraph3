@@ -1342,25 +1342,24 @@ NEC – NWC – SEC - SWC</value>
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C8N" xml:space="preserve">
-    <value>%Width </value>
+    <value>Center X</value>
   </data>
   <data name="4C8S" xml:space="preserve">
-    <value>Shape Width (1 to 100) %  for all selected shapes
+    <value>Shapes center X coordinate (-128 to 128) 
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4C9N" xml:space="preserve">
-    <value>%Scale 1 </value>
+    <value>Center Y</value>
   </data>
   <data name="4C9S" xml:space="preserve">
-    <value>Shape Scale 1 (1 to 100) % for all selected shapes
+    <value>Shapes center Y coordinate (-128 to 128) 
 (use up/down to increment/decrement)</value>
   </data>
   <data name="4CAN" xml:space="preserve">
-    <value>%Scale 2 </value>
+    <value>Rotation</value>
   </data>
   <data name="4CAS" xml:space="preserve">
-    <value>Shape Scale 2  (1 to 100) % for all selected shapes
-(use up/down to increment/decrement)</value>
+    <value>Rotation index (0 to 47, in 7.5 degree increments)</value>
   </data>
   <data name="4CBN" xml:space="preserve">
     <value>Dimension</value>
@@ -1375,6 +1374,44 @@ NEC – NWC – SEC - SWC</value>
   <data name="4CCS" xml:space="preserve">
     <value>Shape dimension and auto generate function is disabled
 (this is becaus you moved individual points of the shape) </value>
+  </data>
+  <data name="4CDN" xml:space="preserve">
+    <value>Left Extent</value>
+  </data>
+  <data name="4CDS" xml:space="preserve">
+    <value>Shapes left extent (-128 to 128)</value>
+  </data>
+  <data name="4CEN" xml:space="preserve">
+    <value>Right Extent</value>
+  </data>
+  <data name="4CES" xml:space="preserve">
+    <value>Shapes right extent (-128 to 128)</value>
+  </data>
+  <data name="4CFN" xml:space="preserve">
+    <value>Top Extent</value>
+  </data>
+  <data name="4CFS" xml:space="preserve">
+    <value>Shapes Top Extent (-128 to 128)</value>
+  </data>
+  <data name="4D0N" xml:space="preserve">
+    <value>Bottom Extent</value>
+  </data>
+  <data name="4D0S" xml:space="preserve">
+    <value>Shapes bottom extent (-128 to 128)</value>
+  </data>
+  <data name="4D1N" xml:space="preserve">
+    <value>Size X</value>
+  </data>
+  <data name="4D1S" xml:space="preserve">
+    <value>Shapes left to right size (0 to 256) 
+(use up/down to increment/decrement)</value>
+  </data>
+  <data name="4D2N" xml:space="preserve">
+    <value>Size Y</value>
+  </data>
+  <data name="4D2S" xml:space="preserve">
+    <value>Shapes top to bottom size (0 to 256) 
+(use up/down to increment/decrement)</value>
   </data>
   <data name="600N" xml:space="preserve">
     <value>Diagnostic</value>

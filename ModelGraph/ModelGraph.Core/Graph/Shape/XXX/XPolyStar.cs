@@ -4,37 +4,31 @@ using System.Numerics;
 
 namespace ModelGraph.Core
 {
-    internal class PolyGear : Polygon
+    internal class XPolyStar : XPolygon
     {
-        protected override ShapeType ShapeType => ShapeType.PolyGear;
-        internal PolyGear(bool deserializing = false)
+        protected override ShapeType ShapeType => ShapeType.PolyStar;
+        internal XPolyStar(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
             Radius1 = 0.5f;
             Radius2 = 0.2f;
-            AuxFactor = 0.5f;
-            Dimension = 4;
+            Dimension = 6;
             CreatePoints();
         }
 
         protected override void CreatePoints()
         {
             var cp = GetCenter();
-
             var D = Dimension;
-            var N = 3 * D; //number of points
-            var M = 2 * D; //number of angles
+            var N = 2 * D;
             DXY = new List<Vector2>(N);
-            var (r1, r2, f1) = GetRadius();
-
-            var da = FullRadians / M;
-            var ta = da * f1;
+            var (r1, r2, _) = GetRadius();
+            var da = FullRadians / N;
             var a = RadiansStart;
             for (int i = 0; i < D; i++)
             {
-                DXY.Add(Limit(r1 * (float)Math.Cos(a - ta), r1 * (float)Math.Sin(a - ta)));
-                DXY.Add(Limit(r1 * (float)Math.Cos(a + ta), r1 * (float)Math.Sin(a + ta)));
+                DXY.Add(Limit(r1 * (float)Math.Cos(a), r1 * (float)Math.Sin(a)));
                 a += da;
                 DXY.Add(Limit(r2 * (float)Math.Cos(a), r2 * (float)Math.Sin(a)));
                 a += da;
@@ -44,11 +38,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyGear(Shape shape)
+        private XPolyStar(XShape shape)
         {
             CopyData(shape);
         }
-        private PolyGear(Shape shape, Vector2 p)
+        private XPolyStar(XShape shape, Vector2 p)
         {
             CopyData(shape);
             SetCenter(p);
@@ -56,9 +50,9 @@ namespace ModelGraph.Core
         #endregion
 
         #region OverideAbstract  ==============================================
-        internal override Shape Clone() =>new PolyGear(this);
-        internal override Shape Clone(Vector2 center) => new PolyGear(this, center);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2 | ShapeProperty.Aux | ShapeProperty.Dim;
+        internal override XShape Clone() =>new XPolyStar(this);
+        internal override XShape Clone(Vector2 center) => new XPolyStar(this, center);
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad2 | XShapeProperty.Rad1 | XShapeProperty.Dim;
         #endregion
     }
 }

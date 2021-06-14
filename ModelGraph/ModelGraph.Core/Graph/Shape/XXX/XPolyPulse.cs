@@ -4,10 +4,10 @@ using Windows.ApplicationModel.Chat;
 
 namespace ModelGraph.Core
 {
-    internal class PolyPulse : Polyline
+    internal class XPolyPulse : XPolyline
     {
         protected override ShapeType ShapeType => ShapeType.PolyPulse;
-        internal PolyPulse(bool deserializing = false)
+        internal XPolyPulse(bool deserializing = false)
         {
             if (deserializing) return; // properties to be loaded from serialized data
 
@@ -19,11 +19,11 @@ namespace ModelGraph.Core
         }
 
         #region PrivateConstructor  ===========================================
-        private PolyPulse(Shape shape)
+        private XPolyPulse(XShape shape)
         {
             CopyData(shape);
         }
-        private PolyPulse(Shape shape, Vector2 p)
+        private XPolyPulse(XShape shape, Vector2 p)
         {
             CopyData(shape);
             SetCenter(p);
@@ -71,10 +71,10 @@ namespace ModelGraph.Core
         #endregion
 
         #region RequiredMethods  ==============================================
-        internal override Shape Clone() =>new PolyPulse(this);
-        internal override Shape Clone(Vector2 center) => new PolyPulse(this, center);
+        internal override XShape Clone() =>new XPolyPulse(this);
+        internal override XShape Clone(Vector2 center) => new XPolyPulse(this, center);
         protected override (int min, int max) MinMaxDimension => (2, 19);
-        protected override ShapeProperty PropertyFlags => ShapeProperty.Rad1 | ShapeProperty.Rad2 | ShapeProperty.Aux | ShapeProperty.Dim;
+        protected override XShapeProperty PropertyFlags => XShapeProperty.Rad1 | XShapeProperty.Rad2 | XShapeProperty.Aux | XShapeProperty.Dim;
         #endregion
     }
 }

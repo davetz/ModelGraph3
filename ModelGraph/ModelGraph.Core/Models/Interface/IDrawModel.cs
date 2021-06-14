@@ -23,11 +23,11 @@ namespace ModelGraph.Core
         string ToolTip_Text2 { get; }
 
         // a null pointer indicates a usage choice
-        IDrawData BackData { get; } // editor background layer
-        IDrawData EditData { get; } // editor interactive layer
-        IDrawData Picker1Data { get; }
-        IDrawData Picker2Data { get; }
-        IDrawData OverviewData { get; }
+        IDrawData BackData { get; }       // editor canvas background layer
+        IDrawData EditData { get; }       // editor canvas interactive layer
+        IDrawData Picker1Data { get; }    // picker1 canvas data
+        IDrawData Picker2Data { get; }    // picker2 canvas data
+        IDrawData OverviewData { get; }   // overview canvas data
         ITreeModel FlyTreeModel { get; }
         ITreeModel SideTreeModel { get; }
 
@@ -57,8 +57,8 @@ namespace ModelGraph.Core
 
         //ui control visibility
         bool ToolTipIsVisible { get; }
-        bool Picker1IsVisible { get; }
-        bool Picker2IsVisible { get; }
+        bool LeftCanvasIsVisible { get; set; }
+        bool RightCanvasIsVisible { get; set; }
         bool SelectorIsVisible { get; }
         bool FlyTreeIsVisible { get; }
         bool SideTreeIsVisible { get; }

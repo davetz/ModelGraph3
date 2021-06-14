@@ -2,7 +2,7 @@
 
 namespace ModelGraph.Core
 {
-    internal abstract class PolySpline : Polyline
+    internal abstract class XPolySpline : XPolyline
     {
         #region OverideAbstract  ==============================================
         internal override void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring c = Coloring.Normal)
