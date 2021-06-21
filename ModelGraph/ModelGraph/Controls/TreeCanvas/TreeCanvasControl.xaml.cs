@@ -1285,7 +1285,7 @@ namespace ModelGraph.Controls
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     var num = mdl.GetInt32Value(TCM.Root) + 1;
-                    if (num > 100) return;
+                    //if (num > 100) return;
                     obj.Text = num.ToString();
                     mdl.PostSetTextValue(TCM.Root, obj.Text);
                 }
@@ -1297,7 +1297,7 @@ namespace ModelGraph.Controls
                 if (obj.DataContext is ItemModelUI mc && mc.Model is PropertyModel mdl)
                 {
                     var num = mdl.GetInt32Value(TCM.Root) - 1;
-                    if (num < 0) return;
+                    //if (num < 0) return;
                     obj.Text = num.ToString();
                     mdl.PostSetTextValue(TCM.Root, obj.Text);
                 }

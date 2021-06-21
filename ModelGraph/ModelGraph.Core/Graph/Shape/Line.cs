@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         private Line(Shape shape, Vector2 p)
         {
             CopyData(shape);
-            SetCenter( p);
+            SetCenter(p);
         }
         #endregion
 

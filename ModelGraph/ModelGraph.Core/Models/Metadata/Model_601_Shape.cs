@@ -36,7 +36,7 @@ namespace ModelGraph.Core
             root.Get<Property_Shape_Factor1>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_Radius1>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_Radius2>().CreatePropertyModel(this, Item);
-            root.Get<Property_Shape_Rotation>().CreatePropertyModel(this, Item);
+            root.Get<Property_Shape_Rotation1>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_Dimension>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_SizeX>().CreatePropertyModel(this, Item);
             root.Get<Property_Shape_SizeY>().CreatePropertyModel(this, Item);

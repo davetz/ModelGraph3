@@ -170,9 +170,13 @@ namespace ModelGraph.Core
         internal void InitRadius2(byte value) => _radius2 = value;
         private byte _radius2 = 25;
 
-        internal byte Rotation { get => _rotation; set => Set(ref _rotation, value, ShapeProperty.Rotation); }
-        internal void InitRotation(byte value) => _rotation = value;
-        private byte _rotation = 0;
+        internal byte Rotation1 { get => _rotation1; set => Set(ref _rotation1, value, ShapeProperty.Rotation1); }
+        internal void InitRotation1(byte value) => _rotation1 = value;
+        private byte _rotation1 = 0;
+
+        internal byte Rotation2 { get => _rotation2; set => Set(ref _rotation2, value, ShapeProperty.Rotation2); }
+        internal void InitRotation2(byte value) => _rotation2 = value;
+        private byte _rotation2 = 0;
 
         internal byte Dimension { get => _dimension; set => Set(ref _dimension, value, ShapeProperty.Dimension); }
         internal void InitDimension(byte value) => _dimension = value;
@@ -650,16 +654,6 @@ namespace ModelGraph.Core
             Shape.SetCenter(SelectedShapes, new Vector2());
             Refresh();
         }
-        private void RotateLeft()
-        {
-            Shape.RotateLeft(SelectedShapes, _useAlternate);
-            Refresh();
-        }
-        private void RotateRight()
-        {
-            Shape.RotateRight(SelectedShapes, _useAlternate);
-            Refresh();
-        }
         private void VerticalFlip()
         {
             Shape.VerticalFlip(SelectedShapes);
@@ -670,8 +664,6 @@ namespace ModelGraph.Core
             Shape.HorizontalFlip(SelectedShapes);
             Refresh();
         }
-        private void SetDegree22() => _useAlternate = false;
-        private void SetDegree30() => _useAlternate = true;
         private bool _useAlternate;
         #endregion
 

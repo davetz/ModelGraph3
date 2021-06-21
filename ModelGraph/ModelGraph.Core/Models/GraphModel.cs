@@ -190,11 +190,21 @@ namespace ModelGraph.Core
         }
         #endregion
 
+        #region ModelCommands  ================================================
+        internal override void FlipHorz() { Selector.FlipHorz(); Refresh(); }
+        internal override void FlipVert() { Selector.FlipVert(); Refresh(); }
+        internal override void AlignHorzCenter() { Selector.AlignHorzCenter(); Refresh(); }
+        internal override void AlignVertCenter() { Selector.AlignVertCenter(); Refresh(); }
+        internal override void RotateLeft(byte delta) { Selector.Rotate(AngleLeft(delta)); Refresh(); }
+        internal override void RotateRight(byte delta) { Selector.Rotate(AngleRight(delta)); Refresh(); }
+        #endregion
+
         #region Refresh/UpdateEditorData  =====================================
         internal void Refresh()
         {
             UpdateEditorData();
             if (FlyTreeIsVisible) FlyTreeDelta++;
+            EditorDelta++;
             PageModel.TriggerUIRefresh();
         }
 

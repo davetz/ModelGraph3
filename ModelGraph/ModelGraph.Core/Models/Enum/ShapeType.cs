@@ -16,18 +16,18 @@
         RoundedRect = 10,
         SimpleShapeMask = 0x0F,
 
-        //connected line segments
+        //closed line segments
         ClosedLines = 0x20,
         PolySide = 0x21,
         PolyStar = 0x22,
         PolyGear = 0x23,
 
-        //connected line segments
+        //joined line segments
         JointedLines = 0x40,
         PolySpike = 0x44,
         PolyPulse = 0x45,
 
-        //connected sline segments
+        //joined spline segments
         JoinedSplines = 0x80,
         PolyWave = 0x81,
         PolySpring = 0x82,

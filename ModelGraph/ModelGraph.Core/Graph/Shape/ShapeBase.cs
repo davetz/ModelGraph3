@@ -152,7 +152,9 @@ namespace ModelGraph.Core
                 case ShapeProperty.CenterY:
                     s.DeltaCenterY(sm.DeltaCenterY);
                     break;
-                case ShapeProperty.Rotation:
+                case ShapeProperty.Rotation1:
+                    break;
+                case ShapeProperty.Rotation2:
                     break;
                 case ShapeProperty.Dimension:
                     break;
@@ -210,8 +212,8 @@ namespace ModelGraph.Core
                 cy += scy;
                 N += 1;
             }
-            sm.InitSizeX(ToUShort(x2 - x1));
-            sm.InitSizeY(ToUShort(y2 - y1));
+            sm.InitSizeX(ToUShort((x2 - x1) / 2));
+            sm.InitSizeY(ToUShort((y2 - y1) / 2));
             sm.InitCenterX(ToShort(cx / N));
             sm.InitCenterY(ToShort(cy / N));
             sm.InitExtentEast(ToShort(x1));

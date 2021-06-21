@@ -29,7 +29,7 @@ namespace ModelGraph.Core
         internal abstract void AlignHorzCenter();
         internal abstract void AlignHorzBottom();
         protected abstract void Rotate(Matrix3x2 mx);
-        internal void Rotate(float degree) => Rotate(Matrix3x2.CreateRotation((float)(degree * Math.PI / 180), HitPoint));
+        internal void Rotate(float radians) => Rotate(Matrix3x2.CreateRotation((float)(radians), HitPoint));
         #endregion
     }
 }

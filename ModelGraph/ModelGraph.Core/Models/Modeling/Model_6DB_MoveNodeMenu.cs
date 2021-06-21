@@ -14,10 +14,10 @@ namespace ModelGraph.Core
             if (IsExpandedRight) return false;
             IsExpandedRight = true;
 
-            new Model_6F1_VertAlign(this, Item.Selector);
-            new Model_6F2_HorzAlign(this, Item.Selector);
-            new Model_6F3_Flip(this, Item.Selector);
-            new Model_6F4_Rotate(this, Item.Selector, Angles.LR9045);
+            new Model_6F1_VertAlign(this, Item);
+            new Model_6F2_HorzAlign(this, Item);
+            new Model_6F3_Flip(this, Item);
+            new Model_6F4_Rotate(this, Item, Angles.LR9045);
             return true;
         }
     }

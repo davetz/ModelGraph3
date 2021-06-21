@@ -386,6 +386,8 @@ namespace ModelGraph.Core
         ShapeExtentSouthProperty = 0x4D0 | Is_Covert,
         ShapeSizeXProperty = 0x4D1 | Is_Covert,
         ShapeSizeYProperty = 0x4D2 | Is_Covert,
+        ShapeRotation1Property = 0x4D3 | Is_Covert,
+        ShapeRotation2Property = 0x4D3 | Is_Covert,
 
         #endregion
 

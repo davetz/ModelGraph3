@@ -34,7 +34,8 @@ namespace ModelGraph.Core
             root.RegisterReferenceItem(new Property_Shape_Factor1(sto));
             root.RegisterReferenceItem(new Property_Shape_Radius1(sto));
             root.RegisterReferenceItem(new Property_Shape_Radius2(sto));
-            root.RegisterReferenceItem(new Property_Shape_Rotation(sto));
+            root.RegisterReferenceItem(new Property_Shape_Rotation1(sto));
+            root.RegisterReferenceItem(new Property_Shape_Rotation2(sto));
             root.RegisterReferenceItem(new Property_Shape_Dimension(sto));
             root.RegisterReferenceItem(new Property_Shape_CenterX(sto));
             root.RegisterReferenceItem(new Property_Shape_CenterY(sto));

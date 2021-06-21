@@ -19,6 +19,42 @@ namespace ModelGraph.Core
         public void DrawControlReady() => PageModel.Root.PostRefresh();
         #endregion
 
+        #region ModelCommands  ================================================
+        internal virtual void TryUndo() { }
+        internal virtual void TryRedo() { }
+        internal virtual void FlipVert() { }
+        internal virtual void FlipHorz() { }
+        internal virtual void RotateTo(byte index) { }
+        internal virtual void RotateLeft(byte delta) { }
+        internal virtual void RotateRight(byte delta) { }
+        internal virtual void AlignTop() { }
+        internal virtual void AlignLeft() { }
+        internal virtual void AlignRight() { }
+        internal virtual void AlignBottom() { }
+        internal virtual void AlignVertCenter() { }
+        internal virtual void AlignHorzCenter() { }
+
+        #region AngleMethods  =================================================
+        // 180     =  96  |  -180     =  96
+        //  90     =  48  |   -90     = 144
+        //  60     =  32  |   -60     = 160
+        //  45     =  24  |   -45     = 168
+        //  30     =  16  |   -30     = 176
+        //  22.5   =  12  |   -22.5   = 180
+        //  15     =  8   |   -15     = 184
+        //   7.5   =  4   |    -7.5   = 188
+        //   3.75  =  2   |    -3.75  = 190
+        //   1.875 =  1   |    -1.875 = 191
+        //   0     =  0   |    -0     = 192 
+        internal byte ToAngle(float deg) => (byte)(deg < 0 ? (192 - deg / 1.875) % 192 : (deg / 1.875) % 192);  
+        protected float Angle(byte index) => (float)(AngleInc * index % 192);
+        protected float AngleLeft(byte index) => DeltaAngle(-index);
+        protected float AngleRight(byte index) => DeltaAngle(index);
+        private float DeltaAngle(int delta) => (float)(AngleInc * (192 + delta) % 192);
+        private const double AngleInc = Math.PI / 96; // 1.875 degrees (common denominator for 15 and 22.5 degress)
+        #endregion
+        #endregion
+
         #region ModeStateCursor  ==============================================
         private Dictionary<(byte, byte), DrawCursor> _modeState_Cursor = new Dictionary<(byte, byte), DrawCursor>();
         public DrawCursor GetModeStateCursor() => _modeState_Cursor.TryGetValue((_drawMode, _drawState), out DrawCursor cur) ? cur : DrawCursor.Arrow;

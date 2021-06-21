@@ -7,32 +7,23 @@ namespace ModelGraph.Core
 {
     internal abstract partial class Shape
     {
-        private const int PointsOffset = 15;
-        private byte A = 0xFF; // of color(A, R, G, B)
-        private byte R = 0xFF; // of color(A, R, G, B)
-        private byte G = 0xFF; // of color(A, R, G, B)
-        private byte B = 0xFF; // of color(A, R, G, B)
+        private byte A = 0xFF;  // of color(A, R, G, B)
+        private byte R = 0xFF;  // of color(A, R, G, B)
+        private byte G = 0xFF;  // of color(A, R, G, B)
+        private byte B = 0xFF;  // of color(A, R, G, B)
         protected byte SW = 1;  // stroke width
-        private byte ST = 4;  // stroke type
-        private byte R1 = 1;  // minor axis (inner, horzontal) (1 to 128)
-        private byte R2 = 1;  // major axis (outer, vertical) (1 to 128)
-        private byte F1;      // auxiliary factor (1 to 128)
-        private byte PD = 1;  // polyline dimension specific to the shape type
-        private sbyte CX;      // shapes center x coordinate (-127 t0 127)
-        private sbyte CY;      // shapes center Y coordinate (-127 t0 127)
-        private byte A1;      // rotation index for 7.5 degree delta (0 to 47) arround shapes center
-        private byte A2;      // rotation index for 7.5 degree delta (0 to 47) arround point zero
+        private byte ST = 4;    // stroke type
+        private byte R1;        // radius 1 for circles and squares
+        private byte R2;        // radius 2 for rectangles and ellipses
+        private byte F1;        // clipping factor
+        private byte PD = 1;    // polyline dimension specific to the shape type
+        private byte PL;        // the polyline control parameters are locked
+        private byte AI;        // rotation angle index
+        private sbyte OX;       // offset delta X
+        private sbyte OY;       // offset delta Y
         protected List<Vector2> DXY;  // one or more defined points
 
         #region Properties  ===================================================
-        protected ShapeProperty StrokePropertyFlags()
-        {
-            var ss = (StrokeType)ST & StrokeType.Filled;
-            if (ss == StrokeType.Filled) return ShapeProperty.StrokeStyle;
-            if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return (ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth) & ValidLineProperty;
-            return (ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth) & ValidLineProperty;
-        }
-        protected virtual ShapeProperty ValidLineProperty => ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth;
 
         #region Stroke  =======================================================
         internal void SetStrokeWidth(byte sw) => SW = sw;
@@ -84,6 +75,14 @@ namespace ModelGraph.Core
             if (sw < 1) sw = 1;
             return (ShapeType, (StrokeType)ST, sw);
         }
+        protected ShapeProperty StrokePropertyFlags()
+        {
+            var ss = (StrokeType)ST & StrokeType.Filled;
+            if (ss == StrokeType.Filled) return ShapeProperty.StrokeStyle;
+            if (ss == StrokeType.Dashed || ss == StrokeType.Dotted) return (ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth) & ValidLineProperty;
+            return (ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth) & ValidLineProperty;
+        }
+        protected virtual ShapeProperty ValidLineProperty => ShapeProperty.StrokeStyle | ShapeProperty.StartCap | ShapeProperty.DashCap | ShapeProperty.EndCap | ShapeProperty.StrokeWidth;
         #endregion
 
         #region Color  ========================================================
@@ -93,7 +92,7 @@ namespace ModelGraph.Core
         private const byte _g = 0x80;
         private const byte _a = 0x60;
 
-        internal void SetColor((byte ,byte,byte,byte) color)
+        internal void SetColor((byte, byte, byte, byte) color)
         {
             var (a, r, g, b) = color;
             A = a;
@@ -104,40 +103,6 @@ namespace ModelGraph.Core
         #endregion
 
         #region Radius  =======================================================
-        internal static byte ToByte(float v, float L = 0)
-        {
-            if (v < L) v = L;
-            var b = v * 255;
-            if (b > 255) b = 255;
-            return (byte)b;
-        }
-        internal static sbyte ToSByte(float v)
-        {
-            if (v < -1) v = -1;
-            if (v >  1) v =  1;
-
-            return (sbyte)(v * 127);
-        }
-        internal static float ToFloat(byte b) => b / 255f;
-        internal static float ToFloat(sbyte s) => s / 127f;
-
-        // for converting shape point display values (-1f , 1f) <=> (-128, 128)
-        const short LNS = -128;
-        const short LPS = 128;
-        internal static float ToFloat(short d) => d < -128 ? -1f : d > 128f ? 1f : d / 128;
-        internal static short ToShort(float f) => f < -1 ? LNS : f > 1 ? LPS : f < 0 ? (short)(f * 128f - .5f) : (short)(f * 128f + .5f);
-
-        // for converting shape point display values (0f , 1f) <=> (0, 256)
-        const ushort LNUS = 0;
-        const ushort LPUS = 256;
-        internal static float ToFloat(ushort d) => d > 256f ? 1f : d / 256;
-        internal static ushort ToUShort(float f) => f < -1 ? LNUS : f > 1 ? LPUS : f < 0 ? (ushort)(f * 256f - .5f) : (ushort)(f * 256f + .5f);
-
-
-        internal static (float, float) ToFloat((sbyte dx, sbyte dy) p) => (ToFloat(p.dx), ToFloat(p.dy));
-        internal static Vector2 ToVector((sbyte dx, sbyte dy) p) => new Vector2(ToFloat(p.dx), ToFloat(p.dy));
-        internal static (sbyte dx, sbyte dy) ToSByte(Vector2 p) => (ToSByte(p.X), ToSByte(p.Y));
-
         protected float Factor1 { get { return ToFloat(F1); } set { F1 = ToByte(value); } }
         protected float Radius1 { get { return ToFloat(R1); } set { R1 = ToByte(value, 0.004f); } }
         protected float Radius2 { get { return ToFloat(R2); } set { R2 = ToByte(value, 0.004f); } }
@@ -146,8 +111,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region Center  =======================================================
-        internal float CenterX { get => ToFloat(CX); set => CX = ToSByte(value); }
-        internal float CenterY { get => ToFloat(CY); set => CX = ToSByte(value); }
+        internal float CenterX { get => ToFloat(OX); set => OX = ToSByte(value); }
+        internal float CenterY { get => ToFloat(OY); set => OX = ToSByte(value); }
         #endregion
 
         #region Dimension  ====================================================
@@ -160,8 +125,12 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region Radians  ======================================================
-        protected static float FullRadians = (float)(2 * Math.PI);   //360 degrees
+        #region Rotation  =====================================================
+        private static int ValidAngle(byte v) => v % 192;
+        private const double AngleIncrement = Math.PI / 96; // 1.875 degrees (common denominator for 15 and 22.5 degress)
+        protected float Angle => (float)(AngleIncrement * ValidAngle(AI));
+
+        // defunct legacy - TO BE REMOVED
         protected static float DeltaRadiansA0 = (float)(Math.PI / 8); //22.5 degrees
         protected static float DeltaRadiansA1 = (float)(Math.PI / 6); //30 degrees
         protected float RotateLeftRadians0 => -DeltaRadiansA0;
@@ -169,46 +138,77 @@ namespace ModelGraph.Core
         protected float RotateLeftRadians1 => -DeltaRadiansA1;
         protected float RotateRightRadians1 => DeltaRadiansA1;
 
-        protected void RotateStartLeftA1() { A1 = (byte)((A1 - 1) % 12); }
-        protected void RotateStartRightA1() { A1 = (byte)((A1 + 1) % 12); }
+        protected void RotateStartLeftA1() { AI = (byte)((AI - 1) % 12); }
+        protected void RotateStartRightA1() { AI = (byte)((AI + 1) % 12); }
         #endregion
 
+        #region ConvertDataValues  ============================================
+        internal static byte ToByte(float v, float L = 0)
+        {
+            if (v < L) v = L;
+            var b = v * 255;
+            if (b > 255) b = 255;
+            return (byte)b;
+        }
+        internal static sbyte ToSByte(float v)
+        {
+            if (v < -1) v = -1;
+            if (v > 1) v = 1;
+
+            return (sbyte)(v * 127);
+        }
+        internal static float ToFloat(byte b) => b / 255f;
+        internal static float ToFloat(sbyte s) => s / 127f;
+
+        // for converting shape point display values (-1 , 1) <=> (-128, 128)
+        const short LNS = -128;
+        const short LPS = 128;
+        internal static float ToFloat(short d) => d < -128 ? -1f : d > 128f ? 1f : d / 128;
+        internal static short ToShort(float f) => f < -1 ? LNS : f > 1 ? LPS : (short)Math.Round(f * 128);
+
+        // for converting shape point display values (0 , 1) <=> (0, 256)
+        const ushort LNUS = 0;
+        const ushort LPUS = 256;
+        internal static float ToFloat(ushort d) => d > 256f ? 1f : d / 256;
+        internal static ushort ToUShort(float f) => f < -1 ? LNUS : f > 1 ? LPUS : (ushort)Math.Round(f * 256);
+        #endregion
         #endregion
 
         #region SaveShapes  ===================================================
         internal static byte[] SaveShaptes(IEnumerable<Shape> shapes)
         {
-            var (_, _, _, _, _, _, fw, fh) = GetExtent(shapes);
             var data = new List<byte>(shapes.Count() * 30);
 
-            foreach (var shape in shapes)
+            foreach (var s in shapes)
             {
-                data.Add((byte)shape.ShapeType);   // 0
+                var TY = s.ShapeType;
+                var XY = s.DXY;
+                var PC = XY.Count;
+                if (PC > byte.MaxValue) PC = byte.MaxValue;
 
-                data.Add(shape.A);          // 1
-                data.Add(shape.R);          // 2
-                data.Add(shape.G);          // 3
-                data.Add(shape.B);          // 4
-                data.Add(shape.SW);         // 5
-                data.Add(shape.ST);         // 6
-                data.Add(shape.R1);         // 7
-                data.Add(shape.R2);         // 8
-                data.Add(shape.F1);         // 9
-                data.Add(shape.PD);         //10
-                data.Add((byte)shape.CX);         //11
-                data.Add((byte)shape.CY);         //12
-                data.Add(shape.A1);         //13
-                data.Add(shape.A2);         //14
+                data.Add((byte)TY);     // 0
+                data.Add((byte)PC);     // 1
+                data.Add(s.A);          // 2
+                data.Add(s.R);          // 3
+                data.Add(s.G);          // 4
+                data.Add(s.B);          // 5
+                data.Add(s.SW);         // 6
+                data.Add(s.ST);         // 7
+                data.Add(s.R1);         // 8
+                data.Add(s.R2);         // 9
 
-                var points = shape.DXY;
-                var count = points.Count;
-                if (count > byte.MaxValue) count = byte.MaxValue;
-
-                data.Add((byte)count);      //19
-
-                for (int i = 0; i < count; i++)
+                if (TY > ShapeType.SimpleShapeMask)
                 {
-                    var p = points[i];
+                    data.Add((byte)s.F1);   //10
+                    data.Add(s.PD);         //12
+                    data.Add(s.PL);         //13
+                    data.Add(s.AI);         //14
+                    data.Add((byte)s.OX);   //15
+                    data.Add((byte)s.OY);   //16
+                }
+
+                foreach(var p in XY)
+                {
                     data.Add((byte)ToSByte(p.X));
                     data.Add((byte)ToSByte(p.Y));
                 }
@@ -223,109 +223,69 @@ namespace ModelGraph.Core
         internal static List<Shape> LoadShapes(byte[] data)
         {
             var shapes = new List<Shape>(10);
-            if (data is null || data.Length < 2 ) return shapes;
+            if (data is null || data.Length < 2) return shapes;
 
-            var M = data.Length;
+            var L = data.Length - 2;
+            var P = L - 6;
+            var Q = P - 6;
             var I = 0;
+            Shape s = null;
 
-            while (IsMoreDataAvailable())
+            while (I < L)
             {
                 var st = (ShapeType)data[I++];
+                var pc = data[I++];
+                var N = I + 2 * pc;
+
+                // ensure we don't overrun the data array 
+                if (st < ShapeType.SimpleShapeMask && N > P) break;
+                else if (st > ShapeType.SimpleShapeMask && N > Q) break;
 
                 switch (st)
                 {
-                    case ShapeType.Line:
-                        ReadData(new Line(true));
-                        break;
-
-                    //case ShapeType.Circle:
-                    //    ReadData(new XCircle(true));
-                    //    break;
-
-                    //case ShapeType.Ellipse:
-                    //    ReadData(new XEllipes(true));
-                    //    break;
-
-                    //case ShapeType.PolySide:
-                    //    ReadData(new XPolySide(true));
-                    //    break;
-
-                    //case ShapeType.PolyStar:
-                    //    ReadData(new XPolyStar(true));
-                    //    break;
-
-                    //case ShapeType.PolyGear:
-                    //    ReadData(new XPolyGear(true));
-                    //    break;
-
-                    //case ShapeType.PolyWave:
-                    //    ReadData(new XPolyWave(true));
-                    //    break;
-
-                    //case ShapeType.CenterRect:
-                    //    ReadData(new XRectangle(true));
-                    //    break;
-
-                    //case ShapeType.PolySpike:
-                    //    ReadData(new XPolySpike(true));
-                    //    break;
-
-                    //case ShapeType.PolyPulse:
-                    //    ReadData(new XPolyPulse(true));
-                    //    break;
-
-                    //case ShapeType.PolySpring:
-                    //    ReadData(new XPolySpring(true));
-                    //    break;
-
-                    //case ShapeType.RoundedRect:
-                    //    ReadData(new XRoundedRectangle(true));
-                    //    break;
-                    //default:
-                    //    return shapes; // stop and disregard invalid shape data
+                    case ShapeType.Line: s = new Line(); break;
                 }
-            }
-            return shapes;
+                shapes.Add(s);
 
-            bool IsMoreDataAvailable()
-            {
-                var J = I + PointsOffset;
-                if (M > J)
+                // read stroke and simple shape parameters
+                s.A = data[I++];
+                s.R = data[I++];
+                s.G = data[I++];
+                s.B = data[I++];
+                s.SW = data[I++];
+                s.ST = data[I++];
+                s.R1 = data[I++];
+                s.R2 = data[I++];
+
+                if (st > ShapeType.SimpleShapeMask)
                 {
-                    var K = data[J];
-                    return (K != 0 && M > J + K * 2);
+                    //read complex shape parameters
+                    s.F1 = data[I++];
+                    s.PD = data[I++];
+                    s.PL = data[I++];
+                    s.AI = data[I++];
+                    s.OX = (sbyte)data[I++];
+                    s.OY = (sbyte)data[I++];
                 }
-                return false;
-            }
-            void ReadData(Shape shape)
-            {
-                shapes.Add(shape);
-                shape.A = data[I++];
-                shape.R = data[I++];
-                shape.G = data[I++];
-                shape.B = data[I++];
-                shape.SW = data[I++];
-                shape.ST = data[I++];
-                shape.R1 = data[I++];
-                shape.R2 = data[I++];
-                shape.F1 = data[I++];
-                shape.PD = data[I++];
-                shape.CX = (sbyte)data[I++];
-                shape.CY = (sbyte)data[I++];
-                shape.A1 = data[I++];
-                shape.A2 = data[I++];
-                var pc = data[I++];
+
                 if (pc > 0)
                 {
-                    shape.DXY = new List<Vector2>(pc);
-                    for (int i = 0; i < pc; i++)
+                    // read point data, if any
+                    s.DXY = new List<Vector2>(pc);
+                    for (int j = 0; j < pc; j++)
                     {
                         var dx = ((sbyte)data[I++]) / 127.0f; //use as much of the sbyte
                         var dy = ((sbyte)data[I++]) / 127.0f; //precision as posible
-                        shape.DXY.Add(new Vector2(dx, dy));
+                        s.DXY.Add(new Vector2(dx, dy));
                     }
                 }
+                else
+                {
+                    s.DXY = new List<Vector2>();
+                    s.CreatePoints();
+                }
             }
+            return shapes;
         }
         #endregion
 
@@ -342,10 +302,10 @@ namespace ModelGraph.Core
             R2 = s.R2;
             F1 = s.F1;
             PD = s.PD;
-            CX = s.CX;
-            CY = s.CY;
-            A1 = s.A1;
-            A2 = s.A2;
+            PL = s.PL;
+            AI = s.AI;
+            OX = s.OX;
+            OY = s.OY;
             DXY = new List<Vector2>(s.DXY);
         }
         #endregion

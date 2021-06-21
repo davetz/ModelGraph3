@@ -20,13 +20,14 @@ namespace ModelGraph.Core
         Factor1 = 0x200,
         CenterX = 0x400,
         CenterY = 0x800,
-        Rotation = 0x1000,
-        Dimension = 0x2000,
-        IsImpaired = 0x4000,
+        Rotation1 = 0x1000,
+        Rotation2 = 0x2000,
+        Dimension = 0x4000,
+        IsImpaired = 0x8000,
         //=================
-        ExtentEast = 0x8000,
-        ExtentWest = 0x10000,
-        ExtentNorth = 0x20000,
-        ExtentSouth = 0x40000,
+        ExtentEast = 0x10000,
+        ExtentWest = 0x20000,
+        ExtentNorth = 0x40000,
+        ExtentSouth = 0x80000,
     }
 }
