@@ -21,7 +21,7 @@ namespace ModelGraph.Core
         internal abstract void AddDrawData(DrawData drawData, float size, float scale, Vector2 offset, Coloring coloring = Coloring.Normal);
         internal abstract void AddDrawData(DrawData drawData, float scale, Vector2 offset, FlipState flip);
 
-        protected abstract (float x1, float y1, float x2, float y2, float cx, float cy) GetExtent();
+        internal abstract (float x1, float y1, float x2, float y2, float cx, float cy) GetExtent();
         protected abstract void Scale(Vector2 scale);
         protected abstract ShapeProperty PropertyFlags { get; }
         protected abstract void CreatePoints();
@@ -89,6 +89,30 @@ namespace ModelGraph.Core
             foreach (var shape in shapes) { shape.MoveCenter(p - GetCenter(shapes)); }
         }
         protected void SetCenter(Vector2 p) => MoveCenter(p - GetCenter());
+        #endregion
+
+        #region CloneShapes  ==================================================
+        internal static List<Shape> Clone(List<Shape> shapes, Vector2 cp)
+        {
+            var N = shapes.Count;
+            var cpList = new List<Vector2>(N);
+            var cloned = new List<Shape>(N);
+            var ccp = new Vector2();
+            foreach (var s in shapes)
+            {
+                var scp = s.GetCenter();
+                cpList.Add(scp);
+                ccp += scp;
+            }
+            ccp /= N;
+
+            for (int i = 0; i < N; i++)
+            {
+                var tcp = cp + ccp - cpList[i];
+                cloned.Add(shapes[i].Clone(tcp));
+            }
+            return cloned;
+        }
         #endregion
 
         #region MoveCenter  ===================================================

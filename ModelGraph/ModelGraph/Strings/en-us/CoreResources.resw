@@ -321,6 +321,18 @@
   <data name="021S" xml:space="preserve">
     <value>Rotate right 45 degrees</value>
   </data>
+  <data name="026N" xml:space="preserve">
+    <value>Cut</value>
+  </data>
+  <data name="026S" xml:space="preserve">
+    <value>Remove selected items and place them on clipboard</value>
+  </data>
+  <data name="027N" xml:space="preserve">
+    <value>Copy</value>
+  </data>
+  <data name="027S" xml:space="preserve">
+    <value>Copy seleted items to the clipboard</value>
+  </data>
   <data name="0D2A" xml:space="preserve">
     <value>F</value>
   </data>
@@ -1763,6 +1775,12 @@ NEC – NWC – SEC - SWC</value>
   </data>
   <data name="6F4N" xml:space="preserve">
     <value>Rotate</value>
+  </data>
+  <data name="6F5N" xml:space="preserve">
+    <value>Cut/Copy</value>
+  </data>
+  <data name="6F5S" xml:space="preserve">
+    <value>Cut/Copy selected items</value>
   </data>
   <data name="7D0N" xml:space="preserve">
     <value>Compute</value>

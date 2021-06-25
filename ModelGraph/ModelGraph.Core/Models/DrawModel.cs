@@ -20,6 +20,8 @@ namespace ModelGraph.Core
         #endregion
 
         #region ModelCommands  ================================================
+        internal virtual void Cut() { }
+        internal virtual void Copy() { }
         internal virtual void TryUndo() { }
         internal virtual void TryRedo() { }
         internal virtual void FlipVert() { }
@@ -219,8 +221,8 @@ namespace ModelGraph.Core
 
         //ui control visibility
         public bool ToolTipIsVisible { get; protected set; }
-        public bool LeftCanvasIsVisible { get; set; }
-        public bool RightCanvasIsVisible { get; set; }
+        public bool Picker1IsVisible { get; protected set; }
+        public bool Picker2IsVisible { get; protected set; }
         public bool SelectorIsVisible { get; protected set; }
         public bool FlyTreeIsVisible { get; protected set; }
         public bool SideTreeIsVisible { get; protected set; }

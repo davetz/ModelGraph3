@@ -66,6 +66,8 @@ namespace ModelGraph.Core
         Rotate30RightCommand = 0x23,
         Rotate22LeftCommand = 0x24,
         Rotate22RightCommand = 0x25,
+        CutCommand = 0x26,
+        CopyCommand = 0x27,
 
         FlipRotateMode = 0xD2, //configure auto flip rotate
         TerminalMode = 0xD3, //add terminals to symbol
@@ -544,6 +546,7 @@ namespace ModelGraph.Core
         Model_6F2_HorzAlign = 0x6F2,
         Model_6F3_Flip = 0x6F3,
         Model_6F4_Rotate = 0x6F4,
+        Model_6F5_CutCopy = 0x6F5,
 
         //=====================================================================
         PrimeCompute_Model = 0x7D0,

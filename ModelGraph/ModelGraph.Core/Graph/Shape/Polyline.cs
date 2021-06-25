@@ -58,7 +58,7 @@ namespace ModelGraph.Core
             var (x1, y1, x2, y2, cx, cy) = GetExtent();
             return new Vector2(cx, cy);
         }
-        protected override (float x1, float y1, float x2, float y2, float cx, float cy) GetExtent()
+        internal override (float x1, float y1, float x2, float y2, float cx, float cy) GetExtent()
         {
             if (DXY is null) return (0, 0, 0, 0, 0, 0);
             var x1 = 1f;

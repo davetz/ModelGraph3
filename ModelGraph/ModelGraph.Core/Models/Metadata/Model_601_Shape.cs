@@ -68,6 +68,7 @@ namespace ModelGraph.Core
         {
             PopulateSelectList();
             Items.Clear();
+            if (Item.IsAugmentedPropertyList) new Model_6F5_CutCopy(this, Item);
             Items.AddRange(_selectList);
             return true;
         }
@@ -75,20 +76,24 @@ namespace ModelGraph.Core
         void PopulateSelectList()
         {
             var sp = Item.PropertyFlags;
+            var ap = Item.IsAugmentedPropertyList;
             _selectList.Clear();
             if ((sp & ShapeProperty.StrokeStyle) != 0) _selectList.Add(_fullModelList[I_StrokeStyle]);
             if ((sp & ShapeProperty.StartCap) != 0) _selectList.Add(_fullModelList[I_StartCap]);
             if ((sp & ShapeProperty.DashCap) != 0) _selectList.Add(_fullModelList[I_DashCap]);
             if ((sp & ShapeProperty.EndCap) != 0) _selectList.Add(_fullModelList[I_EndCap]);
             if ((sp & ShapeProperty.StrokeWidth) != 0) _selectList.Add(_fullModelList[I_StrokeWidth]);
-            if ((sp & ShapeProperty.SizeX) != 0) _selectList.Add(_fullModelList[I_SizeX]);
-            if ((sp & ShapeProperty.SizeY) != 0) _selectList.Add(_fullModelList[I_SizeY]);
-            if ((sp & ShapeProperty.CenterX) != 0) _selectList.Add(_fullModelList[I_CenterX]);
-            if ((sp & ShapeProperty.CenterY) != 0) _selectList.Add(_fullModelList[I_CenterY]);
-            if ((sp & ShapeProperty.ExtentEast) != 0) _selectList.Add(_fullModelList[I_ExtentEast]);
-            if ((sp & ShapeProperty.ExtentWest) != 0) _selectList.Add(_fullModelList[I_ExtentWest]);
-            if ((sp & ShapeProperty.ExtentNorth) != 0) _selectList.Add(_fullModelList[I_ExtentNorth]);
-            if ((sp & ShapeProperty.ExtentSouth) != 0) _selectList.Add(_fullModelList[I_ExtentSouth]);
+            if (Item.IsAugmentedPropertyList)
+            {
+                if ((sp & ShapeProperty.SizeX) != 0) _selectList.Add(_fullModelList[I_SizeX]);
+                if ((sp & ShapeProperty.SizeY) != 0) _selectList.Add(_fullModelList[I_SizeY]);
+                if ((sp & ShapeProperty.CenterX) != 0) _selectList.Add(_fullModelList[I_CenterX]);
+                if ((sp & ShapeProperty.CenterY) != 0) _selectList.Add(_fullModelList[I_CenterY]);
+                if ((sp & ShapeProperty.ExtentEast) != 0) _selectList.Add(_fullModelList[I_ExtentEast]);
+                if ((sp & ShapeProperty.ExtentWest) != 0) _selectList.Add(_fullModelList[I_ExtentWest]);
+                if ((sp & ShapeProperty.ExtentNorth) != 0) _selectList.Add(_fullModelList[I_ExtentNorth]);
+                if ((sp & ShapeProperty.ExtentSouth) != 0) _selectList.Add(_fullModelList[I_ExtentSouth]);
+            }
         }
 
     }

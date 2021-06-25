@@ -131,10 +131,7 @@ namespace ModelGraph.Core
         protected float Angle => (float)(AngleIncrement * ValidAngle(AI));
 
         // defunct legacy - TO BE REMOVED
-        protected static float DeltaRadiansA0 = (float)(Math.PI / 8); //22.5 degrees
         protected static float DeltaRadiansA1 = (float)(Math.PI / 6); //30 degrees
-        protected float RotateLeftRadians0 => -DeltaRadiansA0;
-        protected float RotateRightRadians0 => DeltaRadiansA0;
         protected float RotateLeftRadians1 => -DeltaRadiansA1;
         protected float RotateRightRadians1 => DeltaRadiansA1;
 

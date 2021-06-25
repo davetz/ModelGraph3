@@ -42,7 +42,7 @@ namespace ModelGraph.Core
         private DrawMode Mode { get => (DrawMode)_drawMode; set => ModeIndex = (byte)value; }
         private enum DrawState : byte
         {
-            OnVoid, //pointer is on an empty space on the drawing
+            OnVoid, //pointer is on an empty space
 
             OnShape,
             OnLine,
@@ -114,12 +114,33 @@ namespace ModelGraph.Core
 
             foreach (var s in _picker2Shapes) { _templateShapes.Add(s.Clone()); }
 
-            LeftCanvasIsVisible = RightCanvasIsVisible = OverviewIsVisible = SideTreeIsVisible = true;
+            Picker1IsVisible = Picker2IsVisible = OverviewIsVisible = SideTreeIsVisible = true;
 
             SetViewMode();
             InititalizeBackData();
             Refresh();
         }
+        #endregion
+
+        #region ModelCommands  ================================================
+        internal override void Cut()
+        {
+            _shapeClipboard.Clear();
+            _shapeClipboard.AddRange(SelectedShapes);
+            var shapes = Symbol.GetShapes();
+            foreach (var s in SelectedShapes)
+            {
+                shapes.Remove(s);
+            }
+            Refresh();
+        }
+        internal override void Copy()
+        {
+            _shapeClipboard.Clear();
+            _shapeClipboard.AddRange(SelectedShapes);
+            Refresh();
+        }
+        private List<Shape> _shapeClipboard = new List<Shape>(10);
         #endregion
 
         #region ShapeProperty  ================================================
@@ -131,9 +152,7 @@ namespace ModelGraph.Core
             (SideTreeModel as TreeModel).Validate();
             Refresh();
         }
-        private byte _min;
-        private byte _max;
-
+        internal bool IsAugmentedPropertyList;
         internal ShapeProperty PropertyFlags { get => _propertyFlags; }
         private ShapeProperty _propertyFlags;
 
@@ -265,49 +284,146 @@ namespace ModelGraph.Core
             RefreshPicker1Data();
             RefreshPicker2Data();
             if (triggerUIRefresh) PageModel.TriggerUIRefresh();
+        }
+        #endregion
 
-            #region InternalMethods  ==========================================
-            void RefreshPicker1Data()
+        #region Picker1,Picker2,Editor  =======================================
+        #region Picker1  ======================================================
+        void RefreshPicker1Data()
+        {
+            var w = Picker1Data.Extent.Width;
+            var r = w / 2;
+            var c = new Vector2(0, 0);
+            var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
+            var d = -r;
+            Picker1.Clear();
+            Picker1Delta++;
+            foreach (var s in Symbol.GetShapes())
             {
-                var r = Picker1Data.Extent.Width / 2;
-                var c = new Vector2(0, 0);
-                var a = (float)Symbol.AbsoluteSize;
-                Picker1.Clear();
-                Picker1Delta++;
-                foreach (var s in Symbol.GetShapes())
+                s.AddDrawData(Picker1, a, r, c);
+                if (SelectedShapes.Contains(s))
                 {
-                    s.AddDrawData(Picker1, a, r, c);
+                    var points = new Vector2[] { c, new Vector2(r, r) };
+                    Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                }
+                c = new Vector2(0, c.Y + w);
+                DrawSeperator();
+            }
+            void DrawSeperator()
+            {
+                d += w;
+                var p = new Vector2[] { new Vector2(-r, d), new Vector2(r, d) };
+                Picker1.AddParms((p, (ShapeType.Line, StrokeType.Simple, 1), (90, 255, 255, 255)));
+            }
+        }
+        private void Picker1Tap(bool add = false)
+        {
+            _picker2Index = -1;
+            _picker1Index = (int)(0.5f + Picker1Data.Point1.Y / Picker1Data.Extent.Width);
+            if (Picker1IsValid)
+            {
+                var s = Symbol.GetShapes()[_picker1Index];
+                if (add)
+                {
                     if (SelectedShapes.Contains(s))
                     {
-                        var points = new Vector2[] { c, new Vector2(r, r) };
-                        Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                        SelectedShapes.Remove(s);
+                        if (SelectedShapes.Count == 0) SetViewMode();
                     }
-                    c = new Vector2(0, c.Y + Picker1Data.Extent.Width);
+                    else
+                        SelectedShapes.Add(s);
                 }
-            }
-            void RefreshPicker2Data()
-            {
-                var r = Picker2Data.Extent.Width / 2;
-                var c = new Vector2(0, 0);
-                var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
-
-                Picker2.Clear();
-                Picker2Delta++;
-                foreach (var s in _picker2Shapes)
+                else
                 {
-                    s.AddDrawData(Picker2, a, r, c);
-                    if (Picker2IsValid && s == _picker2Shapes[_picker2Index])
-                    {
-                        var points = new Vector2[] { c, new Vector2(r, r) };
-                        Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                    }
-                    c = new Vector2(0, c.Y + Picker2Data.Extent.Width);
+                    SelectedShapes.Clear();
+                    SelectedShapes.Add(s);
                 }
             }
-            #endregion
+            else
+            {
+                SelectedShapes.Clear();
+            }
+            IsAugmentedPropertyList = SelectedShapes.Count > 0;
+            GetProperties();
+            if (Mode == DrawMode.Reshape) return;
+            if (SelectedShapes.Count == 0) SetViewMode();
+            Mode = DrawMode.Edit;
+            Refresh(true);
         }
+        private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
+        private int _picker1Index;
+        #endregion
 
-        #region RefreshEditorData  ============================================
+        #region Picker2  ======================================================
+        void RefreshPicker2Data()
+        {
+            var w = Picker2Data.Extent.Width;
+            var r = w / 2;
+            var c = new Vector2(0, 0);
+            var a = (float)Symbol.AbsoluteSize; //needed to calculate the stroke width
+            var d = -r;
+            Picker2.Clear();
+            Picker2Delta++;
+
+            foreach (var s in _shapeClipboard)
+            {
+                s.AddDrawData(Picker2, a, r, c);
+                if (_picker2Index == 0)
+                {
+                    var points = new Vector2[] { c, new Vector2(r, r) };
+                    Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                }
+            }
+            DrawSeperator();
+
+            c = new Vector2(0, c.Y + w);
+            foreach (var s in _picker2Shapes)
+            {
+                s.AddDrawData(Picker2, a, r, c);
+                DrawSeperator();
+                if (Picker2IsValid && s == _picker2Shapes[_picker2Index - 1])
+                {
+                    var points = new Vector2[] { c, new Vector2(r, r) };
+                    Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
+                }
+                c = new Vector2(0, c.Y + w);
+                
+            }
+            void DrawSeperator()
+            {
+                d += w;
+                var p = new Vector2[] { new Vector2(-r, d), new Vector2(r, d) };
+                Picker2.AddParms((p, (ShapeType.Line, StrokeType.Simple, 1), (90, 255, 255, 255)));
+            }
+        }
+        private void Picker2Tap()
+        {
+            _picker1Index = -1;
+            SelectedShapes.Clear();
+            IsAugmentedPropertyList = false;
+
+            _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
+            if (Picker2IsValid)
+            {
+                SelectedShapes.Add(_templateShapes[_picker2Index - 1]);
+            }
+            GetProperties();
+
+            if ((_picker2Index == 0 && _shapeClipboard.Count > 0) || Picker2IsValid)
+                Mode = DrawMode.Paste;
+            else
+                Mode = DrawMode.View;
+        }
+        private bool Picker2IsValid => _picker2Index > 0 && _picker2Index <= _picker2Shapes.Length;
+        private int _picker2Index;
+        private readonly List<Shape> _templateShapes = new List<Shape>(_picker2Shapes.Length);
+        private static readonly Shape[] _picker2Shapes =
+        {
+            new Line(),
+        };
+        #endregion
+
+        #region Editor  =======================================================
         void RefreshEditorData()
         {
             var r = EditRadius;
@@ -337,7 +453,7 @@ namespace ModelGraph.Core
         }
         #endregion
 
-        #region InititalizeBackData  ==========================================
+        #region BackData  =====================================================
         private void InititalizeBackData()
         {
             var r = EditRadius;
@@ -429,42 +545,9 @@ namespace ModelGraph.Core
 
 
         #endregion
-        #endregion
 
-        #region Picker1,Overview,Picker2  =====================================
-        private void Picker1Tap(bool add = false)
-        {
-            _picker2Index = -1;
-            _picker1Index = (int)(0.5f + Picker1Data.Point1.Y / Picker1Data.Extent.Width);
-            if (Picker1IsValid)
-            {
-                var s = Symbol.GetShapes()[_picker1Index];
-                if (add)
-                {
-                    if (SelectedShapes.Contains(s))
-                    {
-                        SelectedShapes.Remove(s);
-                        if (SelectedShapes.Count == 0) SetViewMode();
-                    }
-                    else
-                        SelectedShapes.Add(s);
-                }
-                else
-                {
-                    SelectedShapes.Clear();
-                    SelectedShapes.Add(s);
-                }
-            }
-            else
-            {
-                SelectedShapes.Clear();
-            }
-            GetProperties();
-            if (Mode == DrawMode.Reshape) return;
-            if (SelectedShapes.Count == 0) SetViewMode();
-            Mode = DrawMode.Edit;
-            Refresh(true);
-        }
+        internal List<Shape> SelectedShapes = new List<Shape>();
+
         private void OverviewTap()
         {
             var shapes = Symbol.GetShapes();
@@ -476,46 +559,6 @@ namespace ModelGraph.Core
             GetProperties();
             Mode = DrawMode.Edit;
         }
-
-        private void Picker2Tap()
-        {
-            _picker1Index = -1;
-            SelectedShapes.Clear();
- 
-            _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
-            if (Picker2IsValid)
-            {
-                SelectedShapes.Add(_templateShapes[_picker2Index]);
-            }
-            GetProperties();
-
-            if (Picker2IsValid)
-                Mode = DrawMode.Paste;
-            else
-               Mode = DrawMode.View;
-        }
-        internal List<Shape> SelectedShapes = new List<Shape>();
-        private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
-        private bool Picker2IsValid => _picker2Index > -1 && _picker2Index < _picker2Shapes.Length;
-        private int _picker1Index;
-        private int _picker2Index;
-        private List<Shape> Shapes = new List<Shape>(_picker2Shapes.Length);
-        private List<Shape> _templateShapes = new List<Shape>(_picker2Shapes.Length);
-        private static Shape[] _picker2Shapes =
-        {
-            new Line(),
-            //new XCircle(),
-            //new XEllipes(),
-            //new XRectangle(),
-            //new XRoundedRectangle(),
-            //new XPolySide(),
-            //new XPolyStar(),
-            //new XPolyGear(),
-            //new XPolyPulse(),
-            //new XPolySpike(),
-            //new XPolyWave(),
-            //new XPolySpring(),
-        };
         #endregion
 
         #region ColorARGB/Apply/Revert  =======================================
@@ -631,40 +674,11 @@ namespace ModelGraph.Core
             PageModel.TriggerUIRefresh();
         }
         private bool _hitSelecteShapes;
-        private void CutAction()
-        {
-            _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(SelectedShapes);
-            var shapes = Symbol.GetShapes();
-            foreach (var s in SelectedShapes)
-            {
-                shapes.Remove(s);
-            }
-            SetViewMode();
-        }
-        private List<Shape> _shapeClipboard = new List<Shape>(10);
-        private void CopyAction()
-        {
-            _shapeClipboard.Clear();
-            _shapeClipboard.AddRange(SelectedShapes);
-            SetViewMode();
-        }
         private void CenterAction()
         {
             Shape.SetCenter(SelectedShapes, new Vector2());
             Refresh();
         }
-        private void VerticalFlip()
-        {
-            Shape.VerticalFlip(SelectedShapes);
-            Refresh();
-        }
-        private void HorizontalFlip()
-        {
-            Shape.HorizontalFlip(SelectedShapes);
-            Refresh();
-        }
-        private bool _useAlternate;
         #endregion
 
         #region MoveMode  =====================================================
@@ -717,10 +731,20 @@ namespace ModelGraph.Core
         #region CreateMode == AddSymbolShape  =================================
         private void CloneAction()
         {
-            if (Picker2IsValid)
+            var cp = EditData.Point1 / EditRadius;
+            if (_picker2Index == 0 && _shapeClipboard.Count > 0)
             {
-                var cp = EditData.Point1 / EditRadius;
-                var ns = _templateShapes[_picker2Index].Clone(cp);
+                var newshapes = Shape.Clone(_shapeClipboard, cp);
+                
+                foreach (var ns in newshapes)
+                {
+                    Symbol.GetShapes().Add(ns);
+                }
+                Refresh();
+            }
+            else if (Picker2IsValid)
+            {
+                var ns = _templateShapes[_picker2Index - 1].Clone(cp);
                 Symbol.GetShapes().Add(ns);
                 Refresh();
             }

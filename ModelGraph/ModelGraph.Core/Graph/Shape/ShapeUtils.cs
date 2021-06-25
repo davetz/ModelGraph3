@@ -44,7 +44,7 @@ namespace ModelGraph.Core
         #endregion
 
         #region GetExtent  ====================================================
-        static protected (float dx1, float dy1, float dx2, float dy2, float cdx, float cdy, float dx, float dy) GetExtent(IEnumerable<Shape> shapes)
+        static protected (float, float, float, float, float, float, float, float) GetExtent(IEnumerable<Shape> shapes)
         {
             var x1 = 1f;
             var y1 = 1f;

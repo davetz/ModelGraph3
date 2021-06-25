@@ -104,15 +104,15 @@ namespace ModelGraph.Controls
                 if (_flyTreeIsVisible) ShowFlyTree(); else HideFlyTree();
             }
 
-            if (DrawModel.LeftCanvasIsVisible != _picker1IsVisible)
+            if (DrawModel.Picker1IsVisible != _picker1IsVisible)
             {
-                _picker1IsVisible = DrawModel.LeftCanvasIsVisible;
+                _picker1IsVisible = DrawModel.Picker1IsVisible;
                 if (_picker1IsVisible) RestorePicker1(); else HidePicker1();
             }
 
-            if (DrawModel.RightCanvasIsVisible != _picker2IsVisible)
+            if (DrawModel.Picker2IsVisible != _picker2IsVisible)
             {
-                _picker2IsVisible = DrawModel.RightCanvasIsVisible;
+                _picker2IsVisible = DrawModel.Picker2IsVisible;
                 if (_picker2IsVisible) RestorePicker2(); else HidePicker2();
             }
 
@@ -131,8 +131,8 @@ namespace ModelGraph.Controls
         private void ConfigDrawItems()
         {
             _toolTipIsVisible = !DrawModel.ToolTipIsVisible;
-            _picker1IsVisible = !DrawModel.LeftCanvasIsVisible;
-            _picker2IsVisible = !DrawModel.RightCanvasIsVisible;
+            _picker1IsVisible = !DrawModel.Picker1IsVisible;
+            _picker2IsVisible = !DrawModel.Picker2IsVisible;
             _selectorIsVisible = !DrawModel.SelectorIsVisible;
             _flyTreeIsVisible = !DrawModel.FlyTreeIsVisible;
             _sideTreeIsVisible = !DrawModel.SideTreeIsVisible;

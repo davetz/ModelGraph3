@@ -57,8 +57,8 @@ namespace ModelGraph.Core
 
         //ui control visibility
         bool ToolTipIsVisible { get; }
-        bool LeftCanvasIsVisible { get; set; }
-        bool RightCanvasIsVisible { get; set; }
+        bool Picker1IsVisible { get; }
+        bool Picker2IsVisible { get; }
         bool SelectorIsVisible { get; }
         bool FlyTreeIsVisible { get; }
         bool SideTreeIsVisible { get; }
