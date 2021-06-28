@@ -85,9 +85,6 @@ namespace ModelGraph.Core
             Symbol = symbol;
             AbsoluteSize = symbol.AbsoluteSize;
 
-            Overview = Editor;
-            OverviewWidth = 40;
-
             EditorWidth = EditSize;
             BackLay = new DrawData();
 
@@ -298,37 +295,62 @@ namespace ModelGraph.Core
             var d = -r;
             Picker1.Clear();
             Picker1Delta++;
-            foreach (var s in Symbol.GetShapes())
+            var shapes = Symbol.GetShapes();
+            foreach (var s in shapes)
             {
                 s.AddDrawData(Picker1, a, r, c);
-                if (SelectedShapes.Contains(s))
-                {
-                    var points = new Vector2[] { c, new Vector2(r, r) };
-                    Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                }
+            }
+            if (SelectedShapes.Count == shapes.Count) HighlightSlot();
+            DrawSeperator();
+            c = new Vector2(0, c.Y + w);
+
+            foreach (var s in shapes)
+            {
+                s.AddDrawData(Picker1, a, r, c);
+                if (SelectedShapes.Contains(s)) HighlightSlot();
                 c = new Vector2(0, c.Y + w);
                 DrawSeperator();
             }
+
             void DrawSeperator()
             {
                 d += w;
                 var p = new Vector2[] { new Vector2(-r, d), new Vector2(r, d) };
                 Picker1.AddParms((p, (ShapeType.Line, StrokeType.Simple, 1), (90, 255, 255, 255)));
             }
+            void HighlightSlot()
+            {
+                var points = new Vector2[] { c, new Vector2(r, r) };
+                Picker1.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
+            }
         }
         private void Picker1Tap(bool add = false)
         {
             _picker2Index = -1;
             _picker1Index = (int)(0.5f + Picker1Data.Point1.Y / Picker1Data.Extent.Width);
-            if (Picker1IsValid)
+            var shapes = Symbol.GetShapes();
+            if (_picker1Index < 0 || _picker1Index > shapes.Count)
             {
-                var s = Symbol.GetShapes()[_picker1Index];
+                _picker1Index = -1;
+                SelectedShapes.Clear();
+            }
+            else if (_picker1Index == 0)
+            {
+                var SomeNotSelected = shapes.Count != SelectedShapes.Count;
+                SelectedShapes.Clear();
+                if (SomeNotSelected)
+                {
+                    SelectedShapes.AddRange(shapes);
+                }
+            }
+            else
+            {
+                var s = shapes[_picker1Index - 1];
                 if (add)
                 {
                     if (SelectedShapes.Contains(s))
                     {
                         SelectedShapes.Remove(s);
-                        if (SelectedShapes.Count == 0) SetViewMode();
                     }
                     else
                         SelectedShapes.Add(s);
@@ -339,10 +361,7 @@ namespace ModelGraph.Core
                     SelectedShapes.Add(s);
                 }
             }
-            else
-            {
-                SelectedShapes.Clear();
-            }
+
             IsAugmentedPropertyList = SelectedShapes.Count > 0;
             GetProperties();
             if (Mode == DrawMode.Reshape) return;
@@ -350,7 +369,6 @@ namespace ModelGraph.Core
             Mode = DrawMode.Edit;
             Refresh(true);
         }
-        private bool Picker1IsValid => _picker1Index > -1 && _picker1Index < Symbol.GetShapes().Count;
         private int _picker1Index;
         #endregion
 
@@ -368,11 +386,7 @@ namespace ModelGraph.Core
             foreach (var s in _shapeClipboard)
             {
                 s.AddDrawData(Picker2, a, r, c);
-                if (_picker2Index == 0)
-                {
-                    var points = new Vector2[] { c, new Vector2(r, r) };
-                    Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                }
+                if (_picker2Index == 0) HighlightSlot();
             }
             DrawSeperator();
 
@@ -381,19 +395,19 @@ namespace ModelGraph.Core
             {
                 s.AddDrawData(Picker2, a, r, c);
                 DrawSeperator();
-                if (Picker2IsValid && s == _picker2Shapes[_picker2Index - 1])
-                {
-                    var points = new Vector2[] { c, new Vector2(r, r) };
-                    Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
-                }
+                if (_picker2Index > 0 && _picker2Index <= _picker2Shapes.Length && s == _picker2Shapes[_picker2Index - 1]) HighlightSlot();
                 c = new Vector2(0, c.Y + w);
-                
             }
             void DrawSeperator()
             {
                 d += w;
                 var p = new Vector2[] { new Vector2(-r, d), new Vector2(r, d) };
                 Picker2.AddParms((p, (ShapeType.Line, StrokeType.Simple, 1), (90, 255, 255, 255)));
+            }
+            void HighlightSlot()
+            {
+                var points = new Vector2[] { c, new Vector2(r, r) };
+                Picker2.AddParms((points, (ShapeType.CenterRect, StrokeType.Filled, 0), (90, 255, 255, 255)));
             }
         }
         private void Picker2Tap()
@@ -403,18 +417,17 @@ namespace ModelGraph.Core
             IsAugmentedPropertyList = false;
 
             _picker2Index = (int)(0.5f + Picker2Data.Point1.Y / Picker2Data.Extent.Width);
-            if (Picker2IsValid)
+            if (_picker2Index > 0 && _picker2Index <= _picker2Shapes.Length)
             {
                 SelectedShapes.Add(_templateShapes[_picker2Index - 1]);
             }
             GetProperties();
 
-            if ((_picker2Index == 0 && _shapeClipboard.Count > 0) || Picker2IsValid)
+            if ((_picker2Index == 0 && _shapeClipboard.Count > 0) || (_picker2Index > 0 && _picker2Index <= _picker2Shapes.Length))
                 Mode = DrawMode.Paste;
             else
                 Mode = DrawMode.View;
         }
-        private bool Picker2IsValid => _picker2Index > 0 && _picker2Index <= _picker2Shapes.Length;
         private int _picker2Index;
         private readonly List<Shape> _templateShapes = new List<Shape>(_picker2Shapes.Length);
         private static readonly Shape[] _picker2Shapes =
@@ -742,7 +755,7 @@ namespace ModelGraph.Core
                 }
                 Refresh();
             }
-            else if (Picker2IsValid)
+            else if (_picker2Index > 0 && _picker2Index <= _templateShapes.Count)
             {
                 var ns = _templateShapes[_picker2Index - 1].Clone(cp);
                 Symbol.GetShapes().Add(ns);
